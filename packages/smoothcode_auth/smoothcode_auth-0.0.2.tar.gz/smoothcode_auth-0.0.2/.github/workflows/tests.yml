@@ -1,0 +1,26 @@
+name: 'Tests'
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test_app:
+    name: 'Run Tests'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: 'Installing Requirements'
+        run: |
+          pip install --upgrade pip
+          pip install pytest==6.2.5 pytest-cov==3.0.0
+      - name: 'Running Tests'
+        run: pytest --cov=. --no-cov-on-fail --cov-fail-under=95
