@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+    branch = true
+    source = ["./skbot"]
+
+[tool.coverage.report]
+    omit = [
+        "./skbot/ignition/messages.py",
+        "*tests*",
+        "./skbot/ignition/sdformat/bindings/*",
+        "./skbot/ignition/sdformat/create_frame_graph.py",
+        "./skbot/ignition/sdformat/generic_sdf/*",
+        "./skbot/_numba_overloads.py"
+    ]
+
+    exclude_lines = [
+        "pragma: no cover",
+        "raise NotImplementedError",
+        "@register_jitable",
+        "@numba.jit",
+        "@numba.generated_jit"
+    ]
