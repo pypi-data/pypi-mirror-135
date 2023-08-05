@@ -1,0 +1,91 @@
+Metadata-Version: 2.1
+Name: pyvcontrold-net
+Version: 2.0.0
+Summary: A small library to interact with vcontrold (openv).
+Home-page: https://github.com/tsvsj/pyvcontrold-net
+Author: Sven Schaefer
+Author-email: tsvsjoj@gamil.com
+License: Apache-2.0
+Project-URL: Bug Reports, https://github.com/tsvsj/pyvcontrold-net/issues
+Project-URL: Donating, https://www.buymeacoffee.com/tsvsj
+Project-URL: Say Thanks!, https://saythanks.io/to/tsvsj
+Project-URL: Source, https://github.com/tsvsj/pyvcontrold-net
+Keywords: smarthome,vcontrold,openv,viessmann,heating control
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Natural Language :: German
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Home Automation
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: PyYAML
+Requires-Dist: Jinja2
+
+<!-- pyvcontrold-net documentation master file -->
+# pyvcontrold-net
+
+![image](https://img.shields.io/github/last-commit/tsvsj/pyvcontrold-net?style=flat-square:alt:GitHublastcommit)
+![image](https://img.shields.io/github/license/tsvsj/pyvcontrold-net?style=flat-square:alt:GitHub)
+![image](https://img.shields.io/pypi/dm/pyvcontrold-net?style=flat-square:alt:PyPI-Downloads)
+![image](https://img.shields.io/pypi/v/pyvcontrold-net?style=flat-square:alt:PyPI)
+![image](https://img.shields.io/pypi/pyversions/pyvcontrold-net?style=flat-square:alt:PyPI-PythonVersion)
+![image](https://img.shields.io/pypi/status/pyvcontrold-net?style=flat-square:alt:PyPI-Status)
+
+This is a simple library to interact with vcontrold ([@openv/vcontrold](https://github.com/openv/vcontrold)), the open-source daemon to communicate with Viessmann Vitotronic via Optolink. Documentation for vcontrold itself can be found at [@openv/openv Wiki](https://github.com/openv/openv/wiki).
+
+------
+## Installation
+
+Use pip to install the pyvcontrold-net package.
+
+```console
+(.venv) $ pip install pyvcontrold-net
+```
+
+After the installation is done, you can import the package and create an instance of vcontrold.
+
+## Basic Usage
+
+To use vcontrold you need to import the module vcontrold from the package vcontrold.
+
+> :warning: You need to know your *device ID*. If you don't already know it, use :py:attr:`.device_id` to find the device ID of your heating control system. If your device ID is not listed in the ``devices`` node within ``vcontrold_config.yml``, you need to add it (or replace the existing) to each command. Otherwise no command will be processed!
+
+```python
+>>> from vcontrold import vcontrold
+>>> vcd = vcontrold.vcontrold(host="127.0.0.1", port=3002, timeout=5)
+>>> vcd.get_viessmann_data()
+```
+
+This will connect to you vcontold, execute all of the available commands and return the result as JSON.
+
+For more information refer to the [Documentation](docs/index.html)
+
+## Contribution
+
+As I have only one heating system at home, there is no possibility to add commands to the library, which donâ€™t work on my own heating system. So if youâ€™ve identified commands, that are not initially included, open an issue and let me know to create a helpful library for all of the people out there, that donâ€™t have a fancy smart home heating control system.
+
+## Bugs/Issues
+
+Please report any issues you find. Iâ€™ll try to fix them asap.
+
+## Donations
+
+If you like my work and would like to support me, feel free to by me a cup of coffee.
+
+<a href="https://www.buymeacoffee.com/tsvsj" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy me a coffee" height=60></a>
+
+## Disclaimer
+
+Iâ€™m not responsible for the usage of this program by any other people. The software shouldnâ€™t harm the heater control in any way, but be aware, that there are official solutions from Viessmann, that can be purchased and safely used.
+
