@@ -1,0 +1,88 @@
+Metadata-Version: 2.1
+Name: pyinvestingsnippets
+Version: 1.3.1
+Summary: UNKNOWN
+Home-page: https://pyinvestingsnippets.readthedocs.io/
+Author: InvestingSnippets
+Author-email: investingsnippets@gmail.com
+License: MIT License
+Project-URL: Bug Reports, https://github.com/investingsnippets/pyinvestingsnippets/issues
+Project-URL: Source, https://github.com/investingsnippets/pyinvestingsnippets
+Project-URL: Documentation, https://pyinvestingsnippets.readthedocs.io/
+Keywords: investing,financial-data
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Office/Business :: Financial
+Classifier: Topic :: Office/Business :: Financial :: Investment
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: scikit-learn (>=0.22.1)
+Requires-Dist: seaborn (>=0.11.2)
+Requires-Dist: matplotlib (>=3.2.2)
+Requires-Dist: scipy (>=1.4.1)
+Requires-Dist: pandas (>=1.1.5)
+Requires-Dist: numpy (>=1.19.5)
+Provides-Extra: tests
+Requires-Dist: pytest (<=6.2.5,>=2.8.0) ; extra == 'tests'
+Requires-Dist: pytest-cov ; extra == 'tests'
+Requires-Dist: pytest-httpbin (==1.0.0) ; extra == 'tests'
+Requires-Dist: pytest-mock (==2.0.0) ; extra == 'tests'
+Requires-Dist: scipy ; extra == 'tests'
+
+
+
+[![PyPI version](https://img.shields.io/pypi/v/pyinvestingsnippets.svg)](https://pypi.org/project/pyinvestingsnippets/)
+![Supported Python versions](https://img.shields.io/pypi/pyversions/pyinvestingsnippets.svg)
+[![Build Status](https://github.com/investingsnippets/pyinvestingsnippets/workflows/CI/badge.svg)](https://github.com/investingsnippets/pyinvestingsnippets/actions?query=workflow%3ACI)
+![CodeQL](https://github.com/investingsnippets/pyinvestingsnippets/workflows/CodeQL/badge.svg)
+[![Documentation Status](https://readthedocs.org/projects/pyinvestingsnippets/badge/?version=latest)](https://pyinvestingsnippets.readthedocs.io/en/latest/?badge=latest)
+
+
+
+# Python Module for Investing Snippets
+
+Pandas extensions and utility classes for stock and investment analysis. 
+
+
+## Develop
+
+First install the required venv and tox
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install tox
+```
+
+Run tox test and lint
+
+```
+tox
+```
+
+Install the package locally
+
+```
+pip install .tox/dist/pyinvestingsnippets-<version>.zip
+```
+
+## Release
+
+On master change the version
+
+```
+git commit -am "v0.0.3"
+git tag -a v0.0.3
+git push origin --tags
+git push -u
+tox -e release
+```
+
