@@ -1,0 +1,76 @@
+Wikipedia scraper is a python library to scrape for a Wikipedia. using browser automation. 
+It currently runs only on windows.
+
+## Scrape Wikipedia Current events
+ In this, we first import library.
+
+
+```sh
+from wikipedia_scraper_in import *
+response = wikipedia.current_events()
+```
+
+### Response Data
+```sh
+        "title": "An apartment fire",
+        "description": "An apartment fire in the Bronx, New York City, kills 17 people.",
+        "link": "/wiki/2022_Bronx_apartment_fire"
+```
+
+## Scrape GDP per Capita
+ In this, we first import library.
+
+
+```sh
+from wikipedia_scraper_in import *
+response = wikipedia.gdp_per_capita()
+```
+
+### Response Data
+```sh
+        "country": "Monaco\u202f*",
+        "region": "Europe",
+        "imf_estimate": "N/A",
+        "Imf_year": "190,532",
+        "un_estimate": "2019",
+        "un_year": "2019"
+```
+ 
+ 
+### Bot Studio
+[Bot_Studio](https://pypi.org/project/bot_studio/) is needed for browser automation. When this library is imported in code, an automated browser will automatically open up in which it opens Wikipedia page and scrapes data from the page.
+
+### Installation
+```sh
+pip install wikipedia-scraper-in
+```
+
+### Import
+```sh
+from wikipedia_scraper_in import *
+```
+
+### Get Current Events 
+```sh
+response = wikipedia.current_events()
+
+```
+
+### Get GDP per Capita
+```sh
+response = wikipedia.gdp_per_capita()
+
+```
+### Run bot on cloud
+* Current Events - You can run bot on [Cloud](https://datakund.com/products/wikipedia-current-events?_pos=1&_sid=14f41b6c0&_ss=r).
+* GDP per Capita -  You can run bot on [Cloud](https://datakund.com/products/wikipedia-gdp-per-capita?_pos=1&_sid=e6747578c&_ss=r).
+
+### Send Feedback to Developers
+```sh
+bot_studio.send_feedback(feedback="Need help with this ......")
+```
+
+### Contact Us
+* [Telegram](https://t.me/datakund)
+* [Website](https://datakund.com)
+
