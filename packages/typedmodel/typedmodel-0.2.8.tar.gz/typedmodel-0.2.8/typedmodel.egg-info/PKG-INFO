@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: typedmodel
+Version: 0.2.8
+Summary: provide strict type checking for dataclass and pydantic model
+Home-page: https://github.com/qiujiangkun/typedmodel
+Author: Jiangkun QIU
+Author-email: qjk2001@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+
+# TypedModel
+
+TypedModel aims to provide strict type checking for dataclass and pydantic model.
+
+dataclass is useful, but provides no type checking
+
+pydantic is useful, but sometimes it bugs out
+
+https://github.com/samuelcolvin/pydantic/issues/3189
+
+https://github.com/samuelcolvin/pydantic/issues/3569
+
+## Usage
+
+```shell
+pip install typedmodel
+```
+
+```python3
+from typedmodel import BaseModel
+
+
+class Foo(BaseModel):
+    a: str
+    b: str
+    d = 'default'
+    e: str = 'default'
+
+
+foo = Foo(a="a", b="b")
+
+```
+check `tests` for more use cases
+
