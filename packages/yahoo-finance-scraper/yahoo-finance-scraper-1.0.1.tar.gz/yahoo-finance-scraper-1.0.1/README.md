@@ -1,0 +1,95 @@
+Yahoo finance Scraper is a python library to scrape stock, stock prices and stock change of company, using browser automation. 
+It currently runs only on windows.
+
+## Scrape stock, stock price, stock changes in yahoo finance main page. 
+In this, we first import library to scrape data.
+```sh
+from yahoo_finance_scraper import *
+response=yahoo.finance()
+```
+### Response Data
+```json
+        "stock": "S&P Futures",
+        "stock_price": "4,699.25",
+        "stock_change": "(-0.12%)"   
+```
+
+## Scrape historical data from company URL.
+In this, we first import library, replace **"url"** with **"yahoo finance's company url"**
+```sh
+from scrape_yahoo_finance import *
+response = yahoo.finance_historical_data(stock_url="url")
+```
+### Response Data
+```json
+     {
+        "current_price": "2,194.30",
+        "stock_name": "E-mini Russell 2000 Index Futur (RTY=F)"
+      },
+        "date": "Jan 12, 2022",
+        "open": "2,190.20",
+        "high": "2,198.00",
+        "low": "2,188.40",
+        "volume": "8,019",
+        "adj_close": "2,194.30",
+        "close": "2,194.30"   
+```
+
+## Scrape Trending Tickers. 
+In this, we first import library to scrape data using simple command.
+```sh
+from yahoo_finance_scraper import *
+response=yahoo.ticker_symbol_downloader()
+```
+### Response Data
+```json
+        "symbol": "^IXIC",
+        "name": "NASDAQ Composite",
+        "last_price": "14,893.75",
+        "price_change": "+86.95",
+        "price_change_percent": "+0.59%"   
+```
+
+#### Bot Studio
+[Bot_Studio](https://pypi.org/project/bot_studio/) is needed for browser automation. As soon as this library is imported in code, automated browser will open up in which it opens Yahoo Finance and scrapes data from the page.
+
+### Installation
+
+```sh
+pip install scrape-yahoo-finance
+```
+
+### Import
+```sh
+from scrape_yahoo_finance import *
+```
+
+### Get stock, stock price, stock changes on yahoo main page
+```sh
+response=yahoo.finance()
+data=response['body']
+```
+### Get historical data from company URL
+```sh
+response = yahoo.finance_historical_data(stock_url="url")
+data=response['body']
+```
+### Get Trending tickers
+```sh
+response = yahoo.ticker_symbol_downloader()
+data=response['body']
+```
+### Run bot on cloud
+* Stock, stock price, stock changes on yahoo main page - You can run bot on [Cloud](https://datakund.com/collections/all/products/yahoo-finance-scraper).
+* Historical data from company URL - You can run bot on [Cloud](https://datakund.com/products/yahoo-finance-historical-data).
+* Trending tickers - You can run bot on [Cloud](https://datakund.com/products/yahoo-ticker-symbol-scraper-bot).
+
+### Send Feedback to Developers
+```sh
+bot_studio.send_feedback(feedback="Need help with this ......")
+```
+
+### Contact Us
+* [Telegram](https://t.me/datakund)
+* [Website](https://datakund.com)
+
