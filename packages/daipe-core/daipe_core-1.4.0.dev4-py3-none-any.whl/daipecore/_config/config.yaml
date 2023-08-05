@@ -1,0 +1,74 @@
+parameters:
+  daipecore:
+    logger:
+      type: default
+    pandas:
+      dataframe:
+        show_method: # Default is None, is set based on running environment
+
+services:
+  daipecore.logger:
+    class: logging.Logger
+    factory: ['@daipecore.logger.DynamicLoggerFactory', 'create']
+
+  daipecore.logger.LoggerFactory:
+    tags:
+      - {name: 'daipe.logger.factory', alias: 'default'}
+
+  daipecore.logger.DynamicLoggerFactory:
+    arguments:
+      - !tagged_aliased ['daipe.logger.factory', '%daipecore.logger.type%']
+
+  daipecore.pandas.dataframe.PandasDataFrameShowMethod:
+    tags:
+      - {name: 'daipecore.pandas.dataframe.show_method', alias: pandas_show}
+
+  daipecore.pandas.dataframe.show_method:
+    factory: ['@daipecore.pandas.dataframe.PandasDataFrameShowMethodInjector', 'get']
+
+  daipecore.pandas.dataframe.PandasDataFrameShowMethodInjector:
+    arguments:
+      - !tagged_aliased ['daipecore.pandas.dataframe.show_method', '%daipecore.pandas.dataframe.show_method%']
+
+  daipecore.function.ArgumentResolver:
+    arguments:
+      - '@daipecore.logger'
+
+  daipecore.function.ArgumentsResolver:
+
+  daipecore.lineage.argument.ArgumentMapping:
+    tags:
+      - 'lineage.decorator.function.argument_mapping'
+
+  daipecore.lineage.argument.ArgumentClassResolver:
+    arguments:
+      - !tagged 'lineage.decorator.function.argument_mapping'
+
+  daipecore.lineage.argument.ArgumentParser:
+
+  daipecore.lineage.notebook_function_parser:
+    class: daipecore.lineage.InputDecoratorParser
+    arguments:
+      - 'notebook_function'
+      - 'daipecore.lineage.InputDecorator'
+      - 'InputDecorator'
+    tags:
+      - 'lineage.decorator.parser'
+
+  daipecore.widgets.WidgetsFactory:
+    arguments:
+      - !tagged "widgets.factory"
+
+  daipecore.widgets.ArgumentParser:
+    class: argparse.ArgumentParser
+
+  daipecore.widgets.CommandLineWidgets:
+    arguments:
+      - '@daipecore.widgets.ArgumentParser'
+    tags:
+      - "widgets.factory"
+
+  daipecore.widgets.Widgets:
+    factory: ['@daipecore.widgets.WidgetsFactory', 'create']
+
+  daipecore.shortcut.ShortcutCreator:
