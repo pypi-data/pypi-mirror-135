@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# launch the onboard python controller for the cognifly remote control library
+# usage:
+#   cognifly-controller [--headless]
+#
+
+set -e # exit in case somethings fails
+
+echo "Starting cognifly_controller.py"  # echo the original command
+
+HEADLESS=false
+
+for i in "$@" ; do
+    if [[ $i == "headless" ]] ; then
+        HEADLESS=true
+    fi
+done
+
+if $HEADLESS
+then
+  echo "using headless mode"
+  python3 -m cognifly controller-headless
+else
+  echo "using screen mode"
+  python3 -m cognifly controller
+fi
