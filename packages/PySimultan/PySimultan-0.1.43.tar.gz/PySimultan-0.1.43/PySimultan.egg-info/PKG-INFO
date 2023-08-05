@@ -1,0 +1,682 @@
+Metadata-Version: 2.1
+Name: PySimultan
+Version: 0.1.43
+Summary: Python Package to import and work with the SIMULTAN Data model
+Home-page: https://github.com/bph-tuwien/PySimultan
+Author: Max Buehler
+License: MIT
+Keywords: python
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+# PySimultan
+
+Simultan version: 0.2.147
+
+Python Package to import and work with the SIMULTAN Data model
+[[SIMULTAN REPORT](https://simlab.tuwien.ac.at/wp-content/uploads/2018/03/183101-Endbericht_Simultan.pdf)].
+
+### What is it?
+
+This package tries to provide a simple and seamless integration of SIMULTAN in python. 
+
+With only three lines of code and a template you can import a SIMULTAN-Project:
+
+```python
+from PySimultan import DataModel, TemplateParser
+
+template_parser = TemplateParser(template_filepath='my_template.yml')
+data_model = DataModel(project_path='my_project.simultan', 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+typed_data = data_model.get_typed_data(template_parser=template_parser)
+```
+
+You can also integrate SIMULTAN in your existing Project with PySimultan and a few lines of code:
+
+See [readme_test_5](tests/readme_examples/readme_test_5.py):
+```python
+from PySimultan import DataModel, TemplateParser
+
+
+class MyWindow(object):
+
+    def __init__(self, *args, **kwargs):
+
+        pass
+
+    def open(self):
+        print(f'Window {self.Name} with area {self.Area} m² opened')
+
+
+template_parser = TemplateParser()
+template_parser.bases['Window'] = MyWindow
+template_parser.create_template_classes()
+data_model = DataModel(project_path='test.simultan', 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+typed_data = data_model.get_typed_data(template_parser=template_parser)
+
+# assuming the fist object in the data-model is of the TYPE 'Window'
+typed_data[0].open()
+```
+
+# Installation
+
+PySimultan can be installed via pip. To install PySimultan run:
+
+```
+# PyPI
+pip install PySimultan
+```
+
+### Background:
+
+As SIMULTAN is written in C#, the package uses [Python.NET](https://github.com/pythonnet/pythonnet) to import the Simultan libraries.
+With Python.NET all functions of the dlls are preserved, and you are able to develop in python without any changes
+(except for cases that are .NET specific).
+
+To make life easier for developers, we have implemented a typing process that imports components 
+as instances of the type you have defined! Using simple text templates, the 'TYPE' of a
+SIMULTAN component is assigned to a class in Python. 
+
+Best explained with an example:
+
+_A component with the 'TYPE' parameter 'Room' is imported from a project. 
+With the template a python class `Room` is assigned to the 'TYPE': 'Room'. 
+The new class `Room` is created when parsing the template. It inherits from:_ 
+* _a default class which wraps the imported object (like `SimultanObject`)_ 
+* _a class created from the template, adding properties for the content._
+* _a user defined class defined in the templates 'inherit_from' entry_
+
+
+This way SIMULTAN can be integrated into existing packages with minimal adjustments!
+
+### Features:
+
+* fast: use of lazy loading, caching and parallelization
+* variable search depth for references
+* minimal dependencies
+* easy to integrate
+
+### To Do:
+* Only read access. Write and save has not been tested yet.
+* Calculations not implemented
+* Networks not implemented
+
+Usage
+-----
+
+### Data model Typing
+
+Since SIMULTAN is a dynamic data model, the data must first be typed.
+To do this, the TYPE parameter is created in a component to be typed and a corresponding value is set.
+
+_For example, the user creates a component 'Living Room 1 Floor',
+which he can identify and assign as a room on the first floor based on the name.
+However, for an application it is not clear which data corresponds to what.
+Therefore, the data must first be typed. For typing, the parameter 'TYPE' is created in
+a component and a corresponding value is set._
+
+![](resources/doc/first_type_component.png)
+
+_In this example the `TYPE` of the component is 'Room' and every application which imports the project
+can identify it as of the type 'Room'._
+
+In Python [readme_test_1](tests/readme_examples/readme_test_1.py):
+```python
+from PySimultan import DataModel
+data_model = DataModel(project_path='example1.simultan', 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+print(data_model.data.Items)
+print(f'Component type: {data_model.data.Items[0].ContainedParameters.Items[1].TextValue}')
+```
+
+prints a list for the components and the type of the first component:
+```python
+[<ParameterStructure.Component.Component object at 0x00000157F77AA7C0>]
+Component type: Room
+```
+
+Now we can import and determine the type of the component
+
+### TemplateParser
+
+We can determine the type of our component, but to do this with a lots
+of components and sub-components is getting annoying fast. This is where we 
+can use the `TemplateParser`.
+
+The TemplateParser is a class which scans the data model and creates instances of
+types, defined in a template.
+
+We want to load the following components in python:
+
+![](resources/doc/example3_simultan.png)
+
+Therefore, we have to create a template which defines how our class should look like.
+Let's look at this template-file [template_example3.yml](tests/readme_examples/resources/template_example3.yml):
+
+```yaml
+- !Template
+  template_name: Room
+  template_id: '1'
+  inherits_from:
+  content: [Internal heat gains, Volume, Room Name, Furniture]
+  documentation: 'Room: defines a Room or a Zone'
+  units: {Internal heat gains: W, Volume: m³, Room Name: '-', Furniture: '-'}
+  types: {Internal heat gains: float, Volume: float, Room Name: str}
+  slots: {Furniture: Element_00}
+- !Template
+  template_name: Table
+  template_id: '2'
+  inherits_from:
+  content: [Number Persons]
+  documentation: 'Table: defines a table with number of persons'
+  units: {Number Persons: '-'}
+  types: {Number Persons: float}
+  slots: {}
+```
+
+In this yaml-file is one 'Room'-template which defines how components of the TYPE 'Room' should be handled.
+There is a entry called `content` which defines which content for this type is expected. The content in the
+SIMULTAN data model can be a Parameter, a sub-component or a linked component. In this example four items in
+the SIMULTAN-component are expected: 'Internal heat gains', 'Volume', 'Room Name' and 'Furniture'.
+
+What the Template parser does is that it checks in the SIMULTAN-Component if there is a TYPE-Parameter defined.
+If the TYPE is found, there is a check for each item in the content if a parameter with the name of the content is
+defined. 
+
+_For example the first item of the content is 'Internal heat gains'. If a parameter with this name 
+is found in the component, the property of the generated python-component will return the value of the SIMULTAN-parameter
+'Internal heat gains'._
+
+If no parameter is found, PySimultan checks if there is a slot defined for the content. Sub-components or
+linked components in the SIMULTAN data model have a slot and a slot-extension. With this slot- /extension 
+PySimultan can determine which component or sub-component is the value of the content.
+
+_In this example for the content 'Furniture' the slot 'Element_00' is defined. If no Parameter
+'Furniture' is found, PySimultan checks if there is a entry with the slot 'Element' and the slot-extension
+'0' in the component and return this instance._
+
+To load the 'Room' component run [readme_test_3](tests/readme_examples/readme_test_3.py):
+```python
+from PySimultan import DataModel, TemplateParser
+
+# use pkg_resources to load package example files
+with pkg_resources.path(readme_examples, 'template_example3.yml') as r_path:
+    template_file = str(r_path)
+
+# create and write the templates
+create_template(template_file)
+
+# create the template parser
+template_parser = TemplateParser(template_filepath=template_file)
+
+# load the SIMULTAN project
+data_model = DataModel(project_path=project_file, 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+
+# create the typed datamodel form the loaded SIMULTAN project and the template_parser
+typed_data = data_model.get_typed_data(template_parser=template_parser, create_all=False)
+```
+
+If we inspect `typed_data` we can see that there is a instance of the type 'Room' with 
+the attributes we defined in the template. The attribute 'Furniture' is the linked component
+with the Slot 'Element' and the slot-extension 0. 
+
+![](resources/doc/example3_inspect.png)
+
+We can easily access all content which was defined in the template with python .dot synatx:
+
+```python
+print(typed_data[0].Furniture)
+print(typed_data[0].Volume)
+
+# Properties with blanks: use getattr
+print(getattr(typed_data[0], 'Internal heat gains'))
+```
+
+## Templates 
+
+### File Description
+
+Template-files are yaml files which define one or more templates. A template has the following keywords:
+
+* **template_name**:
+The name of the template; [str]; This name is also used for the 'TYPE' value of a SIMULTAN-component and 
+the class name in python: _Example: 'TestTemplate'_
+
+
+* **template_id**:
+ID of the template; [int]; There is currently no functionality for the ID of the template; _Example: 1_
+
+
+* **inherits_from**:
+parent class of the template; [-]; Template from which this template inherits. Can be another Template
+or the name of another template. _Example: see Table and ModifiedTable template_
+
+
+* **content**:
+List of the content names; [-]; this list defines which attributes the python class for this template has.
+The values of these attributes are either the value of the parameter with the name of the SIMULTAN-component
+or the value of the defined slot (see slots); _Example: [Internal heat gains, Volume, Room Name, Furniture]_
+
+
+* **documentation**:
+Documentation of the template; [str]; Documentation for other developers and users;_Example:_
+
+
+* **units**:
+Units of the content; [dict]; dictionary with the name of the content as key and unit as value. No further functionality.
+_Example: {Internal heat gains: W, Volume: m³, Room Name: '-', Furniture: '-'}_
+
+
+* **types**:
+Type of the content; [dict]; The type defines if the current_value or the text_value of a SIMULTAN-component 
+is returned. If the type is str the text_value is returned, otherwise the current_value, the sub-component or
+the refence is returned; _Example: {Internal heat gains: float, Volume: float, Room Name: str}_
+
+
+* **slots**:
+slots of the content; [dict]; if no parameter with the content name is found, the reference or the sub-component
+with the here defined slot is returned; _Example: {Furniture: Element_00}_
+
+* **synonyms**:
+synonyme names of the python attributes; [dict]; in python class: the content is accessed through the synonym instead 
+of the content name
+
+#### Template Example
+
+```yaml
+- !Template
+  template_name: Room
+  template_id: '1'
+  inherits_from:
+  content: [Internal heat gains, Volume, Room Name, Furniture]
+  documentation: 'Room: defines a Room or a Zone'
+  units: {Internal heat gains: W, Volume: m³, Room Name: '-', Furniture: '-'}
+  types: {Internal heat gains: float, Volume: float, Room Name: str}
+  slots: {Furniture: Element_00}
+- &id001 !Template
+  template_name: Table
+  template_id: '2'
+  inherits_from:
+  content: [Number Persons]
+  documentation: 'Table: defines a table with number of persons'
+  units: {Number Persons: '-'}
+  types: {Number Persons: float}
+  slots: {}
+- !Template
+  template_name: ModifiedTable
+  template_id: '3'
+  inherits_from: *id001
+  content:
+  documentation: See Table
+  units:
+  types:
+  slots: {}
+- !Template
+  template_name: MaterialList
+  template_id: '4'
+  inherits_from: List
+  content: []
+  documentation: List with Materials. This list inherits from the build-in type List
+  units: {}
+  types: {}
+  slots: {}
+- !Template
+  template_name: MyFace
+  template_id: '101'
+  inherits_from: Geometric Area
+  content: []
+  documentation: Face. This type inherits from the build-in type Geometric Area
+  units: {}
+  types: {}
+  slots: {}
+```
+
+### Template generation in python 
+
+With PySimultan template-files can be generated in an easy way. Templates can be created as instances of
+`PySimultan.Template` and dumped to a file:
+
+```python
+from PySimultan import Template, yaml
+
+# create several templates:
+face_template = Template(template_name='MyFace',
+                         template_id='1',
+                         content=[],
+                         inherits_from='Geometric Area',
+                         documentation='',
+                         units={},
+                         types={},
+                         slots={}
+                         )
+
+building_template = Template(template_name='Building',
+                             template_id='2',
+                             content=['FloorList'],
+                             documentation='',
+                             units={},
+                             types={},
+                             slots={'FloorList': 'Liste_00'},
+                             inherits_from='SmartCampusBuilding'
+                             )
+
+floor_list_template = Template(template_name='FloorList',
+                               template_id='3',
+                               content=[],
+                               inherits_from='List',
+                               documentation='List with Floors',
+                               units={},
+                               types={},
+                               slots={}
+                               )
+
+# create a list of the templates to write to a file:
+templates = [face_template, building_template, floor_list_template]
+
+# write the templates to a file:
+with open(r'test.yml',
+          mode='w',
+          encoding="utf-8") as f_obj:
+    yaml.dump(templates, f_obj)
+```
+
+
+
+
+
+
+## Geometry
+
+In SIMULTAN geometry is handled in a different way. The geometry is seperated from the data-model and there can be multiple geometry files and modles.
+The geometry-model is also loaded separately from the data-model.
+
+When a project with a geometry model is loaded, there are automatically `typed_geo_models` generated. These geometry
+models are python objects with python objects of vertices, edges, faces ...
+
+These python instances are also used in the typed data model. These instances inherit from 
+
+
+## Default Types
+
+There are default types for components of these slots (or TYPE):
+
+### SimultanObject
+By default all Components in a SIMULTAN-project inherit from `SimultanObject`. This class wraps the SIMULTAN-objects
+in Python and makes basic attributes accessible.
+
+`SimultanObject` class documentation:
+
+**classproperties:**<br />
++ cls_instances: a list with all instances of the class
++ _cls_instances_dict: a dictionary with `id`: `instance` of all instances of the class
+
+**properties:**<br />
++ id: ID of the component
++ name: Name of the Component
++ contained_components: List of the contained components of the instance
++ contained_parameters: Dictionary of the contained parameters of the instance `name`: `ValueCurrent`
++ flat_sub_comp_list: flat list of subcomponents
++ referenced_components: List of all referenced components
++ current_slot: Current Slot of the component
++ slot_extension: Slot extension of the component
++ referenced_assets: List of referenced assets
+
+**methods:**<br />
++ get_param(param): get component parameter by name
++ set_param(param, value): set component parameter by name to value
+
+
+### List
+A 'Liste'-object is list with a component's subcomponents.
+Additionaly the items in the list are sorted by their slot extension, if the slot is the same for all elements.
+A SIMULTAN component is automatically interpreted as a list if the 'slot' of the component is 'Liste' and no `Type` is defined.
+Additionally, components can be interpreted as list by setting `inherits_from`: ['Liste'].
+_<br /><br /> Example [readme_test_6](tests/readme_examples/readme_test_6.py): <br /><br />
+![](resources/doc/lists_simultan_project.PNG)
+This SIMULTAN-Project contains the component `NormalList`. The component has the slot `Liste` and 
+therefore is interpreted as a list in python if no `TYPE`-parameter is defined_
+
+`List` class documentation:
+
+**properties:**<br />
++ data: sorted (if possible) list of contained sub-components
++ contained_components: List of the contained components of the instance
++ name: Name of the Component
+
+**methods:**<br />
++ same as a python `list`
+
+<br /><br />
+
+### ReferenceList
+A 'ReferenceList'-object is a list with a component's referenced components in python.
+Additionaly, the items in the list are sorted by their slot extension, if the slot is the same for all elements.
+To implement a `ReferenceList` set the `TYPE` of a SIMULTAN-component to `ReferenceList` or inherit from `ReferenceList` in the template.
+_<br /><br /> Example [readme_test_6](tests/readme_examples/readme_test_6.py): <br /><br />
+![](resources/doc/lists_simultan_project.PNG)
+This SIMULTAN-Project contains the component `ReferenceList`. The component's `TYPE` parameter is set to 'ReferenceList' and therefore is interpreted as a ReferenceList in python._
+
+`ReferenceList` class documentation:
+
+**properties:**<br />
++ data: sorted (if possible) list of contained sub-components
++ contained_components: List of the contained components of the instance
++ name: Name of the Component
+
+**methods:**<br />
++ same as a python `list`
+
+<br /><br />
+
+### ValueField
+slot: 'ValueField'; returns a pandas dataframe for the value-field
+
+  
+### BuildInFace
+slot: 'Geometrische_Flächen' ('Geometric Area'); returns a instance of the class BuildInFace, has the link to `GeometricFace`.
+BuildInFace inherits from `SimultanObject`
+
+`BuildInFace` class documentation:
+
+**properties:**<br />
++ geo_ids: List of IDs of the faces in the geometry model
++ geo_instances: List of the contained geometry instances (of type `GeometricFace`)
++ area: Area of the face; in [m³]
++ boundaries: List of the boundaries of the face (usually one)
++ construction: Construction of the face
+
+**methods:**<br />
++ get_geo_instances: returns the geometry instances of the geometry viewer
+
+<br /><br />
+
+
+### BuildInVolume
+slot: 'Geometrische_Volumina'; returns a instance of the class BuildInVolume, has the link to `GeometricVolume`
+
+
+### BuildInZone
+type: 'BuildInZone'; returns a instance of the class BuildInZone (a zone can consist of multiple volumes)
+
+### BuildInConstruction
+Identified by InstanceType.ALIGNED_WITH
+
+`BuildInConstruction` class documentation:
+
+**properties:**<br />
++ is_window: Is window or not, identified by parameter 'gVergl'; if is_window: type cast to `BuildInWindowConstruction`, 
+else type cast to `BuildInWallConstruction`
+
+**methods:**<br />
++ check_type: returns the geometry instances of the geometry viewer
+
+<br /><br />
+
+### BuildInWallConstruction
+
+`BuildInWallConstruction` class documentation:
+
+**properties:**<br />
++ total_thickness: total Thickness of the construction in [m]
++ layers: List of the material layers
+
+**methods:**<br />
++ check_type: returns the geometry instances of the geometry viewer
+
+<br /><br />
+
+### BuildInWindowConstruction
+
+`BuildInWindowConstruction` class documentation:
+
+**properties:**<br />
+lots of :-D; see GitHub class definition
+
+**methods:**<br />
+lots of :-D; see GitHub class definition
+
+<br /><br />
+
+### BuildInMaterialLayer
+
+`BuildInMaterialLayer` class documentation:
+
+**properties:**<br />
+lots of :-D; see GitHub class definition
+
+**methods:**<br />
+lots of :-D; see GitHub class definition
+
+<br /><br />
+
+
+## Geometry default Types:
+
+### GeometricLayer
+### GeometricVertex
+### GeometricEdge
+### GeometricEdgeLoop
+
+### GeometricFace
+`GeometricFace` class documentation:
+
+**properties:**<br />
++ area: Area of the face; in [m³]
++ boundary: Boundary of the face; returns `GeometricEdgeLoop`
++ components: List of components linked to the face; usually a `BuildInFace` and a `BuildInConstruction`
++ construction: Construction of the face
++ geo_instances: List of the contained geometry instances (of type `GeometricFace`)
++ holes: List of holes in the face; returns [`GeometricEdgeLoop`]
++ hole_faces: Faces of the holes; returns [`GeometricFace`]
++ hull_face
++ normal: Normal of the face; np.ndarray
++ orientation: Orientation of the face: 1: in normal direction; -1: reverse normal direction
++ points: Edge-Points of the face; returns np.ndarray
++ side_1_volume: volume on side 1 of the face (in normal direction)
++ side_2_volume: volume on side 2 of the face (in reverse normal direction)
+
+**methods:**<br />
+
+<br /><br />
+
+### GeometricVolume
+
+
+## Tips and tricks:
+
+### get all instances of a type
+
+The `TemplateParser` keeps track of all classes and instances. So it's easy to find all instances of 
+a certain type in the data-model. `TemplateParser.template_classes` returns a dictionary with all generated python classes. 
+These classes have an attribute `cls_instances` which returns a list with all instances of this type. `ValueField`, `List` and 
+all classes which inherit from these do not have `cls_instances`.
+
+After loading the data-model:
+```python
+from PySimultan import TemplateParser, DataModel
+template_parser = TemplateParser(template_filepath='my_template.yml')
+data_model = DataModel(project_path='my_project.simultan', 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+typed_data = data_model.get_typed_data(template_parser=template_parser, create_all=True)
+
+for cls in template_parser.template_classes.values():
+    if hasattr(cls, 'cls_instances'):
+        print(f'{cls.__name__}: {cls.cls_instances}')
+
+```
+
+![](resources/doc/all_instances.PNG)
+
+# Integrate PySimultan in your package
+
+PySimultan tries to make the integration of the SIMULTAN data model as simple as possible. The integration 
+is done by using user-defined classes to inherit from when the template classes are created.
+
+All generated classes must inherit from a PySimultan base class which wraps the imported SIMULTAN-component. 
+This class tracks created instances and wraps the SIMULTAN-component. 
+
+There are two methods to use your own implementation for the classes of the imported components.
+
+## Use TemplateParser's bases and geo_bases
+The `TemplateParser` has the two dictionaries `bases` and `geo_bases` from which the created template-classes inherit 
+if the 'inherit_from' entry in a Template is not empty or a 'default type' is detected. 
+To use your own implementation of a class you just have to create or overwrite a entry in the `bases` or `geo_bases`
+with the template name as key and your class as value:
+
+Example [readme_test_5](tests/readme_examples/readme_test_5.py):
+```python
+from PySimultan import DataModel, TemplateParser
+
+
+class MyWindow(object):
+
+    def __init__(self, *args, **kwargs):
+
+        self.another_attribute = kwargs.get('another_attribute', None)
+
+    def open(self):
+        print(f'Window {self.Name} with area {self.Area} m² opened')
+
+
+template_parser = TemplateParser(template_filepath=template_file)
+template_parser.bases['Window'] = MyWindow
+template_parser.create_template_classes()
+data_model = DataModel(project_path=project_file, 
+                       user_name='SomeUser', 
+                       password='UserPwd')
+typed_data = data_model.get_typed_data(template_parser=template_parser)
+
+typed_data[0].open()
+```
+
+Limitations: 
+* the `__init__` method must be implemented with *args and **kwargs as arguments
+* in the `__init__` method, the attributes defined in content must not be initialized or skipped. 
+Background: 
+For the defined content in the template are `properties` created who's getters and setters access the SIMULTAN-component.
+Therefore, the attributes must not be initialized. A workaround is to inherit directly from `SimultanObject` and 
+overwrite the `__init__`-method.
+
+
+## Use monkey patching
+
+
+## More infos
+
+
