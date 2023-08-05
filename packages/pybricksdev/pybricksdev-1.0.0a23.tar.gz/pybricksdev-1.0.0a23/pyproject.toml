@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "pybricksdev"
+version = "1.0.0-alpha.23"
+description = "Pybricks developer tools"
+authors = ["The Pybricks Authors <dev@pybricks.com>"]
+maintainers = ["Laurens Valk <laurens@pybricks.com>", "David Lechner <david@pybricks.com>" ]
+license = "MIT"
+readme = "README.md"
+homepage = "https://pybricks.com"
+repository = "https://github.com/pybricks/pybricksdev"
+documentation = "https://docs.pybricks.com/projects/pybricksdev"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+]
+include = [
+    "AUTHORS.md"
+]
+
+[tool.poetry.urls]
+"Changelog" = "https://github.com/pybricks/pybricksdev/blob/master/CHANGELOG.md"
+"Support" = "https://github.com/pybricks/support/discussions"
+"Issues" = "https://github.com/pybricks/support/issues"
+
+[tool.poetry.scripts]
+pybricksdev = 'pybricksdev.cli:main'
+
+[tool.poetry.dependencies]
+aioserial = "^1.3.0"
+argcomplete = "^1.11.1"
+asyncssh = "^2.2.1"
+bleak = "^0.14.1"
+mpy-cross = "1.14"
+python = ">=3.8,<3.11"
+tqdm = "^4.62.3"
+validators = "^0.18.2"
+pyusb = "^1.0.2"
+semver = "^2.13.0"
+appdirs = "^1.4.4"
+prompt-toolkit = "^3.0.18"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^21.5b1", allow-prereleases = true}
+coverage = {extras = ["toml"], version = "^5.5"}
+flake8 = "^3.8.3"
+ipykernel = "^5.3.1"
+ipywidgets = "^7.6.3"
+nbstripout = "^0.3.8"
+notebook = "^6.0.3"
+pybricks = {version = "3.0.0rc1", allow-prereleases = true}
+pytest = "^5.2"
+Sphinx = "^4.0.2"
+sphinx-rtd-theme = "^0.5.2"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.black]
+target-version = ['py38']
+
+[tool.coverage.run]
+branch = true
+command_line = "-m pytest"
+source = ["pybricksdev"]
