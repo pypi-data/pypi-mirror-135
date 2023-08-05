@@ -1,0 +1,123 @@
+Metadata-Version: 2.1
+Name: contaxy
+Version: 0.0.6
+Summary: Python package template.
+Home-page: https://github.com/ml-tooling/contaxy
+Author: ML Tooling Team
+Author-email: team@mltooling.org
+License: MIT
+Project-URL: Changelog, https://github.com/ml-tooling/contaxy/releases
+Project-URL: Issue Tracker, https://github.com/ml-tooling/contaxy/issues
+Project-URL: Documentation, https://github.com/ml-tooling/contaxy#documentation
+Project-URL: Source, https://github.com/ml-tooling/contaxy
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Utilities
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: typer
+Requires-Dist: pydantic
+Requires-Dist: fastapi
+Requires-Dist: kubernetes
+Requires-Dist: docker
+Requires-Dist: psutil
+Requires-Dist: uvicorn
+Requires-Dist: addict
+Requires-Dist: sqlalchemy (>=1.4.0)
+Requires-Dist: psycopg2
+Requires-Dist: shortuuid
+Requires-Dist: python-slugify
+Requires-Dist: loguru
+Requires-Dist: python-multipart
+Requires-Dist: streaming-form-data
+Requires-Dist: filetype
+Requires-Dist: minio
+Requires-Dist: azure-storage-blob
+Requires-Dist: python-jose[cryptography]
+Requires-Dist: passlib[bcrypt]
+Requires-Dist: json-merge-patch
+Requires-Dist: jsonpath-ng
+Requires-Dist: email-validator
+Requires-Dist: fastapi-utils
+Requires-Dist: pydantic[dotenv]
+Requires-Dist: jinja2
+Requires-Dist: requests-oauthlib
+Requires-Dist: faker
+Provides-Extra: dev
+Requires-Dist: setuptools ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+Requires-Dist: flake8 ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: pytest-mock ; extra == 'dev'
+Requires-Dist: pytest-cov ; extra == 'dev'
+Requires-Dist: mypy ; extra == 'dev'
+Requires-Dist: types-python-slugify ; extra == 'dev'
+Requires-Dist: types-requests ; extra == 'dev'
+Requires-Dist: types-cachetools ; extra == 'dev'
+Requires-Dist: black ; extra == 'dev'
+Requires-Dist: pydocstyle ; extra == 'dev'
+Requires-Dist: isort ; extra == 'dev'
+Requires-Dist: lazydocs ; extra == 'dev'
+Requires-Dist: locust ; extra == 'dev'
+Requires-Dist: pyinstrument ; extra == 'dev'
+Requires-Dist: pytest-profiling ; extra == 'dev'
+Requires-Dist: devtools[pygments] ; extra == 'dev'
+Requires-Dist: ipykernel ; extra == 'dev'
+Requires-Dist: universal-build ; extra == 'dev'
+Requires-Dist: requests ; extra == 'dev'
+
+# Python Library Template
+
+_WIP: Document python library._
+
+## Requirements
+
+* Python 3.6+
+
+## Installation
+
+Install via pip:
+
+```bash
+pip install --upgrade -e path/to/lib
+```
+
+## Usage
+
+After installation, the package can be imported:
+
+```python
+import template_package
+```
+
+## Development
+
+This library uses [black](https://github.com/psf/black) for auto-formatting, [isort](https://github.com/PyCQA/isort) for import sorting, [flake8](https://github.com/PyCQA/flake8) for linting, [mypy](https://github.com/python/mypy) for type checking, and [pydocstyle](https://github.com/PyCQA/pydocstyle) for docstring style checks. All code is written compatible with Python 3.6+, with type hints wherever possible.
+
+## Testing
+
+* DeploymentManager:
+  * By default, just the DockerDeploymentManager is executed. To execute also the Kubernetes-related tests, a Kubernetes cluster has to be available from where the code is executed. On your local Mac, you can simply start one by executing `kind create cluster`. Then execute the tests by setting the environment variable `KUBE_AVAILABLE=true` (in VS Code, you can for example set the env variable in the `launch.json` or append it in front of the pytest command, e.g. `KUBE_AVAILABLE=true pytest...`)
+
+
