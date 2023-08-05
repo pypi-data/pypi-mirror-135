@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import os.path as path
+import re
+
+from setuptools import find_packages, setup
+
+_PATH_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*parts):
+    with open(os.path.join(_PATH_ROOT, *parts), "r", encoding="utf8") as fp:
+        return fp.read()
+
+
+# Get package version
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
+
+with open('HISTORY.rst') as history_file:
+    history = history_file.read()
+
+requirements = ['tensorboardX', 'tqdm', 'matplotlib', 'pandas', 'torch']
+
+this_dir = path.abspath(path.dirname(__file__))
+with open(os.path.join(this_dir, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+setup(
+    name='delve',
+    version=find_version("delve", "__init__.py"),
+    description=
+    'Delve lets you monitor PyTorch model layer saturation during training',
+    url='https://github.com/delve-team/delve',
+    author='Mats L. Richter & Justin Shenk',
+    author_email='shenk.justin@gmail.com',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    license='MIT license',
+    install_requires=requirements,
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Education',
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Topic :: Scientific/Engineering :: Mathematics',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Libraries',
+    ],
+    python_requires='>=3.6',
+    packages=find_packages(),
+    project_urls={
+        "Bug Tracker": "https://github.com/delve-team/delve/issues",
+        "Documentation": "https://delve-docs.readthedocs.io/en/latest/",
+        "Source Code": "https://github.com/delve-team/delve",
+    },
+    include_package_data=True,
+    keywords=[
+        'deep learning', 'machine learning', 'pytorch', 'saturation',
+        'pruning', 'saturation', 'AI'
+    ],
+    zip_safe=False,
+)
