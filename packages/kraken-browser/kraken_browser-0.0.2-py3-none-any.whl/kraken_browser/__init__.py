@@ -1,0 +1,1 @@
+from .kraken_browser import Browser
