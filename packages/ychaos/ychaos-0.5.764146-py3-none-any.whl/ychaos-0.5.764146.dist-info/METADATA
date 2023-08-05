@@ -1,0 +1,180 @@
+Metadata-Version: 2.1
+Name: ychaos
+Version: 0.5.764146
+Summary: Python module ychaos
+Home-page: https://github.com/yahoo/ychaos
+Author: Resilience Team
+Author-email: ychaos-dev@yahooinc.com
+License: UNKNOWN
+Project-URL: Documentation, https://yahoo.github.io/ychaos
+Project-URL: Source, https://github.com/yahoo/ychaos
+Project-URL: Changelog, https://yahoo.github.io/ychaos/releases/
+Project-URL: CI Pipeline, https://cd.screwdriver.cd/pipelines/7419
+Project-URL: Download, https://pypi.org/project/ychaos/#files
+Keywords: ychaos,testing,resilience,chaos,engineering
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Natural Language :: English
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Topic :: Security
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: System :: Benchmark
+Requires-Python: >="3.6"
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pydantic (==1.9.0)
+Requires-Dist: pyyaml (==6.0)
+Requires-Dist: requests (==2.27.1)
+Requires-Dist: rich (==11.0.0)
+Provides-Extra: agents
+Requires-Dist: psutil (==5.9.0) ; extra == 'agents'
+Requires-Dist: pyOpenSSL (==21.0.0) ; extra == 'agents'
+Provides-Extra: all
+Requires-Dist: ansible (==3.2.0) ; extra == 'all'
+Requires-Dist: psutil (==5.9.0) ; extra == 'all'
+Requires-Dist: pyOpenSSL (==21.0.0) ; extra == 'all'
+Provides-Extra: chaos
+Requires-Dist: ansible (==3.2.0) ; extra == 'chaos'
+Provides-Extra: debug
+Requires-Dist: mkdocs ; extra == 'debug'
+Requires-Dist: mkdocs-material (>=7.0.0) ; extra == 'debug'
+Requires-Dist: mkdocstrings ; extra == 'debug'
+Requires-Dist: mkdocs-awesome-pages-plugin ; extra == 'debug'
+Requires-Dist: json-schema-for-humans ; extra == 'debug'
+Requires-Dist: markdown-include ; extra == 'debug'
+Requires-Dist: flake8 ; extra == 'debug'
+Requires-Dist: bandit ; extra == 'debug'
+Requires-Dist: pre-commit ; extra == 'debug'
+Requires-Dist: codespell ; extra == 'debug'
+Requires-Dist: mypy ; extra == 'debug'
+Requires-Dist: types-PyYAML ; extra == 'debug'
+Requires-Dist: types-requests ; extra == 'debug'
+Requires-Dist: types-setuptools ; extra == 'debug'
+Requires-Dist: pytest ; extra == 'debug'
+Requires-Dist: pytest-cov ; extra == 'debug'
+Requires-Dist: pytest-timeout ; extra == 'debug'
+Requires-Dist: pytest-xdist ; extra == 'debug'
+Requires-Dist: mockito ; extra == 'debug'
+Requires-Dist: callee ; extra == 'debug'
+Requires-Dist: parameterized ; extra == 'debug'
+Requires-Dist: jsondiff ; extra == 'debug'
+Requires-Dist: coverage (<6.0) ; extra == 'debug'
+Requires-Dist: isort ; extra == 'debug'
+Requires-Dist: black ; extra == 'debug'
+Requires-Dist: absolufy-imports ; extra == 'debug'
+Requires-Dist: ansible (==3.2.0) ; extra == 'debug'
+Requires-Dist: psutil (==5.9.0) ; extra == 'debug'
+Requires-Dist: pyOpenSSL (==21.0.0) ; extra == 'debug'
+Provides-Extra: doc_build
+Requires-Dist: mkdocs ; extra == 'doc_build'
+Requires-Dist: mkdocs-material (>=7.0.0) ; extra == 'doc_build'
+Requires-Dist: mkdocstrings ; extra == 'doc_build'
+Requires-Dist: mkdocs-awesome-pages-plugin ; extra == 'doc_build'
+Requires-Dist: markdown-include ; extra == 'doc_build'
+Requires-Dist: json-schema-for-humans ; extra == 'doc_build'
+Requires-Dist: psutil (==5.9.0) ; extra == 'doc_build'
+Requires-Dist: pyOpenSSL (==21.0.0) ; extra == 'doc_build'
+Requires-Dist: livereload ; extra == 'doc_build'
+Provides-Extra: mypy
+Requires-Dist: mypy ; extra == 'mypy'
+Requires-Dist: types-PyYAML ; extra == 'mypy'
+Requires-Dist: types-requests ; extra == 'mypy'
+Requires-Dist: types-setuptools ; extra == 'mypy'
+Provides-Extra: pep8
+Requires-Dist: black ; extra == 'pep8'
+Requires-Dist: flake8 ; extra == 'pep8'
+Requires-Dist: codespell ; extra == 'pep8'
+Provides-Extra: pylint
+Provides-Extra: test
+Requires-Dist: mockito ; extra == 'test'
+Requires-Dist: jsondiff ; extra == 'test'
+Requires-Dist: coverage (<6.0) ; extra == 'test'
+Requires-Dist: cryptography ; extra == 'test'
+Requires-Dist: ansible (==3.2.0) ; extra == 'test'
+Requires-Dist: psutil (==5.9.0) ; extra == 'test'
+Requires-Dist: pyOpenSSL (==21.0.0) ; extra == 'test'
+Requires-Dist: pytest-timeout ; extra == 'test'
+Requires-Dist: parameterized ; extra == 'test'
+
+
+<!-- TODO Add other badges (codecov, chat, etc.) -->
+[![CI Pipeline](https://cd.screwdriver.cd/pipelines/7419/badge)](https://cd.screwdriver.cd/pipelines/7419/)
+[![codecov](https://codecov.io/gh/yahoo/ychaos/branch/main/graph/badge.svg?token=UA7QNZ6QOQ)](https://codecov.io/gh/yahoo/ychaos)
+![Python Support](https://img.shields.io/pypi/pyversions/ychaos)
+[![PyPi](https://img.shields.io/pypi/status/ychaos)](https://pypi.org/project/ychaos/)
+[![Code Style](https://img.shields.io/badge/codestyle-black-black)](https://black.readthedocs.io/en/stable/index.html)
+[![Documentation](https://img.shields.io/badge/Documentation-latest-blue)](https://yahoo.github.io/ychaos)
+[![License](https://img.shields.io/github/license/yahoo/ychaos)](https://github.com/yahoo/ychaos/blob/main/LICENSE)
+
+# ychaos
+
+YChaos is a self-serving chaos testing toolkit designed to
+provide users with all the capabilities of doing an end to end resilience
+testing of your service. YChaos is designed to give users a framework
+to validate, verify and attack your system to simulate real life
+failures that might cause outages in your service.
+
+To get started with YChaos, refer to the [documentation](https://yahoo.github.io/ychaos)
+
+## Table of contents
+
+1. [Background](#background)
+1. [Install](#install)
+1. [Usage](#usage)
+1. [Maintainers](#maintainers)
+1. [License](#license)
+
+## Background
+
+The most important aspect of maintaining a web service on cloud
+infrastructure is to make it resilient from failures. Most of
+these failures are unexpected and are not tested while development.
+The service which is capable of handling an unexpected failure passes the
+criteria of a resilient service.
+
+YChaos provides a self-serving framework to inject these unexpected failures
+into your service in the form of YChaos Agents and understand if your service
+is equipped to handle unknown failures either within the service
+or from a 3rd party service dependency.
+
+## Install
+
+To install ychaos from PyPi,
+
+```bash
+pip install ychaos[<subpackage>]
+```
+
+The following subpackages are available for usage
+1. agents : `pip install ychaos[agents]`
+2. chaos : `pip install ychaos[chaos]`
+
+To know more about each subpackage and what they do, refer to the [documentation](https://yahoo.github.io/ychaos)
+
+You can also install the package from the source code.
+
+```bash
+git clone https://github.com/yahoo/ychaos
+cd ychaos
+pip install ".[<subpackage>]"
+```
+
+## Usage
+
+Refer to the [documentation](https://yahoo.github.io/ychaos) to know about the usage.
+
+## Maintainers
+
+[The Resilience Team @yahoo](mailto://ychaos-dev@yahooinc.com)
+
+## License
+
+This project is licensed under the terms of the Apache 2.0 open source license. 
+Please refer to [LICENSE](https://github.com/yahoo/ychaos/blob/main/LICENSE) for the full terms.
+
+
