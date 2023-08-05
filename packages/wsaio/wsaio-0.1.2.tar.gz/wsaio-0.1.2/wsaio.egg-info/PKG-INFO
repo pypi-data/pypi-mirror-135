@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: wsaio
+Version: 0.1.2
+Summary: An event-driven WebSocket library for Python.
+Home-page: https://github.com/asleep-cult/wsaio
+Author: asleep-cult
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+wsaio is a callback-based WebSocket library for Python.
+
+# Examples
+```py
+import asyncio
+
+from wsaio import WebSocketClient
+
+
+class EchoClient(WebSocketClient):
+    async def on_text(self, data):
+        await self.write(data)
+
+    async def on_binary(self, data):
+        await self.write(data, binary=True)
+
+
+async def main(loop):
+    client = EchoClient(loop=loop)
+
+    await client.connect('wss://localhost/helloWorld')
+    await client.wait_until_closed()
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main(loop))
+```
+
+
