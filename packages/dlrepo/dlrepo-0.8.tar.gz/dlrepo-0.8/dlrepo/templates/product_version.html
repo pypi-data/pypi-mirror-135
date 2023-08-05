@@ -1,0 +1,43 @@
+{# Copyright (c) 2021 Julien Floret #}
+{# Copyright (c) 2021 Robin Jarry #}
+{# SPDX-License-Identifier: BSD-3-Clause #}
+{% extends "base.html" %}
+
+{% block breadcrumbs %}
+{{breadcrumbs(['products', product, variant, product_branch, version.name])}}
+{% endblock %}
+
+{% block page_content %}
+<section class="files">
+  <h2>Files</h2>
+  <hr/>
+  <div class="artifact-formats">
+    {% for fmt in version.artifact_formats|sort(attribute="name") %}
+    <div class="artifact-format{% if fmt.internal %} internal{% endif %}"
+         {% if fmt.internal %}
+         title="internal format (not for release)"
+         {% endif %}>
+      <a href="{{fmt.name}}" class="format">{{fmt.name}}/</a>
+      <a href="{{fmt.name}}.tar" class="archive" title="Whole archive">
+        {{fmt.name}}.tar
+      </a>
+      <a href="{{fmt.name}}.sha256" class="digest" title="SHA-256 digests">
+        {{fmt.name}}.sha256
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="whole-archive">
+    <a href="../{{version.name}}.tar" title="Whole archive (large file)">
+      {{product}}-{{variant}}-v{{version.name}}.tar
+    </a>
+  </div>
+
+  {% if version.artifact_formats|selectattr("name", "equalto", "container")|list %}
+  <code class="docker-command">
+    docker pull {{request.host}}/{{user + "/" if user}}{{product}}/{{variant}}/{{product_branch}}:{{version.name}}
+  </code>
+  {% endif %}
+</section>
+{% endblock %}
