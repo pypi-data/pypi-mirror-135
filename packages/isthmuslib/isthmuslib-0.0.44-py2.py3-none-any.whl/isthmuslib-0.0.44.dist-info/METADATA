@@ -1,0 +1,292 @@
+Metadata-Version: 2.1
+Name: isthmuslib
+Version: 0.0.44
+Summary: Convenience utils for plotting, styling, and manipulating high-dimensional vectors
+Home-page: https://github.com/mitchellpkt/python-isthmuslib
+Author: Isthmus (Mitchell P. Krawiec-Thayer)
+Author-email: isthmuslib@mitchellpkt.com
+License: LGPL-3.0-only
+Project-URL: Changelog, https://github.com/mitchellpkt/python-isthmuslib/blob/master/CHANGELOG.rst
+Project-URL: Issue Tracker, https://github.com/mitchellpkt/python-isthmuslib/issues
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Operating System :: Unix
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Utilities
+Requires-Python: >=3.6
+License-File: LICENSE
+License-File: AUTHORS.rst
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: loguru
+Requires-Dist: pydantic
+Requires-Dist: statsmodels
+Requires-Dist: pytz
+Requires-Dist: pyarrow
+Requires-Dist: tqdm
+
+========
+Overview
+========
+
+
+
+Convenience utils for plotting, styling, and manipulating high-dimensional vectors.
+
+* Analyses and plotting methods are one line to call, and produce consistently-formatted publication-ready plots.
+* Enables rapid exploratory data analysis (EDA) and prototyping, perfect for taking a quick peek at data or making a quick figure to stash in the lab book (with labels and titles automatically included). See `examples here <https://github.com/Mitchellpkt/python-isthmuslib/blob/main/demo.ipynb>`_.
+* Designed for easy drop-in use for other projects, whether using internally to the code or for clean notebooks. Import isthmuslib to avoid writing many lines of plotting code when it would distract or detract from the main focus of your project.
+* The visual and text configuration objects (`Style` and `Rosetta`, respectively) can be directly attached to a given data set, so you can "set it and forget it" at instantiation. All subsequent outputs will automatically have matching colors, sizes, labels, etc.
+* The `VectorSequence` object is designed for handling, plotting, and manipulating timeseries-like high-dimensional vectors. Its functionality includes: dimensionality reduction via singular vealue decomposition, seasonal (e.g. weekly, monthly, ...) timeseries decomposition, infosurface generation, and more.
+* Uses industry standard libraries (pyplot, numpy, seaborn, pandas, etc) under the hood, and exposes their underlying functionality through the wrappers.
+
+Free software for personal or academic use: **GNU Lesser General Public License v3 (LGPLv3).** Contact licensing@mitchellpkt.com for commercial applications.
+
+Installation
+============
+
+::
+
+    pip install isthmuslib
+
+Documentation
+=============
+
+
+To use the project:
+
+.. code-block:: python
+
+    import isthmuslib
+
+
+Demo
+=============
+See a light demo here: https://github.com/Mitchellpkt/python-isthmuslib/blob/main/demo.ipynb
+
+Changelog
+=========
+
+0.0.4 (2021-02-14)
+------------------
+
+* First release on PyPI.
+
+0.0.5 (2021-02-15)
+------------------
+
+* Extra data set
+* Dictionary scatter
+
+0.0.6 (2021-02-15)
+------------------
+
+* Minor tweaks (extra passthroughs)
+
+0.0.7 (2021-02-15)
+------------------
+
+* Minor tweaks
+* Fixes a few bad links in README
+* Updates the changelog
+
+0.0.8 (2021-02-17)
+------------------
+
+* Adds data frame overviews
+
+
+0.0.9 (2021-02-17)
+------------------
+
+* Allows specification of plot types in 2d
+
+0.0.10 (2021-02-19)
+-------------------
+
+* Cumulative histograms
+
+0.0.11 (2021-02-19)
+-------------------
+
+* Histogram normalization
+
+0.0.12 (2021-02-25)
+-------------------
+
+* Heatmaps
+
+0.0.13 (2021-02-26)
+-------------------
+
+* Feature engineering code generator
+
+0.0.14 (2021-02-26)
+-------------------
+
+* Adds print template
+
+0.0.15 (2021-03-14)
+-------------------
+
+* Adds requirements
+
+0.0.16 (2021-03-14)
+-------------------
+
+* Fixes histogram color passthrough
+
+0.0.17 (2021-03-14)
+-------------------
+
+* Adds internal face color for histogram (probably extend to others later)
+
+0.0.18 (2021-03-28)
+-------------------
+
+* Adds gaussian demo data
+* Histagram alpha parameter
+
+0.0.19 (2021-04-09)
+-------------------
+
+* Adds rolling mean and median to scatter function
+
+0.0.20 (2021-04-09)
+-------------------
+
+* Fixes mean / median bugs
+
+0.0.21 (2021-04-09)
+-------------------
+
+* Fixes mean / median bugs
+
+0.0.22 (2021-04-09)
+-------------------
+
+* Adds line of best fit
+
+0.0.23 (2021-04-11)
+-------------------
+
+* Adds watermark
+
+0.0.24 (2021-04-11)
+-------------------
+
+* Adds color
+
+0.0.25 (2021-06-01)
+-------------------
+
+* Adds timeseries tooling and misc utils
+
+0.0.26 (2021-06-01)
+-------------------
+
+* Repackage
+
+0.0.27 (2021-11-26)
+-------------------
+
+* Include pydantic and loguru in dependencies
+
+0.0.28 (2021-11-26)
+-------------------
+
+* bugfix
+
+0.0.29 (2021-11-28)
+-------------------
+
+* tweak naming and add high dimension generalisation
+
+0.0.30 (2021-11-29)
+-------------------
+
+* ability to invert y-axis on heatmaps
+
+0.0.31 (2021-11-29)
+-------------------
+
+* deprecate univariate sequences
+
+0.0.32 (2021-11-29)
+-------------------
+
+* method hint
+
+0.0.33 (2021-11-29)
+-------------------
+
+* drop stray logger
+
+0.0.34 (2021-11-29)
+-------------------
+
+* fix: sorting
+
+0.0.35 (2021-12-04)
+-------------------
+
+* fix: vector ordering
+
+0.0.36 (2021-12-08)
+-------------------
+
+* seasonal decomposition of vector sequence
+
+0.0.37 (2021-12-12)
+-------------------
+
+* Singular vector decomposition infosurface
+
+0.0.38 (2021-12-13)
+-------------------
+
+* fix: frequency decomposition label and xlims
+
+0.0.39 (2021-12-27)
+-------------------
+
+* refactor: everything
+
+0.0.40 (2021-12-28)
+-------------------
+
+* extra configurability, colors, etc
+
+0.0.41 (2021-12-28)
+-------------------
+
+* fix: boolean grid parameter
+
+0.0.42 (2021-12-31)
+-------------------
+
+* tweak: infer labels when scattering dataframes
+
+0.0.43 (2022-01-01)
+-------------------
+
+* tweak: no legend on viz_x_y(dataframe, x string, y string)
+
+0.0.44 (2022-01-18)
+-------------------
+
+* chore: fill ratio and vectorized machine time
+
