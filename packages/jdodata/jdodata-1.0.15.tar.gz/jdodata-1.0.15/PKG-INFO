@@ -1,0 +1,56 @@
+Metadata-Version: 2.1
+Name: jdodata
+Version: 1.0.15
+Summary: Jianda Open Data
+Home-page: UNKNOWN
+Author: @wukehao
+Author-email: wukehao@jddatatech.com
+License: MIT
+Keywords: 简答数据,jianda,jianda data,open data
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Office/Business :: Financial
+
+简答数据开放数据
+================
+
+-  用户名密码申请请联系 wukehao@jddatatech.com。
+
+环境要求
+--------
+
+python >= 3
+
+安装
+----
+
+::
+
+    python -m pip install jdodata
+
+使用
+----
+
+::
+
+    # 登陆
+    from jdodata import OpenDataClient
+    client = OpenDataClient(username="test", password="test") # 账号密码请联系 wukehao@jddatatech.com 索取.
+     
+    params = {
+        "fund_code": "510080"
+    }
+     
+    ret = client.ApiStockpediaFundNet_value.get(params=params)
+     
+    ret = client.ApiFund_assistantFundNet_value.get(params={"fund_code": "510080"})
+
+

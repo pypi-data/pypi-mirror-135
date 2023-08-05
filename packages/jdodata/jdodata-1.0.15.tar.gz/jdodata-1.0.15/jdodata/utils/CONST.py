@@ -1,0 +1,1 @@
+HOST = 'https://opendata.gubaike.com'
