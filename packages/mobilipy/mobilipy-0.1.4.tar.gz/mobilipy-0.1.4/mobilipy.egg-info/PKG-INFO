@@ -1,0 +1,37 @@
+Metadata-Version: 1.1
+Name: mobilipy
+Version: 0.1.4
+Summary: A mobility analysis package developed at the Swiss Data Science Center
+Home-page: UNKNOWN
+Author: Michal Pleskowicz
+Author-email: <michal.pleskowicz@gmail.com>
+License: UNKNOWN
+Description: #Mobilipy
+        **Mobilipy** is a mobility analysis package that lets you identify complete trip information (meaning segmentation into trips and activities, mode detection as well as home and work location detection) from raw GPS data. It also enables working with GTFS data. IN addition to that, It proposes two ways to make the data more private.  
+          
+        Below is an example usage of the pipeline:
+        
+        ##Preparation
+        ```from sdscmob import plot, preparation, waypointsdataframe, segmentation, mode_detection, legs, gtfs_helper, home_work, privacy```  
+        ```w_df = waypointsdataframe.WaypointsDataFrame(data)```  
+        ```df_prepared = preparation.prepare(w_df)```  
+        ##Segmentation
+        ```route_clusters_detected = segmentation.segment(df_prepared)```  
+        ##Mode detection
+        ```route_clusters_detected = mode_detection.mode_detection(route_clusters_detected)```  
+        ##Legs
+        ```legs_user = legs.get_user_legs(route_clusters_detected, user_id)```  
+        ##Home and work detection
+        ```home_location, work_location = home_work.detect_home_work(legs_user, df_prepared)```
+        ##Privacy
+        ```obfuscated_df, shifted_home, shifted_work = privacy.obfuscate(w_df, [home, work])```  
+        ```aggregated_data = privacy.aggregate(w_df)```  
+        ##GTFS
+        ```gtfs_helper.GTFS_Helper(directory='./gtfs/')```  
+Keywords: python,mobility,gps,trips,first package
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
