@@ -1,0 +1,75 @@
+Metadata-Version: 2.1
+Name: golos-lib-python
+Version: 0.9.21
+Summary: Python library for Golos blockchain
+Home-page: https://github.com/golos-blockchain/lib-python
+License: MIT
+Author: Vladimir Kamarzin
+Author-email: vvk@vvk.pp.ru
+Requires-Python: >=3.6.1,<4.0.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: appdirs (>=1.4.4,<2.0.0)
+Requires-Dist: certifi (>=2020.4.5,<2021.0.0)
+Requires-Dist: ecdsa (>=0.13,<0.14)
+Requires-Dist: funcy (>=1.14,<2.0)
+Requires-Dist: langdetect (>=1.0.8,<2.0.0)
+Requires-Dist: prettytable (>=0.7.2,<0.8.0)
+Requires-Dist: pycryptodome (>=3.9.7,<4.0.0)
+Requires-Dist: pylibscrypt (>=1.8.0,<2.0.0)
+Requires-Dist: scrypt (>=0.8.13,<0.9.0)
+Requires-Dist: toolz (>=0.10.0,<0.11.0)
+Requires-Dist: ujson (>=2.0.3,<3.0.0)
+Requires-Dist: urllib3 (>=1.25.9,<2.0.0)
+Requires-Dist: voluptuous (>=0.11.7,<0.12.0)
+Requires-Dist: w3lib (>=1.21.0,<2.0.0)
+Requires-Dist: websocket-client (>=0.56,<0.57)
+Project-URL: Repository, https://github.com/golos-blockchain/lib-python
+Description-Content-Type: text/markdown
+
+# golos-lib-python
+
+Официальная библиотека Golos для Python. Форк библиотеки [golodranets](https://github.com/steepshot/golodranets). Актуально на HF 26 и находится в активной разработке.
+
+Включает в себя все необходимое для работы с GOLOS: формирование, подписывание и отправка транзакций, получение данных от API, работа с криптографией. Кроме того, присутствует BIP38-кошелек для шифрования приватных ключей.
+
+Подходит для торговых ботов, скриптов, автоматических шлюзов, для SSR и микросервисов на Python. Может применяться в десктопных и мобильных приложениях (Kivy).
+
+# Установка
+
+Как обычный пакет:
+
+```sh
+pip install golos-lib-python
+```
+
+Или можно собрать из исходников:
+
+```sh
+cd golos-lib-python
+poetry install
+poetry build
+```
+
+Для запуска тестов:
+```sh
+poetry run pytest
+```
+
+## Сборка для macOS
+
+Перед сборкой выполните:
+
+```sh
+brew install openssl
+export CFLAGS="-I$(brew --prefix openssl)/include $CFLAGS"
+export LDFLAGS="-L$(brew --prefix openssl)/lib $LDFLAGS"
+```
+
