@@ -1,0 +1,53 @@
+<div id="cpskin-slogan"
+     tal:condition="view/show_slogan">
+  <tal:def tal:define="infos view/get_slogan">
+    <div id="cpskin-slogan-titre" tal:content="infos/title"></div>
+    <div id="cpskin-slogan-description" tal:content="infos/description"></div>
+  </tal:def>
+</div>
+
+<div id="cpskin-banner"
+     tal:condition="view/available"
+     i18n:domain="cpskin">
+
+    <div id="minisite-logo"
+         tal:condition="exists: context/logo-minisite.png">
+        <a href=""
+           tal:attributes="href view/homeUrl">
+            <img src=""
+                 alt="Logo"
+                 tal:attributes="src string:${context/absolute_url}/logo-minisite.png"
+                 i18n:attributes="alt" />
+        </a>
+    </div>
+
+    <div id="minisite-search">
+    </div>
+    <tal:def tal:define="banner view/getBanner">
+          <img
+               tal:condition="python:banner['type'] == 'image'"
+               src=""
+               alt=""
+               class="banner"
+               tal:attributes="src banner/url"
+               i18n:attributes="alt" />
+
+          <video
+               tal:condition="python:banner['type'] == 'video'"
+               autoplay muted loop
+               id="banner-video"
+               aria-hidden="true">
+               <source tal:attributes="src banner/url" src="" type="video/mp4"></source>
+               <source tal:attributes="src banner/url_webm" src="" type="video/webm"></source>
+          </video>
+
+          <button
+               tal:condition="python:banner['type'] == 'video'"
+               id="toggle-video"
+               class="video-play"
+               type="button"
+               i18n:translate="">
+               Pause
+          </button>
+     </tal:def>
+</div>

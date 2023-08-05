@@ -1,0 +1,209 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="cpskin">
+
+    <!-- Plone viewlets -->
+
+    <browser:viewlet
+        name="plone.logo"
+        manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+        class=".logo.CPSkinLogoViewlet"
+        layer="..interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+
+
+    <!-- CPSkin viewlets -->
+
+    <browser:viewlet
+        name="cpskin.top_menu"
+        manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+        class=".top_menu.TopMenuViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.top_collapse"
+        manager="plone.app.layout.viewlets.interfaces.IPortalTop"
+        class=".top_collapse.TopCollapseViewlet"
+        template="top_collapse.pt"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.right_actions"
+        manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+        class=".right_actions.RightActionsViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.banner"
+        manager="plone.app.layout.viewlets.interfaces.IPortalTop"
+        class=".banner.CPSkinBannerViewlet"
+        permission="zope2.View"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.footer"
+        manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
+        class="plone.app.layout.viewlets.common.FooterViewlet"
+        template="footer.pt"
+        for="*"
+        layer="..interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        name="cpskin.footer_sitemap"
+        manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
+        class=".footer.CPSkinFooterSitemapViewlet"
+        permission="zope2.View"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.footer_minisite"
+        manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
+        class=".footer_minisite.CPSkinFooterMinisiteViewlet"
+        template="footer_minisite.pt"
+        for="*"
+        layer="..interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        name="cpskin.standardtags"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+        view="plone.app.layout.globals.interfaces.IViewView"
+        permission="zope.Public"
+        template="standardtags.pt"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.hiddentags"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+        view="plone.app.layout.globals.interfaces.IViewView"
+        permission="cpskin.editkeywords"
+        template="hiddentags.pt"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.isearchtags"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+        view="plone.app.layout.globals.interfaces.IViewView"
+        permission="cpskin.editkeywords"
+        template="isearchtags.pt"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.iamtags"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+        view="plone.app.layout.globals.interfaces.IViewView"
+        permission="cpskin.editkeywords"
+        template="iamtags.pt"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.social_viewlet"
+        manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+        class=".social.SocialViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.media"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+        class=".media.MediaViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.above_related_contacts"
+        manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+        class=".related_contacts.AboveRelatedContactsViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.below_related_contacts"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+        class=".related_contacts.BelowRelatedContactsViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="cpskin.related_contacts_map"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+        class=".related_contacts.RelatedContactsMapViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        for="*"
+        name="cpskin.organization_gallery"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+        class=".organization_gallery.OrganizationGalleryViewlet"
+        permission="zope.Public"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:viewlet
+        name="sc.social.likes"
+        manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+        class=".social.SocialLikesViewlet"
+        permission="zope2.View"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <configure package="imio.dashboard">
+        <browser:viewlet
+            for="OFS.interfaces.IItem"
+            name="dashboard-document-generation-link"
+            manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+            class="imio.dashboard.browser.overrides.IDDashboardDocumentGeneratorLinksViewlet"
+            template="browser/templates/generationlinks.pt"
+            layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+            permission="zope2.View"
+            />
+    </configure>
+
+    <browser:resource
+        file="css/banner.css"
+        name="cpskin.core.banner.css"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:resource
+        file="css/tags.css"
+        name="cpskin.core.tags.css"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:resource
+        file="css/mediaviewlet.css"
+        name="cpskin.core.mediaviewlet.css"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+    <browser:resource
+        file="css/organization.css"
+        name="cpskin.core.organization.css"
+        layer="..interfaces.ICPSkinCoreLayer"
+        />
+
+</configure>

@@ -1,0 +1,62 @@
+<div id="multimediaviewlet" tal:condition="view/available">
+
+  <tal:def tal:define="albums view/get_albums;
+                       videos view/get_videos">
+
+    <div class=""
+         tal:attributes="class python: videos and 'albums-container' or 'albums-container albums-only'"
+         tal:condition="albums">
+        <h2 i18n:translate="Photos">Photos</h2>
+        <div class="left"
+             tal:define="first_album python: albums[0]">
+            <ul class="albums">
+                <li class="album-0">
+                <div class="lead-image-wrapper" >
+                    <img tal:replace="structure first_album" />
+                </div>
+                </li>
+            </ul>
+        </div>
+        <div class="center"
+             tal:define="other_albums python: albums[1:]">
+            <ul class="albums">
+                <li tal:repeat='album other_albums'
+                    tal:attributes="class string:album-${repeat/album/number}">
+                    <div class="lead-image-wrapper" >
+                        <img tal:replace="structure album" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <a class="link-all"
+                tal:attributes="href python:view.get_albums_collection().absolute_url()"
+                i18n:translate='link-to-all-albums'>
+                Voir tous les albums
+        </a>
+    </div>
+    <div class=""
+         tal:attributes="class python: albums and 'videos-container' or 'videos-container videos-only'"
+         tal:condition="videos">
+        <h2 i18n:translate="Videos">Vidéos</h2>
+        <div class="right">
+            <ul class="videos">
+                <li tal:repeat='video videos'>
+                <div class="iframe-responsive-wrapper">
+                    <img class="iframe-ratio"  src="data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7"/>
+                    <div tal:content="structure video"></div>
+                </div>
+                </li>
+            </ul>
+            <a href=""
+                tal:attributes="href python:view.get_videos_collection().absolute_url()"
+                class="link-all" i18n:translate='link-to-all-videos'>
+                Voir toutes les vidéos
+            </a>
+        </div>
+
+    </div>
+    <div class="visualClear"></div>
+
+  </tal:def>
+
+</div>

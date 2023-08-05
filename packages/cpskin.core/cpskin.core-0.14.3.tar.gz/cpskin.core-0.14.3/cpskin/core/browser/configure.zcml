@@ -1,0 +1,510 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    xmlns:faceted="http://namespaces.zope.org/faceted"
+    xmlns:z3c="http://namespaces.zope.org/z3c"
+    xmlns:grok="http://namespaces.zope.org/grok"
+    i18n_domain="cpskin">
+
+  <adapter factory=".controlpanel.CPSkinControlPanelAdapter" />
+
+  <include package="z3c.jbot" file="meta.zcml" />
+
+  <include package="plone.app.contentmenu" />
+
+  <browser:resourceDirectory
+      name="cpskin.core.images"
+      directory="resources/images"
+      layer="..interfaces.ICPSkinCoreLayer" />
+
+  <browser:resourceDirectory
+      name="cpskin.core.css"
+      directory="resources/css"
+      layer="..interfaces.ICPSkinCoreLayer" />
+
+  <browser:resourceDirectory
+      name="cpskin.core.js"
+      directory="resources/js"
+      layer="..interfaces.ICPSkinCoreLayer" />
+
+  <!-- Browser pages used by profile - no layer allowed here -->
+  <browser:view
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="cpskin-frontpage-setup"
+      class=".pages.FrontPage"
+      permission="zope.Public"
+      />
+
+  <browser:view
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="cpskin-helppage-setup"
+      class=".pages.HelpPage"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      name="consent"
+      permission="zope2.View"
+      class=".privacy.ConsentFormWithPolicy"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="cpskin.minisite.interfaces.IMinisiteRoot"
+      name="consent"
+      permission="zope2.View"
+      class=".privacy.ConsentFormWithPolicy"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <!-- Privacy related browser pages -->
+  <browser:page
+      for="*"
+      name="allow_iframes"
+      class=".privacy.PrivacyView"
+      attribute="allow_iframes"
+      permission="zope2.View"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="allow_languages"
+      class=".privacy.PrivacyView"
+      attribute="allow_languages"
+      permission="zope2.View"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:view
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="opendata"
+      class=".pages.OpenData"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:view
+      for="plone.app.layout.navigation.interfaces.INavigationRoot"
+      name="teleservice-template"
+      class=".pages.TeleService"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:viewlet
+    view=".pages.TeleService"
+    name="plone.path_bar"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+    class=".pages.EmptyPathBarViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="collective.folderishtypes.listing_viewlet"
+    manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+    class=".folderish.FolderishViewlet"
+    for="collective.folderishtypes.interfaces.IFolderishType"
+    layer="..interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.contentviews"
+    manager="plone.app.layout.viewlets.interfaces.IContentViews"
+    class="plone.app.layout.viewlets.common.ContentViewsViewlet"
+    template="contentviews.pt"
+    for="plone.dexterity.interfaces.IDexterityContainer"
+    layer="..interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <!-- Other browser pages -->
+  <browser:jbot
+      directory="overrides"
+      layer="..interfaces.ICPSkinCoreLayer" />
+
+  <browser:page
+      for="*"
+      name="is_gdpr"
+      class=".utils.UtilsView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      attribute="is_gdpr"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      name="has_enabled_accessibilty_link_in_footer"
+      class=".utils.UtilsView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      attribute="has_enabled_accessibilty_link_in_footer"
+      permission="zope.Public"
+      />
+  <browser:page
+      for="*"
+      name="edit_anysurfer_settings"
+      class=".utils.UtilsView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      attribute="edit_anysurfer_settings"
+      permission="zope.Public"
+      />
+  <browser:page
+      for="*"
+      name="has_folderish_default"
+      class=".utils.UtilsView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      attribute="has_folderish_default"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      name="convert_default_url"
+      class=".utils.UtilsView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      attribute="convert_default_url"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      name="cpskin_navigation_view"
+      class=".folder.CpskinNavigationView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      template="templates/cpskin_navigation_view.pt"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="plone.dexterity.interfaces.IDexterityContainer"
+      name="cpskin_navigation_view_with_leadimage"
+      class=".folder.CpskinNavigationViewWithLeadImage"
+      layer="..interfaces.ICPSkinCoreLayer"
+      template="templates/cpskin_navigation_view_with_leadimage.pt"
+      permission="zope.Public"
+      />
+
+  <configure package="plone.app.contenttypes.browser">
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        class="cpskin.core.browser.folder.CpskinFolderView"
+        layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+        name="full_view"
+        template="templates/full_view.pt"
+        permission="zope2.View"
+        />
+  </configure>
+
+  <browser:page
+      for="*"
+      name="plone_layout"
+      class=".layout.LayoutPolicy"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="sunburstview"
+      class=".sunburstview.SunburstView"
+      permission="zope.Public"
+      allowed_interface="plonetheme.sunburst.browser.interfaces.ISunburstView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="sendtomanager_form"
+      class=".sendtomanager.SendToManagerForm"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="banner_activation"
+      class=".banner.BannerActivationView"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IBannerActivationView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="media_activation"
+      class=".media.MediaActivationView"
+      permission="zope.Public"
+      allowed_interface=".interfaces.IMediaActivationView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="navigation_toggle_activation"
+      class=".navigation.NavigationToggleView"
+      permission="zope.Public"
+      allowed_interface=".interfaces.INavigationToggleView"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="folderview_view"
+      class=".folderview.FolderView"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="folderview_configuration"
+      class=".folderview.FolderView"
+      permission="zope.Public"
+      allowed_attributes="can_configure configure addContent removeContent canAddContent canRemoveContent useBigImages stopBigImagesUse canUseBigImages canStopBigImagesUse"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="slider_config_view"
+      class=".folderview.FolderView"
+      permission="zope.Public"
+      attribute="slider_config"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="slick_config_view"
+      class=".folderview.FolderView"
+      permission="zope.Public"
+      attribute="slick_config"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:page
+      for="Products.CMFCore.interfaces.IFolderish"
+      name="folderview"
+      class=".folderview.FolderView"
+      permission="zope.Public"
+      template="templates/folderview.pt"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:menuItem
+      for="Products.CMFCore.interfaces.IFolderish"
+      menu="plone_displayviews"
+      title="Vue index avec collections et slider"
+      action="folderview"
+      permission="cpskin.siteadministrator"
+      description="Vue index avec collections et slider"
+      layer="..interfaces.ICPSkinCoreLayer"
+      i18n:attributes="title; description"
+      />
+
+  <browser:page
+      name="cpskin-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.CPSkinControlPanel"
+      permission="cpskin.siteadministrator"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <include package="eea.facetednavigation" file="meta.zcml" />
+  <faceted:view
+      name="faceted-preview-leadimage"
+      template="templates/faceted-preview-leadimage.pt"
+      for="plone.app.collection.interfaces.ICollection"
+      title="Faceted items leadimage"
+      permission="zope2.View"
+      />
+
+  <browser:page
+     name="cpskincore-macros"
+     for="*"
+     template="templates/cpskincore_macros.pt"
+     permission="zope2.View"
+     />
+
+  <browser:page
+    name="set-geo-contents-form"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="cmf.ModifyPortalContent"
+    class=".form.GeoForm"
+    />
+
+  <browser:page
+    name="replace-richtext-form"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="cmf.ModifyPortalContent"
+    class=".form.ReplaceRichtextForm"
+    />
+
+  <browser:page
+    name="register"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    class=".register.CustomRegistrationForm"
+    layer="..interfaces.ICPSkinCoreLayer"
+    permission="cmf.AddPortalMember"
+    />
+
+
+  <!-- Document generator -->
+  <browser:page
+    for="eea.facetednavigation.interfaces.IFacetedNavigable"
+    name="document-generation"
+    class=".pages.IDocumentGenerationView"
+    layer="..interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="plone.app.event.dx.interfaces.IDXEvent"
+    name="document_generation_helper_view"
+    class=".pages.EventGenerationHelperView"
+    layer="..interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <!-- directory contact details -->
+  <browser:page
+    for="collective.contact.widget.interfaces.IContactContent"
+    name="contactdetails"
+    class=".contactdetails.ContactDetailsView"
+    template="templates/directorycontactdetails.pt"
+    layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="faceted-preview-item"
+    class=".organization.FacetedPreviewItem"
+    for="collective.contact.core.content.organization.IOrganization"
+    template="templates/preview-organization.pt"
+    layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <!-- widget -->
+  <adapter factory=".widget.MultiLineDataConverter" />
+
+  <z3c:widgetTemplate
+    mode="input"
+    widget=".widget.IMultiLineWidget"
+    template="templates/multiline_input.pt"
+    layer="z3c.form.interfaces.IFormLayer"
+    />
+
+  <z3c:widgetTemplate
+    mode="display"
+    widget=".widget.IMultiLineWidget"
+    template="templates/multiline_display.pt"
+    layer="z3c.form.interfaces.IFormLayer"
+    />
+
+
+  <browser:page
+    name="view"
+    for="collective.contact.core.content.organization.IOrganization"
+    class="cpskin.core.browser.collective_contact_view.OrganizationView"
+    template="templates/organization.pt"
+    layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+<!-- adapt collective.contact.core views to prevent JS error which arrive
+     when collective.geo.behaviour is enabled -->
+  <configure package="collective.contact.core.browser">
+    <browser:page
+        name="view"
+        for="collective.contact.core.content.position.IPosition"
+        class="cpskin.core.browser.collective_contact_view.PositionView"
+        template="templates/position.pt"
+        layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="view"
+        for="collective.contact.core.content.person.IPerson"
+        class="cpskin.core.browser.collective_contact_view.PersonView"
+        template="templates/person.pt"
+        layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+
+  </configure>
+
+  <grok:grok package=".collective_contact_view" />
+
+  <browser:page
+    for="*"
+    name="tuple-error"
+    class=".pages.TupleErrorPage"
+    layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="transmo-export"
+    class=".pages.TransmoExport"
+    layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+    permission="zope2.View"
+    />
+
+  <browser:view
+      for="*"
+      name="cpskinhealthy"
+      class=".pages.CpskinHealthy"
+      permission="cmf.ModifyPortalContent"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <!-- adapt plone.app.search view to add * at the end of searchterm -->
+  <configure package="plone.app.search">
+    <browser:page
+        name="search"
+        class="cpskin.core.browser.search.CpskinSearch"
+        permission="zope2.View"
+        for="*"
+        template="search.pt"
+        layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+        />
+  </configure>
+
+  <browser:page
+      class="cpskin.core.browser.document.DescriptionView"
+      name="document_with_description"
+      for="plone.app.contenttypes.interfaces.IDocument"
+      template="templates/document_with_description.pt"
+      layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+      permission="zope2.View"
+      menu="plone_displayviews"
+      title="View Document with description"
+      />
+
+  <!-- adapt file view to redirect anon users to download url -->
+  <configure package="plone.app.contenttypes.browser">
+    <browser:page
+        name="file_view"
+        for="plone.app.contenttypes.interfaces.IFile"
+        class="cpskin.core.browser.file.FileView"
+        template="templates/file.pt"
+        layer="cpskin.core.interfaces.ICPSkinCoreLayer"
+        permission="zope2.View"
+        />
+  </configure>
+
+  <browser:page
+    name="event_listing"
+    for="*"
+    permission="zope2.View"
+    class="cpskin.core.browser.event_listing.EventListing"
+    layer="..interfaces.ICPSkinCoreLayer"
+    />
+
+</configure>

@@ -1,0 +1,41 @@
+<div id="top-menu-actions"
+     tal:define="show_lead_image view/show_lead_image">
+  <div class="top-menu-action"
+       tal:repeat="menu view/menus">
+    <dl class="actionMenu deactivated" id=""
+        tal:define="root menu/root;
+                    submenus menu/submenu;"
+        tal:attributes="id string:top-menu-${root/getId};
+                        class python: submenus and 'actionMenu deactivated' or 'actionMenu deactivated empty'">
+      <dt class="actionMenuHeader">
+        <a href="#"
+           tal:attributes="href root/getURL;
+                           title root/Description"
+             tal:content="root/Title"></a>
+      </dt>
+      <dd class="actionMenuContent"
+          tal:condition="submenus">
+        <ul>
+            <li tal:repeat="submenu submenus">
+                <a href="#"
+                   tal:attributes="href submenu/getURL;
+                                   title submenu/Description">
+                    <tal:leadimage tal:condition="show_lead_image">
+                        <div class="top-submenu-item-leadimage"
+                             tal:define="item_object submenu/getObject;
+                                         item_has_leadimage python: getattr(item_object, 'hasContentLeadImage', False);"
+                             tal:condition="item_has_leadimage">
+                            <img tal:define="scale item_object/@@images;
+                                             img python:scale.scale('leadImage', width=280, height=280)"
+                                 tal:replace="structure python: img.tag() if img else None" />
+                        </div>
+                    </tal:leadimage>
+                    <div class="top-submenu-item-title"
+                         tal:replace="submenu/Title" />
+                </a>
+            </li>
+        </ul>
+      </dd>
+    </dl>
+  </div>
+</div>

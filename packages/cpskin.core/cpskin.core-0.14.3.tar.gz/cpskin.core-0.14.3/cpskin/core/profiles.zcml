@@ -1,0 +1,670 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           i18n_domain="cpskin">
+
+    <genericsetup:registerProfile
+        name="default"
+        title="cpskin.core: default"
+        directory="profiles/default"
+        description="Installs CPSkin core"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="cpskin.core: uninstall"
+        directory="profiles/uninstall"
+        description="Uninstalls CPSkin core"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- Upgrade profiles -->
+
+    <genericsetup:registerProfile
+        name="to17"
+        title="cpskin.core: to17"
+        directory="upgrades/to17"
+        description="CPSKIN Core: upgrade to v17"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:registerProfile
+        name="to19"
+        title="cpskin.core: to19"
+        directory="upgrades/to19"
+        description="CPSKIN Core: upgrade to v19"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- Upgrade steps -->
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v72: Add privacy specific JS"
+        description="Purpose : Fix transformations on consent form"
+        source="71"
+        destination="72"
+        handler=".upgradehandlers.upgrade_js_registry"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v71: Install privacy"
+        description="Install iaweb.privacy add-on for cookies consent"
+        source="70"
+        destination="71"
+        handler=".upgradehandlers.install_privacy"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v70: Add field enable_accessibility_link_in_footer to registry"
+        description="Add field enable_accessibility_link_in_footer to registry"
+        source="69"
+        destination="70"
+        handler=".upgradehandlers.upgrade_enable_accessibility_link_in_footer"
+        profile="cpskin.core:default" />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v69: Authorize (add) Link in Plone Site root"
+      description="Purpose : Users can create shortlinks in Plone Site root [WEB-3415]"
+      source="68"
+      destination="69"
+      handler=".upgradehandlers.upgrade_limit_plone_site_portal_type_2"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v68: Add accessibility specific JS"
+      description="Purpose : Fix accessibilty issues"
+      source="67"
+      destination="68"
+      handler=".upgradehandlers.upgrade_js_registry"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v67: Enable changes history in directory"
+      description="Purpose : Enable versioning on collective.contact.core content types"
+      source="66"
+      destination="67"
+      handler=".upgradehandlers.enable_directory_versioning"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v66: Upgrade viewlets"
+      description="Purpose : Reorder belowcontentbody viewlets"
+      source="65"
+      destination="66"
+      handler=".upgradehandlers.upgrade_viewlets"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v65: Add use_slick parameter"
+      description="Purpose :  Add use_slick parameter"
+      source="64"
+      destination="65"
+      handler=".upgradehandlers.to_65_use_slick"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v64: Update types"
+      description="Purpose : Add listing_view view to Event type"
+      source="63"
+      destination="64"
+      handler=".upgradehandlers.update_types"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v63: Add indexed taxonomies setting"
+      source="62"
+      destination="63"
+      handler=".upgradehandlers.upgrade_indexed_taxonomies"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v62: Add searchable behaviors on organizations"
+      source="61"
+      destination="62"
+      handler=".upgradehandlers.add_searchable_on_organization"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v61: Change in site_properties : Add/authorize document in default_page_types"
+      source="60"
+      destination="61"
+      handler=".upgradehandlers.upgrade_add_default_page_types_document"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v60: Set some properties (ex: file size) in collective.quickupload"
+        description="Set some properties (ex: file size) in collective.quickupload"
+        handler=".upgradehandlers.set_quickupload_properties"
+        source="59"
+        destination="60"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v59: Add registry for new document view (folderish)"
+        description="Add new view on folderish document (but children items aren't print below document)"
+        handler=".upgradehandlers.update_types"
+        source="58"
+        destination="59"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v58: Add registry for contact core fallback"
+        description="Add records for contact core fallback"
+        handler=".upgradehandlers.upgrade_registry_for_contact_core_fallback"
+        source="57"
+        destination="58"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v57: Add header, navigation, columns and footer options"
+        source="56"
+        destination="57"
+        handler=".upgradehandlers.upgrade_registry_for_content_classes"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v56: Add show_footer_sitemap option"
+        source="55"
+        destination="56"
+        handler=".upgradehandlers.upgrade_registry_for_show_footer_sitemap"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v55: Change in site_properties : Specify a typesUseViewActionInListings"
+        handler=".upgradehandlers.upgrade_add_specific_typesUseViewActionInListings"
+        source="54"
+        destination="55"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v54: Upgrade CSS and JS registry"
+        description="Upgrade viewlets CSS and JS registry for minisite dropdown menu (WEBOTT-9)"
+        handler=".upgradehandlers.upgrade_css_js_registry"
+        source="53"
+        destination="54"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v53: Use real footer for minisite"
+        source="52"
+        destination="53"
+        handler=".upgradehandlers.upgrade_footer_minisite"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v52: Upgrade viewlets"
+        description="Upgrade viewlets to sort them right (WEB-2885)"
+        handler=".upgradehandlers.upgrade_viewlets"
+        source="51"
+        destination="52"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v51: Add collapse_minisite_menu option"
+        source="50"
+        destination="51"
+        handler=".upgradehandlers.upgrade_registry_for_minisite_menu"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v50: Upgrade viewlets"
+        description="Upgrade viewlets to add new top_collapse viewlet"
+        handler=".upgradehandlers.upgrade_viewlets"
+        source="49"
+        destination="50"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v49: Update JS registry"
+        source="48"
+        destination="49"
+        handler=".upgradehandlers.upgrade_js_registry"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v48: Remove not used slider_type value"
+      source="47"
+      destination="48"
+      handler=".upgradehandlers.remove_slider_type_to_registry"
+      profile="cpskin.core:default"
+      />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v47: Limit adding portal type (only document and folder) in Plone Site."
+      source="46"
+      destination="47"
+      handler=".upgradehandlers.upgrade_limit_plone_site_portal_type"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v46: Change in site_properties : Specify a typesUseViewActionInListings"
+      source="45"
+      destination="46"
+      handler=".upgradehandlers.upgrade_add_specific_typesUseViewActionInListings"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+      title="CPSKIN Core: upgrade to v45: Add booking behavior"
+      source="44"
+      destination="45"
+      handler=".upgradehandlers.upgrade_add_booking_behavior"
+      profile="cpskin.core:default"
+    />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v44: Add search_position option"
+        source="43"
+        destination="44"
+        handler=".upgradehandlers.upgrade_search_position"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v43: Add GDPR link"
+        source="42"
+        destination="43"
+        handler=".upgradehandlers.install_imiogdpr"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v42: Migrate hide_title for sliders"
+        source="41"
+        destination="42"
+        handler=".upgradehandlers.migrate_hide_title_for_sliders"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v41: Split show_day_and_month setting"
+        source="40"
+        destination="41"
+        handler=".upgradehandlers.split_show_day_and_month"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v40: Update JS registry"
+        source="39"
+        destination="40"
+        handler=".upgradehandlers.upgrade_js_registry"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v39: Install Fancybox"
+        source="38"
+        destination="39"
+        handler=".upgradehandlers.install_fancybox"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v38: Add settings behavior for directory"
+        source="37"
+        destination="38"
+        handler=".upgradehandlers.add_directory_view_behavior"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v37: Add cpskin.organization_gallery viewlet / CSS / JS"
+        source="36"
+        destination="37"
+        handler=".upgradehandlers.upgrade_organization_gallery"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v36: Add photos fields for organization"
+        source="35"
+        destination="36"
+        handler=".upgradehandlers.add_images_behavior"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="Add figcaption to valid_tags"
+        source="34"
+        destination="35"
+        handler=".upgradehandlers.set_other_xhtml_valid_tags"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="Use sc.social.like instead of sc.social.bookmarks"
+        source="33"
+        destination="34"
+        handler=".upgradehandlers.use_sc_social_like_instead_of_bookmarks"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v33: Add cpskin_navigation_view_with_leadimage"
+        description="Purpose : Add cpskin_navigation_view"
+        handler=".upgradehandlers.update_types"
+        source="32"
+        destination="33"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v32: Add registry for themes descriptions"
+        description="Add record for themes descriptions in registry"
+        handler=".upgradehandlers.upgrade_registry_for_themes_descriptions"
+        source="31"
+        destination="32"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v31: Add registry for media viewlet"
+        description="Add 2 records for media viewlet in registry"
+        handler=".upgradehandlers.upgrade_registry_for_media_viewlet"
+        source="30"
+        destination="31"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v30: Add banner image field for event"
+        description="Purpose : use different banner for events #17809"
+        handler=".upgradehandlers.add_banner_view_behavior"
+        source="29"
+        destination="30"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v29: Add cpskin_navigation_view"
+        description="Purpose : Add cpskin_navigation_view"
+        handler=".upgradehandlers.update_types"
+        source="28"
+        destination="29"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v28: Right actions"
+        description="Upgrade settings / viewlets / JS to add new right_actions"
+        handler=".upgradehandlers.add_right_actions"
+        source="27"
+        destination="28"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v27: Add registry for slogan"
+        description="Add record for slogan in registry"
+        handler=".upgradehandlers.upgrade_registry_for_slogan"
+        source="26"
+        destination="27"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v26: Update types"
+        description="Puropose : Add description to organization type for #17660"
+        handler=".upgradehandlers.update_types"
+        source="25"
+        destination="26"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v25: Clean wrong installs from portal setup"
+        description="Clean wrong installs from portal setup : #17714"
+        handler=".upgradehandlers.clean_portal_setup"
+        source="24"
+        destination="25"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v24: Add registry for top menu"
+        description="Add records for top menu action in registry"
+        handler=".upgradehandlers.upgrade_registry_for_top_menu"
+        source="23"
+        destination="24"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v23: Upgrade viewlets"
+        description="Upgrade viewlets to add new top_menu viewlet"
+        handler=".upgradehandlers.upgrade_viewlets"
+        source="22"
+        destination="23"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v22: Migrate A la une sliders"
+        description="Sets display_type value on all a-la-une collections"
+        handler=".upgradehandlers.migrate_a_la_une_sliders"
+        source="21"
+        destination="22"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v21: Update theme variables"
+        description="Update theme variables and set version of cpskin.theme profile"
+        handler=".upgradehandlers.update_theme_variables"
+        source="20"
+        destination="21"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v20: Empty value of link_text"
+        description="Empty value of link_text"
+        handler=".upgradehandlers.empty_value_of_link_text"
+        source="19"
+        destination="20"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v19"
+        description="Add the faceted interface for multiple layout and add a new javascript"
+        handler=".upgradehandlers.upgrade_to_nineteen"
+        source="18"
+        destination="19"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v18"
+        description="Remove old behavior IUseKeywordHomepage"
+        handler=".upgradehandlers.clean_old_keyword_homepage"
+        source="17"
+        destination="18"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v17"
+        description="Upgrade step for moving CPSkin actions to new menu"
+        handler=".upgradehandlers.move_cpskin_actions"
+        source="16"
+        destination="17"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v16"
+        description="Upgrade step for adding navigation toggle action"
+        handler=".upgradehandlers.add_navigation_toggle_action"
+        source="15"
+        destination="16"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v15"
+        description="Upgrade step for adding index view behavior."
+        handler=".upgradehandlers.add_index_view_behavior"
+        source="14"
+        destination="15"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v14"
+        description="Upgrade step for adding homepage keywords."
+        handler=".upgradehandlers.upgrade_homepage_keywords"
+        source="13"
+        destination="14"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v13"
+        description="Upgrade step for adding slider type param."
+        handler=".upgradehandlers.upgrade_slider_type"
+        source="12"
+        destination="13"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v12"
+        description="Upgrade step for adding minisite viewlet menu."
+        handler=".upgradehandlers.upgrade_minisite_menu"
+        source="11"
+        destination="12"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v11"
+        description="Upgrade step for adding sub menu persistence option."
+        handler=".upgradehandlers.upgrade_to_eleven"
+        source="10"
+        destination="11"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v10"
+        description="Upgrade step for adding city name param."
+        handler=".upgradehandlers.upgrade_city_name"
+        source="9"
+        destination="10"
+        profile="cpskin.core:default"
+        />
+
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v9"
+        description="Upgrade step for update footer with imio template"
+        handler=".upgradehandlers.upgrade_footer_viewlet"
+        source="8"
+        destination="9"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v8"
+        description="Upgrade step for CPSKIN Core to v8"
+        handler=".upgradehandlers.upgrade_to_eight"
+        source="7"
+        destination="8"
+        profile="cpskin.core:default"
+        />
+
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v7"
+        description="Upgrade step for CPSKIN Core to v7"
+        handler=".upgradehandlers.upgrade_to_seven"
+        source="6"
+        destination="7"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v6"
+        description="Upgrade step for CPSKIN Core to v6"
+        handler=".upgradehandlers.upgrade_to_six"
+        source="5"
+        destination="6"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v5"
+        description="Upgrade step for CPSKIN Core to v5"
+        handler=".upgradehandlers.upgrade_to_five"
+        source="4"
+        destination="5"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v4"
+        description="Upgrade step for CPSKIN Core to v4"
+        handler=".upgradehandlers.upgrade_to_four"
+        source="3"
+        destination="4"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v3"
+        description="Upgrade step for CPSKIN Core to v3"
+        handler=".upgradehandlers.upgrade_to_three"
+        source="2"
+        destination="3"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Core: upgrade to v2"
+        description="Upgrade step for CPSKIN Core to v2"
+        handler=".upgradehandlers.upgrade_to_two"
+        source="1"
+        destination="2"
+        profile="cpskin.core:default"
+        />
+
+    <genericsetup:registerProfile
+        name="init"
+        title="cpskin.core: init"
+        directory="profiles/init"
+        description="Installs CPSkin core"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+</configure>
