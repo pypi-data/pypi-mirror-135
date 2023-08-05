@@ -1,0 +1,1 @@
+from .infolib import info
