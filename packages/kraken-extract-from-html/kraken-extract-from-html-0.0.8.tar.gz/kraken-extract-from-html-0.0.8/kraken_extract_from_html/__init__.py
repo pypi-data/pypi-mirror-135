@@ -1,0 +1,12 @@
+import kraken_extract_from_html
+
+import extractors.extract_emails
+import extractors.extract_feeds
+import extractors.extract_images
+import extractors.extract_ioc
+import extractors.extract_links
+import extractors.extract_schemas
+import extractors.extract_src
+import extractors.extract_text
+import extractors.extract_title
+import extractors.extract_urls
