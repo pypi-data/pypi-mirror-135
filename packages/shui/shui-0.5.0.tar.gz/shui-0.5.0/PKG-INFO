@@ -1,0 +1,105 @@
+Metadata-Version: 2.1
+Name: shui
+Version: 0.5.0
+Summary: Spark-Hadoop Unix Installer
+Home-page: https://github.com/jemrobinson/shui
+License: MIT
+Keywords: Spark,Hadoop,installation
+Author: James Robinson
+Author-email: james.em.robinson@gmail.com
+Requires-Python: >=3.6,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development
+Classifier: Topic :: Utilities
+Requires-Dist: beautifulsoup4 (>=4,<5)
+Requires-Dist: cleo (>=0.8,<0.9)
+Requires-Dist: packaging (>=20.9,<21.0)
+Requires-Dist: pathlib3x (>=1.3,<2.0)
+Requires-Dist: requests (>=2.25,<3.0)
+Requires-Dist: tqdm (>=4.59,<5.0)
+Requires-Dist: url-normalize (>=1.4,<2.0)
+Requires-Dist: urllib3 (>=1.26,<2.0)
+Project-URL: Repository, https://github.com/jemrobinson/shui
+Description-Content-Type: text/markdown
+
+# SHUI
+Spark-Hadoop Unix Installer
+
+![OSes](https://img.shields.io/badge/system-macOS%7CLinux%7CFreeBSD-green)
+![Architectures](https://img.shields.io/badge/arch-i686%7Cx86__64-yellowgreen)
+
+[![Python](https://img.shields.io/pypi/pyversions/shui.svg?logo=python&logoColor=white)](https://pypi.org/project/shui)
+[![PyPI version](https://badge.fury.io/py/shui.svg)](https://badge.fury.io/py/shui)
+[![PyPI downloads](https://img.shields.io/pypi/dm/shui)](https://img.shields.io/pypi/dm/shui)
+[![Code style](https://github.com/jemrobinson/shui/workflows/check-code-style/badge.svg)](https://github.com/jemrobinson/shui/actions)
+[![Functionality](https://github.com/jemrobinson/shui/workflows/test-functionality/badge.svg)](https://github.com/jemrobinson/shui/actions)
+
+This package uses Python to download and unpack a pre-built version of Spark/Hadoop from Apache.
+Its primary use-case is simplifying unattended installs where the user wants "the latest available version" of these tools.
+
+## Features
+
+- download Spark/Hadoop release tarball from Apache.
+- verify the tarball using the SHA512 sum provided by Apache.
+- unpack the tarball to a target directory on your local system.
+
+## Installation
+
+First you'll need to install `shui` using pip: `pip install shui`.
+
+## Usage
+
+### Versions
+The `versions` command shows you all available Spark/Hadoop versions.
+
+```
+USAGE
+  shui versions [--latest]
+
+OPTIONS
+  --latest               Show only the latest available version
+
+GLOBAL OPTIONS
+  -h (--help)            Display this help message
+  -q (--quiet)           Do not output any message
+  -v (--verbose)         Increase the verbosity of messages: "-v" for normal output, "-vv" for more verbose output and "-vvv" for debug
+  -V (--version)         Display this application version
+  --ansi                 Force ANSI output
+  --no-ansi              Disable ANSI output
+  -n (--no-interaction)  Do not ask any interactive question
+```
+
+### Install
+The `install` command will download, verify and install a particular Spark/Hadoop version.
+
+```
+USAGE
+  shui install [--latest] [--spark <...>] [--hadoop <...>] [--target <...>]
+
+OPTIONS
+  --latest               Use the latest available version
+  --spark                Spark version (default: "any")
+  --hadoop               Hadoop version (default: "any")
+  --target               Directory to install into (default: "cwd")
+
+GLOBAL OPTIONS
+  -h (--help)            Display this help message
+  -q (--quiet)           Do not output any message
+  -v (--verbose)         Increase the verbosity of messages: "-v" for normal output, "-vv" for more verbose output and "-vvv" for debug
+  -V (--version)         Display this application version
+  --ansi                 Force ANSI output
+  --no-ansi              Disable ANSI output
+  -n (--no-interaction)  Do not ask any interactive question
+```
+
