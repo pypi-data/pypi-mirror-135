@@ -1,0 +1,39 @@
+{% from 'common.jinja' import dataflow_from_definition -%}
+import argparse
+import base64
+import os
+import pathlib
+
+from ascend.sdk import definitions, field, value
+from ascend.sdk.applier import DataflowApplier
+from ascend.sdk.client import Client
+
+{% for mod in proto_mods %}
+import ascend.protos.{{mod}}.{{mod}}_pb2 as {{mod}}
+{% endfor %}
+
+{% for gmod, cls in gmod_classes %}
+from {{gmod}} import {{cls}}
+{% endfor %}
+
+
+GENERATED_FROM_HOSTNAME = "{{hostname}}"
+GENERATED_FROM_DATA_SERVICE_ID = "{{data_service_id}}"
+GENERATED_FROM_DATAFLOW_ID = "{{dataflow.id}}"
+
+
+def construct_dataflow(data_service_id: str = GENERATED_FROM_DATA_SERVICE_ID, dataflow_id: str = GENERATED_FROM_DATAFLOW_ID):
+  {{ dataflow_from_definition(data_service_id, dataflow, 'dataflow', renderer, ordered_components, inline_code_map, classname_map) | indent(2) }}
+  return dataflow
+
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--hostname", default=os.getenv("ASCEND_HOSTNAME", default=GENERATED_FROM_HOSTNAME))
+  parser.add_argument("-ds", "--data-service-id", default=os.getenv("ASCEND_DATA_SERVICE_ID", default=GENERATED_FROM_DATA_SERVICE_ID))
+  parser.add_argument("-df", "--dataflow-id", default=os.getenv("ASCEND_DATAFLOW_ID", default=GENERATED_FROM_DATAFLOW_ID))
+  args = parser.parse_args()
+
+  client = Client(args.hostname)
+  dataflow = construct_dataflow(args.data_service_id, args.dataflow_id)
+  DataflowApplier(client).apply(args.data_service_id, dataflow)
