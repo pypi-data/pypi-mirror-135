@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "infima_client"
+version = "0.285.2-alpha.0"
+description = "A client library for accessing Infima"
+authors = ["Alex Papanicolaou <alex@infima.io>"]
+readme = "README.md"
+packages = [{ include = "infima_client", from = "src" }]
+include = ["CHANGELOG.md", "src/infima_client/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+importlib_metadata = { version = "^4.2", python = "~3.7" }
+httpx = ">=0.15.4,<0.17.0"
+attrs = "^20.1.0"
+python-dateutil = "^2.8.0"
+semver = "^2.13.0"
+pandas = "^1.1.0"
+more-itertools = "^8.12.0"
+stringcase = "^1.2.0"
+tqdm = "^4.62.3"
+typing_extensions = { version = "^4.0.1", python = "~3.7" }
+
+[tool.poetry.dev-dependencies]
+black = "^21.5b2"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+mypy = "^0.910"
+nox = "^2021.10.1"
+nox-poetry = "^0.9.0"
+pytest = "^6.2.5"
+
+[tool.black]
+line-length = 88
+target_version = ["py37", "py38", "py39"]
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry_core>=1.0.7"]
+build-backend = "poetry.core.masonry.api"
