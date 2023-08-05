@@ -1,0 +1,28 @@
+<div id="{{ html_id }}" class="card my-2 filter-block">
+    <div class="card-header py-1 px-2 filter-header">{{ filter_title }}
+    <div class="float-right">
+    {% block header_icons %}
+    {% endblock %}
+        <a href="javascript:void(0)" class="filter-header-icon {% if collapsed %}collapsed{% endif %}" data-target="#{{ html_id }}-panel" data-toggle="collapse">
+            <i class="expandicon"></i>
+        </a>
+    </div>
+    </div>
+    <div class="card-body p-2 collapse {% if not collapsed %}show{% endif %}" id="{{ html_id }}-panel">
+        {% block content %}
+            <div class="filter-content">
+            </div>
+        {% endblock %}
+    </div>
+</div>
+{% block javascript %}
+{% endblock %}
+<script>
+    $("#{{ html_id }} .filter-header").click(function () {
+        $($(this).attr('data-target')).toggle(200)
+    })
+
+    {% block remove_registration %}
+    django_datatables.add_filter('{{ table.table_id }}', new_filter)
+    {% endblock %}
+</script>
