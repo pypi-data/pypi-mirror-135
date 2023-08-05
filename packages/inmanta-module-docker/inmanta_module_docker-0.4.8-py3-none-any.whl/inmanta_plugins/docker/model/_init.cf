@@ -1,0 +1,99 @@
+"""
+    Copyright 2017 Inmanta
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    Contact: code@inmanta.com
+"""
+import ip
+import ip::services
+
+entity Service extends ip::services::Server:
+    """
+        A docker service
+    """
+    ip::cidr bridge_ip="172.17.0.1/16"
+end
+
+typedef container_state as string matching self == "running" or self == "stopped" or self == "latest" or self == "purged"
+
+entity Container:
+    """
+        A docker container deployed on a container service
+
+        :param name: The name of the docker container
+        :param image: The image to base this container on
+        :param detach: Detach this container when started?
+        :param state: The state of the container
+        :param memory_limit: RAM allocated to the container in human readable format ("128MB")
+        :param command: The command to execute
+        :param entrypoint: The entrypoint of the container
+    """
+    string name
+    string image
+    bool detach=true
+    docker::container_state state="running"
+    string memory_limit="0"
+    string command=""
+    string entrypoint=""
+end
+
+implement Container using std::none
+
+Service.containers [0:] -- Container.service [1]
+
+entity Port:
+    """
+        A portmapping between the container and the host
+    """
+    ip::ip host_ip = "0.0.0.0"
+    ip::port host_port
+    ip::port container_port
+end
+
+Container.ports [0:] -- Port.container [1]
+
+entity Volume:
+    """
+        A volume mounted from the host into the container
+    """
+    string host_path
+    string container_path
+    string options = "rw"
+end
+
+Container.volumes [0:] -- Volume.container [1]
+
+implementation docker for Service:
+    docker_pkg = std::Package(host=host, name="docker", state="installed")
+    docker_config = std::ConfigFile(host=host, path="/etc/sysconfig/docker", requires=docker_pkg,
+                                    content=std::template("docker/docker-sysconfig.tmpl"))
+    std::Service(host=host, name="docker", state="running", onboot=true, requires=[docker_pkg, docker_config])
+end
+
+implement Service using docker
+
+entity Registry extends ip::services::Server:
+    """
+        Deploy a docker registry
+    """
+    
+end
+
+implementation dockerRegistry for Registry:
+    pkg = std::Package(host=host, name="docker-registry", state="latest")
+    std::Service(host=host, name="docker-registry", state="running", onboot=true)
+end
+
+implement Registry using dockerRegistry
+
