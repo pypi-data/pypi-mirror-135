@@ -1,0 +1,271 @@
+---
+stages:
+  - check
+  - test
+  - coverage
+  - build
+  - publish
+  - clean up
+
+check code smells:
+  interruptible: true
+  image: python:3.8
+  script:
+    - pip install tox
+    - tox -e system-lint
+  stage: check
+  only:
+    refs:
+      - master
+      - merge_request
+    changes:
+      - tox.ini
+      - setup.cfg
+      - xotless/*.py
+      - xotless/**/*.py
+
+check python format:
+  interruptible: true
+  image: python:3.8
+  stage: check
+  script:
+    - |
+      pip install black==21.9b0 isort==5.6.4
+      black --check xotless/ && isort -c --df xotless/
+  only:
+    refs:
+      - master
+      - merge_request
+    changes:
+      - pyproject.toml
+      - xotless/*.py
+      - xotless/**/*.py
+
+
+.run_tox_tests: &run_tox_tests
+  resource_group: xotless-tox-tests
+  interruptible: true
+  image: python:$PYTHON
+  stage: test
+  script:
+    - pip install tox
+    - tox -e system-unit
+
+.run_tox_staticcheck: &run_tox_staticcheck
+  interruptible: true
+  image: python:3.10
+  stage: check
+  script:
+    - pip install tox
+    - tox -e system-staticcheck
+
+.run_tox_doctest: &run_tox_doctest
+  interruptible: true
+  image: python:3.10
+  stage: check
+  script:
+    - pip install tox
+    - tox -e system-doctest
+
+
+tests:
+  <<: *run_tox_tests
+  needs:
+    - check code smells
+    - run static checks
+  parallel:
+    matrix:
+      - PYTHON: ["3.8", "3.9", "3.10"]
+  only:
+    refs:
+      - master
+      - merge_requests
+    changes:
+      - tox.ini
+      - setup.cfg
+      - xotless/*.py
+      - xotless/**/*.py
+
+
+run static checks:
+  <<: *run_tox_staticcheck
+  only:
+    refs:
+      - master
+      - merge_requests
+    changes:
+      - tox.ini
+      - setup.cfg
+      - xotless/*.py
+      - xotless/**/*.py
+
+
+run doctests:
+  <<: *run_tox_doctest
+  only:
+    refs:
+      - master
+      - merge_requests
+    changes:
+      - tox.ini
+      - docs/source/conf.py
+      - docs/**/*.rst
+      - setup.cfg
+      - xotless/*.py
+      - xotless/**/*.py
+
+
+run coverage tests:
+  interruptible: true
+  needs:
+    - check code smells
+    - run static checks
+    - tests
+  image: python:3.10
+  stage: coverage
+  script:
+    - pip install tox
+    - tox -e system-coverage
+  only:
+    refs:
+      - master
+      - merge_requests
+    changes:
+      - tox.ini
+      - setup.cfg
+      - xotless/*.py
+      - xotless/**/*.py
+
+
+build source distribution:
+  image: python:3.8-alpine
+  stage: build
+  script:
+    - rm -f dist/*
+    - apk add git
+    - python setup.py sdist
+  artifacts:
+    paths:
+      - dist/
+  only:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TAG =~ /^\d+(\.\d+)*(a\d+|b\d+|rc\d+)?(\.post\d+)?$/
+
+build binary distribution:
+  image: python:3.8-alpine
+  stage: build
+  script:
+    - pip install wheel
+    - apk add git
+    - python setup.py bdist_wheel
+  artifacts:
+    paths:
+      - dist/
+  only:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TAG =~ /^\d+(\.\d+)*(a\d+|b\d+|rc\d+)?(\.post\d+)?$/
+
+
+.build-doc: &build-documentation
+  image: python:3.10
+  stage: build
+  script:
+    - apt-get install -y --no-install-recommends git make
+    - pip install -e .
+    - pip install sphinx~=4.3.1 sphinx-rtd-theme
+    - make -C docs/ html
+    - mkdir -p public
+    - cp -r docs/build/html/* public/
+  artifacts:
+    paths:
+      - docs/build/html
+      - public/
+
+build documentation:
+  <<: *build-documentation
+  interruptible: true
+  needs:
+    - run doctests
+  only: &when-build-documentation-only
+    refs:
+      - master
+      - merge_requests
+    changes:
+      - tox.ini
+      - docs/source/conf.py
+      - docs/**/*.rst
+      - xotless/*.py
+      - xotless/**/*.py
+
+pages:
+  <<: *build-documentation
+  only:
+    refs:
+      - master
+
+publish_pypi:
+  variables:
+    GIT_STRATEGY: none
+  image: python:3.8
+  stage: publish
+  script:
+    - pip install twine
+    - twine upload -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD" dist/*
+  only:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TAG =~ /^\d+(\.\d+)*(a\d+|b\d+|rc\d+)?(\.post\d+)?$/
+  needs:
+    - build source distribution
+    - build binary distribution
+  environment:
+    name: pypi
+    url: https://pypi.org/project/$CI_PROJECT_NAME
+
+
+publish in our rtd:
+  interruptible: true
+  variables:
+    GIT_STRATEGY: none
+  stage: publish
+  needs:
+    - build documentation
+  image: alpine
+  script:
+    - |
+      apk add openssh rsync
+      mkdir -p $HOME/.ssh
+      chmod 700 $HOME/.ssh
+      cp $RSA_KEY_FILE $HOME/.ssh/id_rsa
+      chmod 600 $HOME/.ssh/id_rsa
+      cp $SSH_CONFIG_FILE $HOME/.ssh/config
+      ssh docs.lahavane.com mkdir -p /data/$CI_PROJECT_NAME/.$CI_COMMIT_SHA
+      rsync -auvp -e ssh docs/build/html/ docs.lahavane.com:/data/$CI_PROJECT_NAME/.$CI_COMMIT_SHA/
+      ssh docs.lahavane.com "cd /data/$CI_PROJECT_NAME; rm -r $CI_COMMIT_REF_NAME; ln -s .$CI_COMMIT_SHA $CI_COMMIT_REF_NAME"
+      ssh docs.lahavane.com "cd /data/$CI_PROJECT_NAME; ls -al | grep -oE '\.([0-9]|[a-z])*$' | sort | uniq -c | grep '1 ' | grep -oE '\.([0-9]|[a-z])*$' | xargs rm -rf"
+  environment:
+    name: docs.lahavane.com
+    url: http://docs.lahavane.com/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME
+  only:
+    <<: *when-build-documentation-only
+    variables:
+      - $CI_REPOSITORY_URL =~ /gitlab\.merchise\.org/
+  tags:
+    - gitlab.merchise.org
+
+
+automatically remove MR documentation from our RTD server after 4 hours:
+  stage: clean up
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - when: never
+  trigger:
+    include: ci/cleanup.yml
