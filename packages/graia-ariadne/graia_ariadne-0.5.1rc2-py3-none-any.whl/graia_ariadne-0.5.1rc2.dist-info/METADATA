@@ -1,0 +1,121 @@
+Metadata-Version: 2.1
+Name: graia-ariadne
+Version: 0.5.1rc2
+Summary: Another elegant framework for mirai and mirai-api-http v2.
+Home-page: https://graia.rtfd.io/
+Author: BlueGlassBlock
+Author-email: blueglassblock@outlook.com
+Requires-Python: >=3.8,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Provides-Extra: alconna
+Provides-Extra: document
+Provides-Extra: full
+Provides-Extra: graia
+Requires-Dist: aiohttp (>=3.7.4,<4.0.0)
+Requires-Dist: arclet-alconna (>=0.4.1,<0.5.0); extra == "alconna" or extra == "full"
+Requires-Dist: graia-broadcast (>=0.14.4)
+Requires-Dist: graia-saya (>=0.0.13,<0.0.14); extra == "graia" or extra == "full"
+Requires-Dist: graia-scheduler (>=0.0.6,<0.0.7); extra == "graia" or extra == "full"
+Requires-Dist: loguru (>=0.5,<0.6)
+Requires-Dist: mkdocs-material (>=8.1.2); extra == "document"
+Requires-Dist: pdoc (>=8.0,<9.0); extra == "document"
+Requires-Dist: prompt-toolkit (>=3.0.24,<4.0.0)
+Requires-Dist: pydantic (>=1.8.2,<2.0.0)
+Requires-Dist: regex (>=2021.11.10,<2022.0.0)
+Requires-Dist: typing-extensions (>=4.0.0,<5.0.0)
+Requires-Dist: yarl (>=1.7,<2.0)
+Project-URL: Repository, https://github.com/GraiaProject/Ariadne
+Description-Content-Type: text/markdown
+
+<div align="center">
+
+# Ariadne
+
+_Another elegant framework for mirai and mirai-api-http v2._
+
+> 接受当下, 面向未来.
+
+<a href="https://pypi.org/project/graia-ariadne"><img alt="PyPI" src="https://img.shields.io/pypi/v/graia-ariadne" /></a></td>
+<a href="https://pypi.org/project/graia-ariadne"><img alt="PyPI Pre Release" src="https://img.shields.io/github/v/tag/GraiaProject/Ariadne?include_prereleases&label=latest&color=orange"></td>
+<a href="https://pypi.org/project/graia-ariadne"><img alt="Python Version" src="https://img.shields.io/pypi/pyversions/graia-ariadne" /></a>
+<a href="https://pypi.org/project/graia-ariadne"><img alt="Python Implementation" src="https://img.shields.io/pypi/implementation/graia-ariadne" /></a>
+
+<a href="https://graia.rtfd.io/"><img alt="docs" src="https://img.shields.io/badge/文档-click_here-black" /></a>
+<a href="https://graiaproject.github.io/Ariadne/"><img alt="API docs" src="https://img.shields.io/badge/API_文档-click_here-black"></a>
+<a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-black.svg" alt="black" /></a>
+<a href="https://pycqa.github.io/isort/"><img src="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat" alt="isort"/></a>
+<a href="https://github.com/GraiaProject/Ariadne/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/GraiaProject/Ariadne"></a>
+
+</div>
+
+**本项目适用于 mirai-api-http 2.0 以上版本**.
+
+Ariadne 是 `Graia Project` 继承了 [`Application`](https://github.com/GraiaProject/Applicaiton) 并进行了许多改进后产生的作品,
+相信它可以给你带来良好的 `Python QQ Bot` 开发体验.
+
+**注意, 本框架需要 [`mirai-api-http v2`](https://github.com/project-mirai/mirai-api-http).**
+
+## 安装
+
+`poetry add graia-ariadne`
+
+或
+
+`pip install graia-ariadne`
+
+> 我们强烈建议使用 [`poetry`](https://python-poetry.org) 进行包管理
+
+## 开始使用
+
+```python
+from graia.ariadne.app import Ariadne
+from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import Plain
+from graia.ariadne.model import Friend, MiraiSession
+
+app = Ariadne(MiraiSession(host="http://localhost:8080", verify_key="ServiceVerifyKey", account=123456789))
+
+
+@app.broadcast.receiver("FriendMessage")
+async def friend_message_listener(app: Ariadne, friend: Friend):
+    await app.sendMessage(friend, MessageChain.create([Plain("Hello, World!")]))
+
+
+app.launch_blocking()
+```
+
+更多信息请看 [文档](https://graia.rtfd.io/).
+
+## 讨论
+
+QQ 交流群: [邀请链接](https://jq.qq.com/?_wv=1027&k=VXp6plBD)
+
+> QQ 群不定时清除不活跃成员, 请自行重新申请入群.
+
+## 文档
+
+[API 文档](https://graiaproject.github.io/Ariadne/) [官方文档](https://graia.rtfd.io/) [社区文档](https://graiax.cn)  [鸣谢](https://graia.rtfd.io/appendix/credits)
+
+**如果认为本项目有帮助, 欢迎点一个 `Star`.**
+
+## 协议
+
+本项目以[`GNU AGPLv3`](https://choosealicense.com/licenses/agpl-3.0/) 作为开源协议, 这意味着你需要遵守相应的规则.
+
+## 持续集成 (CI) 状态
+
+[![Dev PyPI Version](https://img.shields.io/pypi/v/graia-ariadne-dev?label=dev-pypi)](https://pypi.org/project/graia-ariadne-dev)
+[![Documentation Status](https://readthedocs.org/projects/graia/badge/?version=latest)](https://graia.rtfd.io/)
+
+
+[![Build and deploy API Docs](https://github.com/GraiaProject/Ariadne/actions/workflows/api_docs.yml/badge.svg)](https://github.com/GraiaProject/Ariadne/actions/workflows/api_docs.yml)
+[![Publish to PyPI](https://github.com/GraiaProject/Ariadne/actions/workflows/release-to-pypi.yml/badge.svg)](https://github.com/GraiaProject/Ariadne/actions/workflows/release-to-pypi.yml)
+## 开发版资源 / 参与开发
+
+[开发分支文档](https://graia-dev.rtfd.io/)
+[开发分支](https://github.com/GraiaProject/Ariadne/tree/dev)
+[开发版 PyPI](https://pypi.org/project/graia-ariadne-dev) 
+[开始开发](./CONTRIBUTING.md)
