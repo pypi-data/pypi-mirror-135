@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkspa=self.webpackChunkspa||[]).push([[564],{3564:function(e,n,s){s.r(n);var u=s(9755),a=s.n(u);window.jQuery=a(),window.$=a(),n.default=a()}}]);
