@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "tikka"
+version = "0.4.1"
+description = "Tikka is a fast and light Python/Tk client to manage your Ğ1 accounts"
+authors = ["Vincent Texier <vit@free.fr>"]
+include = [
+    "tikka/locales/*/LC_MESSAGES/*.mo",
+    "tikka/slots/pyqt/resources/gui/windows/*_rc.py",
+    "tikka/slots/pyqt/resources/gui/widgets/*_rc.py",
+    "tikka/slots/pyqt/resources/icons/*_rc.py",
+]
+
+[tool.poetry.scripts]
+tikka = "tikka.__main__:main"
+
+[tool.poetry.dependencies]
+python = "^3.7.0"
+duniterpy = {version = "1.0.0rc1", allow-prereleases = true}
+mnemonic = "^0.19"
+yoyo-migrations = "^7.3.1"
+PyQt5 = "^5.15.6"
+
+[tool.poetry.dev-dependencies]
+black = "20.8b1"
+mypy = "^0.790"
+pylint = "^2.6.0"
+pytest = "^6.2.1"
+pyinstaller = "^4.4"
+pre-commit-hooks = {git = "https://github.com/Lucas-C/pre-commit-hooks"}
+gitlab-ci-linter = {git = "https://gitlab.com/devopshq/gitlab-ci-linter"}
+PyQt5-stubs = "^5.15.2"
+pytest-qt = "^4.0.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0a5"]
+build-backend = "poetry.core.masonry.api"
