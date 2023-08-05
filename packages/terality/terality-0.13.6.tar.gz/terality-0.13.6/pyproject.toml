@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "terality"
+version = "0.13.6"
+description = "The Data Processing Engine for Data Scientists"
+authors = ["Terality Engineering Team <dev.null@terality.com>"]
+license = "Proprietary"
+readme = "README.md"
+homepage = "https://terality.com/"
+packages = [
+    { include = "terality" },
+    { include = "terality_serde" },
+    { include = "common_client_scheduler" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+pyarrow = "^6.0.0"
+numpy = "^1.18"
+pandas = "^1.0.0"
+requests = "^2.26.0"
+pydantic = "^1.7.3"
+aiobotocore = "^2.0"
+# To prevent pip from downloading every single boto3 version from the latest version
+# to one that's compatible with the same botocore requirement as aiobotocore,
+# we add a dependency on a narrow version of boto3. See TER-636 for details.
+boto3 = ">=1.19.8,<1.19.9"
+single-source = "^0.1.5"
+typing_extensions = "^3.10.0"
+azure-storage-file-datalake = {version = "^12.4.0", optional = true}
+azure-storage-blob = {version = "^12.8.1", optional = true}
+azure-identity = {version = "^1.6.0", optional = true}
+python-dateutil = "^2.8.1"
+sentry-sdk = "^1.3.0"
+click = "^8.0.1"
+urllib3 = ">= 1.26.0"
+cloudpickle = "^2.0.0"
+protobuf = "^3.9.1"
+
+[tool.poetry.extras]
+azure = ["azure-storage-blob", "azure-storage-file-datalake", "azure-identity"]
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.790"
+pytest = "^5.4.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+terality = 'terality._terality.bin.__main__:cli'
