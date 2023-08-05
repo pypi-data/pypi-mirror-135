@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: gnnrl
+Version: 1.0.1
+Summary: gnnrl pipeline
+Home-page: https://github.com/yusx-swapp/GNN-RL-Model-Compression/tree/master
+Author: Sixing Yu
+Author-email: yusx@iastate.edu
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/anonymous429/GNN-RL-Model-Compression/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# GNN-RL-Model-Compression
+GNN-RL Compression: Topology-Aware Network Pruning using Multi-stage Graph Embedding and Reinforcement Learning
+
+## Dependencies
+
+Current code base is tested under following environment:
+
+1. Python   3.8
+2. PyTorch  1.8.0 (cuda 11.1)
+3. torchvision 0.7.0
+4. [torch-geometric](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html#) 1.6.1
+
+## Results on ImageNet
+| Models                   | FLOPs ratio| Top1 Acc. (%) |![\delta](http://latex.codecogs.com/svg.latex?{\Delta}) Acc.| Dataset |
+| ------------------------ | ------------     | ------------ |------------|------------|
+| MobileNet-v1                | 40% FLOPs       | **69.50**  |**-1.40**  |ImageNet|
+| MobileNet-v1                | 70% FLOPs       | **70.70**  |**-0.20**  |ImageNet|
+| MobileNet-v2                | 58% FLOPs       | **70.04**  |**-1.83**  |ImageNet|
+| VGG-16                | 20% FLOPs       | **70.992**   |**+0.49** |ImageNet|
+| ResNet-50                | 47% FLOPs       | **74.28**   |**-1.82** |ImageNet|
+| ResNet-18                | 50% FLOPs       | **68.66**   |**-1.10** |ImageNet|
+
+
+
