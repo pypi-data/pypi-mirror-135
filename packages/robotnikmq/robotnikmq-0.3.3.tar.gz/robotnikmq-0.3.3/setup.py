@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+from setuptools import setup
+
+packages = \
+['robotnikmq']
+
+package_data = \
+{'': ['*']}
+
+install_requires = \
+['arrow>=1.2.1,<2.0.0',
+ 'funcy>=1.17,<2.0',
+ 'logzero>=1.7.0,<2.0.0',
+ 'pika>=1.2.0,<2.0.0',
+ 'pydantic>=1.9.0,<2.0.0',
+ 'pyyaml>=6.0,<7.0',
+ 'retry2>=0.9.3,<0.10.0',
+ 'typeguard>=2.13.3,<3.0.0']
+
+setup_kwargs = {
+    'name': 'robotnikmq',
+    'version': '0.3.3',
+    'description': 'Utilities for safe, efficient, and scalable infrastructure using RabbitMQ',
+    'long_description': '# RobotnikMQ\n\nUtilities for safe, efficient, and scalable infrastructure using RabbitMQ\n\n## Usage\n\nTODO\n\n## Installation & Setup\n\nTo install robotnikmq with [`pip`](https://pip.pypa.io/en/stable/) execute the following:\n\n```bash\npip install /path/to/repo/robotnikmq\n```\n\nIf you don\'t want to re-install every time there is an update, and prefer to just pull from the git repository, then use the `-e` flag.\n\n### Configuration\n\nRobotnikMQ can be configured globally, on a per-user, or on a per-application basis. When certain functions of the RobotnikMQ library are called without a provided configuration, it will attempt to find a configuration first for the application in the current working directory `./robotnikmq.yaml`, then for the user in `~/.config/robotnikmq/robotnikmq.yaml` and then for the system in `/etc/robotnikmq/robotnikmq.yaml`. An error will be raised if a configuration is not provided and neither of those files exist.\n\nThe RobotnikMQ configuration is primarily a list of servers organized into tiers. If a given system or user can be expected to connect to the same cluster the vast majority of the time, then you can/should use a per-user or global configuration. Otherwise, simply have your application configure its own RobotnikMQ configuration (see **Usage** section).\n\nThe configuration file itself should look something like this:\n\n```yaml\ntiers:\n- - ca_cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/robotnik-ca.crt\n    cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.crt\n    host: 127.0.0.1\n    key: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.key\n    password: \'\'\n    port: 1\n    user: \'\'\n    vhost: \'\'\n  - ca_cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/robotnik-ca.crt\n    cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.crt\n    host: \'1\'\n    key: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.key\n    password: \'1\'\n    port: 1\n    user: \'1\'\n    vhost: \'1\'\n- - ca_cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/robotnik-ca.crt\n    cert: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.crt\n    host: 127.0.0.1\n    key: /home/eugene/Development/robotnikmq/tests/integration/vagrant/pki/issued/rabbitmq-vm/rabbitmq-vm.key\n    password: hackme\n    port: 5671\n    user: robotnik\n    vhost: /robotnik\n```\n\nIn the example above, you should be able to see two tiers of servers, the first has two server configurations that are intentionally broken for testing purposes, while the second has a valid configuration (this is the configuration that is used for unit-testing).\n\nThe idea is that RobotnikMQ will first attempt to connect to all servers in the first tier in a random order, then if all of them fail, it will attempt to connect to all the servers in the second tier, and so on. This is intended to allow both load-balancing on different servers and for redundancy in case some of those servers fail. You can also configure only one tier with one server, or just a list of tiers, each of which have one server in them. This way, the secondary and tertiary servers would only be used if there is something wrong with the primary.\n\n## Development\n\n### Standards\n\n- Be excellent to each other\n- Code coverage must be at 100% for all new code, or a good reason must be provided for why a given bit of code is not covered.\n  - Example of an acceptable reason: "There is a bug in the code coverage tool and it says its missing this, but its not".\n  - Example of unacceptable reason: "This is just exception handling, its too annoying to cover it".\n- The code must pass the following analytics tools. Similar exceptions are allowable as in rule 2.\n  - `pylint --disable=C0111,W1203,R0903 --max-line-length=100 ...`\n  - `flake8 --max-line-length=100 ...`\n  - `mypy --ignore-missing-imports --follow-imports=skip --strict-optional ...`\n- All incoming information from users, clients, and configurations should be validated.\n- All internal arguments passing should be typechecked whenever possible with `typeguard.typechecked`\n\n### Development Setup\n\nUsing [poetry](https://python-poetry.org/) install from inside the repo directory:\n\n```bash\npoetry install\n```\n\nThis will set up a virtualenv which you can always activate with either `poetry shell` or run specific commands with `poetry run`. All instructions below that are meant to be run in the virtualenv will be prefaced with `(robotnikmq)$ `\n\n#### IDE Setup\n\n**Sublime Text 3**\n\n```bash\ncurl -sSL https://gitlab.com/-/snippets/2066312/raw/master/poetry.sublime-project.py | poetry run python\n```\n\n## Testing\n\nAll testing should be done with `pytest` which is installed with the `dev` requirements.\n\nTo run all the unit tests, execute the following from the repo directory:\n\n```bash\n(robotnikmq)$ pytest\n```\n\nThis should produce a coverage report in `/path/to/dewey-api/htmlcov/`\n\nWhile developing, you can use [`watchexec`](https://github.com/watchexec/watchexec) to monitor the file system for changes and re-run the tests:\n\n```bash\n(robotnikmq)$ watchexec -r -e py,yaml pytest\n```\n\nTo run a specific test file:\n\n```bash\npytest tests/unit/test_core.py\n```\n\nTo run a specific test:\n\n```bash\npytest tests/unit/test_core.py::test_hello\n```\n\nFor more information on testing, see the `pytest.ini` file as well as the [documentation](https://docs.pytest.org/en/stable/).\n\n### Vagrant Testing\n\nWhen you run `pytest` you may notice that some tests are being skipped with the message "rabbitmq-vm needs to be running", this is because those tests require other services to connect to. RobotnikMQ works primarily with RabbitMQ, as a result, a lot of the tests require a server hosting it. RobotnikMQ comes with a [vagrant testing setup](https://www.vagrantup.com/docs/cli) which can be initialized from the repo directory and executing `vagrant up --provision`. The VM comes with some basic essentials for working with RobotnikMQ. Coincidentally, the virtualized setup happens to serve as a model for how mentat can be configured.\n\n- You can log in with `vagrant ssh`\n- The VM hosts a RabbitMQ server with port-forwarding configured\n  - You can access the managment UI at: https://localhost:15671/ (username: `vagrant`, password: `Uy7ht9qbbakp5h3p2KiyyEjIX8O7VkuQ`)',
+    'author': 'Eugene Kovalev',
+    'author_email': 'eugene@kovalev.systems',
+    'maintainer': None,
+    'maintainer_email': None,
+    'url': 'https://gitlab.com/robotnikmq/robotnikmq',
+    'packages': packages,
+    'package_data': package_data,
+    'install_requires': install_requires,
+    'python_requires': '>=3.8,<4.0',
+}
+
+
+setup(**setup_kwargs)
