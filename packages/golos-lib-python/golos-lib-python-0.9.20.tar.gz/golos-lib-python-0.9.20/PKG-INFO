@@ -1,0 +1,80 @@
+Metadata-Version: 2.1
+Name: golos-lib-python
+Version: 0.9.20
+Summary: Python library for Golos blockchain
+Home-page: https://github.com/golos-blockchain/lib-python
+License: MIT
+Author: Vladimir Kamarzin
+Author-email: vvk@vvk.pp.ru
+Requires-Python: >=3.6.1,<4.0.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: appdirs (>=1.4.4,<2.0.0)
+Requires-Dist: certifi (>=2020.4.5,<2021.0.0)
+Requires-Dist: ecdsa (>=0.13,<0.14)
+Requires-Dist: funcy (>=1.14,<2.0)
+Requires-Dist: langdetect (>=1.0.8,<2.0.0)
+Requires-Dist: prettytable (>=0.7.2,<0.8.0)
+Requires-Dist: pycryptodome (>=3.9.7,<4.0.0)
+Requires-Dist: pylibscrypt (>=1.8.0,<2.0.0)
+Requires-Dist: scrypt (>=0.8.13,<0.9.0)
+Requires-Dist: toolz (>=0.10.0,<0.11.0)
+Requires-Dist: ujson (>=2.0.3,<3.0.0)
+Requires-Dist: urllib3 (>=1.25.9,<2.0.0)
+Requires-Dist: voluptuous (>=0.11.7,<0.12.0)
+Requires-Dist: w3lib (>=1.21.0,<2.0.0)
+Requires-Dist: websocket-client (>=0.56,<0.57)
+Project-URL: Repository, https://github.com/golos-blockchain/lib-python
+Description-Content-Type: text/markdown
+
+# Python GOLOS Library
+
+This is a fork of [golodranets](https://github.com/steepshot/golodranets) GOLOS
+library for Python which was forked from official STEEM library for Python. It
+comes with a BIP38 encrypted wallet.
+
+The main differences from the `steem-python`:
+
+* directed to work with GOLOS blockchain
+* websocket support
+* convert Cyrillic to Latin for tags and categories
+* Golos assets - `STEEM` -> `GOLOS`, `SBD` -> `GBG`, `VESTS` -> `GESTS`
+* renamed modules - `steem` -> `golos`, `steemdata` -> `golosdata`
+* for `Post` instance added two fields - `score_trending` and `score_hot`. This fields may be helpful if you want to sort your saved posts like `get_discussions_by_trending` and `get_discussions_by_trending` methods do. `reblogged_by` field is also filled now
+* for `Account` instance methods `get_followers` and `get_following` were improved - now it takes `limit` and `offset` parameters
+
+GOLOS HF 26 is supported.
+
+# Installation
+
+As regular package:
+
+```
+pip install python-golos
+```
+
+Local installation from source:
+
+```
+cd golos-python
+poetry install
+poetry shell
+```
+
+## Homebrew Build Prereqs
+
+If you're on a mac, you may need to do the following first:
+
+```
+brew install openssl
+export CFLAGS="-I$(brew --prefix openssl)/include $CFLAGS"
+export LDFLAGS="-L$(brew --prefix openssl)/lib $LDFLAGS"
+```
+
