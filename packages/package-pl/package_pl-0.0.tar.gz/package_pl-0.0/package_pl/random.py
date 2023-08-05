@@ -1,0 +1,1 @@
+print("This print is in local random.py which means if this is printed this file is called instead of the original random")
