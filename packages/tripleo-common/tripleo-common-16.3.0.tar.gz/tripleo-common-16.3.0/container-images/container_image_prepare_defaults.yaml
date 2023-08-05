@@ -1,0 +1,47 @@
+parameter_defaults:
+  ContainerImagePrepare:
+    # Image label which allows the versioned tag to be looked up from the <tag>
+    # image.
+  - tag_from_label: rdo_version
+    # Uncomment to serve images from the undercloud registry. Images will be
+    # copied to the undercloud registry during preparation.
+    # To copy/serve from a different local registry, set the value to
+    # <address>:<port> of the registry service.
+    # push_destination: true
+
+    # Substitutions to be made when processing the template file
+    # <prefix>/share/tripleo-common/container-images/tripleo_containers.yaml.j2
+    set:
+      # Container image name components for OpenStack images.
+      namespace: quay.io/tripleomaster
+      name_prefix: openstack-
+      name_suffix: ''
+      tag: current-tripleo
+      rhel_containers: false
+
+      # Substitute neutron images based on driver. Can be 'other' or 'ovn'.
+      # This is usually set automatically by detecting if ovn services are
+      # deployed.
+      neutron_driver: 'ovn'
+
+      # Container image name components for Ceph images.
+      # Only used if Ceph is deployed.
+      ceph_namespace: quay.io/ceph
+      ceph_image: daemon
+      ceph_tag: v6.0.6-stable-6.0-pacific-centos-8-x86_64
+
+      ceph_prometheus_namespace: quay.ceph.io/prometheus
+      ceph_prometheus_image: prometheus
+      ceph_prometheus_tag: v2.7.2
+
+      ceph_alertmanager_namespace: quay.ceph.io/prometheus
+      ceph_alertmanager_image: alertmanager
+      ceph_alertmanager_tag: v0.16.2
+
+      ceph_node_exporter_namespace: quay.ceph.io/prometheus
+      ceph_node_exporter_image: node-exporter
+      ceph_node_exporter_tag: v0.17.0
+
+      ceph_grafana_namespace: quay.ceph.io/app-sre
+      ceph_grafana_image: grafana
+      ceph_grafana_tag: 6.7.4

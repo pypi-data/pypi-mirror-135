@@ -1,0 +1,2665 @@
+CHANGES
+=======
+
+16.3.0
+------
+
+* Add ceph\_spec library to tripleo-common
+* Don't enable module stream in rhel9
+* Remove /etc/yum.repos.d/ubi.repo
+* Remove redhat-release only if installed
+* remove remove-machine-id element
+* Remove additional patching to use gitpython with eventlet
+* Use Python3 yoga unit tests
+* Remove workaround for tempest sudoers
+* Bump Ceph container daemons to v6.0.6
+* Add tempest to sudoers for tempest container image
+* Remove unused tripleo\_common.utils.keystone
+* Remove unused tripleo\_common.utils.time\_functions
+* Stop creating manifest .htaccess
+* Install curl for EL8 only
+* Add collectd plugins and related packages
+* Tidy up config image declarations
+* Removing erlang-hipe
+* task-core file generation
+* Remove memcachec from containers
+* Running ansible-config before writing default config
+* Disable ubi repos during container builds
+* Deactivate LV's before disconnecting nbd device
+* Add an API config image heat variable
+* Add designate dashboard to the horizon container
+* Fix namespace-less containers in image-serve
+* [EL8] Add nodejs:14 module stream
+* [CS9] Rework dnf modules
+* Trivial: fix conditional whitespace
+* Fix permissions for deployments
+* Delete overcloud-hardened-full image definitions
+* Add ipa client to tripleoclient container
+* Include qdrouterd packages on EL9
+* Fix the help output for tripleo-mount-image
+* [EL9] Switch to mariadb:10.5 module
+* Update tcib for CentOS Stream 9
+* add kernel-modules-extra in overcloud image needed for HWOL
+
+16.2.0
+------
+
+* Remove six library
+* [c9] replacing genisoimage with xorriso
+* Revert "Revert "Allow for OCI manifests""
+* Revert "Allow for OCI manifests"
+* Remove unused constants for Mistral workflows/actions
+* Remove unused DEFAULT\_DEPLOY\_\*\_NAME
+* Remove unused TRIPLEO\_NETWORK\_CONFIG\_RESOURCE
+* Remove unused DEPLOYMENT\_STATUS\_FILE
+* Remove unused constants for TripleO UI
+* Remove tftp-server package from ironic-pxe container
+* Align swtpm packages for nova-libvirt/compute
+* Drop ansible-playbook-3 workarounds
+* Allow for OCI manifests
+* Detect image format for qemu-nbd --format
+* Remove mistral sudoers
+* Remove zaqar
+* Removal mistral
+* Remove /etc/rabbitmq/rabbitmq.conf
+* Revert "Switch to mariadb:10.5 module"
+* Remove unused input parameters for upload-artifacts
+* Switch to mariadb:10.5 module
+* Add scripts tripleo-mount-image, tripleo-unmount-image
+* Add security\_reset.expect.10.5 from kolla for mariadb>10.5
+* Add configs for CentOS 9 image
+* Fix awk expression
+* Install Neutron BGPVPN in neutron-server
+* Setting language for the python3.6 tox environment
+* Fix upload-artifacts and its installation
+* Remove now useless sudo call for port check
+* Replace upgrades template when providers run again
+* Remove rehdat-release package from UBI8 image
+* inventory.py: all\_get\_neutron\_data to handle 404
+* Re-add tripleoclient and tempest container
+* Remove paramiko for FIPS
+* Bump Ceph container daemons to v6.0.4
+* Add dnsmasq to ironic-pxe container
+* Drop python3-networking-vmware-nsx from base neutron image
+* Add neutron-rpc-server to the base neutron image
+* Add apache to the designate api container
+* Do not generate password for unsupported services
+* Add python3-mod-wsgi to neutron-server image
+* Shrink whole disk image from 40G to 6G
+* Fix field validation typo s/macs/mac
+* Add missing IPv6 support for healthcheck\_port
+* Rename AdminToken to KeystonePassword
+* Remove ironic-inspector dnsmasq healthcheck
+* directly use files instread of tcib\_gather\_files
+* Check for no neutron network in inventory
+* Drop deprecated "macs" field in nodes\_json
+* Rename hieradata\_files result var
+* Build out runner dir structure
+* tcib: clean up cinder packages
+* Add missing ipa images to overcloud-hardened-images-uefi
+* Remove undercloud auth details from inventory
+* Make sure Heat Ephemeral has images prepared
+* Refactor enabled\_services for roles
+* Add TypeError exception when parsing addresses
+
+16.1.0
+------
+
+* Move rabbitmq healthcheck to something more modern
+* Cleanup OS\_CLOUD env var for ephemeral heat
+* Remove xinetd from the mariadb container
+* Do not fail if initiatorname.iscsi does not exist
+* Changed minversion in tox to 3.18.0
+* Remove references to tripleo-validations legacy directory
+* Remove libcgroup-tools from libvirt container
+* Make the clustercheck healthcheck work with socat
+* Fix config parsing in memcached healthcheck
+* Disable neutron inventory src if no ctlplane ports
+* Fix site-packages in horizon's extend\_start.sh
+* Ignore non host ports by tag filtering
+* Strip final dot of the fqdn hostname and dnsname
+* Remove the leftover module in tripleo\_common.actions
+* Partial-Revert:Skip port if missing mandatory tag
+* Skip port if missing mandatory tag
+* Ignore OVN Bridge MAC net for inventory generation
+* setup.cfg: Replace dashes with underscores
+* Removed mentions of mistral from the doc
+* Add rhosp-release rpm in rhel images
+* Update image build dependencies
+* Delete python2 based images
+* Remove Keepalived service
+
+16.0.0
+------
+
+* Add utils for local\_orchestration\_client
+* Also catch keystoneauth1.exceptions.catalog.EndpointNotFound
+* Drop SkopeoImageUploader
+* Add Python3 xena unit tests
+* Update master for stable/wallaby
+* Add interface-names to overcloud-hardened-images-uefi-rhel8
+* Revert "Include both Ceph Octopus and Pacific in the content provider"
+* Include both Ceph Octopus and Pacific in the content provider
+* Remove rhel7/centos7 image yaml
+
+15.0.0
+------
+
+* Update artifact tooling for swiftless underclouds
+* Bump Ceph containers to Pacific
+* Add Redfish properties when enrolling with 'idrac'
+* Fix neutron driver detection for containers params
+* healthcheck\_port: drop lsof in favor of awk/find
+* Update defaults for rhel modules in container base
+* exclude redhat-release from yum update in openstack-base
+* Add ceph-ansible to tripleoclient container
+* container-images: fix Cinder when running at Edge
+* Don't use tripleo\_hostname tag
+* Use quay.ceph.io to pull the Ceph Dashboard related images
+* Don't install dhcp-all-interfaces for redhat 8 onwards
+* Switch to tripleo namespace grafana images
+* Addressed more pylint issues
+* Don't allow rotation of HeatAuthEncryptionKey
+* Add passwords\_env parameter to generate\_passwords
+* Extend ansible inventory from network config file
+* Extend network info in generated inventory
+* Don't allow rotating keys if stack not found
+* Add support for py39
+* Removing tempest container build
+* Remove glance related utility methods
+* Ensure ansible.log accesses are locked
+* Cleanup utils 2/2
+* Cleanup utils 1/2
+* Drop swift cruft from config-download
+* Removes unneeded zuul layout overrides - templates for consistency
+* Don't require heat client for generate\_passwords
+* Remove all mistral actions from tripleo-common
+* Remove layout override and wire up buildimage template instead
+* Convert AnsiblePlaybookAction to utility
+* Drop inject\_facts\_as\_vars
+* Fix fact definition for deployments
+* Bring back custom nova filters for undercloud
+* Reduce fact gathering
+* Remove mistral arg from generate\_passwords
+* Cleanup dead mistral actions and workbooks
+* Add cloud-admin user to tripleoclient container
+* Add SITE\_PACKAGES variable to horizon extend\_start
+* Add python3-pymemcache to tcib
+* Add healthcheck to the frr image
+* Do not use ironic/nova for generate\_fencing
+* Add 'session' to generate inventory method
+* Inventory from neutron resources
+* Frr image support
+* Removed broken mocked params
+* Handle containers without a namespace
+* Fix uc install, Undercloud role must overwrite
+* Don't use swift plan for existing passwords
+* Add an internal index to network\_data
+* Fix placement endpoint check when endpoints are not set
+* Add host\_vars to define tasks executed before network configurations
+
+14.0.0
+------
+
+* Conditionally use python instead of cURL
+* Bump Ceph containers to octopus
+* Check existence of expires\_in for auth
+* Use the new IPA-builder element for installing python-hardware
+* Re-factor inventory.py use setdefault pervasively
+* Fix W1201 - logging-not-lazy
+* Add missing parentheses
+* Drop stack\_update function
+* Move daxio package to be arch specific
+* Create a container for Unbound DNS resolver
+* Drop parameter caching
+* pylint: fixed conditions
+* Document healthcheck and container build issues
+* Revert "Revert "Fix a couple of Swift healthchecks""
+* TCIB: Add cinder-volume extend\_start.sh script
+* pylint: fixed logging
+* Add doc/requirements
+* Wire up new tripleo upgrades jobs template
+* TCIB: Fix debug mode for oslo process execute
+* Revert "Removed ubi-8 based jobs"
+* Revert "Fix a couple of Swift healthchecks"
+* Fix a couple of Swift healthchecks
+* Enable pylint
+* Fix ImportWarning during importing a module
+* Change retry logic on buildah build
+* Switch gnocchi-statsd HC to healthcheck\_port
+* Raise error when old network config templates are used
+* Add daxio package for nvdimm scenario
+* The lower constraint file has been removed
+* Cleanup and add test coverage for inventory without overcloud
+* Fix localization for horizon container
+* Fix handling of default\_tag
+* Add extra debug/profiling in buildah debug mode
+* Switch defaults to quay.io
+* TCIB: Pick not best when building on centos/ubi
+* Fix --log-level=debug for buildah
+* Change qemu user id to match previous releases
+* Re-add ndctl to nova-compute image
+* Add better exception logging for builds
+* Fix wait condition for retry
+* Add missing ComputeNeutronMetadataAgent service into tripleo\_containers.yaml.j2
+* Removed ubi-8 based jobs
+* Drop --layers from buildah
+* Add heat-engine healthcheck
+* Refactor buildah logging
+* Add retry to build
+* Replace deprecated UPPER\_CONSTRAINTS\_FILE variable
+* Add Python3 wallaby unit tests
+* Update master for stable/victoria
+
+13.0.0
+------
+
+* Automatically set tag's based on role names
+* Switch to content provider jobs/templates
+* Add both validations path for inflight validation
+* Add ComputeNeutronl3Agent link to neutron-l3-agent container image
+* Handle None config for networkConfig
+* Lower ansible poll interval time
+* Improve bearer auth handling
+* Remove pull NetworkConfig from node-level
+
+12.7.0
+------
+
+* config-download: allow get\_overcloud\_config() to run without Swift
+* Use the new IPA-builder element for installing python-hardware
+* Get NetworkConfig from RoleNetworkConfigMap
+* Include swtpm in the nova\_libvirt container
+* Don't render NetworkConfig for every node
+* Consume ceph, prom, grafana containers from quay.io
+* Lower default verbosity for ansible
+* Also treat config as json(dict)
+* Move get network configs action to utils
+
+12.6.0
+------
+
+* Update container build to better reign in threads
+* Run tripleo-build-containers-ubi-8 on BuildahBuilder code
+* Adjust Ansible forks caculations
+* Fix lower-constraints errors
+* Add --log-level debug for buildah builder
+* Add collectd-libpod-stats to image
+* Replace cradox with rados
+* Remove remaining implementations for OpenDaylight
+* Remove the base layers
+* TCIB: remove leftovers from sahara
+* Remove unused sensu-client healthcheck
+* Remove Kolla overrides
+* Make current user owner of build log files
+* Support basic auth for image registry
+* Add --layers for tcib image layer caching
+* Stop configuring install\_command in tox
+* Add neutron-mlnx-agent container image
+* Switch default container prefix to openstack
+* Remove healthcheck/tacker
+* Include virt-admin in the nova\_libvirt container
+* Remove tripleo-container-image-prepare script
+* Remove sahara-\* from list in tripleo\_containers.yaml
+* Remove overcloud\_containers.yaml
+* Switch to tripleo\_containers.yaml
+* TCIB: move RHEL modules into base image
+* Fix config parser warning
+* Add modify\_only\_with\_source
+* Adding back overcloud-secure as it removes unsafe packages
+* Ensure atomic inventory file rename runs on the same mountpoint
+* (backward compatibility) create kolla UIDs/GIDs for TCIB
+* Restore default log path for image prepare
+* Make build\_timeout configurable
+* Ensure image files are readable to apache
+* Ensure tripleo ansible inventory file update is atomic
+* Remove check for ./puppet/services when filtering services
+* Add exponential backoff to ratelimited requests
+* Don't build image upload tasks when dry\_run=True
+* Change default DHCP timeout for ironic-python-agent
+* Stop doing tag\_from\_label lookup with tag
+* Reduce workers for label lookups
+* Correct the inventory generation
+* Revert "Revert "Remove chunk size for url stream""
+* Handle redirects for blobs better
+* Switch 55-heat-config to async
+* container-images: add librados2 to gnocchi-base
+* Add a real-time kernel hardened images for python3
+* Generate a play per step for external\_deploy\_tasks
+* config-download remove role arg from \_write\_tasks\_per\_step()
+* Replace overcloud-secure with overcloud-partition
+* Properly collect tasks with or conditional in step file
+* Add update and post update tasks to step generated file
+* Add a strict option to per role tasks file generation
+* First pass at script cleanup
+* Remove translation sections from setup.cfg
+
+12.5.0
+------
+
+* Revert "Remove chunk size for url stream"
+* tcib: rename kolla\_version to tcib\_managed
+* Retry fetching {{ deployment\_uuid }}.notify.json file
+* ansible: limit\_hosts now takes precedence over blacklisted\_hostnames
+* TCIB: add python3-pynacl to mariadb image
+* TCIB: bump ceph image to align with kolla images
+* Don't assume default tag exists in container repo
+* image\_uploader: switch stdout\_callback to tripleo\_dense
+* TCIB: add etcd user to the kolla group
+* Switch tripleo-cross-tripleoclient to python 3.7
+* Relax filter\_images\_with\_labels() and re-add kolla\_version
+* Remove the duplicated entry of designate-base
+* (TCIB) Remove validation related things from mistral container
+* Add tripleo\_states to default callback whitelist
+* Catch exception if servers are in error state with no bm\_node attached
+* [Q->T] Include manila in the Queens to Train Upgrade
+* Drop systemd support from nsswitch.conf
+* tcib: move cradox to gnocchi-base & enable ci on scenario001
+* Run standalone jobs with locally built images
+* Ensure lanplus is unset when using redfish
+* Fix stdout\_callback
+* Set undercloud ansible\_connection to local
+* Remove Validations Mistral Workflows
+* Revert "Revert "Remove config-download related mistral actions""
+* Implement tripleo-cross-tripleoclient-py38
+* Run tripleo-build-containers-ubi-8 under specific conditions
+* Add ensure\_global\_symlinks: true
+* Revert "Remove config-download related mistral actions"
+* Fix OVN Octavia provider driver package name
+* Add interface-names to Rhel8 images
+* Remove config-download related mistral actions
+* Remove AnsibleGenerateInventoryAction mistal action
+* tcib/ceilometer-base: remove panko dependency
+* Implement a new Container Images layout
+* Switch to newer openstackdocstheme and reno versions
+* Revert "Add kolla template override to remove python3-networking-mlnx"
+* Remove tripleoclient container
+* Fix nova-virtlogd container healthcheck
+* Add Python3 victoria unit tests
+* Update master for stable/ussuri
+* Add support for python 3.8
+* Strictly check pm\_type string
+* Do not rotate CephX secrets
+* Change generate\_ansible\_inventory() arguments
+
+12.4.0
+------
+
+* Fix dry-run for "remote copy deployment file" task
+* Enhance error messages when building containers
+* Do not disable RabbitMQ and OpsTools repos
+* Use unittest.mock instead of third party mock
+* Bump grafana container to 5.4.3 tag
+* Remove unnecessary Ceph{Admin,Mon,Mds}Key constants
+* Remove tripleo.deployment.overcloudrc action
+* Remove container-update.py
+* linters refresh w/ afferent bugfixes
+* Jinja2 raise extension
+* Remove validation related things from mistral container
+* builder/buildah: use tenacity to retry failing pushes
+* Switch to tripleo\_dense
+* buildah: allow images without type
+* Switch to tripleo stdout callback
+* buildah: exclude build and push, not only build
+* Switch fact caching connection
+* buildah: allow to exclude images from build
+* Add Octavia use of the rsyslog image
+* buildah: allow to bind mount volumes when image build
+* Enable centos-release-opstools repo for centos-8
+* Remove some unsed actions
+* Remove access.yaml workbook
+* Remove octavia\_post.yaml workbook
+* Add kolla template override to remove python3-networking-mlnx
+* Refactor ansible inventory generation
+* image/builder/buildah: support Containerfile
+* Remove swift\_ring\_rebalance.yaml workbook
+* Fix deployments playbook to work in check mode
+* Bump ceph/daemon container image to v4.0.12
+* Remove baremetal\_deploy.\* action entrypoints
+* Use a full string match for container images
+* Remove GetDeploymentFailuresAction
+* utils/config: allows a when to have boolean conditions
+* Use healthcheck\_port for ironic\_inspector\_dnsmasq healthcheck
+* Move \*OvercloudConfigAction functionality to utils
+* Move OvercloudRcAction functionality to utils
+* Fix "import xx as xx"
+* Remove DeploymentStatusAction
+* Cleanup py27 support
+* Only add non-empty blacklisted hostnames
+* Include uc plan var when TripleoInventories contains a single plan
+* mariadb: add pynacl dependency to support ed25519
+* Remove invalid mistral envocation and references
+* Revert "Revert removal of OrchestrationDeployAction"
+
+12.3.0
+------
+
+* Allow ansible\_group\_vars to be overriden by RoleGroupVars
+* Preserve existing placement password during extraction
+* Remove GenerateFencingParametersAction and CreateContainerAction
+* Remove PrepareContainerImage\* Actions
+* Remove scale and stack related workflows and actions
+* Add missing image yaml for centos 8
+* remove py27 from tox.ini
+* Prevent duplicated hosts in overcloudrc no\_proxy
+* Fix multistack inventory
+* clean up tripleo-common zuul layout, remove centos-7
+* Switch to yaml.safe\_load
+* Revert removal of OrchestrationDeployAction
+* Match hostname when doing node delete
+* Remove baremetal deploy workflows and actions
+* Set scp\_if\_ssh to True in ansible.cfg
+* Move ListRolesAction functionality to utils
+* Return None image client when no glance endpoint
+* Fix placement dependencies to work with mysql's ed25519
+* Disable fact gathering for create\_admin
+* Remove mistral dependency for password generation completely
+* Remove unused support.yaml workbook
+* Remove deployment workbook and some unused actions
+* Remove swift\_backup workbook and some related actions
+* Remove plan\_management workflows and unused actions
+* Add mistral workflow module path to mistral ansible config
+* Refactor registry request actions
+* Add libcgroup-tools to libvirt container
+* Improve authentication retries for slow transfers
+* config-download timeout should KILL the process
+* Remove mistral from the snmp password function
+* Move DeployStackAction functionality to utils
+
+12.2.0
+------
+
+* Handle race for the already existing layer
+* Use unversioned RHEL element w/ RHEL8
+* Change how we test for call
+* Pass container name to prune\_unused\_services
+* Move swift tempurl creation functionality to utils
+* Add interface-names to centos8 images
+* Remove skydive support
+* Move UploadTemplatesAction functionality to utils
+* Move PrepareContainerImageEnv functionality to utils
+* Bump ceph/daemon container image to v4.0.10
+* [Q->T] Introduce Queens to Train Upgrade
+* Remove get\_passwords workflow and related action
+* Remove unused password and fernet rotation actions and workflows
+* Move GeneratePasswordsAction functionality to utils
+* test\_kolla\_builder: make tests invariant to default data
+* update jobs to centos-8
+* replace centos-7 with centos-8 in scenario jobs
+* Move RotateFernetKeysAction functionality to utils
+* deployment: set DeployIdentifier to '' if --skip-deploy-identifier is used
+* Fix upload-swift-artifacts handling of json data
+* Add overcloud-ceph image build yaml
+* Fix memcached healthcheck regression
+* Remove tripleo.skydive\_ansible.v1 workbook
+* Remove package\_update workbook
+* Move generate\_fencing\_parameters functionality to utils
+* Move parameter actions functionality to utils - Part 1/2
+* Modify roles to remove unused services
+* Do not create temporary swift URLS for ceph-ansible
+* Move package\_update worflow related functionality to utils
+* Use config for layers
+* Added overcloud images yaml for CentOS-8
+* Remove upload\_validations workflow and related action
+* Move away from "ss" and drop default verbose mode
+* Move plan container creation to utils
+* Remove capabilities-map.yaml related checks from plan workflows
+* Improve upload-swift-artifacts handling of json data
+* Improve step task check to cater for whitespace
+* Make healthchecks more strict
+* Remove tripleo.deployment.convert\_status action
+* Remove the undercloud backup workflow and actions
+* Bracket IPv6 address in ironic\_inspector healthcheck
+* Move process template functionality to utils
+
+12.1.0
+------
+
+* pin ironicclient under 4.0.0 for py27
+* Set PROFILE\_TASKS\_TASK\_OUTPUT\_LIMIT
+* Fixes for CentOS8 containers build
+* Remove container\_image\_prepare\_default workflow
+* remove py27 tox job
+* Add tripleo\_role\_networks to inventory role group vars
+* Remove discover\_nodes workflows
+* tests: Get RoleData correctly
+* Remove unused tripleo.networks.v1 workbook
+* Remove heat\_capabilities action plugin
+* Revert "Make healthchecks more strict"
+* Define all api versions in constraints
+* Remove useless parameters from overcloudrc
+* Remove workbook related to plan environment
+* Tune ansible configuration for better performance
+* Raise exception on KeyboardInterrupt
+* Add config\_download\_args to the deployment workflow
+* Always convert to docker media format
+* Force docker format
+* Make healthchecks more strict
+* Dynamically set the number of Ansible forks
+* container\_update: Retry removing containers
+* Improve error messaging around auth failures
+* Drop the nuetron-server-ovn and odl images
+* Image uploader: use HTTPS for "no verify" registries
+* image\_uploader (attempt #3): fix images upload with no labels
+* Remove unused container images
+* Enforce 0600 permissions on an existing SSH private key file
+* Handle stack not found during inventory generation
+* Derive network config fails
+* Derive new nova compute parameters
+* Remove checking for already running config\_download\_deploy
+* workbooks/deployment: ignore uuid to hostname errors with splitstack & nova-less
+* Remove the tripleo.ansible action
+* image\_uploader/base handle when an image has null labels
+* Update template overrides for rabbitmq
+* image\_uploader: handle when an image has null labels
+* Fix quoting for PYTHONWARNINGS
+* More docs for image uploader class methods
+* image-uploader: allow an image without Labels to be uploaded
+* Revert "Added support of overcloud os\_cloud"
+* add and unify the retries when messages are published to swift
+* Bump ceph/daemon container image to v4.0.8
+* Add container images for DCN/Edge deployments
+* Increase randomness of generated CephFSID
+* Change the python interpreter discovery mode
+* Ensure blacklisted nodes are not included in server\_names
+* actions/ansible: catch errors when cleaning the work directory
+* Default to 50 Ansible forks
+* Remove workdir only if it's a temporary one
+* Make ()'s around step|int optional
+* Add deploy\_steps\_tasks to PER\_TASK\_STEPS
+* Revert "Update hostvars lookup to fix regression"
+* Fix ironic-pxe container healthcheck
+* Add horizon health check
+* Incorrectly derives NeutronPhysnetNUMANodesMapping
+* Using API instead yaql to get manageable nodes
+* config: refactor how per step tasks are generated
+* OvS DPDK parameters failing in NIC Partitioning
+* Pass container\_config to config actions
+* Quote output values for overcloudrc
+* Clarify introspection failed attempt log message
+* Update hostvars lookup to fix regression
+
+12.0.0
+------
+
+* Write ansible log content to a different log file
+* Provide container name when raising exceptions
+* Add healthcheck for nova-virtlogd container
+* Add RootStackName parameter on stack update
+* Escape invalid JSON characters during deployment
+* Ignore blacklisted nodes when rendering network config
+* Improve error reporting for not\_done jobs in buildah
+* Revert "Revert "Improve Swift healthchecks""
+* Revert "Improve Swift healthchecks"
+* Use the Mistral directory for storing the Ansible fact cache
+* kolla/overrides: add missing healthcheck for ironic-neutron-agent
+* Improve Swift healthchecks
+* Make upload workers faster on processing layers
+* Re-raise same exception type in export\_stream
+* Clean up instance defaults setting
+* Stop logging manifest in debug
+* Pin ceph dashboard containers on a specific tag
+* Revert "Set display\_skipped\_host to no"
+* Split the action logic from the run method
+* Fix ceilometer\_agent\_compute health check
+* tox: Keeping going with docs
+* Raise correct exception when worker fails
+* Adjust base\_centos\_yum\_repo\_packages for master
+* Switch to Ussuri jobs
+* get\_undercloud\_registry() - Default to: 'localhost:8787'
+* Fix missing lock
+* Fix py3 issue in get\_undercloud\_registry()
+* Use port 547 for dhcpv6 healthchecks when using IPv6
+* Reset \*RemovalPoliciesMode for node delete
+* Add a healthcheck for ironic-neutron-agent
+* Handle IPv6 addresses in ironic\_pxe\_tftp healthcheck
+* fix linters
+* fix linters
+* Update master for stable/train
+* Do not repeat setting defaults for image layers
+
+11.3.0
+------
+
+* Get undercloud name in get\_undercloud\_registry()
+* Fix dynamic executor appending to objects
+* Bump ceph/daemon container image to v4.0.4
+* Fix etcd healthcheck
+* Make executor type dynamic
+* Use tenancity to backoff when layer is locked
+* Properly catch exceptions when locking a layer
+* Add OS\_COMPUTE\_API\_VERSION to overcloudrc
+* Remove Trove password constant
+* Remove tacker container code
+* Cleanup override file
+* Officially deprecate the skopeo image uploader
+* Improving debug logging
+* Make gitpython and eventlet work with eventlet 0.25.1
+* Raise exception when no IPs found
+* Implement Ansible fact cache for Mistral executor
+* Prefix ansible output with timestamps
+* Fix duplicated msec
+* Always close src/dst sessions and raise to retry
+* Implement threading locks around layers
+* Improve ThreadPoolExecutor usage
+* Randomize the container list for uploads
+* Correct deprecated usage of ironicclient (broken with 3.0.0)
+* Add timestamps to log file for tripleo-container-image-prepare
+* Fix error in parsing nic config with duplicate quotes
+* Remove duplicated "for" loop
+* Remove chunk size for url stream
+* Update the constraints url
+* Run container prepare without gathering facts
+* Set display\_skipped\_host to no
+* Add profile\_tasks to ansible runs
+* Warn when looking up grandparent resource name
+* mistral-executor image install novajoin package
+* healthcheck: List udp ports with ss
+* Activate health check script for qdrouterd image
+* Add missing allocations for active nodes
+* Ignore failure calling cell\_v2\_discover\_hosts from deployment
+* healthcheck\_port: run ss with both sudo & root as best effort
+
+11.2.0
+------
+
+* healthcheck\_port: run ss -ntp with sudo
+* Remove the unused tripleo.plan.update\_from\_dir Mistral action
+* Remove the unused tripleo.plan.update\_plan\_environment Mistral action
+* NeutronPhysnetNUMANodesMapping parameter issue
+* create\_or\_find\_kernel\_and\_ramdisk docstring fixes
+* Introduce TripleoInventories object
+* Add empty block for "fluentd\_monasca\_plugin\_install"
+* Use trash\_output in create\_admin\_via\_ssh workflow
+* Honor trash\_output when not using queue
+* Migrate building IPA to ironic-python-agent-builder
+* Clean up host var for pre/post deployment
+* config-download: rename pre/post deployment hostvars
+* OvS DPDK derive parameters timeout issue
+* Fix ipv6 test and pytest collection
+* Bump build timeout to 60 min
+* Add support for uploading local image
+* Remove hiera roles
+* Add python3 file for additional images
+* Fix trailing slashes for container locations
+* Add health check script for qdrouterd
+* Log exceptions when checking status
+* Remove tripleo-deploy-openshift file
+* Remove the tripleo.deployment.v1.recover\_deployment\_status workflow
+* Remove the unused tripleo.plan.gather\_roles Mistral action
+* Remove the file exists action and save and restore to swift actions
+* Remove the logging to Swift custom Mistral actions
+* Bump the openstackdocstheme extension to 1.20
+* Add filter plugins path to the ansible.cfg
+* Change ceph dashboard service name to meet puppet requirements
+* Add "rhel\_containers" variable to skip containers for RHEL
+* Add / Remove packages to support fluentd
+* Remove disable\_constraints
+* Ensure working systemctl for Sensu
+* Close the http sessions of registry on image prepare
+* Add python3 file for hardened images
+* Revert "[RHEL8]Remove collectd-sensubility from collectd container"
+* Add an undeploy\_roles workflow
+* Allow mixing of count and instances
+* Break out hostname format logic into functions
+* Changes to baremetal provision format
+* Remove the tripleo.plan\_management.v1.list\_roles workflow
+* Remove the tripleo.plan\_management.v1.update\_roles workflow
+* Remove the tripleo.plan\_management.v1.update\_parameters workflow
+* [RHEL8]Remove collectd-sensubility from collectd container
+* Disable tripleo-ci-fedora-28-standalone job
+* Remove hieradata ansible tasks for datafiles
+* Remove OpenShift containers
+* Allows to disable in-flight validations
+* Restore AllNodesExtraMapData
+* Remove support for enrolling nodes with Cisco hardware types
+* Add image for neutron-mlnx-agent
+* Fix expensive api call to get deployment\_name
+* Minor fix for typo : replaces seccomp with libseccomp
+* support conductor group feature in ironic conductor
+* Add reauthentication to sessions
+* Sync Sphinx requirement
+* Fix swift-proxy healthcheck
+* Add docker/podman packages to nova\_libvirt container
+* Add deployment\_options input to config\_download workflow
+* Fix ansible-generate-inventory action
+* Add extraconfig/role\_extraconfig template to hieradata
+* Add service\_configs template to tripleo-hieradata
+* Move redis\_vip to all\_nodes.j2
+* nova-less-deploy: update to metalsmith 0.13
+* Update GitPython requirement from global-requirements
+* Use the default ContainerImagePrepare if not provided
+* Properly close web request
+* Remove the tripleo.plan\_management.v1.select\_roles workflow
+* Remove the tripleo-persist role
+* Rename \_short\_bootstrap\_node\_ip to \_bootstrap\_node\_ip
+
+11.1.0
+------
+
+* wait\_for\_introspection\_to\_finish\_error set status FAILED
+* Fix flake8 git repo location
+* Skip processing network info if not defined
+* Set container=oci for our containers
+* Add Python 3 Train unit tests
+* Skip standalone deploys if tox jobs fail
+* Bump ceph/daemon container image to v4.0.1
+* Update kolla builder tests for new service path
+* Add get\_key tasks for package update
+* Set scenario009 job voting to false
+* Rsyslog image pull
+* Make a more ansible-ish test on hieradata\_files list content
+* Ensure we're raising proper exceptions
+* Correct package name for ceilometermiddleware for swift
+* Correct how we fetch External and InternalApi networks name
+* Remove the tripleo.plan\_management.v1.list\_sample\_plans workflow
+* Create <service> \_cell\_node\_names if nova\_additional\_cell
+* Remove pika from container builds
+* Make instances name/hostname optional
+* Also write NetworkConfig to role dir
+* Added support of overcloud os\_cloud
+* Image Uploader - get\_undercloud\_registry IPv6
+* Remove tripleo-common/playbooks
+* Add fqdn and cloud\_domain templates to tripleo-hieradata
+* Add net\_ip\_map template to tripleo-hieradata
+* Exit 1 when container image prepare fails
+* Processing available Ansible variables as 'parameters' not as 'metadata'
+* Get all the available Ansible variables for each validations
+* Stop writing allnodes\_vars in inventory
+* Python 3 fixes for tripleo-hieradata role
+* Remove the tripleo.plan\_management.v1.publish\_ui\_logs\_to\_swiftworkflow
+* Remove the tripleo.plan\_management.v1.download\_logs workflow
+* Ensure that OctaviaServerCertsKeyPassphrase is 32-byte long
+* Add sudo commands for validations tempfile created in Python3
+* Handle empty NetworkConfig
+* Linting hardening via pre-commit
+* Adds tox environment to test requirements conflicts
+* Remove roles that have been imported into tripleo-ansible
+* Add new images for ceph dashboard composable service
+* Check third-party container image metadata
+* Don't calculate vips for some services
+* Add vip\_data template to tripleo-hieradata
+* Add all\_nodes template to tripleo-hieradata
+* remove plotnetcfg from overcloud image yaml
+* Fix regression in UpdateParametersAction
+* trigger image-build off of image-yaml changes
+* Add template mode to tripleo-hieradata
+* Install dumb-init rpm
+* Minor tox molecule fixes
+* Handle registries with incorrect certs correctly
+* tripleo-hieradata: add hieradata\_files param
+* Adds job that runs molecule tests
+* tripleo-hieradata/per-host: use inventory\_hostname
+* Add tripleo-ansible directory namespace
+* Fix ansible-lint errors
+* Don't validate stack in task for backup ceph fetch dir
+* Adding references for OctaviaDriverAgent images
+* tripleo-hieradata: introduce hieradata\_per\_host
+* Populate Ansible Host variables with AnsibleHostVarsMap
+* Fix tripleo-upgrade-hiera key deleting
+* Fix bashate and flake8 errors
+* Update the Undercloud Services list in the inventory
+* Render NetworkConfig into config-download dir
+* Preserve file extension in config-download
+* Remove scenario008 jobs
+* Set resource\_registry deployed-server port
+* Increase timeout of temp swift URLs from 1 to 4 hours
+* Fix bare variable usage in ansible
+* Add ceph-ansible support to tripleo-ansible-inventory
+* Add bindep support to tox
+* Add general LOG in kolla\_builder.py
+* Rework create\_or\_find\_kernel\_and\_ramdisk to match the current reality
+
+11.0.0
+------
+
+* Convert Docker\*Image parameters
+* Transfer all images in a manifest list
+* Add the ability to compute osds number counting lvm devices
+* Overcloud-full image templates for RHEL8
+* Add support for RHEL 8 and start using versionless element
+* Replace git.openstack.org URLs with opendev.org URLs
+* Add deployed-server bootstrap tasks to tripleo-bootstrap
+* Add tripleo-hieradata role
+* Template each deployment file
+* utils/config: generate param\_config.json if param\_config exists
+* [CVE-2019-3895] Set image owner id
+* Fix Octavia certificate file path and content
+* Don't force verbosity of 1 for config-download
+* Fix validations\_inputs temporary file name
+* fix 404 when requesting empty tripleo container image catalog
+* Handle failed neutron-plugin-ml2.yaml lookup
+* Stop sending execution object via Zaqar message
+* Enable staging-ovirt (fence\_rhevm) fencing agent
+* Remove NovaConsoleauth Service
+* Remove duplications of tasks in scale workbook
+* workbooks/deployment: add support to choose playbook name
+* workbooks/deployment: add support to filter nodes when running Ansible
+* Make get\_enabled\_services() more robust
+* Use a typemap file instead of symlinks for tags
+* Define the interface for multi arch image prepare
+* Add serial option in the inventory
+* Add task to read remote pub key
+* Fix privileges in task fro tripleo-admin
+* [Trivial fix]Remove unnecessary slash
+* Introduce tripleo-container-rm
+* Run ansible before scale down
+* Use oslo\_rootwrap subprocess module in order to gain proper eventlet awareness
+* bootstrap: install network-scripts if EL8
+* tripleo-bootstrap: only enable network, not starting
+* Fix chown command in write\_inputs\_file function
+* tripleo-bootstrap: ensure network service is enabled & started
+* Add new healthchecks for zaqar services
+* Fixup octavia-api healthcheck
+* Remove images that are not in use anymore
+* nova: Remove nova-placement images and healthchecks
+* OpenDev Migration Patch
+* Update master for stable/stein
+* Add missing ws seperator between words
+* docker-rm: check if rpm dependency is actually installed
+
+10.7.0
+------
+
+* Remove ProcessTemplatesAction as base class
+* Use 'DEFAULT\_VALIDATIONS\_BASEDIR' variable from constants.py
+* Adding support for the new validation framework
+* Inject validation roles path in ansible config
+* Correct ovn-dbs health check
+* Fix support for v1 manifests
+* Update default Ceph container image to use to the Nautilus version
+* Adds redfish support to 'overcloud generate fencing'
+* Add container\_cli used for the Overcloud to the Inventory
+* Remove amp\_hw\_arch from octavia\_post
+* Check for file existance in file modification check
+* Wire in parameters.convert\_docker\_params
+* Add convert\_docker\_params function
+* Make ovn package python version aware
+* New health check for cron containers
+* image\_uploader: use buildah instead of podman to manipulate images
+* Use ContainerImageRegistryCredentials for registry auth
+* playbooks/rotate-keys: add support for podman
+* Ensure we get a value for manifest digest
+* Uncap jsonschema
+
+10.6.1
+------
+
+* Set the private key for undercloud tripleo-admin
+* Specify whether undercloud connection is ssh or local
+* turn voting/gating on scen009 master
+* Implement push flag for buildah
+* Make validation inputs configurable via Mistral
+* Revert "Stop dumb-init usage"
+* Silent file descriptor checks
+* Stop dumb-init usage
+* Fix undercloud backup via tripleoclient
+* Silent memcached healthcheck
+* Silent "curl" calls within healthchecks
+* add lower-constraints job
+* Add passphrase generation for Octavia
+* remove libvirt-daemon-driver-lxc
+* placement: Add mariadb to the placement-api container for upgrades
+* Implement image delete for exported images
+* Add a method to list all images in a registry
+* Write out /v2/\_catalog file after image export
+* Octavia: set selinux contexts on ansible generated configuration
+* Update programming language mentioned in setup.cfg
+* Mount openshift-ansible working dir with 'z' option
+* Add openssl-perl to provide /etc/pki/CA in TLS setup
+* mariadb: stop requiring extra package mariadb-server-utils
+* Remove timeout from ansible-playbook-command.sh
+* Update required packages for octavia api
+* Use ansible virtual package
+* Adjust where iptables-services is injected
+* Switch to distro\_python\_version
+* Make container list optional for builds
+* octavia: parameterize calls to container cli
+
+10.6.0
+------
+
+* drop kolla python-congressclient in container images
+* Create individual logs for each ansible run for better debugging
+* cleanup sensu-client packages drop list
+* remove skydive-ansible from mistral container
+* tripleo-container-image-prepare/logging: fix exception formating
+* Ensure iptables-services is in the containers
+* Split upgrade\_tasks.yaml per step tasks
+* image\_uploader: raise an error when podman pull fails
+
+10.5.0
+------
+
+* utils/swift/download\_container: python3 adjustment
+* Improve handling of layer transfer errors
+* Fix interaction between gitpython and eventlet
+* Revert "Modify roles to remove unused services"
+* Fix ansible tasks on python3
+* Small corrections in image\_uploader
+* Fix access of input parameters
+* Return correct value for default neutron\_driver
+* Stop outputting overcloudrc.v3 from workflow
+* mistral-executor: handle ansible-playbook-3
+* Delay check CI jobs until the pep8/unit passes.
+* Specify Octavia amphora image hw\_architecture property in Glance
+* Fix running the baremetal provide workflow with node names
+* Allow PythonImageUploader to accept unknown CA
+* Handle secret strings correctly
+* Handle swift interactions are strings as necessary
+* Remove Congress
+* drop msgpack now that kolla has dropped it as well
+* Use ANSIBLE\_BECOME\_FLAGS instead of ANSIBLE\_SUDO\_FLAGS
+* nova-less-deploy: implement deploy\_roles workflow
+* Warning cleanup in TestConfig
+* Modify roles to remove unused services
+* Delete FreeIPA enroll script
+* Add support of extra variables
+* Drop py35 jobs
+* Expunge the docker uploader
+* Skip ssh\_known\_hosts tasks in check mode
+* Tasks for cleaning up after tripleo\_persist and tripleo\_transfer
+* Don't always validate heat stack when adding parameters
+* Remove python-elasticsearch dependency
+* cinder block - dead code cleanup
+* Allow tripleo-admin user to have a keypair
+* image-serve: add httpd\_sys\_content\_t type to v2/index.json
+* Use Octavia's project for lb security group ops
+* image-serve: redirect root to /v2
+* Improve retry behaviour of \_copy\_layer\_registry\_to\_registry
+* image\_uploader: conditionally import docker
+* drop python-crypto changes from overrides
+* kolla\_builder: don't build template mapping when not needed
+* Append qemu-img to Mistral executor package list
+* Switch to podman for tripleo-deploy-openshift
+* Add python3 packages to overrides
+* Ensure docker is running before dropping containers
+* Use len to compare list at mistral
+* Option to run osa playbooks from path
+* Pass additional args to tripleo-deploy-openshift as ansible options
+* Add ability to run osa playbooks from tripleo-deploy-openshift
+* Introduce a --plan option to replace --config-download-dir
+* Get osa container image from tripleo-common defaults
+* image-serve: add httpd\_sys\_content\_t type to image\_data\_dir
+
+10.4.0
+------
+
+* Don't rely on crudini for octavia config
+* image-serve: improve vhost config
+* Support for Buildah in kolla\_builder
+* Fix a trailing space
+* Add missing queue\_name input parameter for listing validations
+* Role to install apache to serve container images
+* Handle uncompressed layers on image export
+* image\_uplaoder: add retry to \_layer\_stream\_registry
+* fix if statement compare strings with -gt
+* Fixes OVN docker image prep with Neutron
+* Enable placement-api health check
+* Export images to be served by httpd
+* Append rabbitmq\_packages\_append contents
+* Remove python-notario package from mistral-executor image
+* Remove docker/podman from mistral-executor
+* Use ssh in generated inventory for undercloud
+* Authorize undercloud tripleo-admin user
+* Update tox min version to 2.0
+* Make python uploader the default
+* rabbitmq-server workaround
+* Revert "Remove placement healthcheck from overrides"
+* Make the image pulling optional for tripleo-container-tag role
+* Remove placement healthcheck from overrides
+* Break out tripleo-admin creation to its own role
+* Bump the Ceph container image to 3.2.1
+* overcloud\_containers.yaml.j2: remove unused \*-base entry
+* Use the yaml stdout\_callback for better prepare logging
+* Address python3 string issues with subprocess
+* remove percona-xtrabackup
+* nova-less-deploy: updates for metalsmith >= 0.9.0
+* Revert "Add backwards compatible keystone healthcheck link"
+* Remove tomcrypt/tommath from template\_overrides
+* Remove crane image from prepare list
+* Add backwards compatible keystone healthcheck link
+* Override fluentd plugin block
+* nova-less-deploy: follow-up to deploy\_instances
+* [Configuration] Remove testrepository
+* Make transfer and persist modules, trailing slash insensitive
+* New role to create/update/delete hiera value during upgrade
+* Fix stack\_status YAQL expression for non existent stacks
+* placement: Add missing healthcheck for extracted service
+* Check for physical\_resource\_id before getting deployments
+* Publish a better failure message for Update Ansible
+* Prevent upgrading to incompatible mechanism driver
+* Remove deployments.yaml from role directory
+* Ansible role to transfer data from an overcloud node to another
+* Ansible role for data presistence and restoration
+* Publish error for package\_update workflow
+* placement: Add missing PlacementPassword to constants
+* Fix keystone healthcheck
+* nova-less-deploy: deploy\_instances and undeploy\_instances workflows
+* placement: Use the less generic PlacementApi service name
+* Don't fail when undeploying and the stack doesn't exist
+* Change openstack-dev to openstack-discuss
+* Use the tripleo-standalone-scenarios-full template
+* Add scenario002-standalone and 4 to gates as they are voting
+
+10.3.0
+------
+
+* Workaround ssh\_known\_hosts changes not being propagated to containers
+* Add standalone scenario jobs into the gate as well as check
+* Replace tripleo-scenario003-multinode with scenario003-standalone
+* Run scenario009 on tripleo-deploy-openshift changes
+* Sphinx throws warnings on workbooks descriptions
+* Fix Sphinx warnings on auto generated workbooks docs
+* Allow network data with no entries
+* Replace tripleo-scenario002-multinode with scenario002-standalone
+* Add nova serialproxy image
+* Mock swiftutils for overcloud config action test
+* Install ipmitool in the mistral\_executor image
+* [Configuration] Update min tox version
+* Fail multiple executions of config-download of the same plan
+* Fix command syntax error in TripleO and Mistral docs
+* Update hacking version
+* Replace tripleo scenario004-multinode with scenario004-standalone
+* Additional images for openshift services
+* Fix tags for openshift images
+* Add extracted Placement images
+* Replace zaqar image with zaqar-wsgi image
+* Look for lower-case hostname when adding to ssh\_known\_hosts
+* Exit wait\_for\_stack\_does\_not\_exist if the status is delete failed
+* Do not pass insecure and mirrors as arguments
+* Fix ansible-playbook call to python3
+
+10.2.0
+------
+
+* Better surface the error status and message when there is a failure
+* IPv6 healthcheck fixes for nova-vnc-proxy
+* Remove redundant ntp package from image-yaml files
+* Fix DeploymentStatusAction KeyError
+* Drop baremetal job template
+* Address python3 string issues with subprocess
+* Add excludes to kolla builder
+* Implement python based uploader
+* Fix syntax error in role octavia-controller-config
+* Remove tripleo ironic-staging-drivers addition
+* [Configuration] Add missing py37 and corrected default envlist
+* overrides for transitioning from mariadb 10.1 to 10.3
+* Add a way to update ContainerImagePrepare params
+* Only update parameters once in backup workflow
+* Add python-notario package to mistral-executor container
+* Fix environments sorting
+* Increase ansible gather\_timeout to 30secs for config-download
+* Set heatclient exceptions to verbose
+* Derives NUMA aware vSwitches parameters
+* Stops growth of massive dentry cache growth
+* Don't accumulate ansible output uselessly
+* Don't upcall run on UpdateParametersAction errors
+* Fix broken YAQL expressions in heat\_environments.yaml
+* Replace scenario001-multinode with scenario001-standalone
+* Fix ironic-pxe healthcheck
+* Fix non-exiting link to TripleO-common bugs
+* Fix AnsibleAction.run() when argument is not a dict
+* image\_uploader: use /v2 suffix to validate SSL
+* Specify python interpreter for undercloud
+* Set DeployIdentifier on update/upgrade/ffwd prepare actions
+* Rename tripleo-ci-centos-7-scenario009-multinode-oooq
+* Add tripleoclient container
+* Bump the Ceph container image to 3.2.0
+* Generating fencing for capitalized MACs
+* Persist region name in overcloudrc
+* Update swift\_backup workflow success status message
+* Do not fail deploy for empty ceph ansible fetch directory
+* Stop setting boot\_option=local on ironic nodes
+* Use stestr for unit tests
+* Simplify logic in docker detection for docker-rm role
+* Fix rotate\_fernet\_keys workflow to not use heat deployment
+* Catch heat exceptions in DeployStackAction
+* Exit when container is missing or empty when downloading logs
+* Select message IDs properly when publishing to swift
+* Remove configs parameter from TripleoInventory
+* Add advanced deployment options
+* Install ironic-staging-drivers in ironic-conductor
+* Fix nova-api healthcheck
+* Pass execution\_id to tripleo.ansible-playbook
+* Implement tripleo-docker-rm role
+* tripleo-container-tag: pull image before tagging
+* Cache swift responses in process\_environments\_and\_files
+* Don't reset parameter cache in a loop
+* Revert "Revert "Add crane service to overcloud\_containers.yaml.j2""
+* Add container build job
+* Supports specifying profile explicitly in instackenv.json
+* Correct handling of capabilities on node update
+* Option to upload Octavia amphora img in RAW format
+* Omit grep process in nova\_api healthcheck
+* Move Octavia config opts to common config directory
+* Add image\_source to containers
+* Sync state if needed during retrieval
+* Fix config-download timeout
+* fix tox python3 overrides
+* Implement tripleo-container-tag role
+* Stop installing octavia-amphora-image package
+* [Core] Fix the KeyError exception
+* don't install "yum-plugin-priorities" as it part of DNF
+* Revert to coreos images hosted on quay.io
+* Delete old tarball from config container on download
+* Add container images for openshift 3.11
+* Revert "Add crane service to overcloud\_containers.yaml.j2"
+* Use pyyaml to output group vars
+* Support v1 container image manifests
+* Use DockerRegistryMirror to proxy requests
+* Remove non-voting scenarios from gate
+* Move some container deps out of base
+* Don't resolve Heat stack output when unnecessary
+* Run Mistral workflow to make temporary Swift URLs on upgrade
+* Refactor image uploader class structure
+* Fix - config-download tarball upload OverflowError
+* Per server deployments instead of per role
+
+10.1.0
+------
+
+* write\_config: force utf8
+* Add debug to container image prepare
+* Store prepare defaults in packaged yaml
+* Run NetworkDeployment as async task
+* Add tht to mistral\_executor (for plan create)
+* Add ansible\_group\_vars to config download
+* Skip deployments with no uuid
+* Increase size for security hardened images
+* Improve inspect error retry behaviour
+* Update sphinx extension logging
+* Make service optional for auth
+* Remove ceph-ansible Mistral workflow
+* Change ceph-ansible fetch directory format on upgrade from Q to R
+* Add crane service to overcloud\_containers.yaml.j2
+* Replace skopeo inspect with python
+* Add AllNodesConfig to config-download group vars
+* Fix nova-api healthcheck in case of nova metadata wsgi
+* Retry uploading messages to Swift up to 5 times
+* Use Timesync service instead of Ntp
+* Set prepare neutron\_driver from NeutronMechanismDrivers
+* Default the scale status to SUCCESS
+* Fix temp file locking issues in tests
+* tripleo-container-image-prepare add --log-file
+* Fix skip of octavia-undercloud Ansible role
+* Improve validations output for troubleshooting
+* Add wrapper for openshift-ansible docker command
+* Add openshift-ansible container image
+* Fail node cleaning on timeout
+* Don't add tarball to config-download dir
+
+10.0.0
+------
+
+* Add image building config file for Fedora and py3
+* Check mode support for hiera deployments
+* Load and persist modules from the host
+* Revert "Add container runtime packages for cron image"
+* images: install libseccomp beside podman
+* Set workflow status to success when manipulating deployment status
+* Hardcoding x86\_64 in template overrides for the  opendaylight repository
+* Fix check mode for server deployments
+* Upgrade docker ceph container
+* Add httpd and mod\_ssl packages to octavia api image
+* Increase upload concurrency
+* Remove non-voting jobs from the gate
+* Optimize Heat stack check when processing roles
+* Don't fail tripleo-bootstrap on package installs
+* Handle non-existant plan when getting deployment status
+* Do not include ceph-ansible in the container image
+* Skopeo based uploader
+* Use templates for cover
+* config: ignore missing server\_id from the stack
+* Set SSH server keep alive options
+* Tag openshift images for Infra service
+* Add container-registry image to openshift master role
+* Switch to origin-docker-build
+* Make ODL healthcheck IPv6 compatible
+* Revert "Use YAML output of ansible instead of JSON"
+* Add bashate in gate jobs and fix existing errors
+* Fix formatting options
+* Run prepare during package\_update workflow
+* Revert "Use swift bulk-delete when deleting a plan"
+* Revert "Reintroduce empty\_container for tripleoclient"
+* Add container runtime packages for cron image
+* Revert "Add nvmetcli to cinder volume packages"
+* Remove instack-undercloud from image building
+* Disable external plugins in rabbitmq container
+* Improve logging for modify image during prepare
+* Update swift\_rings\_backup workflow to also backup ceph fetch dir
+* Handle missing or bad dmidecode
+* Reintroduce empty\_container for tripleoclient
+* Add validations pkg to mistral-executor image
+* Refactor non-docker upload functions into base class
+* Activate remaining set of healthchecks
+* Allow networks in roles\_data to be dict or list
+* Use YAML output of ansible instead of JSON
+* Fix validation runs in a containerized environment
+* Add config\_download\_timeout input
+* Handle sparse resource registry in build\_service\_filter
+* add python 3.6 unit test job
+* switch documentation job to new PTI
+* import zuul job settings from project-config
+* Use swift bulk-delete when deleting a plan
+* Add health check script for Sahara API
+* Add Ironic inspector health checks
+* Simplify tenacity sleep mocking
+* Switch to openshift 3.10
+* Do not require username/password when enrolling Redfish nodes
+* Drop version from OS\_AUTH\_URL
+* Update error string to be unicode
+* Adjust tenacity mock
+* Update reno for stable/rocky
+
+9.3.0
+-----
+
+* Update README to pass RST strict test
+* Open tarball in binary mode
+* nova\_metadata healthcheck script
+* Ensure all image parameters have a default set
+* Move python-novajoin package to nova-compute-ironic
+* Clean up node registration output
+* Revert "Include microversion in OS\_VOLUME\_API\_VERSION"
+* Revert "Remove ceph-osd and update other Ceph packages if deployment succeeded"
+* Support push\_destination:true in prepare
+* Add container\_image\_prepare\_params to deployment workflow
+* Add support for custom validations
+* Add missing service for DockerCinderVolumeImage
+* Remove ceph-osd and update other Ceph packages if deployment succeeded
+* Use https for novnc proxy healthcheck if ssl\_only is configured
+* Rename argument back to append\_tag
+* Remove container\_registry parameter from update workflows
+* Remove container\_registry param from package update action
+* Add novajoin package to nova-compute image
+* Honor blacklist with enable\_ssh\_admin
+* Add missing urllib3 test dep
+* Add 'podman' rpm to base\_centos containers
+* Avoid getting one-empty-element-list in blacklisted\_hostnames
+* ansible: replace yum module by package module when possible
+* Fix Plan creation from Git
+* Enable Ansible error handling per role
+* Create Heat Environments  workbook
+* Add python-novajoin to nova-api packages
+* Add on-error task to parse\_node\_data\_lookup
+* Add sudoers entry for tripleo-container-image-prepare
+* Action to perform container image prepare
+* Create script tripleo-container-image-prepare
+* Make MetricsQdr service use qdrouterd image
+* Fix available roles listing
+* Add override\_ansible\_cfg
+* Allow deferred undercloud push\_destination detection
+* Use keystone group for loading auth params
+* Create get\_flattened\_parameters workflow
+* Fix overwriting downloaded config files
+* Set trash\_output for ceph-ansible playbook run
+* Revert "Revert "Add disable-nouveau element to tripleo images""
+* Revert "Add disable-nouveau element to tripleo images"
+* Add skydive-ansible to mistral base packages
+* Remove ceph-specific logic from update/upgrade prepare workflow
+* Add default for ceph\_ansible\_playbook in update/upgrade prepare workflow
+* kolla overrides: Remove yum cache
+* Add workflow for config-download export
+* Set known hosts when --limit is set
+* Add missing service for DockerCinderConfigImage
+* Revert "Action to perform container image prepare"
+
+9.2.0
+-----
+
+* Add ability to filter container images to modify
+* Add container images for CNS
+* Add disable-nouveau element to tripleo images
+* Action to perform container image prepare
+* Add --xattrs to sudoers
+* Makes sorting environments with capabilities-map optional
+* Update failures listing to use latest ansible-errors.json location
+* Use /var/lib/mistral/<plan-name> as config-download dir
+* git integration for GetOvercloudConfig action
+* fix tox python3 overrides
+* Generate additional roles with defined roles file
+* Replace Exception.message with str(Exception)
+* Add DockerNovaMetadataConfigImage as part of metadata httpd wsgi move
+* Take WSGIScriptAlias into account in docker healthcheck
+* Generate rndc key in password list
+* Persist ceph-ansible fetch\_directory using mistral
+* Use scenario001 as check and gate job
+* Move scenario009 to the check queue
+* Remove unused clients from container images
+* Allow passing tags to update/upgrade Ansible workflow
+* Select default "openstack" plan when no plan-environment.yaml found
+* Add workflow to select sample plan
+* tripleo-validations, group-validations fails with notify\_running task exception
+* Update heat container healthchecks
+* Fix gnocchi\_statsd and ceilometer\_agent\_ipmi healthcheck
+* Use oslo log for image\_uploader as a library
+* ansible: enable pipelining
+* Fix ssh\_known\_hosts format
+* Re add upload\_validations
+* healthcheck/memcached: add brackets if ipv6
+* Include microversion in OS\_VOLUME\_API\_VERSION
+* Retry inspect of container images
+* Parametrize ansible transport setting
+* Make config-download directory a git repository
+* Fix the messaging workflow name for the validations workflow
+* Add workflow to get available plans
+* Add utility workflow to verify if an object exists
+* Increase gb\_per\_osd from 3 to 5 in derive\_params\_formulas
+* Fixes ordering of environment files in a deployment plan
+* Allow platform in instackenv.json
+* IPMI doesn't mandate a username or password so tripleo shouldn't either
+* Updates OpenDaylight healthcheck URI
+* Adds OpenDaylight sceanrio008 check
+* Remove the unhandled\_error task from baremetal.yaml
+* Fix generate fencing command
+* Remove validations that moved to tripleo-validations
+* Verify the Swift container exists with a small utility workflow
+* Set deployment\_status on error in get\_blacklisted\_hostnames
+* Add release note link in README
+* Workflows for manipulating deployment status
+* Fix unit tests under python 3.6
+* Add new undeploy\_plan workflow
+* Include docker package in mistral-executor image
+* Add different upload cleanup behaviours
+* Remove create\_default\_deployment\_plan workflow
+* filter available role by tags
+* Send a zaqar message with 'list\_validations' result
+* Switch ansible tmp for local connections
+* Let TripleO generate ODLPassword
+* Add openshift sti-builder image
+* Include --xattrs when creating the undercloud backup
+* Use the standard messaging in the support workbook
+* Use upstream etcd container image for openshift
+* Use the standard messaging in the parameters workbook
+* Workflow for configuring BIOS settings to ironic nodes
+* Force lowercase hostnames
+* Add security hardened images that can boot from uefi
+* Use the standard messaging in the baremetal workbook
+* Use the standard messaging in the stack workbook
+* Use the standard messaging in the undercloud\_backup workbook
+* Use the standard messaging in the scale workbook
+* Provide timestamps in Ansible output by default
+* Use the standard messaging in the plan\_management workbook
+* Use the standard messaging in the package\_update workbook
+* Add mistral job to rotate passwords on the overcloud
+* Add workflow for uploading validations to Swift
+* Add XClarity in the list of supported hw types
+* Install python2-networking-ansible in neutron-server
+* Revert "Revert "Pass connection info via ansible config file""
+* Don't resolve outputs when getting stacks
+* Revert "scen007 is failing in the gate"
+* scen007 is failing in the gate
+* kolla\_builder: use any templates except puppet
+* ensure the updates workflow checks container changes
+* Adds no\_proxy input to create\_overcloudrc workflow
+* Stop assuming all containers are plans
+* Delete messages container on plan deletion
+* Verify host\_vars and group\_vars are valid yaml
+* enable the update job on scripts/\* changes
+* Write to /etc/ssh with super user privileges
+* Add health checks for Swift services
+* Add dbus-python to overcloud-full image
+* Use correct modify\_append\_tag key (again)
+* Don't return image tags during dry\_run=True
+* Copy deployments.yaml to top level config-dir
+* Set deployment status to UNDEPLOYED on plan creation
+* UpdatePlanEnvironmentAction enable overwrite or merge
+* Improve ssh connection handling
+* fix tox python3 overrides
+* Set the initial introspection attempt to 0
+* Pass container and queue\_name inputs to the list\_available\_roles workflow
+* Whitelist k8s and OpenShift services as containerized
+* Add container images needed for OpenShift
+* Do not explode on empty containers list
+* Order jobs by number
+* Run container jobs on kolla\_builder changes
+* Add experimental job for OpenShift deployment
+* Pass DockerCephDaemonImage to CephMgr
+* Add health check for OVN containers
+* ensure unique ironic node ID with UCS driver
+* Optimize horizon URI retrieval
+* Remove the output from the heat.stacks\_get action result
+* Add recover\_deployment workflow
+* Use the standard messaging in the swift\_rings\_backup workbook
+* Use the standard messaging in the validations workbook
+* Use the standard messaging in the plan\_management workbook
+
+9.1.0
+-----
+
+* Get deployment\_stack\_id via deployment\_ref for config download
+* Add docker packages to OVN metadata agent container
+* overcloud: include openssh element
+* Ignore errors when checking result of previous deployments
+* Use correct modify\_append\_tag key
+* Deploy ceph-ansible in mistral containers
+* Workflow and action for deployment failures
+* Ansible json error callback plugin
+* Create config-download-latest symlink
+* Add ssh\_network input
+* Remove extra parenthesis from container-update.py
+* Migrate to the new Mistral context class
+* Fix heat api cfn healthcheck
+* Remove the tripleo.container\_images.prepare\_upload action
+* Fix readme doc
+* Increase services project secgroup-rules quotas when deploying Octavia
+* Fix handling hardware types and drivers when generating fencing parameters
+* Lowercase any hostname comparisons in bootstrap\_\* scripts
+* Test target image exists before modifying
+* Add a dry-run behaviour to image image\_uploader
+* Fix Octavia amphora image RPM install
+* Remove the upgrade-non-controller.sh and disable\_upgrade\_deployment
+* Prevent updating derived\_parameters in plan environment
+* Add an "includes" prepare filter to match "excludes"
+* Update heat api healtchecks
+* Remove horizon ui plugins we don't support
+* Add an action to upload validations to Swift
+* Add workflow for plan deployment status
+* Set deployment\_status from config\_download\_deploy
+* Make lb-mgmt-subnet a class B subnet
+* Fix redis healthcheck
+* Revert "TLS by default for the overcloud"
+* Convert classic drivers to hardware types on enrollment
+* (cleanup) remove usage of role\_name
+* Include 'tripleo\_role\_name' in the inventory
+* Install Octavia amphora image if Red Hat
+* Increase services project quotas when deploying Octavia
+* Run yum clean to reduce size of docker image layer
+* Add validation for empty file system backup on Undercloud
+* Check pub key file perms and default to pub key data
+* Support packages list for updates in container
+* Add yum update to base
+* Incorrect plan name in send\_message task
+* Implement image customization during upload
+* TLS by default for the overcloud
+* add tripleo update job as voting
+* Refactor functions out of ProcessTemplateAction
+* Add type and plan\_name to message sent from ansible-playbook action
+* Add special 'all' for deploy\_on\_servers server name to match all
+* Support deployment blacklist with --limit
+* Allow image prepare to only filter by role data
+* Add nvmetcli to cinder volume packages
+* Use the standard messaging in the derive\_parameters workbook
+* Send a message every time we get the stack
+* Optionally run config download at the end of stack create/update
+* Add a 'trash\_output' flag to ansible playbook action
+* Revert: "Remove ceph-ansible workflow."
+* Persist package update ansible logs
+* Use the standard messaging in the baremetal workbook
+* Use the standard messaging in the fernet-key-rotate workbook
+* Use the standard messaging in the networks workbook
+* Script to update RPM's in containers
+* Standardise Workflow messaging and optionally persist messages
+* Octavia amphora image handles updates and symlinks
+* Raise ansible forks to 25
+* Fix dynamic inventory
+* Enable ControlMaster for ansible ssh
+* Workflows for wiping overcloud nodes
+* Fix tarball generation when downloading logs
+* Add healthcheck script to mistral-event-engine image
+* Fix missing docker package in neutron L3 agent container
+* Use Designate Worker container for config
+* Add Workflow To Create Overcloudrc Files
+* Fix the passlib deprecation warning
+* Add workflow to generate fencing parameters
+* Fix nova-placement healthcheck
+* Allow uploading big files to swift (5GB)
+* Create keypair for SSH access to Octavia amphorae
+* Adds Create Container Workflow
+* Allow fencing config generation before deployment
+* Add in a STOPSIGNAL configuration
+* Update the horizon vhost filename
+* Configurable host network for inventory
+* Remove ceph-ansible workflow
+* Bump Ceph container image from 3.0.1 to 3.0.3
+* Use ansible\_queue\_name only for upgrade/update
+
+9.0.1
+-----
+
+* Only update plan on upgrade converge
+* config download support for a fixed directory
+
+9.0.0
+-----
+
+* Find deployment name in config download
+* Allow exit code of 0 only for deployments
+* Retry previously failed deployments
+* Add fluentd health check
+* Enforce env\_variables values to string before run
+* Allow for more overhead in zaqar message
+* ffwd-upgrade cli - adds ffwd\_upgrade\_converge\_plan task for noops
+* Fixes ODL healthcheck URI
+* Update swift plan in UpdatePlanEnvironmentAction
+* Use hostnames in inventory
+* Don't set deployments as hostvars
+* Activate another set of healthchecks
+* Deprecates tripleo.roles.list action
+* Switch to concurrent.futures for container prepare/upload
+* Break out function get\_undercloud\_registry
+* Perform multiple container image prepares and merge result
+* Make two workflows from 'validations' produce output
+* Remove no-ops from user-env too
+* Use scheduler hints in derived\_parameters workflow
+* Use new ceph/daemon tags
+* Add passwords and images for separate messaging backends
+* Fix error handling in set\_provision\_state/set\_power\_state workflows
+* Remove role\_data from inventory
+* Update converge workflow to remove no-ops
+* Fix healthcheck script for neutron-api service
+* Revert "Pass connection info via ansible config file"
+* zuul: run ceph scenarios when touching actions/ansible.py
+* Log ansible and ansible-playbook command
+* Force ANSIBLE\_CALLBACK\_WHITELIST to empty list for collect\_nodes\_uuid
+* Move health\_manager cfg section to octavia\_worker
+* Move build\_service\_filter to kolla\_builder from tripleoclient
+* Represent image prepare defaults in new heat param format
+* Document functions for container prepare
+* Fix parameter indentation on Swift rebalance playbook
+* Fix missing permissions on Swift rebalance playbook
+* Fails to get DPDK feature status
+* Add custom subclass to revert mapping
+* Read bytes for default CA
+* Refactor setting default CA
+* Check mode support for Server Deployments
+* Add healthcheck script for libvirtd
+* Add healthcheck script for neutron-sriov-agent
+* Add healthcheck script for Horizon
+* Enrich integration with ironic networking features
+* Updated from global requirements
+* Remove /etc/os-net-config/config.json in os-apply-config
+* Add support for rescue mode in enrollment and node configuration workflows
+* Check if plan\_env has resource\_registry key
+* Add openvswitch element back in
+* Add and fix healthcheck scripts for Octavia services
+* Pass connection info via ansible config file
+* Add ironic-neutron-agent container
+* Install python2-networking-baremetal in neutron-server
+* Raise an error if deployment\_name cannot be determined
+* Remove extra ssh args passed to ansible
+* Fix minor updates for deployed server environments
+* Make some tweaks to swift logging
+* Add undercloud's CA certificate before deployment
+* Fail introspect\_manageable\_nodes if no nodes are manageable
+* Improve messages on node state transitions
+* Remove fence\_action parameter from GenerateFencingParametersAction
+* Add excludes option to create\_tarball function
+* Increase the image size for security hardened images to 23G
+* Return any errors from called actions in node delete
+* Updated from global requirements
+* Ensure ceph-ansible playbooks are run one at a time
+* Defaults to parent\_resource name correctly
+* Remove the noop deploystep for upgrade converge step
+* Pass plan\_name into get\_config action
+* Wire up --skip-tags to the overcloud upgrade cli
+* Add healthcheck script for ceilometer-agent-compute
+* Add healthcheck script for Nova metadata
+* Don't notify zaqar in publish\_ui\_logs\_to\_swift
+* add option --gather-facts
+* Remove the name from task() functions that refer to themselves
+* Use ansible\_hostname
+* Add healthcheck script for nova-metadata service
+* Activate new healthchecks
+* Add UUID to directory where Heat configs are stored
+* Updated from global requirements
+* Add docker packages to dhcp and l3 agent containers
+* Include active nodes when matching nodes by profile
+* Update reno for stable/queens
+
+8.5.0
+-----
+
+* Make tempest container available on undercloud
+* Populate secure registry set with known secure
+* Add tripleo-ui container
+* Use tenacity for image upload retries
+* Fixes OpenDaylight healthcheck
+* Add healthcheck script for Mistral API
+* Add healthcheck script for Mistral event-engine
+* Always load rsyslog-base container
+* Add healthcheck script for etcd
+* Fix broken validations on stack update
+* Include a default for tag\_from\_label
+* Add healthcheck script for iSCSId
+* Handle failed nodes when enabling ssh admin
+* Added networks\_skip\_config parameter to the roles file
+* Adds workflow to list deployment plans
+* upgrade-non-controller.sh script does not support alternative plan names
+* container-images: support cont. u/c w/ Redis
+* Add healthcheck script for multipathd
+* Add healthcheck script for Collectd
+* Add healthcheck script for gnocchi-statsd
+* Add healthcheck script for memcached
+* Add healthcheck script for gnocchi-metricd
+* Add healthcheck script for Aodh API
+* Add healthcheck script for Tacker
+* Add healthchecks for barbican containers
+* Add healthcheck script for Neutron server
+* Add healthcheck script for Cinder API
+* Add healthcheck script for Gnocchi API
+* container-images: support cont. u/c w/ HAproxy & keepalived
+* Updated from global requirements
+* Provide the output to add a validation for role-specific params on services
+* Purge resolv.conf from the overcloud images
+* Add file type check to upload-swift-artifacts
+* Fix overcloud node delete after an upgrade
+* Add Designate containers
+* Revert "Add healthchecks for barbican containers"
+* Deprecate group:os-apply-config with config-download
+* Fix overcloud export plan
+* Fix the substitution of discovered tag
+* Quote $@ in ansible-playbook-command.sh
+* Add healthchecks for barbican containers
+* Add upload plan-environment action for update and upgrade
+* Handle None value for RoleConfig
+* Set physical\_network on baremetal nodes
+* Fix health check for ovn-metadata
+* Refactor GUI logging to use message claims
+* Updates ODL RPM to Oxygen
+* Fix message type payload in rotate\_fernet\_keys workflow
+* Fix baremetal introspection client creation
+* Adds Update Parameters Workflow
+* Workaround reboot issue in Octavia hm interface template
+* Add UC Backup Mistral workflow definition and actions
+* Use an epoch as default, not a datetime
+* Add keystoneclient to requirements.txt
+* Support deprecated NIC config names for legacy roles
+* Adds Workflow to Delete Deployment Plan
+* Skip stack in-progress check
+* jq is now required on the overcloud images
+* Format group:ansible deployments
+* Build images with a 4k block size filesystem
+* Switch to tripleomaster registry
+* Make the validations workflow a bit more robust
+* Tolerate missing labels for prepare --tag-from-label
+* Add support for multiple playbooks
+* Make container image upload more resilient
+* Alter default for --min-tmpfs
+* Remove mongodb container image
+* Add tripleo-ssh-known-hosts role
+* Specify SSH server list when configuring octavia
+* Updated from global requirements
+* Remove unused gitdb dependency
+* Zuul: Remove project name
+* Select Roles Workflow
+* Adds UpdateRoles Workflow
+* Adds Workflow to List Available Roles
+* Cleanup old MariaDB cruft from override file
+* Use extra\_vars to pass ireallymeanit
+* Add UpdateNetworks workflow
+* Add a Get Networks workflow
+* Validate roles data and network data
+* Use swift.put\_container action to create Swift rings backup
+* Allow a combination of labels for tag discover
+
+8.4.0
+-----
+
+* Install os-net-config as a package, not an element
+* Add tempest container
+* Improve debuggability of update workflow
+* Updated from global requirements
+* Remove step\_tags\_to\_when from config download and fix sorting
+* Add healthcheck script for Redis
+* Add healthcheck script for Panko API
+* Remove RH1 OVB jobs from configuration
+* Remove PackageUpdateManager
+* Add healthcheck script for Nova placement API
+* Use relative path for ansible role install
+* Add Keepalived image
+* Add more UndercloudCinder services to auto eval
+* Make config-download workflow's verbosity configurable
+* Updated from global requirements
+* Skip unnecessary image uploads
+* Discover every tag on prepare
+* Re-enable voting on scenario002-container
+* Octavia post deployment mistral wrapper
+* Updated from global requirements
+* Updated from global requirements
+* Updated from global requirements
+* Consume blacklisted\_ip\_addresses in workflows
+* Use community packages for Sensu
+* Fix OVN metadata agent container image footer
+* Add missing support for the root\_device property
+* [Sensu] Don't use gem based plugins
+* Always pass the plan name to fernet workbook
+* Add ansible playbook for configuring octavia
+* Discover nova hosts in cells right before deployment
+* Removed incorrect user input comments
+* Manage legacy OS::TripleO::RandomString resources in constants
+* Make plan\_name configurable for config\_download\_deploy
+* Convert ansible action to TripleoInventory class
+* Add get\_session function to base action class
+* Revert "zuul: disable voting on scenario 001, 002 and 003"
+* Add role\_data\* keys to inventory
+* Switch static ansible inventory to yaml format
+* Fail config-download when group:os-apply-config used
+* Add new image for realtime computes
+* Log any exceptions that occur in the tripleo.plan.update\_from\_dir action
+* Use push\_destination as the registry host in env file
+* Move more prepare logic into kolla\_builder
+* Use skopeo for tag discover
+* Add docs for reloading workbooks during development
+* Update AnsibleGenerateInventoryAction to match new mistral interfaces
+* Read the tftp IP to test from the command line
+* Validate parameters before updating
+* Install additional packages using kolla mechanism
+* Lowering the number of ansible forks to 25
+* kolla: override mysql packages for sensu
+
+8.3.0
+-----
+
+* Allow passing extra vars when generating static inventory
+* Add write\_static\_inventory to TripleoInventory class
+* Optimize \_heat\_resource\_exists
+* Add Sensu repo to override template
+* zuul: disable voting on scenario 001, 002 and 003
+* TripleoInventory make session optional
+* Allow separate parameters to TripleoInventory class
+* Parameterize Ansible environment vars in Mistral Workflow
+* Fix authentication issue in Swift ring rebalance playbook
+* Remove "overcloud-swift-rings" container during overcloud deletion
+* Parse deploy\_status\_code vs status\_code in deployment workbook
+* Cleanup mistral-api override
+* SRIOV derive parameters workflows
+* Updated from global requirements
+* OvsDpdkSocketMemory MTU Roundup in bytes
+* Inital import of tripleo ansible inventory code
+* Add puppet-tripleo & python2-kubernetes
+* Consume NodeDataLookup in ceph-ansible
+* Break up messages to avoid max message size
+* Get the config for update outside of package update
+* Add OVN Metadata Agent to containerized environments
+* Create config-download dir in tripleo-bootstrap role
+* DPDK derive params network config validation
+* Remove duplicate dictionary in zuul config
+* Correct the container name confusion in the swift rings workflow
+* Install openstack-heat-agents instead of python-heat-agent\*
+* Added ability to generate kek for barbican simple crypto backend
+* Remove jq package install
+* Correct a task name in create\_swift\_rings\_backup\_container\_plan
+* Reduce the calls to heat when downloading config
+* DPDK derive params inputs default value update
+* Concurrent upload container images
+* Comment out tacker image until service is ready
+* Handle error in the deploy\_on\_server workflow
+* Implement post-upload cleanup of docker images
+* Introduce tripleo-bootstrap Ansible role
+* Fix step\_config output which is str not list
+* Include barbican worker and listener images if API is enabled
+
+8.2.0
+-----
+
+* Avoid tox\_install.sh for constraints support
+* IPv6 healthcheck fixes for Glance/Swift
+* Move scenario001 and scenario003 back to the gate
+* Pass the execution id to AnsibleAction
+* Add --ansible-opts for upgrade-non-controller.sh O->P upgrade
+* Tolerate ports in tag discover
+* Add support for ceph\_rbdmirror\_ansible\_vars from tht
+* Add UndercloudCinder services to auto evaluations
+* Add DesignatePassword
+* Updated from global requirements
+* Consume resource-registry in ProcessTemplatesAction
+* Prevent apache from listening on default ports
+* Log the error from OrchestrationDeployAction
+* Memory channels parameter is not derivable
+* Handle ansible-playbook failure for config-download
+* Add reproduce\_command option
+* Memoize docker uploader
+* Finish deprecation of pull\_source
+* Add Ansible playbook/workflow to rebalance Swift rings
+* Stop setting IRONIC\_API\_VERSION and OS\_BAREMETAL\_API\_VERSION in overcloudrc
+* Support enrolling nodes with staging-ovirt hardware type
+* Add exclude list to not override user data
+* config: Always add step conditional first for upgrade\_tasks
+* Handle 'false' in when statements for ansible upgrade\_tasks
+* Switch to use sessions on zaqar, nova and swift
+* Fix chown command for tripleo validation
+* Add the RootStackName parameter to the plan
+* Make scenario007-container voting
+* Pass queue\_name to tripleo.ansible-playbook
+* Add the major upgrade converge in the update workbook
+* Remove scenario003 from the gate
+* Stream the Ansible output to a Zaqar queue
+* Update ceph-ansible playbook path in parameter default for update
+* Add the horizon url to the payload
+* Correct the failed status in the baremetal workflow
+* Switch the default Ceph container image from Jewel to Luminous
+* Add zaqarclient to TripleOAction
+* Cast content-length to an int when comparing sizes
+* Add httpd packages to ec2api image
+* Optimize opendaylight\_api container healhcheck
+* Fluentd: rename fluentd service
+* Add support for CephMgr in the ceph-ansible workflow
+* Migrate tripleo-common to zuul v3 jobs
+* Generate password for libvirt TLS SCRAM auth
+* Add work\_dir for some actions
+* Log Ansible actions to ansible.log
+* Add workflow for deployment via config-download
+* Raise stored HTTPError when fetching swift object
+* Add rsyslog sidecar image for container image prepare
+* Skip hidden files in test\_tags\_are\_set
+* Move defaults out of overcloud\_containers.yaml.j2
+* Updated from global requirements
+* Switch to ceph luminous
+* Truncate the zaqar message to 512 kbytes
+* Workflow to get Horizon URL endpoint
+* Fail ceph-ansible workflow if there is stale puppet-ceph hieradata
+* Add ansible and pyton-shade to the base image
+* Do not update the container registry if is None
+* Healthcheck for nova\_migration\_target container
+* Add Barbican worker and keystone listener images
+* Remove references to the current task from task() in baremetal.yaml
+* Additional tests for config-download
+* Remove Pike-only migration steps
+* Fix typos in container\_images\_prepare failure task names
+* Retry the check\_default\_nodes\_count workflow for 2 minutes
+* Adds detection for legacy API network resource
+* Add novajoin images
+* Only generate keystone v3 enabled overcloudrc's
+* Revert "Remove references to the current task from task() in baremetal.yaml"
+* Remove references to the current task from task() in ceph-ansible.yaml
+* Remove references to the current task from task() in baremetal.yaml
+* Use ANSIBLE\_HOST\_KEY\_CHECKING var instead of ssh-common-args
+* Accept glance image ID in addition to name
+* Add missing IronicInspector service
+* chown fernet keys to match container's keystone user and group
+* Remove references to the current task from task() in deployment.yaml
+* Remove references to the current task from task() in plan\_management.yaml
+* Remove references to the current task from task() in package\_update.yaml
+* Remove references to the current task from task() in access.yaml
+* Fix nova\_vnc\_proxy, ceilometer\_agent\_central and aodh\_evaluator health check
+* Remove references to the current task from task() in stack.yaml
+* Remove references to the current task from task() in validations.yaml
+* Allow running mistral-api service via wsgi in container
+* Get a static inventory for upgrade-non-controller ansible runs
+* Allow processing external\_deploy\_steps\_tasks
+* Default DockerCephDaemonImage to stable, not master, tag
+* Adds --overcloud-user option to upgrade-non-controller.sh
+
+8.1.0
+-----
+
+* Do not rely on openstack-puppet-modules
+* Config download support for all deployments
+* Update list of supported drivers, hardware types and their properties
+* Add user and project\_user\_domains to novaclient
+* Action to always populate container image parameters
+* Ensure ssh key is active before returning from create\_admin\_via\_nova
+* Don't wait for stack in progress in delete
+
+8.0.0
+-----
+
+* Enhances Roles List
+* Update and replace http with https for doc links
+* Add module\_path as option for ansible-playbook action
+* Updated from global requirements
+* Bring the keystone utils up-to-date with Mistral
+* Add release note for minor update workflow
+* Add Mistral workbook to deploy Skydive using ansible
+* Fixup upgrade-non-controller to also accept IP address
+* Take wwn\_with\_extension into account, when configuring a boot device
+* Execute minor update via ansible on mistral
+* Allow nfs-ganesha setup in ceph-ansible workbook
+* Add ironic api/pxe health checks during kolla build
+* Handle nodes that failed to start introspection
+* Fix missed HEALTHCHECK directive in template override
+* Fix healthchecks permissions
+* Add retry loop for docker pull
+* Add OVN container images to TripleO-common
+* Fix running complex command lines via bootstrap\_host\_exec
+* Fix chown command in sudoers file
+* Add logging to capabilities filter
+* Add healthcheck for ODL container
+* Add ODL repo to override template
+* Format and send the retry-limit reached message
+* Always use docker.io for ceph\_namespace
+* Always finish by sending a Zaqar message on error
+* Add the Node UUID to the failure messages from the \_introspect workflow
+* Add ODL container images to TripleO-common
+* Updated from global requirements
+* Remove healthcheck command
+* Define ceph image in overcloud\_containers.yaml.j2
+* Add "tripleo-common-managed" to all workflows in tripleo\_common
+* Add selinux policy rpms to base container image
+* Fix the path to HEALTHCHECK\_SCRIPTS in healthcheck/ironic-api
+* Add health check command for ironic-pxe image
+* Added a kolla config file for building contaner images with qemu uid
+* Don't mock mkdtemp in test\_plan.py either
+* Parse ceph\_client\_ansible\_vars in ceph-ansible workbook
+* Derive Params failure message format change
+* Derive params network config stack exists fix
+* Derive params support for ODL DPDK feature
+* Run fluentd container
+* Add SRIOV container image parameter generation
+* Add missing BarbicanApi service
+* Don't mock mkdtemp
+* Add less verbosity for fernet keys ansible playbook
+* Ensure that GetHostCpusListAction.run() returns a deterministic result
+* Add missing OVN container service entries
+* Use Python to compute release notes version
+* Fix port health check false negatives
+* Support fernet key rotation with containers
+* Make curl healthchecks work with internal TLS
+* Derive Params OvsPmdCoreList compute issue
+* Add clustercheck healthcheck
+* Discover a versioned container image tag
+* Upload remove default for pull\_source
+* Use CephAnsibleDisksConfig when deriving HCI parameters
+* Updated from global requirements
+* Add stunnel to redis image for tls
+* Update reno for stable/pike
+
+7.5.0
+-----
+
+* Make Ansible env variables configurable
+* Map ContainersLogrotateCrond service to cron image
+* Set healthchecks executable
+* Configure mistral event engine container
+* Add Qdrouterd to the overcloud containers
+* Use NovaVcpuPinSet when deriving HCI parameters
+* CPU threads range format for derive parameters
+* Add NovaMetadata to nova-api image params
+* overcloud\_containers.yaml.j2 map images to services
+* Automatically retry introspection for failing nodes
+* Set resource\_class=baremetal for newly enrolled nodes
+* Publish logs before exporting them
+* Use correct path in healthcheck scripts
+* Add logrotate-crond container images params
+* Add Barbican Config Image to overcloud containers
+* Add hypen to the prefix/suffix of container name if not provided
+* Download and run upgrade/deploy\_steps\_playbooks for upgrade
+* Provide a list of unused user env parameters in plan
+* Add OVN images to the overcloud containers
+* Add GUI logging workflows
+* Parameterize Ansible skip\_tags
+* Add health checks during kolla build
+* Use nova-api image for configuration as well
+* Default to host CPU architecture if none is supplied
+* Add ironic-api healthcheck
+* Prompt to clear breakpoints when using deployed-server
+* Allow tripleo-admin creation both for Nova-managed and split-stack
+* Pass UserKnownHostsFile and deploy ssh key
+* Host derive params default hugepage flag fix
+* Remove uwsgi-plugin-python from barbican-api image
+* Fixup EPEL comments
+* Bump the default bare metal (ironic) API version in the overcloud to 1.34
+* healthchecks: service checks for rabbit, swift-\*, mysql
+
+7.4.0
+-----
+
+* Allow setting \*\_interface fields via instackenv.json
+* [refactoring] stop using pxe\_ssh as the default drivers in tests
+* Add health check for services connected to RabbitMQ
+* healthchecks: implement service-specific checks
+* Update the documentation link for doc migration
+* Do not list Ceph specific image in overcloud\_images.yaml.j2
+* Update .gitignore
+* tripleo-common sudoers file is to permissive
+* Pass all network data to render network/port templates
+* Add DockerIronicApiConfigImage
+* Add workflow for IPMI nodes discovery
+* Add error message if no bare metal nodes available
+* Update URL home-page in documents according to document migration
+* Remove EPEL and it's dependencies with Kolla overrides (take two)
+* Revert "Remove EPEL in TripleO's Kolla template\_overrides"
+* Consume ceph-ansible vars from the execution environment
+* healthchecks: start to implement container healthchecks
+* Add heat-all container
+* Add manila-share images
+* Updated from global requirements
+* Add missing DockerMysqlClientConfigImage
+* Remove EPEL in TripleO's Kolla template\_overrides
+* Copyright content changes
+* Derive deployment parameters for HCI
+* Don't call safe\_dump if the param is already str
+* Updated from global requirements
+* Containarize Barbican
+* Set version=auto when creating docker client
+* Method name format changes
+* Remove xinetd package in containerized env
+* Switch from oslosphinx to openstackdocstheme
+* DPDK and Host derive parameters workflows
+* Map container image entries to stack params
+* Updated from global requirements
+* Remove support for py34
+* Upgrade from docker-py to docker
+* Configure ceph clients with ceph-ansible
+* Add OVN container images
+* Add ironic-inspector image
+* Add Mistral workbook to call ceph-ansible to install Ceph
+* Drop MANIFEST.in - it's not needed by pbr
+* Fix files actions run() method
+* Create /etc/ssh/ssh\_known\_hosts on base image
+* Include cron in container images
+* Remove the unused exception PlanOperationError
+* Remove the unused scale module
+* Add Mistral file actions to tripleo-common
+* Use six to correctly handle text in Python 2 and 3 in the Role schema
+
+7.3.0
+-----
+
+* Updated from global requirements
+* Add python 3.5 in classifier and envlist
+* Switch the ansible actions over to mistral-lib
+* Add workbook to rotate fernet keys
+* Create ansible config file and disable retry files
+* Enable passing extra environment variables to ansible commands
+* Remove the dependancy on Mistral
+* use Result from mistral\_lib instead of mistral
+
+7.2.0
+-----
+
+* Derive Params (part 2): Get services and feature list
+* Return the stdout of the kolla-build run
+* Make overcloud\_containers.yaml template driven
+* Add tags and skip-tags options to Mistral Ansible actions
+* Pass correct message to Zaqar in case of plan export failure
+* Add option to get credentials from mistral context for ansible actions
+* Write action to get private key from the validations keypair
+* Set perms to 0600 for the ssh key file
+* Change cwd and set HOME for ansible actions
+* Use tempdir instead of files for ansible-action
+* Fix plan export
+* Enable key rotation action and add release note
+* When enrolling Dell nodes, use drac\_address instead of deprecated drac\_host
+* Switch to RDO packages for HA support in Kolla images
+* Updated from global requirements
+* Do not try to validate nodes that are not available
+* Add fernet keys purging based no t-h-t parameter
+* Move roles utilities to common
+* Define default Image and Volume API versions in overcloudrc
+* Workflow to get the list of deprecated parameters from the plan
+* Create mistral action to rotate fernet keys from passwords variable
+* Add KeystoneFernetKeys to generated passwords
+* Updated from global requirements
+* Add missing haproxy container image
+* Add collectd container
+* Fix wrong use of \`ansible-playbook\`
+* Remove 'ntpd' package from some image-yaml files
+* Add manila container images
+* Add EC2-API container image
+* Add container image for nova-consoleauth and nova-novncproxy
+* Remove deprecated docker.py insecure\_registy argument
+* Adds ansible actions
+* Derive Params (part 1): Initial workflow to start
+* Fix a broken YAQL expression marker in the plan\_management workbook
+* Pass network\_data into per-role j2 templating
+* Pass all role data into role templates when rendering
+* Add missing cinder container images
+* Use Swift to store Plan environment
+* Do not use multiple overrides with the same name
+* Using assertIsNone(xxx) instead of assertEqual(None, xxx)
+* Updated from global requirements
+* Add required packages for nova migration
+* Add xinetd package to swift\_object container
+* Remove symlinks causing hiera hook to exit early
+* Use the mistral-lib actions
+* Add tacker container images
+* Add congress container images
+* Add ceilometer ipmi container images
+
+7.1.0
+-----
+
+* Ensure Swift Rings backup container and URLs
+* Adding the option for the stack id to stack delete
+* Shorten names and rebase hardened images
+* kolla template overrides for A/P HA services managed by pacemaker
+* Re-add hardened image definition as separate yaml
+* Revert "Add creation of security hardened images"
+* Add novajoin password
+* Start using generic dracut-regenerate element
+* Run also sensu-client containers
+* Add creation of security hardened images
+* Replace swiftclient with openstackclient
+* Fix password generation for default plan creation
+* Add Neutron SR-IOV agent container to overcloud containers
+* Parse roles from roles\_data.yaml directly
+* kolla template overrides for pacemaker HA containers
+* Use assertIsNone instead of assertEqual(None, \*\*\*)
+* Make DockerImageUploader work with missing tags
+* Updated from global requirements
+* Add octavia container images
+* Replace assertRaisesRegexp with assertRaisesRegex
+* Updated from global requirements
+* Add ceph/daemon image to undercloud registry
+* Move openstack-tripleo-common to mistral base image
+* Run introspection 20 nodes at a time
+* Add mistral-event-engine image
+* Fix calls to tripleo.git.clone action
+* Add galera support in mysql container image
+* Add rsync to base image
+* move mistral base action dependency to mistral\_lib
+* Add cinder container images
+* Install openstack-tripleo-common-container-base
+* Add an action to fetch and flatten the heat resource tree and parameters
+* Add httpd packages to neutron server image
+* Add httpd packages to glance API image
+* Add httpd packages to swift proxy image
+* Add bootstrap\_host\_exec to setup.cfg scripts
+* Add a bootstrap\_host\_exec CMD
+* Add log capturing support workflows
+* Correct message format for plan\_management workbook
+* Add sahara docker containers
+* Remove update abort
+* Add support for enrolling nodes with Redfish hardware type
+* Move the gathering of flavors into the CollectFlavors action
+* Fix the reporting from the pre-deployment checks workflows
+* Add ceilometer agent images
+* Add horizon container
+* Remove log translations
+* Add etcd image to overcloud containers
+* Ignore '\_comment' as a invalid field in instackenv.json
+
+7.0.0
+-----
+
+* Fix undercloud host discovery logic
+* Updated from global requirements
+* Remove ntp element
+* add caching the GetParametersAction
+* Add workflow wrapping all predeployment checks
+* Implement check node counts as a custom action
+* Implement verify profiles as a custom action
+* Implement check ironic boot configuration as a custom action
+* Workflow to select nodes matching a profile/role
+* Remove legacy hiera element
+* Implement check flavors as a custom action
+* Implement check boot images as a custom action
+* Rename contrib to container-images for packaging
+
+7.0.0.0b1
+---------
+
+* Add support for enrolling nodes with "ipmi" hardware type
+* Remove Percona-Server-shared-56 from openstack-base image
+* Updated from global requirements
+* Add skip\_deploy\_identifier
+* Add MigrationSshKey to generated passwords
+* Create or update deployment plan from git repository
+* Add redis images to overcloud containers
+* Handle re-created resources in StackUpdateManager
+* Fix using old Swift rings when creating a new stack
+* configure\_container: remove os-cloud-config
+* Fix broken command prompt
+* Switch trunk/cbs/buildlogs to use https
+* Extend testing for GenerateFencingParamatersAction
+* Add plan export action and workflow
+* Library wrapper around kolla-build tool
+* Rename 'uploads' key to 'container\_images'
+* overcloud\_containers.yaml defaults
+* Generate EtcdInitialClusterToken
+* Enhance plan creation and update with plan-environment
+* Updated from global requirements
+* Remove machine-id from image
+* overcloudrc: set OS\_AUTH\_TYPE
+* Handle unprovisioned Ironic nodes in fencing parameter generator
+* UpdateCapabilitiesAction add purge\_missing option
+* Updated from global requirements
+* Replace six.iteritems() with .items()
+* Replaces yaml.load() with yaml.safe\_load()
+* Add stack name indicator to overcloudrc
+* Add heat-api-cloudwatch container
+* Validate nodes\_json before trying to register or updates any nodes
+* Make fencing action parameter optional
+* Add telemetry docker images to overcloud containers
+* Add neutron-metadata agent container image
+* Updated from global requirements
+* Add neutron-l3 agent container image
+* Fix Swift ring deployment and Newton to Ocata upgrades
+* Update to a newer hacking library
+* Fix typo in package\_update.yaml
+* Add pull-puppet-modules script to binaries
+* Fix wrong args to update manager
+* Add TripleO template overrides file
+* Add missing container images
+* Add support for network\_data.yaml to process templates action
+* Use latest containers for master branch
+* Allow pushing docker images to host's ctl plane IP
+* Use kwargs to pass in 'error' to a Mistral Result
+* Update the Nova client creation
+* Open log in utf-8 to prevent UnicodeEncodeError
+* Update reno for stable/ocata
+* Use the builtin Mistral engine command 'fail' when failing workflows
+
+5.8.0
+-----
+
+* Updated from global requirements
+* Bump OS\_BAREMETAL\_API\_VERSION to 1.29
+* Force DIB\_PYTHON\_VERSION to be 2
+* Re-enable tee behavior for image builds
+* Just set the breakpoints on args passed to heat update
+* [trivial] Remove broken link
+* Fix race in undercloud cell\_v2 host discovery
+* Fix error message when failing to remove breakpoint
+* Adds basic logging to the upgrade-non-controller.sh utility
+* Updated from global requirements
+* Add release notes since 5.7.0
+* Fix class constructors
+* Add missing linebreak in delorean-current.repo
+* Add utility functions for deleting/emptying swift containers
+* Run nova manage cell\_v2 discover\_host after ironic nodes are registered
+* Add support for calling validations in deploy and introspect workflows
+* Add support for jinja2 includes
+* Use Mistral to create Swift temporary URLs
+* Install python-heat-agent-json-file in overcloud-full
+* Add action for generating fencing parameters
+* Adding release nodes for Congress and Tacker
+* Adding CongressPassword to constants
+* Adding TackerPassword to constants
+* Add element to regenerate dracut
+* Add a 'manage' workflow
+* Remove extraneous whitespace from baremetal.yaml
+* Release notes for 5.8.0 (final Ocata)
+* Updated from global requirements
+* overcloud: include ntp element
+* Add the iptables element to the image building process
+* Add a delete stack workflow
+* Add element to regenerate dracut on the agent
+* Fix delete\_node failures
+* Add a PacemakerRemoteAuthkey to the default passwords
+* Add password and key generation for Octavia
+* Provided an option to disable the password generation
+* Set imageext for IPA ramdisk
+* Updated from global requirements
+* Add Constraints support
+* Fail the deployment workflows when sending a "FAILED" message
+* Fail the scale workflows when sending a "FAILED" message
+* Fail the validation workflows when sending a "FAILED" message
+* Fail the baremetal workflows when sending a "FAILED" message
+* Fail the plan\_management workflows when sending a "FAILED" message
+* Add ReNo support
+* Generate a CephX for manila ceph client service
+* Generate a CephX for the new Ceph MDS service
+* A script that pulls the latest puppet source
+* Only start the deploy if the Heat stack isn't already in progress
+* User provided pwd has to be merged for get\_passwords workflow
+* Add python-heat-agent-json-file to the heat docker agent
+* Sync template processing
+* Removes unnecessary utf-8 coding
+* Force qemu logging to file
+* Updated from global requirements
+* Adds output for failure cases to delete plan action
+* Add support for initial state to the register\_or\_update workflow
+* When making sub-workflow calls, pass the queue\_name
+* Validate the plan name before running
+* Add missing packages to agent container
+* Install python-heat-agent-docker-cmd in overcloud-full
+* Use packaged docker-cmd hook in heat-agents
+* Block the scale down workflow until the stack is COMPLETE or FAILED
+* Don't require mistralclient for password gen
+* Heat-agents container: set up trunk repos correctly
+* Implement stack update as mistral actions
+* Remove unused exception HeatValidationFailedError
+* Remove unused exception ContainerAlreadyExistsError
+* Remove the unused constant OBJECT\_META\_KEY\_PREFIX
+
+5.7.0
+-----
+
+* Add utility workflow to wait for stack COMPLETE or FAILED
+* Add FreeIPA enrollment environment generator
+* Remove remaining vendor plugins from default image YAML
+* Get config files for all openstack\* packages
+* Pin docutils version
+* Add the remote tag to the badge image
+* Drop use of hosts element
+* Add missing os-net-config deps
+* Replaces uuid.uuid4 with uuidutils.generate\_uuid()
+* Change 'cound' to 'could' in error message
+* Fix build-image script output
+* Remove heat\_docker\_agent/run-os-net-config
+* heat-agents use moved 40-hiera-datafiles
+
+5.6.0
+-----
+
+* Workflow for applying RAID configuration to Ironic nodes
+* Add Ec2ApiPassword to PASSWORD\_PARAMETER\_NAMES
+* Create a workflow for running manual cleaning on nodes
+* Updated from global requirements
+* Represent dib elements as a list
+* Environment is a dict, which can't use 'extend'
+* Move the overcloudrc generation from tripleoclient to a Mistral action
+* Fix invalid tests
+* Add python-heat-agent-ansible to overcloud images
+* Fix flavor matching for object-storage role
+* Add panko to generated passwords
+* Convert exceptions to strings when passing them to the Result class
+* Remove the underscore from the base action client methods
+* Show team and repo badges on README
+* Fix parameter update for custom roles
+* Do not ignore pm\_port for Drac drivers
+* Use kwargs to pass in data and error to Mistral Result
+* Revert changes to CephClusterFSID generation
+* Generate CephClusterFSID for new stacks
+* Build overcloud with overcloud-agent element
+* Revert "Add CephClusterFSID to generated passwords"
+* Fix tox -epep8 for Python3
+* Drop \*openstack/common\* in flake8 exclude list
+* Update container images to point to newton
+* Pass the plan name when tagging nodes
+* Remove network-gateway element from image build
+* Fernet Key management
+
+5.5.0
+-----
+
+* Remove discover from test-requirements
+* Remove python-networking-cisco from overcloud-full image
+* Install yum-plugin-priorities on centos images
+* Only use parameter\_defaults for scaling down
+* Replace ucs\_hostname with ucs\_address
+* Create new docker command hook
+* Updated from global requirements
+* Remove unused bits from node management code in utils/node.py
+* Fix the validation ssh keys workflow
+* Add CephClusterFSID to generated passwords
+* Use parameters from existing Heat stack if it already exists
+* Allow building heat-agents image from master
+* Clean up configure\_containers.sh script
+* Install configuration files for all downloaded packages
+* Sets defaults in swift connection related to retries
+* Do not try "manage" actions on nodes that are not in "enroll" state
+* Power off new nodes when making them available, not right after enrolling
+* Remove last vestiges of oslo-incubator
+* Updated from global requirements
+* Refresh DeployIdentifier as well on update
+* Port Scale Down Functionality into Workflow
+* Fetch the snmpd\_readonly\_user\_password from the Mistral environment
+* Add new hiera agent hook to overcloud images
+* Default the J2 excludes files to safe values
+* Make UpdateManager use a passed-in stack setup
+* Remove the duplication of Workbook in the description
+* Add the KeystoneCredential0 and KeystoneCredential1 parameters
+* Add the J2 exclude file exception (When file not found)
+* Updated from global requirements
+* Add support to create role main template file based in role.role.j2.yaml
+* Changed the home-page link
+* Open tripleo-common for Ocata
+* Support node untagging
+* Centos images no longer require epel element
+* Modify j2 templating to allow role files generation
+* Don't set node state during node registration
+* Configure run-validation to use the custom output
+
+5.2.0
+-----
+
+* Fix upload-swift-artifacts for old OSclient
+* Retry sending messages to Zaqar if it fails
+* Port password generation from tripleoclient to tripleo-common
+* Remove the unused service\_host arg from node registration
+* TrivialFix: Remove default=None when set value in Config
+* Remove references to overcloud-without-mergepy
+* Remove the old, deprecated Mistral action names
+* Updated from global requirements
+* Return the result of create\_plan in create\_deployment\_plan workflow
+* Fix the default plan creation
+* Default to Ironic API v1.15
+* Add template processing to the update plan workflow
+* Revert "Upgrades: Add StackUpgradeManager"
+* Revert "Upgrades: Add post-upgrade stack update"
+* Revert "Upgrades: Add initialization to StackUpgradeManager"
+* Provide: return task result in case of failure
+
+5.1.0
+-----
+
+* Add node tagging workflow
+* Revert "Add template processing to the update plan workflow."
+* Check the result of the parent action when subclassing
+* Add FS\_TYPE xfs to RHEL and CentOS images
+* Replace agent elements with package python-heat-agent-puppet
+* Add template processing to the update plan workflow
+* Clearer error when the Mistral env already exists
+* Set Deployment Parameters
+* Updated from global requirements
+* Add an action and workflow to update a plan
+* Wire in jinja templating for custom roles
+* Run copy\_ssh\_keys after overcloud finishes
+* Remove "type: direct" from workflows as it is the default
+* Fix an autoclass reference and add missing pages to the toctree
+* Allow the validations to run openstack commands
+* Handle missing mistral environment
+* Clean up messages in the 'configure' workflow
+* Fix the validation action name in the workbook
+* Ironic Client: Bump the max\_retries and retry\_interval
+* Test baremetal: Correctly stop the mocks
+* Preserve the shell environment for run-validation
+* Add port registration to IPMI power driver
+* Fix error when identity file is missing
+* Change default deploy artifacts container name
+* Fix pep8 errors when running with python3
+* Include environments in capabilities output
+* Revert "Set Deployment Parameters"
+* Add List Roles Action
+* Allow for building specific images
+* Fix upload-swift-artifacts work new OSclient
+
+5.0.0
+-----
+
+* Use Openstack cli instead in order to get the instance status
+* Allow running validation against different plans
+* Disable retry files for ansible validations
+* Workflows to run validations
+* Workflows to load validations
+* Don't expect input to be in every workflow in doc generation
+* Better namespace the list of TripleO actions
+* Set Deployment Parameters
+* M/N upgrade: Fix ACTIVE node detection
+* Generate reference documentation for Workbooks
+* Add Mistral action & workflow for root device configuration
+* Add Mistral action for boot configuration
+* Add boot option argument to the Node Registration Mistral workflow
+* Workflow to setup validations
+* Updated from global requirements
+* Fixes missing action entry point
+* Exclude more unneeded files from default plan
+* Change output for GetCapabilitiesAction
+* Add Plan Deletion
+* Verify that neither the Swift container or Mistral environment exist
+* Adds Deployment Action & Workflow
+* Add backwards compatibility for openstackclient
+* Adds parameters actions
+* Adds action for template processing
+* Add support to image build yaml input to handle env vars
+* Fix typo in Introspection workflow message
+* Prevent replacement of Port, Net and Subnet
+* Change image names to match what the rest of the system expects
+* Remove epel element from base yaml ramdisk agent image
+* Remove the delorean-repo element from CentOS images
+* Ignore changes to images in nova servers
+* Adds Plan List Action
+* Change input for UpdateCapabilitiesAction
+* Install the upload-\* scripts with tripleo-common
+* Fix formatting in doc files
+* Updated from global requirements
+* Extract \`etc\` files from openstack packages
+* Build heat-docker-agents for specific versions
+* Remove unnecessary packages
+* Remove configure\_container.sh script
+* Don't clean after \`yum update\` in script
+* Fix code highlighting in the README and the title in the toctree
+* Minor update to the upgrade-non-controller.sh
+* Move Workflow comments into the workflow description property
+* Remove unused LOG to keep code clean
+* Remove execution\_id from the workflows
+
+5.0.0.0b2
+---------
+
+* Updated from global requirements
+* Remove sysctl element from overcloud image
+* Deployment workflows for remote execution, etc
+* Mistral action to drive Heat software deployments
+* Updated from global requirements
+* Add upload-puppet-modules script
+* Updated from global requirements
+* Add messaging to workflows
+* Allow setting capabilities as a dict in addition to a string
+* Add baremetal workflows
+* Add RegisterNodesAction action
+* Fix exception within deployment plan actions
+* overcloud-odl : add new image file definition
+* Fix interactive update race condition
+* Add --json-output option to tripleo-build-images
+* Support setting node UUID when registering nodes
+* Add Heat Capabilities Actions
+* Add a compatability shim to transition tripleoclient
+
+5.0.0.0b1
+---------
+
+* Allow updating of nodes in baremetal import
+* Removes unused code
+* Add TripleO Mistral documentation
+* Remove unnecessary package dhcp-client
+* Initial Integration of Mistral into TripleO
+* Updated from global requirements
+* Import initial\_state logic from tripleoclient
+* Log diskimage-builder output to a file
+* Remove the TODO from the README.rst
+* Updated from global requirements
+* Example yaml for building images
+* StackAction parameter to distinguish top-level create vs. update
+* Expose documented --seconds option
+* Fix setting deploy kernel and image when updating nodes
+* Fix upload-swift-artifacts with keystone v3
+* Fix no-replace-server to accurately preview update
+
+2.0.0
+-----
+
+* Return list of new nodes from register\_all\_nodes
+* Import code working with Ironic nodes from os\_cloud\_config
+* Upload docker image files from yaml config file
+* Use a common constant for the Heat timeout value
+* Build image files from definitions in yaml
+* Remove ping test template from tripleo-common
+* Upgrades: Add initialization to StackUpgradeManager
+* Upgrades: Add post-upgrade stack update
+* Remove tripleo.sh (now in tripleo-ci repo)
+* Fix typos in code
+* Use m1.small for ping test
+* Replace deprecated LOG.warn with LOG.warning
+* Install the upgrade-non-controller.sh script with tripleo-common
+* Collect constants in one file
+* Change the private subnet of the overcloud tenant network
+* Missing python-ipaddr in heat-agents image
+* Add capabilities filter for Nova
+* Prevent any property change from replacing OS::Nova::Server
+* Expose TENANT\_STACK\_DEPLOY\_ARGS
+* Adds override for the overcloud node user in upgrade-non-controller
+* Upgrades: Add StackUpgradeManager
+* Adds a bash script that operators will use during upgrades
+* Updated from global requirements
+* Use PyYAML's safe\_dump to avoid outputting Python specific values
+* Return current-tripleo symlink
+* Override OS::Nova::Server for user\_data updates
+* Move delorean pin
+* Reuse puppet modules already downloaded
+* Allow updating images via \`tripleo.sh --overcloud-images\`
+* Add requirement for gcc to delorean setup
+* Convenience methods in base model class
+* Pin puppet-nova
+* Extend ping test create timeout
+* Retry delorean package builds on known network errors
+* Pin puppet-concat
+* Detect when we need the alternate heat command
+* Use Fedora image for ping test
+
+1.0.0
+-----
+
+* Output some debug info when pingtest fails
+* Revert "Pin puppet heat"
+* Revert "Pin puppetlabs-mysql to get CI going"
+* Pin puppet heat
+* Catch NotFound when listing events during updates
+* Update pingtest for newer heatclient
+* Use git.openstack.org where possible
+* Revert "Pin the puppetlabs mongodb puppet module"
+* Pin the puppetlabs mongodb puppet module
+* Adds a simple overcloud tenant vm ping test to tripleo.sh
+* Add openstack packages to heat-agents container
+* Update tripleo.sh to enable repo path override
+* Remove stable/liberty pin
+* Heat Docker agent built with Dockerfile
+* Pin stable/liberty repo
+* tripleo.sh support updating and checking deployed overcloud
+* Update the container flag
+* tripleo.sh add option to delete overcloud
+* Add scripts/upload-swift-artifacts
+* Add OVERCLOUD\_IMAGES\_ARGS environment variable
+* Improve docs for template utils
+* Rename stack\_update to \_stack\_update
+* Switch to Mega progress reports
+* Fixes heat exceptions
+* Add the missing plan name to the PlanAlreadyExistsError
+* Drop py33 support
+* Pin puppetlabs-mysql to get CI going
+* Adds file deletion to plan manager
+* Ensures plan exists
+* Initial workflow implementation of tripleo-common
+* Set a default timeout for 240 minutes for Heat Updates
+
+0.1.0
+-----
+
+* Set origin/stable/liberty to the REF we want to build
+* Remove Python 2.6
+* Make coverage tests work
+* Remove flavor creation
+* tripleo.sh set priorities for stable repos
+* Updated from global requirements
+* Set DIB\_INSTALLTYPE\_puppet\_modules for master/stable
+* Show which breakpoint will be cleared by pressing Enter
+* Change breakpoint removal log to info
+* Deploy Docker compute role with tripleo.sh
+* Don't install git-hg
+* tripleo.sh initial support for stable branches
+* Updated from global requirements
+* Fix node group name when deleting a node
+* Remove puppet-heat pin
+* Update the repo whitelist to reflect what we CI
+* Pin puppet-heat
+* Fix cherry-pick comments
+* tripleo.sh Add option to locally build delorean package
+* tripleo.sh Add option to create a local Delorean environment
+* Fix bashate errors
+* Remove empty test file
+* Explicitly unset package update hooks when deleting a node
+* Fix CentOS detection
+* Fix wrong node count when deleting specific nodes
+* Remove support for Tuskar
+* Add tripleo.sh
+* Don't send default environment file on pkg update or scale
+* Change ignore-errors to ignore\_errors
+* Catch and log all exceptions when removing a breakpoint
+* Minimize walking through stack when removing a breakpoint
+* Check if regexp is valid when updating packages
+* Don't set UpdateIdentifier in tuskar plan
+* Allow passing extra environment files when scaling nodes
+* Make tuskar optional when scaling down
+* Allow passing extra environment files to package update
+* Make tuskar optional when running package update
+* Add package update support
+* Add a step-through heat stack update module
+* Scale down heat stack
+* Scale out heat stack
+* Initial Cookiecutter Commit
+* Added .gitreview
