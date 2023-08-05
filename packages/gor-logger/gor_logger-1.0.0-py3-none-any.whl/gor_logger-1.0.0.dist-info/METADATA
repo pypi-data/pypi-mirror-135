@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: gor-logger
+Version: 1.0.0
+Summary: UNKNOWN
+Home-page: UNKNOWN
+Author: Shivam Nagar
+Author-email: shivam.n@greyorange.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+The GorLogger package
+====================
+
+This Package is for the logging purpose for the multiprocessing/multithreading based python applications.
+As current python logging module lack in the multiprocessing based applications.
+
+INSTALLATION
+============
+pip install gor_logger
+
+
+USAGE
+======
+
+>>> from gor_logger import GorLogger
+>>> log_obj = GorLogger()
+>>> logger = log_obj.getInstance('logger_name', 'log_file_name', './logs_directory', 'LOG_LEVEL')
+
+LOGGING
+=======
+
+>>> logger.debug("This is debug message")
+>>> logger.info("This is info message")
+>>> logger.warning("This is warning message")
+>>> logger.error("This is error message")
+>>> logger.critical("This is critical message")
+
+
+IMPORTANT
+=========
+
+This logger module is tested with python3.9 and also it works with TimeRotatingFileHandler with rotation based
+on daily basis i.e separate log file for each day after midnight.
+
+
