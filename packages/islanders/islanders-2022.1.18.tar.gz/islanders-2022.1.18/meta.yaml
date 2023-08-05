@@ -1,0 +1,46 @@
+{% set name = "islanders" %}
+{% set version = "2021.0.3" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 749d346865d947de34548effca16646691cfdaf0cbaa19823fe375c4c7666ebe
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - matplotlib
+    - pandas
+    - pip
+    - pyqt
+    - python
+    - scikit-learn
+  run:
+    - matplotlib
+    - pandas
+    - pyqt
+    - python
+    - scikit-learn
+
+test:
+  imports:
+    - islanders
+
+about:
+  home: The package home page
+  license: UNKNOWN
+  license_family: OTHER
+  license_file: 
+  summary: "module designed to make your data preprocessing experience easier"
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
