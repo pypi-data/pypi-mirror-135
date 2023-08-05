@@ -1,0 +1,310 @@
+<!doctype html>
+<html data-fr-scheme="light" data-fr-theme="light">
+
+	<head>
+		<style>
+		</style>
+
+		<style>
+			html, body {
+				min-height: 0 !important;
+				height: auto !important;
+			}
+		</style>
+
+		<script>
+			function findAndHandleStylemarkBlocks(languages, handler) {
+				var blocks = getStylemarkBlocks(languages);
+				handleStylemarkBlocks(blocks, handler);
+			}
+
+			function getStylemarkBlocks(languages) {
+				languages = typeof languages === 'string' ? [languages] : languages;
+
+				var selectors = [];
+
+				for (var i = 0; i < languages.length; i++) {
+					selectors.push('script[data-language="' + languages[i] + '"]');
+				}
+
+				var selector = selectors.join(',');
+				var scripts = document.querySelectorAll(selector);
+				var blocks = [];
+
+				for (var i = 0, length = scripts.length; i < length; i++) {
+					if (scripts[i].innerText) {
+						blocks.push(scripts[i].innerText);
+					}
+				}
+
+				return blocks;
+			}
+
+			function handleStylemarkBlocks(blocks, handler) {
+				for (var i = 0, length = blocks.length; i < length; i++) {
+					handler(blocks[i], i);
+				}
+			}
+		</script>
+
+			<link rel="stylesheet" href="udata_front/theme/gouvfr/static/less/index.css">
+			<link rel="stylesheet" href="theme/less/examples.css">
+			<script src="udata_front/theme/gouvfr/static/js/index.js"></script>
+
+		
+	</head>
+
+	<body>					<article class="markdown">
+<p>Quelques semaines plus tard fut ouverte la section occidentale, longtemps attendue, entre Étoilenote 3 et La Défense. Cette simple navette initiale fut d'abord prolongée vers l'est jusqu'à la nouvelle station Auber le 23 novembre 1971, puis vers l'ouest le 1er octobre 1972 jusqu'à Saint-Germain-en-Laye par sa connexion à NanterreB 1 à l'ancienne ligne de Paris à Saint-Germain-en-Laye. La section devait initialement s'appeler « Métro express régional Défense-Étoile », mais le nom fut changé quand on se rendit compte de l'acronyme peu flatteur de l'appellation de départ.</p>
+<p>
+    <strong>Bold</strong>
+    <em>Italic</em>
+    <h3>Heading</h3>
+    <h1>Mega heading ?</h1>
+    <code>Little code snippet</code>
+     <p><a href="http://lien.com" rel="nofollow">Lien</a>
+     <img src="http://placehold.it/1200x1800" title="entrez le titre de l'image ici">
+ </p>
+
+<ul>
+    <li>Liste</li>
+    <li>Liste 2</li>
+</ul>
+
+<ol>
+    <li>Ol</li>
+    <li>OL</li>
+    <li>OL3</li>
+</ol>
+
+<table>
+    <thead>
+        <tr>
+            <th>foo</th>
+            <th>bar right</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+    </tbody>
+</table>
+
+<pre><code>Big code snippet</code></pre>
+
+<blockquote>
+    <p>
+    Quote<br>
+    Multiligne ?</p>
+    <p>
+    Quote<br>
+    Quote test</p>
+</blockquote>
+</article>
+			<script type="text/x-stylemark" data-language="html"><article class="markdown">
+<p>Quelques semaines plus tard fut ouverte la section occidentale, longtemps attendue, entre Étoilenote 3 et La Défense. Cette simple navette initiale fut d'abord prolongée vers l'est jusqu'à la nouvelle station Auber le 23 novembre 1971, puis vers l'ouest le 1er octobre 1972 jusqu'à Saint-Germain-en-Laye par sa connexion à NanterreB 1 à l'ancienne ligne de Paris à Saint-Germain-en-Laye. La section devait initialement s'appeler « Métro express régional Défense-Étoile », mais le nom fut changé quand on se rendit compte de l'acronyme peu flatteur de l'appellation de départ.</p>
+<p>
+    <strong>Bold</strong>
+    <em>Italic</em>
+    <h3>Heading</h3>
+    <h1>Mega heading ?</h1>
+    <code>Little code snippet</code>
+     <p><a href="http://lien.com" rel="nofollow">Lien</a>
+     <img src="http://placehold.it/1200x1800" title="entrez le titre de l'image ici">
+ </p>
+
+<ul>
+    <li>Liste</li>
+    <li>Liste 2</li>
+</ul>
+
+<ol>
+    <li>Ol</li>
+    <li>OL</li>
+    <li>OL3</li>
+</ol>
+
+<table>
+    <thead>
+        <tr>
+            <th>foo</th>
+            <th>bar right</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+        <tr>
+            <td>baz</td>
+            <td>bim</td>
+        </tr>
+    </tbody>
+</table>
+
+<pre><code>Big code snippet</code></pre>
+
+<blockquote>
+    <p>
+    Quote<br>
+    Multiligne ?</p>
+    <p>
+    Quote<br>
+    Quote test</p>
+</blockquote>
+</article></script>
+
+		<!--
+			Vanilla JS
+		-->
+
+		<script>
+			findAndHandleStylemarkBlocks('js', function(block) {
+				eval(block);
+			});
+		</script>
+
+		<!--
+			AngularJS
+		-->
+
+		<script>
+			(function(angular) {
+
+				if (!angular) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks('angularjs', function(block, index) {
+					var moduleElem = document.querySelector('[ng-app]');
+					var module;
+
+					if (moduleElem) {
+						// Uses an existing module
+						module = angular.module(moduleElem.getAttribute('ng-app'));
+					}
+					else {
+						// Creates a new module
+						module = angular.module('stylemark-markdown-markdown', []);
+					}
+
+					module.controller('stylemark-markdown-markdown-' + index, function($scope) {
+						$scope.$eval(block);
+					});
+				});
+			})(window.angular);
+		</script>
+
+		<!--
+			React / JSX
+		-->
+
+		<script>
+			(function(ReactDOM) {
+
+				if (!ReactDOM) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks('jsx', function(block, index) {
+					var rootNode = document.querySelectorAll('.stylemark-react-root')[index];
+					var Component = eval(block);
+					ReactDOM.render(Component, rootNode);
+				});
+			})(window.ReactDOM);
+		</script>
+
+		<!--
+			Ember
+		-->
+
+		<script>
+			(function(Ember) {
+
+				if (!Ember) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks(['handlebars', 'hbs'], function(block, index) {
+					var render = function() {
+						var app = window.noop
+						var container = app.__container__;
+						var renderer = container.lookup('renderer:-dom');
+						var template = Ember.HTMLBars.compile(block);
+
+						var jsBlocks = getStylemarkBlocks('js');
+						var jsBlock = jsBlocks && jsBlocks[0] ? jsBlocks[0] : '{}';
+						var context;
+						eval('context = ' + jsBlock);
+
+						// Credit:
+						// http://stackoverflow.com/questions/27950413/render-ember-js-hbs-template-to-a-string#answer-35625858
+						var compile = function(container, template, context) {
+							return new Ember.RSVP.Promise(function(resolve) {
+								Ember.Component.extend(Ember.merge({
+									style: 'display:none;',
+									layout: template,
+									container: container,
+									renderer: renderer,
+
+									init: function() {
+										this._super.apply(this, arguments);
+										Ember.setOwner(this, container);
+									},
+
+									didRender: function() {
+										var elem = this.$();
+										resolve(elem);
+										this.destroy();
+									}
+								}, context))
+									.create()
+									.append();
+
+							});
+						};
+
+						compile(container, template, context).then(function(elem) {
+							var node = document.querySelectorAll('.stylemark-ember-root')[index];
+							jQuery(node).append(elem);
+						});
+					};
+
+					var isReady = function() {
+						return window.noop
+							&& window.noop.__container__;
+					};
+
+					var checkReady = function() {
+						if (isReady()) {
+							render();
+						}
+						else {
+							setTimeout(checkReady, 20);
+						}
+					};
+
+					checkReady();
+				});
+
+			})(window.Ember);
+		</script>
+
+		<script src="_stylemark/js/vendor/iframeResizer.contentWindow.min.js"></script>
+	</body>
+</html>

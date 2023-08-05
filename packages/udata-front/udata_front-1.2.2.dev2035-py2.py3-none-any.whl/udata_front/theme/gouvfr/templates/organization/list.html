@@ -1,0 +1,48 @@
+{% extends theme("layouts/1-column.html") %}
+{% from theme('macros/paginator.html') import paginator with context %}
+
+{% set toolbar_class='search-toolbar' %}
+
+{% set meta = {
+    'title': _('Organizations'),
+    'description': _("%(site)s organization search", site=config['SITE_TITLE']),
+    'keywords': [_('search'), _('organizations')],
+    'robots': 'noindex',
+} %}
+
+{% set bundle = 'search' %}
+
+{% block breadcrumb %}
+<li class="active">
+    {{ _('Organizations') }}
+    <small>{{ _('%(start)s to %(end)s on %(total)s',
+            start=organizations.page_start,
+            end=organizations.page_end,
+            total=organizations.total) }}</small>
+</li>
+{% endblock %}
+
+{% block main_content %}
+<section class="container">
+    <div class="pt-sm search-input">
+        <form method="GET" class="row-inline fs-lg">
+            <span class="icon active">{% include theme("svg/search.svg") %}</span>
+            <input type="text" name="q" value="{{organizations.query._query}}" aria-label="{{ _('Search...') }}"
+                placeholder="{{ _('Search...') }}" />
+        </form>
+    </div>
+    <div class="row-inline pt-xl justify-between align-items-center">
+        <h1 class="m-0 h2">{{ _('Organizations')}} <sup>{{organizations.total}}</sup></h1>
+    </div>
+    <ul class="search-results mt-lg">
+        {% for organization in organizations %}
+        <li>
+            <a href="{{ url_for('organizations.show', org=organization) }}" title="{{ organization.title }}"
+                class="unstyled w-100">{% include theme('organization/search-result.html') %}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {{ paginator(organizations) }}
+</section>
+{% endblock %}
