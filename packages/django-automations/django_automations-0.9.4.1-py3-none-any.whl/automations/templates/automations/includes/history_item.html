@@ -1,0 +1,32 @@
+{% load i18n %}{% spaceless %}
+    <div class="card mb-3">
+        {% with node=task.get_node %}
+            <h4 class="card-header{% if "Error" in task.message %} bg-danger{% elif "OK" in task.message %} bg-success{% else %} bg-warning{% endif %}">{{ task.status }} = flow.{{ node.node_name }}()
+                <small>{% if task.finished %}{{ task.finished }}{% else %}{% trans "running" %}{% endif %}</small></h4>
+            <div class="card-body">
+                {% if node.description %}<p>{{ node.description }}</p>{% endif %}
+                {% if task.message == "OK" and task.result %}
+                    <pre class="mb-0">{{ task.result }}</pre>
+                {% elif "Error" in task.message %}
+                    <a href="{% url "automations:traceback" automation.id task.id %}">
+                        <code>{{ task.message }}</code>
+                    </a>
+                {% else %}
+                    <pre class="mb-0">{{ task.message }}</pre>
+                {% endif %}
+            </div>
+            {% if node.modifiers %}
+                <div class="card-footer">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">{% trans "Modifiers" %}:</li>
+                        {% for key in node.modifiers %}
+                            <li class="list-inline-item"><kbd>{{ key }}</kbd>
+                                {% if key == "Wait" %} <small> ({% trans "until" %} {{ task.automation.paused_until }})</small>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+{% endspaceless %}
