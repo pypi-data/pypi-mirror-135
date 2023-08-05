@@ -1,0 +1,42 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+
+## [Unreleased]
+
+### Added
+- Add support to CLI Backend (youtube-dl/yt-dlp)
+- Add initial support to Dark Theme.
+- ChangeLog
+- Man page
+- Add locale (.mo) es_CU
+- Add flagart module
+  - Add Flag art for Cuba
+- Add Logging system using the Python 'logging' module
+- Release for Python 3.8.3
+
+### Fixed
+- Imports for Internationalization with gettext
+- Fix bug set wx.Locale for Python 3.8
+- Fix bug subprocess for Windows ([WinError 6] Handler no valid)
+  - Set stderr to PIPE
+- Do not interpret output [debug] as an error in the Logs
+- Get all Logs except "ffmpeg version"
+- Do not send messages to the GUI if the app does not exist (Destroy)
+- Close properly the file descriptors
+- Fix issue when stop would crash when dl process has already been exited
+- Fix issue where the cmd tools could not be executed because of permision issues on Linux
+
+### Changed
+- Migration to Python 3.*
+- Update requirements.txt
+- README.md
+- Refactored setup.py
+  - Build the translation files (*.mo) using polib
+  - Build the binaries using PyInstaller. Fix path sep for each OS
+  - Build with updates disabled
+  - Set up for Windows/Linux
+- Update locales en_US, es_ES
+- Replace mainframe.CustomComboBox for mainframe.ListBoxComboPopup
+- Remove twodict Dependency
