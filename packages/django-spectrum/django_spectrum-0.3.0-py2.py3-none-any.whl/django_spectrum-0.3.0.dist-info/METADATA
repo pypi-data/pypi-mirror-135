@@ -1,0 +1,103 @@
+Metadata-Version: 2.1
+Name: django-spectrum
+Version: 0.3.0
+Summary: Provides a colorpicker field for Django
+Home-page: https://github.com/dldevinc/django-spectrum
+Author: Mihail Mishakin
+Author-email: x896321475@gmail.com
+Maintainer: Mihail Mishakin
+Maintainer-email: x896321475@gmail.com
+License: BSD license
+Platform: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Framework :: Django :: 1.11
+Classifier: Framework :: Django :: 2.0
+Classifier: Framework :: Django :: 2.1
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: Framework :: Django :: 3.1
+Classifier: Framework :: Django :: 3.2
+Classifier: Framework :: Django :: 4.0
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: Django (>=1.11)
+
+# django-spectrum
+Provides a colorpicker field for Django
+
+![django-spectrum](http://joxi.ru/l2ZPn43iRE3yDr.png)
+
+[![PyPI](https://img.shields.io/pypi/v/django-spectrum.svg)](https://pypi.org/project/django-spectrum/)
+[![Build Status](https://travis-ci.com/dldevinc/django-spectrum.svg?branch=master)](https://travis-ci.org/dldevinc/django-spectrum)
+
+## Compatibility
+* `python` >= 3.6
+* `django` >= 1.11
+
+## Quickstart
+Install `django-spectrum`:
+```bash
+pip install django-spectrum
+```
+
+Add it to your `INSTALLED_APPS` list:
+```python
+INSTALLED_APPS = (
+    ...
+    "spectrum",
+)
+```
+
+Then add it to your models:
+```python
+from django.db import models
+from spectrum.fields import ColorField
+
+class MyModel(models.Model):
+    color = ColorField(_("color"), default="#FFFF00")
+```
+
+## Color class
+The module defines a `Color` class which is used to represent the `ColorField` 
+attribute on the model. The `Color` class can also be used standalone without 
+any Django model.
+
+Some examples of funcionality provided by the `Color` class:
+```python
+from spectrum.color import Color
+
+c = Color("#FFDA0080")
+
+>>> print(c.opaque)
+False
+
+>>> print(c.hex())
+"#FFDA00"
+
+>>> print(c.hexa())
+"#FFDA0080"
+
+>>> print(c.rgba())
+"rgba(255, 218, 0, 0.5)"
+
+>>> print(c.opacity())
+0.5
+
+>>> print(c.hsla())
+"hsla(51, 100.0%, 50.0%, 0.5)"
+```
+
+
