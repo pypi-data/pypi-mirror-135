@@ -1,0 +1,68 @@
+# Build and publish to TestPyPI
+#
+# Closely watch version references for actions!
+
+name: TestPyPI
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Build and publish to TestPyPI
+    runs-on: ubuntu-latest
+    env:
+      PY_LATEST: 3.9
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up R (release)
+        # They tell us to use master (ambiguously)
+        uses: r-lib/actions/setup-r@master
+
+      - name: Install system requirements
+        run: |
+          sudo apt-get install libcurl4-openssl-dev ffmpeg
+
+      - name: Install diveMove
+        run: |
+          install.packages('diveMove')
+        shell: Rscript {0}
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PY_LATEST }}
+
+      - name: Install Python requirements
+        run: |
+          python -m pip install --upgrade pip setuptools wheel twine
+          python -m pip install -r requirements.txt
+          python -m pip install --upgrade pytest
+
+      - name: Build binary wheel and source tarball
+        run: |
+          python setup.py build sdist bdist_wheel
+
+      - name: Test
+        run: |
+          pytest -v skdiveMove
+
+      - name: Build Sphinx docs
+        run: |
+          python -m pip install .['docs']
+          make -C docs/ html
+
+      - name: Publish distribution to TestPyPI
+        if: startsWith(github.ref, 'refs/tags')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+          # Last backslash mandatory
+          TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
+        run: |
+          twine check dist/*
+          twine upload dist/*
