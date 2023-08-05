@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Authority detail" %}{% endblock %}
+
+{% block content %}
+{{ authority }}
+<h3>{% trans "Users" %}</h3>
+{% for u in authority.users.all %}
+    {{ u }}
+{% empty %}
+    {% trans "No users" %}
+{% endfor %}
+
+{% endblock %}
