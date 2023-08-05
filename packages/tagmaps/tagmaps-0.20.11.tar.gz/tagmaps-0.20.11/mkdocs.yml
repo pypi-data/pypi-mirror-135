@@ -1,0 +1,45 @@
+site_name: Tag Maps Documentation
+site_url: https://ad.gitlab.vgiscience.de/tagmaps/docs
+site_author: Alexander Dunkel
+copyright: CC BY-SA 4.0, Alexander Dunkel
+site_dir: site
+
+repo_url: https://github.com/Sieboldianus/TagMaps/
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - python
+    - bash
+  collapse_navigation: true
+  custom_dir: docs/overrides
+
+markdown_extensions:
+    - toc:
+        permalink: true
+    - markdown_include.include:
+        base_path: docs
+    - admonition
+    - fenced_code
+    - sane_lists
+
+plugins:
+    - search
+    - git-revision-date-localized
+nav:
+    - Introduction: index.md
+    - Contents: contents.md
+    - Installation: quick-guide.md
+    - Concept: theory/introduction.md
+    - User Guide:
+        - Detailed installation guide: user-guide/installation.md
+        - Use your own data: user-guide/use-your-own-data.md
+        - Tutorial: user-guide/tutorial.md
+        - Jupyter lab examples: user-guide/jupyter-examples.md
+        - Troubleshooting: user-guide/troubleshooting.md
+    - Command Line Interface: argparse/args.md
+    - API Reference (external): api/tagmaps_.html
+    - Additional resources: resources.md
+    - About: about.md

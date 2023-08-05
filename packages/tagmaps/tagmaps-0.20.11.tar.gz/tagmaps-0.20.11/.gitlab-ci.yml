@@ -1,0 +1,79 @@
+test:
+  image: registry.gitlab.vgiscience.org/tud_ifk/miniconda-cidefault
+  before_script:
+      # initialize conda shell
+      - conda init bash
+      - source ~/.bashrc
+      # activate default ci_env from registry image
+      # contains anybadge
+      - conda activate ci_env
+      - conda env create -f environment.yml
+      # activate tagmaps env
+      # with --stack environments
+      - conda activate tagmaps --stack
+      # install additional packages
+      # needed in tagmaps ci job
+      - pip install git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.vgiscience.de/tud_ifk/argdown.git
+      - conda install pylint bitarray -c conda-forge
+      - pip install pdoc3 pylint-exit
+  stage: test
+  script:
+    # test dev install
+    - pip install -e . --no-dependencies
+    # run main integration test
+    - cleaned_data_file=01_Input/flickr_dresden_cc-by-licenses.csv
+    - python tests/test_all.py --max_items 50 --auto_mode --load_intermediate=$cleaned_data_file
+    # argparse to markdown conversion
+    # for mkdocs args page
+    - python docs/argparse/argparse_doc.py
+    - argdown parse_args.py > docs/argparse/args.md
+    # to enable all warnings during ci doc generation
+    # - export PYTHONWARNINGS='error::UserWarning'
+    - pdoc --config show_type_annotations=True --template-dir docs/apidoc/ --html --output-dir docs/api/ tagmaps
+    # create badges
+    - pylint --output-format=text tagmaps | tee pylint.txt || pylint-exit $?
+    - score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.txt)
+    - echo "Pylint score was $score"
+    - anybadge -l pylint --value=$score --file=pylint.svg 2=red 4=orange 9=yellow 10=green
+    - anybadge -l pipeline --value=passing --file=pipeline.svg passing=green failing=red
+    - version_var=$(sed -n "s#__version__ =\s*'\(.*\)'#\1#p" tagmaps/version.py)
+    - echo "Version for badges $version_var"
+    - conda_version=$(conda search tagmaps -c conda-forge | tail -1 | awk  '{print $2}')
+    - echo "Conda version was $conda_version"
+    - anybadge -l pypi --value="$version_var" --file=pypi.svg --color=green
+    - anybadge -l conda-forge --value="$conda_version" --file=conda-forge.svg --color=orange
+    - anybadge -l mkdocs --value="Documentation" --file=documentation.svg --color=green
+  artifacts:
+    paths:
+      # quote because * is a
+      # special character in YAML
+      - '*.svg'
+      - docs/argparse/args.md
+      - docs/api/
+  only:
+  - master
+  - ci-test
+
+pages:
+  stage: deploy
+  image: registry.gitlab.vgiscience.org/tud_ifk/alpine-mkdocs
+  script:
+    - mkdir .public
+    - cp resources/img6.png .public
+    - cp resources/tagmaps_steps.png .public
+    - cp *.svg .public
+    - mv .public public
+    # build docs
+    - mkdocs build
+    - mv site public
+    # copy pdoc3 compiled API ref
+    - mv docs/api/tagmaps/* public/site/api/
+    - mv public/site public/docs
+  artifacts:
+    name: pages
+    paths:
+    - public
+  only:
+  - master
+  - ci-test
+
