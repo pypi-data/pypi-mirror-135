@@ -1,0 +1,140 @@
+CHANGES
+=======
+
+5.0.5
+-----
+
+* [FIX] OdooChecker: Discard migrations folder as odoo main module (#358)
+
+5.0.4
+-----
+
+* Revert "[REVERT] requirements: Using pylint<2.11.0 because issue 5096 (#355)"
+
+5.0.3
+-----
+
+* [REVERT] requirements: Using pylint<2.11.0 because issue 5096 (#355)
+
+5.0.2
+-----
+
+* [REF] requirements: Upgrade pylint version 2.11.1 (#354)
+
+5.0.1
+-----
+
+* [REF] manifest-version-format: Add new valid odoo v15.0 (#353)
+* [REF] sql-injection: No sql-injection using constants (#351)
+* [FIX] sql-injection: AttributeError: 'NoneType' object has no attribute 'parent' (#350)
+
+5.0.0
+-----
+
+* [REF] requirements: Upgrade pylint version (#349)
+
+4.0.0
+-----
+
+* [REF] README: Auto-update Using pylint\_odoo.messages2rst()
+* [ADD] dangerous-qweb-replace-wo-priority: Consider qweb view templates (#347)
+* [ADD] context-overridden: Better using kwargs instead of dictionary (#256)
+* [REF] invalid-name, unused-argument: Suppress check for migrations path (#348)
+
+3.10.0
+------
+
+* [FIX] sql-injection: Fix false positives (#344)
+* [FIX] pylint\_odoo: Fix manifest\_version\_format option ignored (#346)
+
+3.9.0
+-----
+
+* [FIX] translation-required: Skip tests folder (#345)
+* [FIX] xml-syntax-error: Fix crash if a xml has syntax errors (#343)
+* [REF] pylint-odoo: Add .pylintrc example (#325)
+* [FIX] attribute-deprecated: Check only "Model" class' attributes (#342)
+* [FIX] attribute-string-redundant: "string" of related field is taken from the referenced one (#341)
+* [FIX] file-not-used: Fix false positives on Windows (#335)
+
+3.8.0
+-----
+
+* [FIX] Add pbr to requirements (#328)
+* [REF] requirements: upgrade pylint version (#320)
+
+3.7.1
+-----
+
+* [FIX] test-folder-imported: Support all import styles (#315)
+* [FIX] misc.py: Properly support python namespace package when detecting the odoo addon directory (#317)
+
+3.7.0
+-----
+
+* [REF] README: Auto-update Using pylint\_odoo.messages2rst()
+* [ADD] translation-positional-used: New check to valid the allow change the order of string formatting (#305)
+* [ADD] str-format-used: Check if str.format was used in translated string (#304)
+* [ADD] test-folder-imported: check if tests folder is imported in init file (#310)
+
+3.6.0
+-----
+
+* [FIX] requirements: fix dependencies break with pip 20.3 Fix #306 (#313)
+* [ADD] add compatibility to v14.0 (#312)
+
+3.5.1
+-----
+
+* [REF] .travis.yml: Enable condition to deploy pypi
+* [REF] README: Auto-update Using pylint\_odoo.messages2rst()
+* [FIX] dangerous-view-replace-wo-priority: check all child tags with replace (#309)
+* [ADD] pylint-odoo: add new check to maintainers key in manifest must be a list of str (#308)
+* [REF] development-status-allowed: Explicitly report possible values (#301)
+* [REF]  odoo-addons-relative-import: does not apply in tests/ directory (#307)
+* [REF] CI: Enable py3.8 and py3.9 (#294)
+
+3.5.0
+-----
+
+* [FIX] messages2rst: Compatible with more than 3 message items
+* [REF] no-utf8-coding-comment,unnecessary-utf8-coding-comment: Using python version to enable/disable them (#292)
+* [REF] po-msgstr-variables: Check if there is missing 'module:' comment (#291)
+
+3.4.0
+-----
+
+* [REF] README: Auto-update Using pylint\_odoo.messages2rst()
+* Fixing pragma: no cover position
+* [ADD] po-msgstr-variables: Check if string translated can be parsed correctly
+* [ADD] duplicate-po-message-definition, po-syntax-error: Enable PO checks
+
+3.3.2
+-----
+
+* [REF] missing-manifest-dependency: Add openupgradelib as a whitelist. (#288)
+* [FIX] sql-injection: Consider valid arguments built with psycopg2.sql
+
+3.3.1
+-----
+
+* [REF] missing-import-error: Add new packages for Odoo v13.0
+
+3.3.0
+-----
+
+* [REF] requirements.txt: Update packages version (#285)
+
+3.2.0
+-----
+
+* [FIX] get\_manifest\_file: Get manifest file correctly
+* [FIX] Visit module: manage odoo subdirectories Better way to check whether a path is a path of a subdirectoy of a Odoo module. Before, '/a/b/cc/d' was considered as a subdirectoy of '/a/b/c' because '/a/b/c' in '/a/b/cc/d' == True
+
+3.1.0
+-----
+
+* [REF] README: Auto-update Using pylint\_odoo.messages2rst()
+* [FIX] rst\_lint: Using UTF-8 encoding by default (#272)
+* [ADD] Possibility of package name include dots
+* [REF] .travis.yml: Using py3.7 stable instead of dev (#271)
