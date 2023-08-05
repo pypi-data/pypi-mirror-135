@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec name="RPA.Cloud.AWS" type="LIBRARY" format="REST" scope="GLOBAL" generated="2022-01-18T12:58:30Z" specversion="3" source="./RPA/Cloud/AWS.py" lineno="891">
+<version/>
+<doc>`AWS` is a library for operating with Amazon AWS services S3, SQS,
+Textract and Comprehend.
+
+Services are initialized with keywords like ``Init S3 Client`` for S3.
+
+**AWS authentication**
+
+Authentication for AWS is set with `key id` and `access key` which can be given to the library
+in three different ways.
+
+- Method 1 as environment variables, ``AWS_KEY_ID`` and ``AWS_KEY``.
+- Method 2 as keyword parameters to ``Init Textract Client`` for example.
+- Method 3 as Robocloud vault secret. The vault name needs to be given in library init or
+  with keyword ``Set Robocloud Vault``. Secret keys are expected to match environment variable
+  names.
+
+Method 1. credentials using environment variable
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library   RPA.Cloud.AWS
+
+    *** Tasks ***
+    Init AWS services
+        # NO parameters for client, expecting to get credentials
+        # with AWS_KEY and AWS_KEY_ID environment variable
+        Init S3 Client
+
+Method 2. credentials with keyword parameter
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library   RPA.Cloud.AWS
+
+    *** Tasks ***
+    Init AWS services
+        Init S3 Client  aws_key_id=${AWS_KEY_ID}  aws_key=${AWS_KEY}
+
+Method 3. setting Robocloud Vault in the library init
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library   RPA.Cloud.AWS  robocloud_vault_name=aws
+
+    *** Tasks ***
+    Init AWS services
+        Init S3 Client  use_robocloud_vault=${TRUE}
+
+Method 3. setting Robocloud Vault with keyword
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library   RPA.Cloud.AWS
+
+    *** Tasks ***
+    Init AWS services
+        Set Robocloud Vault     vault_name=aws
+        Init Textract Client    use_robocloud_vault=${TRUE}
+
+**Requirements**
+
+The default installation depends on `boto3`_ library. Due to the size of the
+dependency, this library has been set as an optional package for ``rpaframework``.
+
+Following declaration, `rpaframework[aws]`, will install all rpaframework libraries
+plus `RPA.Cloud.AWS`.
+
+.. code-block:: yaml
+
+    channels:
+      - conda-forge
+    dependencies:
+      - python=3.7.5
+      - pip=20.1
+      - pip:
+        - rpaframework[aws]==12.0.3
+
+.. _boto3:
+    https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
+
+**Example**
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library   RPA.Cloud.AWS   region=us-east-1
+
+    *** Variables ***
+    ${BUCKET_NAME}        testbucket12213123123
+
+    *** Tasks ***
+    Upload a file into S3 bucket
+        [Setup]   Init S3 Client
+        Upload File      ${BUCKET_NAME}   ${/}path${/}to${/}file.pdf
+        @{files}         List Files   ${BUCKET_NAME}
+        FOR   ${file}  IN   @{files}
+            Log  ${file}
+        END</doc>
+<tags>
+</tags>
+<inits>
+<init name="Init" source="./RPA/Cloud/AWS.py" lineno="999">
+<arguments repr="region: str = eu-west-1, robocloud_vault_name: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="region: str = eu-west-1">
+<name>region</name>
+<type>str</type>
+<default>eu-west-1</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="robocloud_vault_name: str | None = None">
+<name>robocloud_vault_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Initialize self.  See help(type(self)) for accurate signature.</doc>
+<shortdoc>Initialize self.  See help(type(self)) for accurate signature.</shortdoc>
+</init>
+</inits>
+<keywords>
+<kw name="Analyze Document" source="./RPA/Cloud/AWS.py" lineno="361">
+<arguments repr="image_file: str = None, json_file: str = None, bucket_name: str = None, model: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="image_file: str = None">
+<name>image_file</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="json_file: str = None">
+<name>json_file</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="model: bool = False">
+<name>model</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Analyzes an input document for relationships between detected items
+
+:param image_file: filepath (or object name) of image file
+:param json_file: filepath to resulting json file
+:param bucket_name: if given then using `image_file` from the bucket
+:param model: set `True` to return Textract Document model, default `False`
+:return: analysis response in json or TextractDocument model
+
+Example:
+
+.. code-block:: robotframework
+
+    ${response}    Analyze Document    ${filename}    model=True
+    FOR    ${page}    IN    @{response.pages}
+        Log Many    ${page.tables}
+        Log Many    ${page.form}
+        Log Lines    ${page.lines}
+        Log Many    ${page}
+        Log    ${page}
+        Log    ${page.form}
+    END</doc>
+<shortdoc>Analyzes an input document for relationships between detected items</shortdoc>
+</kw>
+<kw name="Convert Textract Response To Model" source="./RPA/Cloud/AWS.py" lineno="691">
+<arguments repr="response">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="response">
+<name>response</name>
+</arg>
+</arguments>
+<doc>Convert AWS Textract JSON response into TextractDocument object,
+which has following structure:
+
+    - Document
+    - Page
+    - Tables
+    - Rows
+    - Cells
+    - Lines
+    - Words
+    - Form
+    - Field
+
+:param response: JSON response from AWS Textract service
+:return: `TextractDocument` object
+
+Example:
+
+.. code-block:: robotframework
+
+    ${response}    Analyze Document    ${filename}
+    ${model}=    Convert Textract Response To Model    ${response}
+    FOR    ${page}    IN    @{model.pages}
+        Log Many    ${page.tables}
+        Log Many    ${page.form}
+        Log Lines    ${page.lines}
+        Log Many    ${page}
+        Log    ${page}
+        Log    ${page.form}
+    END</doc>
+<shortdoc>Convert AWS Textract JSON response into TextractDocument object, which has following structure:</shortdoc>
+</kw>
+<kw name="Create Bucket" source="./RPA/Cloud/AWS.py" lineno="144">
+<arguments repr="bucket_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Create S3 bucket with name
+
+:param bucket_name: name for the bucket
+:return: boolean indicating status of operation</doc>
+<shortdoc>Create S3 bucket with name</shortdoc>
+</kw>
+<kw name="Create Queue" source="./RPA/Cloud/AWS.py" lineno="867">
+<arguments repr="queue_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="queue_name: str = None">
+<name>queue_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Create queue with name
+
+:param queue_name: [description], defaults to None
+:return: create queue response as dict</doc>
+<shortdoc>Create queue with name</shortdoc>
+</kw>
+<kw name="Delete Bucket" source="./RPA/Cloud/AWS.py" lineno="160">
+<arguments repr="bucket_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Delete S3 bucket with name
+
+:param bucket_name: name for the bucket
+:return: boolean indicating status of operation</doc>
+<shortdoc>Delete S3 bucket with name</shortdoc>
+</kw>
+<kw name="Delete Files" source="./RPA/Cloud/AWS.py" lineno="186">
+<arguments repr="bucket_name: str = None, files: list = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="files: list = None">
+<name>files</name>
+<type>list</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Delete files in the bucket
+
+:param bucket_name: name for the bucket
+:param files: list of files to delete
+:return: number of files deleted or `False`</doc>
+<shortdoc>Delete files in the bucket</shortdoc>
+</kw>
+<kw name="Delete Message" source="./RPA/Cloud/AWS.py" lineno="853">
+<arguments repr="receipt_handle: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="receipt_handle: str = None">
+<name>receipt_handle</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Delete message in the queue
+
+:param receipt_handle: message handle to delete
+:return: delete message response as dict</doc>
+<shortdoc>Delete message in the queue</shortdoc>
+</kw>
+<kw name="Delete Queue" source="./RPA/Cloud/AWS.py" lineno="879">
+<arguments repr="queue_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="queue_name: str = None">
+<name>queue_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Delete queue with name
+
+:param queue_name: [description], defaults to None
+:return: delete queue response as dict</doc>
+<shortdoc>Delete queue with name</shortdoc>
+</kw>
+<kw name="Detect Document Text" source="./RPA/Cloud/AWS.py" lineno="490">
+<arguments repr="image_file: str = None, json_file: str = None, bucket_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="image_file: str = None">
+<name>image_file</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="json_file: str = None">
+<name>json_file</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Detects text in the input document.
+
+:param image_file: filepath (or object name) of image file
+:param json_file: filepath to resulting json file
+:param bucket_name: if given then using `image_file` from the bucket
+:return: analysis response in json</doc>
+<shortdoc>Detects text in the input document.</shortdoc>
+</kw>
+<kw name="Detect Entities" source="./RPA/Cloud/AWS.py" lineno="778">
+<arguments repr="text: str = None, lang=en">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="text: str = None">
+<name>text</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="lang=en">
+<name>lang</name>
+<default>en</default>
+</arg>
+</arguments>
+<doc>Inspects text for named entities, and returns information about them
+
+:param text: A UTF-8 text string. Each string must contain fewer
+    that 5,000 bytes of UTF-8 encoded characters
+:param lang: language code of the text, defaults to "en"</doc>
+<shortdoc>Inspects text for named entities, and returns information about them</shortdoc>
+</kw>
+<kw name="Detect Sentiment" source="./RPA/Cloud/AWS.py" lineno="760">
+<arguments repr="text: str = None, lang=en">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="text: str = None">
+<name>text</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="lang=en">
+<name>lang</name>
+<default>en</default>
+</arg>
+</arguments>
+<doc>Inspects text and returns an inference of the prevailing sentiment
+
+:param text: A UTF-8 text string. Each string must contain fewer
+    that 5,000 bytes of UTF-8 encoded characters
+:param lang: language code of the text, defaults to "en"</doc>
+<shortdoc>Inspects text and returns an inference of the prevailing sentiment</shortdoc>
+</kw>
+<kw name="Download Files" source="./RPA/Cloud/AWS.py" lineno="305">
+<arguments repr="bucket_name: str = None, files: list = None, target_directory: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="files: list = None">
+<name>files</name>
+<type>list</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="target_directory: str = None">
+<name>target_directory</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Download files from bucket to local filesystem
+
+:param bucket_name: name for the bucket
+:param files: list of S3 object names
+:param target_directory: location for the downloaded files, default
+    current directory
+:return: number of files downloaded</doc>
+<shortdoc>Download files from bucket to local filesystem</shortdoc>
+</kw>
+<kw name="Get Cells" source="./RPA/Cloud/AWS.py" lineno="482">
+<arguments repr="">
+</arguments>
+<doc>Get parsed cells from the response
+
+:return: cells</doc>
+<shortdoc>Get parsed cells from the response</shortdoc>
+</kw>
+<kw name="Get Document Analysis" source="./RPA/Cloud/AWS.py" lineno="563">
+<arguments repr="job_id: str = None, max_results: int = 1000, next_token: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="job_id: str = None">
+<name>job_id</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="max_results: int = 1000">
+<name>max_results</name>
+<type>int</type>
+<default>1000</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="next_token: str = None">
+<name>next_token</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Get the results of Textract asynchronous `Document Analysis` operation
+
+:param job_id: job identifier, defaults to None
+:param max_results: number of blocks to get at a time, defaults to 1000
+:param next_token: pagination token for getting next set of results,
+       defaults to None
+:return: dictionary
+
+Response dictionary has key `JobStatus` with value `SUCCEEDED` when analysis
+has been completed.
+
+Example:
+
+.. code-block:: robotframework
+
+    Init Textract Client  %{AWS_KEY_ID}  %{AWS_KEY_SECRET}  %{AWS_REGION}
+    ${jobid}=    Start Document Analysis  s3bucket_name  invoice.pdf
+    FOR    ${i}    IN RANGE    50
+        ${response}    Get Document Analysis  ${jobid}
+        Exit For Loop If    "${response}[JobStatus]" == "SUCCEEDED"
+        Sleep    1s
+    END</doc>
+<shortdoc>Get the results of Textract asynchronous `Document Analysis` operation</shortdoc>
+</kw>
+<kw name="Get Document Text Detection" source="./RPA/Cloud/AWS.py" lineno="657">
+<arguments repr="job_id: str = None, max_results: int = 1000, next_token: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="job_id: str = None">
+<name>job_id</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="max_results: int = 1000">
+<name>max_results</name>
+<type>int</type>
+<default>1000</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="next_token: str = None">
+<name>next_token</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Get the results of Textract asynchronous `Document Text Detection` operation
+
+:param job_id: job identifier, defaults to None
+:param max_results: number of blocks to get at a time, defaults to 1000
+:param next_token: pagination token for getting next set of results,
+       defaults to None
+:return: dictionary
+
+Response dictionary has key `JobStatus` with value `SUCCEEDED` when analysis
+has been completed.
+
+Example:
+
+.. code-block:: robotframework
+
+    Init Textract Client  %{AWS_KEY_ID}  %{AWS_KEY_SECRET}  %{AWS_REGION}
+    ${jobid}=    Start Document Text Detection  s3bucket_name  invoice.pdf
+    FOR    ${i}    IN RANGE    50
+        ${response}    Get Document Text Detection    ${jobid}
+        Exit For Loop If    "${response}[JobStatus]" == "SUCCEEDED"
+        Sleep    1s
+    END</doc>
+<shortdoc>Get the results of Textract asynchronous `Document Text Detection` operation</shortdoc>
+</kw>
+<kw name="Get Pages And Text" source="./RPA/Cloud/AWS.py" lineno="597">
+<arguments repr="textract_response: dict">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="textract_response: dict">
+<name>textract_response</name>
+<type>dict</type>
+</arg>
+</arguments>
+<doc>Get pages and text out of Textract response json
+
+:param textract_response: JSON from Textract
+:return: dictionary, page numbers as keys and value is a list
+         of text lines</doc>
+<shortdoc>Get pages and text out of Textract response json</shortdoc>
+</kw>
+<kw name="Get Tables" source="./RPA/Cloud/AWS.py" lineno="468">
+<arguments repr="">
+</arguments>
+<doc>Get parsed tables from the response
+
+:return: tables</doc>
+<shortdoc>Get parsed tables from the response</shortdoc>
+</kw>
+<kw name="Get Words" source="./RPA/Cloud/AWS.py" lineno="475">
+<arguments repr="">
+</arguments>
+<doc>Get parsed words from the response
+
+:return: words</doc>
+<shortdoc>Get parsed words from the response</shortdoc>
+</kw>
+<kw name="Init Comprehend Client" source="./RPA/Cloud/AWS.py" lineno="741">
+<arguments repr="aws_key_id: str | None = None, aws_key: str | None = None, region: str | None = None, use_robocloud_vault: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key_id: str | None = None">
+<name>aws_key_id</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key: str | None = None">
+<name>aws_key</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="region: str | None = None">
+<name>region</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="use_robocloud_vault: bool = False">
+<name>use_robocloud_vault</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Initialize AWS Comprehend client
+
+:param aws_key_id: access key ID
+:param aws_key: secret access key
+:param region: AWS region
+:param use_robocloud_vault: use secret stored into `Robocloud Vault`</doc>
+<shortdoc>Initialize AWS Comprehend client</shortdoc>
+</kw>
+<kw name="Init S3 Client" source="./RPA/Cloud/AWS.py" lineno="127">
+<arguments repr="aws_key_id: str | None = None, aws_key: str | None = None, region: str | None = None, use_robocloud_vault: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key_id: str | None = None">
+<name>aws_key_id</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key: str | None = None">
+<name>aws_key</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="region: str | None = None">
+<name>region</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="use_robocloud_vault: bool = False">
+<name>use_robocloud_vault</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Initialize AWS S3 client
+
+:param aws_key_id: access key ID
+:param aws_key: secret access key
+:param region: AWS region
+:param use_robocloud_vault: use secret stored into `Robocloud Vault`</doc>
+<shortdoc>Initialize AWS S3 client</shortdoc>
+</kw>
+<kw name="Init Sqs Client" source="./RPA/Cloud/AWS.py" lineno="799">
+<arguments repr="aws_key_id: str | None = None, aws_key: str | None = None, region: str | None = None, queue_url: str | None = None, use_robocloud_vault: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key_id: str | None = None">
+<name>aws_key_id</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key: str | None = None">
+<name>aws_key</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="region: str | None = None">
+<name>region</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="queue_url: str | None = None">
+<name>queue_url</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="use_robocloud_vault: bool = False">
+<name>use_robocloud_vault</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Initialize AWS SQS client
+
+:param aws_key_id: access key ID
+:param aws_key: secret access key
+:param region: AWS region
+:param queue_url: SQS queue url
+:param use_robocloud_vault: use secret stored into `Robocloud Vault`</doc>
+<shortdoc>Initialize AWS SQS client</shortdoc>
+</kw>
+<kw name="Init Textract Client" source="./RPA/Cloud/AWS.py" lineno="344">
+<arguments repr="aws_key_id: str | None = None, aws_key: str | None = None, region: str | None = None, use_robocloud_vault: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key_id: str | None = None">
+<name>aws_key_id</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="aws_key: str | None = None">
+<name>aws_key</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="region: str | None = None">
+<name>region</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="use_robocloud_vault: bool = False">
+<name>use_robocloud_vault</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Initialize AWS Textract client
+
+:param aws_key_id: access key ID
+:param aws_key: secret access key
+:param region: AWS region
+:param use_robocloud_vault: use secret stored into `Robocloud Vault`</doc>
+<shortdoc>Initialize AWS Textract client</shortdoc>
+</kw>
+<kw name="List Buckets" source="./RPA/Cloud/AWS.py" lineno="176">
+<arguments repr="">
+</arguments>
+<doc>List all buckets for this account
+
+:return: list of buckets</doc>
+<shortdoc>List all buckets for this account</shortdoc>
+</kw>
+<kw name="List Files" source="./RPA/Cloud/AWS.py" lineno="211">
+<arguments repr="bucket_name">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="bucket_name">
+<name>bucket_name</name>
+</arg>
+</arguments>
+<doc>List files in the bucket
+
+:param bucket_name: name for the bucket
+:return: list of files</doc>
+<shortdoc>List files in the bucket</shortdoc>
+</kw>
+<kw name="Receive Message" source="./RPA/Cloud/AWS.py" lineno="841">
+<arguments repr="">
+</arguments>
+<doc>Receive message from queue
+
+:return: message as dict</doc>
+<shortdoc>Receive message from queue</shortdoc>
+</kw>
+<kw name="Send Message" source="./RPA/Cloud/AWS.py" lineno="819">
+<arguments repr="message: str = None, message_attributes: dict = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="message: str = None">
+<name>message</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="message_attributes: dict = None">
+<name>message_attributes</name>
+<type>dict</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Send message to the queue
+
+:param message: body of the message
+:param message_attributes: attributes of the message
+:return: send message response as dict</doc>
+<shortdoc>Send message to the queue</shortdoc>
+</kw>
+<kw name="Set Robocloud Vault" source="./RPA/Cloud/AWS.py" lineno="111">
+<arguments repr="vault_name">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="vault_name">
+<name>vault_name</name>
+</arg>
+</arguments>
+<doc>Set Robocloud Vault name
+
+:param vault_name: Robocloud Vault name</doc>
+<shortdoc>Set Robocloud Vault name</shortdoc>
+</kw>
+<kw name="Start Document Analysis" source="./RPA/Cloud/AWS.py" lineno="517">
+<arguments repr="bucket_name_in: str = None, object_name_in: str = None, object_version_in: str = None, bucket_name_out: str = None, prefix_object_out: str = textract_output">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name_in: str = None">
+<name>bucket_name_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="object_name_in: str = None">
+<name>object_name_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="object_version_in: str = None">
+<name>object_version_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name_out: str = None">
+<name>bucket_name_out</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="prefix_object_out: str = textract_output">
+<name>prefix_object_out</name>
+<type>str</type>
+<default>textract_output</default>
+</arg>
+</arguments>
+<doc>Starts the asynchronous analysis of an input document
+for relationships between detected items such as key-value pairs,
+tables, and selection elements.
+
+:param bucket_name_in: name of the S3 bucket for the input object,
+    defaults to None
+:param object_name_in: name of the input object, defaults to None
+:param object_version_in: version of the input object, defaults to None
+:param bucket_name_out: name of the S3 bucket where to save analysis result
+    object, defaults to None
+:param prefix_object_out: name of the S3 bucket for the analysis result object,
+:return: job identifier
+
+Input object can be in JPEG, PNG or PDF format. Documents should
+be located in the Amazon S3 bucket.
+
+By default Amazon Textract will save the analysis result internally
+to be accessed by keyword ``Get Document Analysis``. This can
+be overridden by giving parameter ``bucket_name_out``.</doc>
+<shortdoc>Starts the asynchronous analysis of an input document for relationships between detected items such as key-value pairs, tables, and selection elements.</shortdoc>
+</kw>
+<kw name="Start Document Text Detection" source="./RPA/Cloud/AWS.py" lineno="614">
+<arguments repr="bucket_name_in: str = None, object_name_in: str = None, object_version_in: str = None, bucket_name_out: str = None, prefix_object_out: str = textract_output">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name_in: str = None">
+<name>bucket_name_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="object_name_in: str = None">
+<name>object_name_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="object_version_in: str = None">
+<name>object_version_in</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name_out: str = None">
+<name>bucket_name_out</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="prefix_object_out: str = textract_output">
+<name>prefix_object_out</name>
+<type>str</type>
+<default>textract_output</default>
+</arg>
+</arguments>
+<doc>Starts the asynchronous detection of text in a document.
+Amazon Textract can detect lines of text and the words that make up a
+line of text.
+
+:param bucket_name_in: name of the S3 bucket for the input object,
+    defaults to None
+:param object_name_in: name of the input object, defaults to None
+:param object_version_in: version of the input object, defaults to None
+:param bucket_name_out: name of the S3 bucket where to save analysis result
+    object, defaults to None
+:param prefix_object_out: name of the S3 bucket for the analysis result object,
+:return: job identifier
+
+Input object can be in JPEG, PNG or PDF format. Documents should
+be located in the Amazon S3 bucket.
+
+By default Amazon Textract will save the analysis result internally
+to be accessed by keyword ``Get Document Text Detection``. This can
+be overridden by giving parameter ``bucket_name_out``.</doc>
+<shortdoc>Starts the asynchronous detection of text in a document. Amazon Textract can detect lines of text and the words that make up a line of text.</shortdoc>
+</kw>
+<kw name="Upload File" source="./RPA/Cloud/AWS.py" lineno="247">
+<arguments repr="bucket_name: str = None, filename: str = None, object_name: str = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="filename: str = None">
+<name>filename</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="object_name: str = None">
+<name>object_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Upload single file into bucket
+
+:param bucket_name: name for the bucket
+:param filename: filepath for the file to be uploaded
+:param object_name: name of the object in the bucket, defaults to None
+:return: tuple of upload status and error
+
+If `object_name` is not given then basename of the file is
+used as `object_name`.</doc>
+<shortdoc>Upload single file into bucket</shortdoc>
+</kw>
+<kw name="Upload Files" source="./RPA/Cloud/AWS.py" lineno="266">
+<arguments repr="bucket_name: str = None, files: list = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bucket_name: str = None">
+<name>bucket_name</name>
+<type>str</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="files: list = None">
+<name>files</name>
+<type>list</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Upload multiple files into bucket
+
+:param bucket_name: name for the bucket
+:param files: list of files (2 possible ways, see above)
+:return: number of files uploaded
+
+Giving files as list of filepaths:
+    ['/path/to/file1.txt', '/path/to/file2.txt']
+
+Giving files as list of dictionaries (including filepath and object name):
+    [{'filepath':'/path/to/file1.txt', 'object_name': 'file1.txt'},
+    {'filepath': '/path/to/file2.txt', 'object_name': 'file2.txt'}]</doc>
+<shortdoc>Upload multiple files into bucket</shortdoc>
+</kw>
+</keywords>
+<datatypes>
+</datatypes>
+</keywordspec>

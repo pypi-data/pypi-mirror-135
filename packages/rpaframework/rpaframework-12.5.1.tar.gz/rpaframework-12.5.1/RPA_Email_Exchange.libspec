@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec name="RPA.Email.Exchange" type="LIBRARY" format="REST" scope="GLOBAL" generated="2022-01-18T12:58:31Z" specversion="3" source="./RPA/Email/Exchange.py" lineno="35">
+<version/>
+<doc>`Exchange` is a library for sending, reading, and deleting emails.
+`Exchange` is interfacing with Exchange Web Services (EWS).
+
+For more information about server settings, see
+`this Microsoft support article &lt;https://support.microsoft.com/en-us/office/server-settings-you-ll-need-from-your-email-provider-c82de912-adcc-4787-8283-45a1161f3cc3&gt;`_.
+
+**Examples**
+
+**Robot Framework**
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library     RPA.Email.Exchange
+    Task Setup  Authorize  username=${ACCOUNT}  password=${PASSWORD}
+
+    *** Variables ***
+    ${ACCOUNT}              ACCOUNT_NAME
+    ${PASSWORD}             ACCOUNT_PASSWORD
+    ${RECIPIENT_ADDRESS}    RECIPIENT
+    ${IMAGES}               myimage.png
+    ${ATTACHMENTS}          C:${/}files${/}mydocument.pdf
+
+    *** Tasks ***
+    Task of sending email
+        Send Message  recipients=${RECIPIENT_ADDRESS}
+        ...           subject=Exchange Message from RPA Robot
+        ...           body=&lt;p&gt;Exchange RPA Robot message body&lt;br&gt;&lt;img src='myimage.png'/&gt;&lt;/p&gt;
+        ...           save=${TRUE}
+        ...           html=${TRUE}
+        ...           images=${IMAGES}
+        ...           cc=EMAIL_ADDRESS
+        ...           bcc=EMAIL_ADDRESS
+        ...           attachments=${ATTACHMENTS}
+
+    Task of listing messages
+        # Attachments are saved specifically with a keyword Save Attachments
+        ${messages}=    List Messages
+        FOR    ${msg}    IN    @{messages}
+            Log Many    ${msg}
+            ${attachments}=    Run Keyword If    "${msg}[subject]"=="about my orders"
+            ...    Save Attachments
+            ...    ${msg}
+            ...    save_dir=${CURDIR}${/}savedir
+        END
+        # Using save_dir all attachments in listed messages are saved
+        ${messages}=    List Messages
+        ...    INBOX/Problems/sub1
+        ...    criterion=subject:about my orders
+        ...    save_dir=${CURDIR}${/}savedir2
+        FOR    ${msg}    IN    @{messages}
+            Log Many    ${msg}
+        END
+
+    Task of moving messages
+        Move Messages    criterion=subject:about my orders
+        ...    source=INBOX/Processed Purchase Invoices/sub2
+        ...    target=INBOX/Problems/sub1
+
+**Python**
+
+.. code-block:: python
+
+    from RPA.Email.Exchange import Exchange
+
+    ex_account = "ACCOUNT_NAME"
+    ex_password = "ACCOUNT_PASSWORD"
+
+    mail = Exchange()
+    mail.authorize(username=ex_account, password=ex_password)
+    mail.send_message(
+        recipients="RECIPIENT",
+        subject="Message from RPA Python",
+        body="RPA Python message body",
+    )</doc>
+<tags>
+</tags>
+<inits>
+</inits>
+<keywords>
+<kw name="Authorize" source="./RPA/Email/Exchange.py" lineno="122">
+<arguments repr="username: str, password: str, autodiscover: bool = True, access_type: str = DELEGATE, server: str | None = None, primary_smtp_address: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="username: str">
+<name>username</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="password: str">
+<name>password</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="autodiscover: bool = True">
+<name>autodiscover</name>
+<type>bool</type>
+<default>True</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="access_type: str = DELEGATE">
+<name>access_type</name>
+<type>str</type>
+<default>DELEGATE</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="server: str | None = None">
+<name>server</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="primary_smtp_address: str | None = None">
+<name>primary_smtp_address</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Connect to Exchange account
+
+:param username: account username
+:param password: account password
+:param autodiscover: use autodiscover or set it off
+:param accesstype: default "DELEGATE", other option "IMPERSONATION"
+:param server: required for configuration options
+:param primary_smtp_address: by default set to username, but can be
+    set to be different than username</doc>
+<shortdoc>Connect to Exchange account</shortdoc>
+</kw>
+<kw name="Create Folder" source="./RPA/Email/Exchange.py" lineno="333">
+<arguments repr="folder_name: str | None = None, parent_folder: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="folder_name: str | None = None">
+<name>folder_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="parent_folder: str | None = None">
+<name>parent_folder</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Create email folder
+
+:param folder_name: name for the new folder
+:param parent_folder: name for the parent folder, by default INBOX
+:return: True if operation was successful, False if not</doc>
+<shortdoc>Create email folder</shortdoc>
+</kw>
+<kw name="Delete Folder" source="./RPA/Email/Exchange.py" lineno="353">
+<arguments repr="folder_name: str | None = None, parent_folder: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="folder_name: str | None = None">
+<name>folder_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="parent_folder: str | None = None">
+<name>parent_folder</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Delete email folder
+
+:param folder_name: current folder name
+:param parent_folder: name for the parent folder, by default INBOX
+:return: True if operation was successful, False if not</doc>
+<shortdoc>Delete email folder</shortdoc>
+</kw>
+<kw name="Empty Folder" source="./RPA/Email/Exchange.py" lineno="400">
+<arguments repr="folder_name: str | None = None, parent_folder: str | None = None, delete_sub_folders: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="folder_name: str | None = None">
+<name>folder_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="parent_folder: str | None = None">
+<name>parent_folder</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="delete_sub_folders: bool = False">
+<name>delete_sub_folders</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Empty email folder of all items
+
+:param folder_name: current folder name
+:param parent_folder: name for the parent folder, by default INBOX
+:param delete_sub_folders: delete sub folders or not, by default False
+:return: True if operation was successful, False if not</doc>
+<shortdoc>Empty email folder of all items</shortdoc>
+</kw>
+<kw name="List Messages" source="./RPA/Email/Exchange.py" lineno="158">
+<arguments repr="folder_name: str | None = None, criterion: str | None = None, contains: bool = False, count: int = 100, save_dir: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="folder_name: str | None = None">
+<name>folder_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="criterion: str | None = None">
+<name>criterion</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="contains: bool = False">
+<name>contains</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="count: int = 100">
+<name>count</name>
+<type>int</type>
+<default>100</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_dir: str | None = None">
+<name>save_dir</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>List messages in the account inbox. Order by descending
+received time.
+
+:param folder_name: name of the email folder, default INBOX
+:param criterion: list messages matching criterion
+:param contains: if matching should be done using `contains` matching
+ and not `equals` matching, default `False` is means `equals` matching
+:param count: number of messages to list
+:param save_dir: set to path where attachments should be saved,
+ default None (attachments are not saved)</doc>
+<shortdoc>List messages in the account inbox. Order by descending received time.</shortdoc>
+</kw>
+<kw name="List Unread Messages" source="./RPA/Email/Exchange.py" lineno="192">
+<arguments repr="folder_name: str | None = None, criterion: str | None = None, contains: bool = False, count: int = 100, save_dir: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="folder_name: str | None = None">
+<name>folder_name</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="criterion: str | None = None">
+<name>criterion</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="contains: bool = False">
+<name>contains</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="count: int = 100">
+<name>count</name>
+<type>int</type>
+<default>100</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_dir: str | None = None">
+<name>save_dir</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>List unread messages in the account inbox. Order by descending
+received time.
+
+:param folder_name: name of the email folder, default INBOX
+:param criterion: list messages matching criterion
+:param contains: if matching should be done using `contains` matching
+ and not `equals` matching, default `False` is means `equals` matching
+:param count: number of messages to list
+:param save_dir: set to path where attachments should be saved,
+ default None (attachments are not saved)</doc>
+<shortdoc>List unread messages in the account inbox. Order by descending received time.</shortdoc>
+</kw>
+<kw name="Move Message" source="./RPA/Email/Exchange.py" lineno="457">
+<arguments repr="msg: dict, target: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="msg: dict">
+<name>msg</name>
+<type>dict</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="target: str">
+<name>target</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Move a message into target folder
+
+:param msg: dictionary of the message
+:param target: path to target folder
+:raises AttributeError: if `msg` is not a dictionary containing
+ `id` and `changekey` attributes
+
+Example:
+
+.. code-block:: robotframework
+
+    ${messages}=    List Messages
+    ...    INBOX
+    ...    criterion=subject:about my orders
+    FOR    ${msg}    IN    @{messages}
+        Run Keyword If    "${msg}[sender][email_address]"=="${priority_account}"
+        ...    Move Message    ${msg}    target=INBOX / Problems / priority
+    END</doc>
+<shortdoc>Move a message into target folder</shortdoc>
+</kw>
+<kw name="Move Messages" source="./RPA/Email/Exchange.py" lineno="422">
+<arguments repr="criterion: str = , source: str | None = None, target: str | None = None, contains: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="criterion: str = ">
+<name>criterion</name>
+<type>str</type>
+<default/>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="source: str | None = None">
+<name>source</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="target: str | None = None">
+<name>target</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="contains: bool = False">
+<name>contains</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Move message(s) from source folder to target folder
+
+:param criterion: move messages matching this criterion
+:param source: source folder
+:param target: target folder
+:param contains: if matching should be done using `contains` matching
+ and not `equals` matching, default `False` is means `equals` matching
+:return: boolean result of operation, True if 1+ items were moved else False
+
+Criterion examples:
+
+- subject:my message subject
+- body:something in body
+- sender:sender@domain.com</doc>
+<shortdoc>Move message(s) from source folder to target folder</shortdoc>
+</kw>
+<kw name="Rename Folder" source="./RPA/Email/Exchange.py" lineno="372">
+<arguments repr="oldname: str | None = None, newname: str | None = None, parent_folder: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="oldname: str | None = None">
+<name>oldname</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="newname: str | None = None">
+<name>newname</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="parent_folder: str | None = None">
+<name>parent_folder</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Rename email folder
+
+:param oldname: current folder name
+:param newname: new name for the folder
+:param parent_folder: name for the parent folder, by default INBOX
+:return: True if operation was successful, False if not</doc>
+<shortdoc>Rename email folder</shortdoc>
+</kw>
+<kw name="Save Attachments" source="./RPA/Email/Exchange.py" lineno="616">
+<arguments repr="message: dict | str, save_dir: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="message: dict | str">
+<name>message</name>
+<type>dict</type>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_dir: str | None = None">
+<name>save_dir</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Save attachments in message into given directory
+
+:param message: dictionary or .eml filepath containing message details
+:param save_dir: filepath where attachments will be saved
+:return: list of saved attachments
+
+Example.
+
+    .. code:: robotframework
+
+    ${messages}=    List Messages
+    FOR    ${msg}    IN    @{messages}}
+        Save Attachments    ${msg}    %{ROBOT_ARTIFACTS}
+    END
+    ${attachments}=  Save Attachments  ${CURDIR}${/}saved.eml  %{ROBOT_ARTIFACTS}</doc>
+<shortdoc>Save attachments in message into given directory</shortdoc>
+</kw>
+<kw name="Save Message" source="./RPA/Email/Exchange.py" lineno="671">
+<arguments repr="message: dict, filename: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="message: dict">
+<name>message</name>
+<type>dict</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filename: str">
+<name>filename</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Save email as .eml file
+
+:param message: dictionary containing message details
+:param filename:</doc>
+<shortdoc>Save email as .eml file</shortdoc>
+</kw>
+<kw name="Send Message" source="./RPA/Email/Exchange.py" lineno="221">
+<arguments repr="recipients: str, subject: str = , body: str = , attachments: str | None = None, html: bool = False, images: str | None = None, cc: str | None = None, bcc: str | None = None, save: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="recipients: str">
+<name>recipients</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="subject: str = ">
+<name>subject</name>
+<type>str</type>
+<default/>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="body: str = ">
+<name>body</name>
+<type>str</type>
+<default/>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="attachments: str | None = None">
+<name>attachments</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="html: bool = False">
+<name>html</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="images: str | None = None">
+<name>images</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="cc: str | None = None">
+<name>cc</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="bcc: str | None = None">
+<name>bcc</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save: bool = False">
+<name>save</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Keyword for sending message through connected Exchange account.
+
+:param recipients: list of email addresses, defaults to []
+:param subject: message subject, defaults to ""
+:param body: message body, defaults to ""
+:param attachments: list of filepaths to attach, defaults to []
+:param html: if message content is in HTML, default `False`
+:param images: list of filepaths for inline use, defaults to []
+:param cc: list of email addresses, defaults to []
+:param bcc: list of email addresses, defaults to []
+:param save: is sent message saved to Sent messages folder or not,
+    defaults to False
+
+Email addresses can be prefixed with ``ex:`` to indicate an Exchange
+account address.
+
+Recipients is a `required` parameter.</doc>
+<shortdoc>Keyword for sending message through connected Exchange account.</shortdoc>
+</kw>
+<kw name="Wait For Message" source="./RPA/Email/Exchange.py" lineno="518">
+<arguments repr="criterion: str = , timeout: float = 5.0, interval: float = 1.0, contains: bool = False, save_dir: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="criterion: str = ">
+<name>criterion</name>
+<type>str</type>
+<default/>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="timeout: float = 5.0">
+<name>timeout</name>
+<type>float</type>
+<default>5.0</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="interval: float = 1.0">
+<name>interval</name>
+<type>float</type>
+<default>1.0</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="contains: bool = False">
+<name>contains</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_dir: str | None = None">
+<name>save_dir</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Wait for email matching `criterion` to arrive into INBOX.
+
+:param criterion: wait for message matching criterion
+:param timeout: total time in seconds to wait for email, defaults to 5.0
+:param interval: time in seconds for new check, defaults to 1.0
+:param contains: if matching should be done using `contains` matching
+ and not `equals` matching, default `False` is means `equals` matching
+:param save_dir: set to path where attachments should be saved,
+ default None (attachments are not saved)
+:return: list of messages</doc>
+<shortdoc>Wait for email matching `criterion` to arrive into INBOX.</shortdoc>
+</kw>
+</keywords>
+<datatypes>
+</datatypes>
+</keywordspec>
