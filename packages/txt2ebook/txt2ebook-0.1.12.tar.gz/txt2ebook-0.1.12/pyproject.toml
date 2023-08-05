@@ -1,0 +1,79 @@
+[tool.poetry]
+name = "txt2ebook"
+version = "0.1.12"
+description = "Console tool to convert txt file to different ebook format"
+authors = ["Kian-Meng Ang <kianmeng@cpan.org>"]
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+homepage = "https://github.com/kianmeng/txt2ebook"
+repository = "https://github.com/kianmeng/txt2ebook"
+keywords = ["txt", "ebook", "epub"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Natural Language :: Chinese (Simplified)",
+    "Natural Language :: Chinese (Traditional)",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Text Processing :: General",
+]
+include = [
+    "CHANGELOG.md",
+    "LICENSE"
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+EbookLib = "^0.17.1"
+bs4 = "^0.0.1"
+cchardet = "^2.1.7"
+CJKwrap = "^2.2"
+langdetect = "^1.0.9"
+loguru = "^0.5.3"
+click = "^8.0.3"
+dotmap = "^1.3.26"
+regex = "^2021.11.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = {version = "^21.11b1", allow-prereleases = true}
+isort = "^5.10.1"
+mypy = "^0.910"
+pylint = "^2.11.1"
+flake8 = "^4.0.1"
+flake8-print = "^4.0.0"
+pep8-naming = "^0.12.1"
+vulture = "^2.3"
+bandit = "^1.7.1"
+pytest-cov = "^3.0.0"
+
+[tool.poetry.scripts]
+txt2ebook = 'txt2ebook.txt2ebook:main'
+tte = 'txt2ebook.txt2ebook:main'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 80
+target-version = ["py310"]
+
+[tool.mypy]
+ignore_missing_imports = 1
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-vv"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py37,py38,py39,py310
+
+[testenv]
+deps = pytest
+commands = pytest
+"""
