@@ -1,0 +1,91 @@
+#
+# Project Librarian: Brandon Piotrzkowski
+#              Graduate Student
+#              UW-Milwaukee Department of Physics
+#              Center for Gravitation & Cosmology
+#              <brandon.piotrzkowski@ligo.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+Script to execute the online spatiotemporal coincidence search between external
+triggers and internal gravitational wave candidate superevents
+"""
+__author__ = "Brandon Piotrzkowski <brandon.piotrzkowski@ligo.org>"
+
+
+
+# Global imports.
+import numpy as np
+from ligo.raven import search
+from gracedb_sdk import Client
+
+from optparse import Option, OptionParser
+
+# Command line options.
+parser = OptionParser(
+    description = __doc__,
+    usage = "%prog [options]",
+    option_list = [
+        Option("-i", "--graceid", metavar="(S,E,MS,M)XXXXXX", default=None,
+            help="GraceDB ID of event querying on (required)"),
+        Option("-w", "--window", nargs=2, metavar="tl th", type=int, action="append",
+            default=None, help="time window [tl, th] seconds to search around event time (required with th > th)"),
+        Option("-u", "--gracedb_url", metavar="https://gracedb.ligo.org/api/", default='',
+            help="Gracedb url"),
+        Option("-g", "--group", metavar="CBC or Burst", default=None,
+            help="Group of GW event searching for."),
+        Option("-p", "--pipelines", metavar="Fermi,Swift,AGILE,INTEGRAL", default=None,
+            help="Pipelines of external event searching for (comma separated)."),
+        Option("-s", "--searches", metavar="GRB,SubGRB,SubGRBTargeted,MDC", default=None,
+            help="Searches of event searching for (comma separated).")
+    ])
+opts, args = parser.parse_args()
+print(opts)
+
+
+# Check required options are there
+if not opts.graceid:
+    raise AssertionError('gracedb id not given')
+else:
+    graceid = str(opts.graceid)
+
+if not opts.window:
+    raise AssertionError('search window not given')
+else:
+    tl, th = int(opts.window[0][0]), int(opts.window[0][1])
+
+
+# Load other options
+if opts.gracedb_url:
+    gracedb = Client(str(opts.gracedb_url))
+else:
+    gracedb = None
+
+group = opts.group
+
+if opts.pipelines:
+    pipelines = [pipeline for pipeline in str(opts.pipelines).split(',')]
+else:
+    pipelines = []
+
+if opts.searches:
+    searches = [search for search in str(opts.searches).split(',')]
+else:
+    searches = []
+
+
+results = search.search(graceid, tl, th, gracedb=gracedb, group=group, pipelines=pipelines, searches=searches)
+print(results)

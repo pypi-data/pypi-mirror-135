@@ -1,0 +1,55 @@
+#!/usr/bin/python
+
+#
+# Project Librarian: Brandon Piotrzkowski
+#              Graduate Student
+#              UW-Milwaukee Department of Physics
+#              Center for Gravitation & Cosmology
+#              <brandon.piotrzkowski@ligo.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+Script to execute the online spatiotemporal coincidence search between external
+triggers and internal gravitational wave candidate superevents
+"""
+__author__ = "Brandon Piotrzkowski <brandon.piotrzkowski@ligo.org>"
+
+
+
+# Global imports.
+import numpy as np
+from ligo.raven import search
+from ligo.skymap.io import fits
+
+from optparse import Option, OptionParser
+
+# Command line options.
+parser = OptionParser(
+    description = __doc__,
+    usage = "%prog [options]")
+opts, args = parser.parse_args()
+print(args)
+
+# Check only two skymaps are given
+if len(args) != 2:
+    raise AssertionError('only provide 2 sky map filenames')
+   
+se_skymap, header = fits.read_sky_map(args[0], moc=False)
+ext_skymap, header = fits.read_sky_map(args[1], moc=False)
+
+
+result = search.skymap_overlap_integral(se_skymap, ext_skymap)
+print("Skymap overlap integral: {}".format(result))

@@ -1,0 +1,114 @@
+#!/usr/bin/python
+
+#
+# Project Librarian: Brandon Piotrzkowski
+#              Graduate Student
+#              UW-Milwaukee Department of Physics
+#              Center for Gravitation & Cosmology
+#              <brandon.piotrzkowski@ligo.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+Script to execute the online spatiotemporal coincidence search between external
+triggers and internal gravitational wave candidate superevents
+"""
+__author__ = "Brandon Piotrzkowski <brandon.piotrzkowski@ligo.org>"
+
+
+
+# Global imports.
+import numpy as np
+from ligo.raven import search
+from gracedb_sdk import Client
+
+from optparse import Option, OptionParser
+
+# Command line options.
+parser = OptionParser(
+    description = __doc__,
+    usage = "%prog [options]",
+    option_list = [
+        Option("-s", "--superevent", metavar="(S,MS)XXXXXXX", default=None,
+            help="GraceDB ID of superevent (required)"),
+        Option("-e", "--ext_event", metavar="(E,M)XXXXXXX", default=None,
+            help="GraceDB ID of external event (required)"),
+        Option("-w", "--window", nargs=2, metavar="tl th", type=int, action="append",
+            default=None, help="time window [tl, th] seconds to search around event time (required with th > th)"),
+        Option("-g", "--grb_search", metavar="GRB SubGRB SubGRBTargeted", default=None,
+            help="Search of external event."),
+        Option("-S", "--superevent_skymap", metavar="bayestar.fits.gz", default=None,
+            help="fits(.gz) filename for superevent sky map"),
+        Option("-E", "--ext_event_skymap", metavar="'glg_healpix_all_bn_v00.fit'", default=None,
+            help="fits(.gz) filename for external event sky map"),
+        Option("-u", "--gracedb_url", metavar="https://gracedb.ligo.org/api/", default='',
+            help="Gracedb url"),
+        Option("-f", "--far_grb", metavar="1e-6", default=None,
+            help="False alarm rate of GRB"),
+        Option("-r", "--em_rate", metavar="1e-3", default=None,
+            help="False alarm rate of GRB")
+    ])
+opts, args = parser.parse_args()
+print(opts)
+
+
+# Check required options are there
+if not opts.superevent:
+    raise AssertionError('superevent graceid not given')
+else:
+    se_id = str(opts.superevent)
+
+if not opts.ext_event:
+    raise AssertionError('external event graceid not given')
+else:
+    exttrig_id = str(opts.ext_event)
+
+if not opts.window:
+    raise AssertionError('search window not given')
+else:
+    tl, th = int(opts.window[0][0]), int(opts.window[0][1])
+
+# Load other options
+if opts.gracedb_url:
+    gracedb = Client(str(opts.gracedb_url))
+else:
+    gracedb = None
+
+grb_search = opts.grb_search
+se_fitsfile = opts.superevent_skymap
+ext_fitsfile = opts.ext_event_skymap
+
+if opts.far_grb:
+    far_grb = float(opts.far_grb)
+else:
+    far_grb = None
+
+if opts.em_rate:
+    em_rate = float(opts.em_rate)
+else:
+    em_rate = None
+
+if se_fitsfile and ext_fitsfile:
+    incl_sky = True
+else:
+    incl_sky = False
+
+
+results = search.calc_signif_gracedb(
+              se_id, exttrig_id, tl, th, grb_search=grb_search,
+              se_fitsfile=se_fitsfile, ext_fitsfile=ext_fitsfile,
+              incl_sky=incl_sky, gracedb=gracedb, far_grb=far_grb,
+              em_rate=em_rate)
+print(results)
