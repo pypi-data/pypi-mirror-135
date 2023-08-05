@@ -1,0 +1,76 @@
+[tox]
+isolated_build = True
+minversion=3.14.6
+envlist = py{37,38,39,310}, linters
+
+[testenv]
+deps =
+    ; Do not forget to put your requirements here.
+    pytest
+commands =
+    pytest
+
+[testenv:linters]
+basepython = python3
+skip_install = true
+deps =
+    {[testenv:format]deps}
+    {[testenv:flake8]deps}
+    {[testenv:mypy]deps}
+commands =
+    {[testenv:format]commands}
+    {[testenv:flake8]commands}
+    {[testenv:mypy]commands}
+
+[testenv:flake8]
+basepython = python3
+skip_install = true
+deps =
+    flake8
+    flake8-bugbear
+
+commands =
+    flake8 --version
+    flake8 src/ tests/
+
+[testenv:format]
+basepython = python3
+skip_install = true
+deps =
+    black
+    isort
+commands =
+    isort --version
+    isort src/ tests/
+    black --version
+    black src/ tests/
+
+[testenv:mypy]
+basepython = python3
+skip_install = true
+deps =
+    ; Do not forget to put your requirements here.
+    mypy
+commands =
+    mypy --version
+    mypy src/
+
+[testenv:build]
+basepython = python3
+whitelist_externals =
+    make
+deps =
+    flit
+commands =
+    make clean
+    flit build
+
+[testenv:release]
+basepython = python3
+whitelist_externals =
+    make
+deps =
+    {[testenv:build]deps}
+commands =
+    {[testenv:build]commands}
+    flit publish
