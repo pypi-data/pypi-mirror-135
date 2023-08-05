@@ -1,0 +1,53 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="visaplan.js.urlsplit"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+  <!--
+    Be careful if you use general includeDependencies, it can have sideffects!
+    Better import explicite packages or configurations ;)
+  -->
+  <!--<includeDependencies package="." />-->
+
+  <include package=".browser" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="visaplan.js.urlsplit"
+      directory="profiles/default"
+      description="Installs the visaplan.js.urlsplit add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="visaplan.js.urlsplit (uninstall)"
+      directory="profiles/uninstall"
+      description="Uninstalls the visaplan.js.urlsplit add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.uninstall"
+      />
+
+  <include file="upgrades.zcml" />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="visaplan.js.urlsplit-hiddenprofiles"
+      />
+
+  <!-- [ Statische Ressourcen (++resource++) ... [ -->
+  <include package="plone.resource" file="meta.zcml"/>
+
+  <browser:resourceDirectory
+      name="visaplan.js.urlsplit"
+      directory="resource"
+      />
+  <!-- ] ... Statische Ressourcen (++resource++) ] -->
+
+  <!-- -*- extra stuff goes here -*- -->
+
+</configure>

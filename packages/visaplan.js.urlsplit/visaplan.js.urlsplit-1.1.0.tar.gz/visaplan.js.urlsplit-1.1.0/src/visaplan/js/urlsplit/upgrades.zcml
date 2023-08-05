@@ -1,0 +1,16 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <!-- -*- extra stuff goes here -*- -->
+  <genericsetup:upgradeStep
+    source="*"
+    destination="1002"
+    title="Load and cook Javascript resources"
+    description="Registers (but not activates) the urlUnsplit script and function"
+    profile="visaplan.js.urlsplit:default"
+    handler=".upgrades.load_and_cook_javascript"
+    />
+
+
+</configure>
