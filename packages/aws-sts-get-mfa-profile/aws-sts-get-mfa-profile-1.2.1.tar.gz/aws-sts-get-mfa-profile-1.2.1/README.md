@@ -1,0 +1,35 @@
+# AWS STS Get MFA Profile
+Use this package to automatically setup an MFA enabled profile for AWS CLI
+
+1. Install AWS CLI 
+2. Sign up for MFA in the AWS IAM Management console (if you haven't already) and note the MFA ARN.
+![AWS Console MFA ARN](./mfa-arn.png)
+3. Create an access key in the AWS IAM Management console (if you haven't already) and note the access key id and secret.
+![AWS Console CLI Access Key](./access-key-cli.png)
+4. Create a credential text file profile in your home directory (`'C:\Users\SamuelMercer\.aws\credentials'`) with an mfa profile like below
+```
+[mfa]
+aws_access_key_id = AKIAWZ...
+aws_secret_access_key = XzRI...
+mfa_serial = arn:aws:iam::467792...:mfa/...
+```
+5. Install the python package using pip
+```
+> python -m pip install aws-sts-get-mfa-profile
+```
+6. Run the script `get-sts-token.py` using the required length of token in seconds (don't do more than 1 day == 86400 seconds)
+```
+> get-sts-token.py
+```
+
+7. When making AWS CLI calls from now on it should work, e.g. 
+```
+> aws iam list-users
+
+{
+    "Users": [
+        {
+            ...
+```
+
+
