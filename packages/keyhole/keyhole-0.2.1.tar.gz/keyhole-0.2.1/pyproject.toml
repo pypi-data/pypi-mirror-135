@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "keyhole"
+version = "0.2.1"
+description = "Work with declassified keyhole satellite images."
+readme = "README.rst"
+authors = ["Seth Warn <swarn@uark.edu>"]
+packages = [
+    { include = "keyhole" },
+]
+
+[tool.poetry.dependencies]
+python = "~3.9"
+numpy = "^1.20"
+pyvips = "^2.1.15"
+scipy = "^1.7"
+scikit-image = "^0.18"
+tqdm = "^4.62.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[tool.poetry.scripts]
+keyhole = "keyhole.cli:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
