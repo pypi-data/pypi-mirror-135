@@ -1,0 +1,38 @@
+{% spaceless %}
+    <table id="{{ datatable.table_id }}" class="{{ datatable.table_class }}" data-url="{{ request.path }}">
+        <thead>
+        <tr{% if datatable.table_options.no_titles %} class="d-none"{% endif %}>
+            {% for t in datatable.all_titles %}
+                <th>{{ t }}</th>
+            {% endfor %}
+        </tr>
+        {% if not datatable.table_options.no_col_search %}
+            <tr class="column-search-header">
+                {% include 'datatables/search_boxes.html' with table=datatable %}
+            </tr>
+        {% endif %}
+        </thead>
+        <tfoot>
+            <tr>
+                {% if not datatable.table_options.no_footer %}
+                    {% for t in datatable.all_titles %}
+                        <th>{{ t }}</th>
+                    {% endfor %}
+                {% endif %}
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            {{ datatable.table_id }}_configuration = {{ datatable.col_def_str|safe }};
+            new django_datatables.PythonTable("{{ datatable.table_id }}", {{ datatable.table_id }}_configuration);
+        })
+        $('#{{ datatable.table_id }} [data-toggle="popover"]').popover({trigger:"hover"})
+        $('#{{ datatable.table_id }}').keyup(function (event) {
+            if (event.which === 13) {
+                var elem = $('.cell-input:focus').blur();
+            }
+        });
+    </script>
+{% endspaceless %}
