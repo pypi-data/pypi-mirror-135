@@ -1,0 +1,46 @@
+<div class="clr-row">
+  <div class="clr-col-4">
+    <clr-toggle-container>
+      <clr-toggle-wrapper>
+        <input type="checkbox" clrToggle [(ngModel)]="addExplain">
+        <label>Explain results</label>
+      </clr-toggle-wrapper>
+    </clr-toggle-container>
+  </div>
+  <div class="clr-col-4">
+    <clr-toggle-container>
+      <clr-toggle-wrapper class="tooltip tooltip-md tooltip-top-right">
+        <input type="checkbox" clrToggle [(ngModel)]="safeMode" [disabled]="!enableSafeModeTrigger">
+        <label>Safe mode: <code>{{ safeMode ? 'on' : 'off' }}</code></label>
+        <span class="tooltip-content">In safe mode, only single SELECT queries are allowed.</span>
+      </clr-toggle-wrapper>
+    </clr-toggle-container>
+  </div>
+  <div class="clr-col-4">
+    <button class="btn btn-flat btn-sm" style="float: right" [disabled]="sql==defaultSql" (click)="onReset()">RESET</button>
+  </div>
+</div>
+
+<div class="clr-row">
+  <div class="clr-col-12" style="height: 70vh;">
+    <div class="resize-container" mwlResizable [enableGhostResize]="true" [style.height]="editorHeight" (resizing)="onResize($event)">
+      <ngx-monaco-editor style="height: 100%;" [options]="{theme: 'vs-dark', language: 'sql'}" (ngModelChange)="onChange($event)" [ngModel]="sql"></ngx-monaco-editor>
+      <div mwlResizeHandle class="resize" [resizeEdges]="{bottom: true}"></div>
+    </div>
+  </div>
+  <div class="clr-col-12">
+    <ng-container *ngIf="errorMessage">
+      <clr-alert [clrAlertType]="'danger'" [clrAlertAppLevel]="true">
+        <clr-alert-item>
+          <span class="alert-text" [innerHTML]="errorMessage"></span>
+          <div class="alert-actions">
+            <a href="https://github.com/data-hydenv/hydenv-database/issues/new?labels=bug,exercise-js&assignees=mmaelicke" target="_blank">
+              <button class="btn alert-action btn-sm">ISSUE</button>
+            </a>
+          </div>
+        </clr-alert-item>
+      </clr-alert>
+    </ng-container>
+    <button class="btn btn-outline-success btn-block" (click)="onExecute()" [clrLoading]="btnState">Execute</button>
+  </div>
+</div>
