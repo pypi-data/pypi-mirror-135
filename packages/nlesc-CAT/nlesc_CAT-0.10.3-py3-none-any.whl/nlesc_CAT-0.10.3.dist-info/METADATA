@@ -1,0 +1,130 @@
+Metadata-Version: 2.1
+Name: nlesc-CAT
+Version: 0.10.3
+Summary: A collection of tools designed for the automatic construction of chemical compounds.
+Home-page: https://github.com/nlesc-nano/CAT
+Author: ['Bas van Beek', 'Jelena Belic']
+Author-email: b.f.van.beek@vu.nl
+License: GNU Lesser General Public License v3 or later
+Keywords: quantum-mechanics,molecular-mechanics,science,chemistry,python-3,python-3-6,python-3-7,python-3-8,python-3-9,python-3-10,automation,scientific-workflows
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Natural Language :: English
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Typing :: Typed
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+License-File: LICENSE.md
+Requires-Dist: Nano-Utils (>=0.4.3)
+Requires-Dist: numpy (>=1.15.0)
+Requires-Dist: scipy (>=0.19.1)
+Requires-Dist: pandas (>=0.23.0)
+Requires-Dist: pyyaml (>=5.1)
+Requires-Dist: schema (!=0.7.5,>=0.7.2)
+Requires-Dist: AssertionLib (>=2.2.3)
+Requires-Dist: plams (>=1.5.1)
+Requires-Dist: typing-extensions (>=3.7.4.3)
+Requires-Dist: qmflows (>=0.11.0)
+Requires-Dist: rdkit-pypi (>=2018.03.1)
+Requires-Dist: packaging (>=1.16.8)
+Requires-Dist: contextlib2 (>=0.6.0) ; python_version == "3.6"
+Provides-Extra: doc
+Requires-Dist: sphinx (>=2.4) ; extra == 'doc'
+Requires-Dist: sphinx-rtd-theme ; extra == 'doc'
+Requires-Dist: data-CAT (>=0.7.0) ; extra == 'doc'
+Requires-Dist: nano-CAT (>=0.7.1) ; extra == 'doc'
+Requires-Dist: auto-FOX (>=0.10.0) ; extra == 'doc'
+Provides-Extra: test
+Requires-Dist: pytest (>=5.4.0) ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: pytest-mock ; extra == 'test'
+Requires-Dist: h5py (>=2.7.0) ; extra == 'test'
+Requires-Dist: sphinx (>=2.4) ; (python_version >= "3.7") and extra == 'test'
+Requires-Dist: sphinx-rtd-theme ; (python_version >= "3.7") and extra == 'test'
+Requires-Dist: data-CAT (>=0.7.0) ; (python_version >= "3.7") and extra == 'test'
+Requires-Dist: nano-CAT (>=0.7.1) ; (python_version >= "3.7") and extra == 'test'
+Requires-Dist: auto-FOX (>=0.10.0) ; (python_version >= "3.7") and extra == 'test'
+
+.. image:: https://github.com/nlesc-nano/CAT/workflows/Build%20with%20Conda/badge.svg
+   :target: https://github.com/nlesc-nano/CAT/actions?query=workflow%3A%22Build+with+Conda%22
+.. image:: https://readthedocs.org/projects/cat/badge/?version=latest
+   :target: https://cat.readthedocs.io/en/latest/
+.. image:: https://zenodo.org/badge/169708827.svg
+   :target: https://zenodo.org/badge/latestdoi/169708827
+.. image:: https://badge.fury.io/py/nlesc-CAT.svg
+   :target: https://badge.fury.io/py/nlesc-CAT
+
+|
+
+.. image:: https://img.shields.io/badge/python-3.6-blue.svg
+   :target: https://docs.python.org/3.6/
+.. image:: https://img.shields.io/badge/python-3.7-blue.svg
+   :target: https://docs.python.org/3.7/
+.. image:: https://img.shields.io/badge/python-3.8-blue.svg
+   :target: https://docs.python.org/3.8/
+.. image:: https://img.shields.io/badge/python-3.9-blue.svg
+   :target: https://docs.python.org/3.9/
+.. image:: https://img.shields.io/badge/python-3.10-blue.svg
+   :target: https://docs.python.org/3.10/
+
+###############################
+Compound Attachment Tool 0.10.3
+###############################
+
+**CAT** is a collection of tools designed for the construction of various chemical compounds.
+Further information is provided in the documentation_.
+
+Package installation
+--------------------
+**CAT** can be installed via pip as following:
+
+- **CAT**: ``pip install nlesc-CAT --upgrade``
+
+Note that, while not strictly necessary, it is recommended to first create a conda environment:
+
+- Download and install miniconda for python3: miniconda_ (also you can install the complete anaconda_ version).
+
+- Create a new virtual environment:  ``conda create --name CAT python``
+
+- Activate the environment:: ``conda activate CAT``
+
+Input files
+============
+
+Running **CAT** and can be done with the following command:
+``init_cat my_settings.yaml``. The user merely has to provide a yaml_ file
+with the job settings, settings which can be tweaked and altered to suit ones
+purposes (see example1_). Alternatively, **CAT** can be run like a regular
+python script, bypassing the command-line interface
+(*i.e.* ``python input.py``, see example2_).
+
+An extensive description of the various available settings is available in
+the documentation_.
+
+
+.. _yaml: https://yaml.org/
+.. _documentation: https://cat.readthedocs.io/en/latest/
+.. _miniconda: http://conda.pydata.org/miniconda.html
+.. _anaconda: https://www.continuum.io/downloads
+.. _installConda: https://docs.anaconda.com/anaconda/install/
+.. _HDF5: http://www.h5py.org/
+.. _here: https://www.python.org/downloads/
+.. _rdkit: http://www.rdkit.org
+.. _PLAMS: https://github.com/SCM-NV/PLAMS
+.. _QMFlows: https://github.com/SCM-NV/qmflows
+.. _example1: https://github.com/BvB93/CAT/blob/master/examples/input_settings.yaml
+.. _example2: https://github.com/BvB93/CAT/blob/master/examples/input.py
+
+
+
+
