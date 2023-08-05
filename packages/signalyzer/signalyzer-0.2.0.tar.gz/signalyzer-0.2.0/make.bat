@@ -1,0 +1,40 @@
+@ECHO OFF
+
+REM Command file
+if "%1" == "" goto help
+
+if "%1" == "help" (
+    :help
+    echo.Please use `make ^<target^>` where ^<target^> is one of
+    echo.  docs       to build the html documentation of the package
+    echo.  doctest    to run all tests for the documentation
+    echo.  build      to build the package
+    echo.  release    to release the package on PyPi
+    goto end
+)
+
+if "%1" == "docs" (
+    sphinx-build -b html ./docs ./docs/_build
+    goto end
+)
+
+if "%1" == "doctest" (
+    cd docs
+    make doctest -o +NORMALIZE_WHITESPACE
+    cd ..
+    goto end
+)
+
+if "%1" == "build" (
+    python setup.py sdist bdist_wheel
+    goto end
+)
+
+if "%1" == "release" (
+    python setup.py sdist
+    python setup.py bdist_wheel
+    twine upload --verbose -r pypi dist/*
+    goto end
+)
+
+:end

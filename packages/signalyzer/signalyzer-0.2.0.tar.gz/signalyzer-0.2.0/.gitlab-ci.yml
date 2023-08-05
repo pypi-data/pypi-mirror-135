@@ -1,0 +1,53 @@
+image: python:3.9
+
+variables:
+  CACHE_DIR: ${CI_PROJECT_DIR}/.cache
+  REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
+
+before_script:
+  # display Python version
+  - python -V
+
+stages:
+  - build
+  - deploy
+  - release
+
+build:
+  stage: build
+  script:
+    # build Python source distribution and wheel
+    - python setup.py sdist bdist_wheel
+  artifacts:
+    paths:
+      - dist/*.whl
+      - dist/*.tar.gz
+
+pages:
+  stage: deploy
+  script:
+    # build Sphinx documentation
+    - pip install sphinx
+    - pip install furo
+    - pip install sphinx-copybutton
+    - pip install sphinx-panels
+    - pip install sphinx-plotly-directive
+    - pip install .
+    - sphinx-build -b html ./docs public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - main
+
+release:
+  stage: release
+  script:
+    # release PyPI package
+    - pip install twine
+    - python setup.py sdist bdist_wheel
+    - twine upload -u ${CI_REGISTRY_USER} -p ${CI_JOB_TOKEN} --repository-url ${REGISTRY_URL} dist/*
+  only:
+    - main
+  when: manual
