@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "xkcd-cli-viewer"
+version = "0.1.2"
+license = "MIT"
+description = "A CLI that scrapes the XKCD website."
+authors = ["iamkneel <nsdj.sharma@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.27.1"
+beautifulsoup4 = "^4.10.0"
+Pillow = "^9.0.0"
+rich = "^11.0.0"
+thefuzz = {extras = ["speedup"], version = "^0.19.0"}
+
+[tool.poetry.dev-dependencies]
+black = "^21.12b0"
+
+[tool.poetry.scripts]
+xkcd-cli = "xkcd_cli_viewer.cli.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
