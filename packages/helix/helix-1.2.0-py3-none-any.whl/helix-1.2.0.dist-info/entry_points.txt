@@ -1,0 +1,37 @@
+[console_scripts]
+helix = helix.__main__:main
+
+[helix.blueprints]
+cmake-c = helix.blueprints.cmake.cmake:CMakeCBlueprint
+cmake-cpp = helix.blueprints.cmake.cmake:CMakeCppBlueprint
+static-cmake-c = helix.blueprints.cmake.static.static:StaticCMakeCBlueprint
+static-cmake-cpp = helix.blueprints.cmake.static.static:StaticCMakeCppBlueprint
+
+[helix.components]
+configuration-example = helix.components.examples.configuration.configuration:ConfigurationExampleComponent
+linux-libcurl-remote-file-copy = helix.components.attack.command_and_control.remote_file_copy.libcurl.libcurl:AttackLinuxLibcURLRemoteFileCopyComponent [linux]
+linux-openssl-aes-decrypt-data-encrypted = helix.components.attack.exfiltration.data_encrypted.openssl.aes.aes:AttackLinuxOpenSSLAESDecryptDataEncryptedComponent [linux]
+linux-openssl-aes-encrypt-data-encrypted = helix.components.attack.exfiltration.data_encrypted.openssl.aes.aes:AttackLinuxOpenSSLAESEncryptDataEncryptedComponent [linux]
+linux-remove-file-deletion = helix.components.attack.defense_evasion.file_deletion.remove.remove:AttackLinuxRemoveFileDeletionComponent [linux]
+linux-system-command-line-interface = helix.components.attack.execution.command_line_interface.system.system:AttackLinuxSystemCommandLineInterfaceComponent [linux]
+linux-unlink-file-deletion = helix.components.attack.defense_evasion.file_deletion.unlink.unlink:AttackLinuxUnlinkFileDeletionComponent [linux]
+linux-utime-timestomp = helix.components.attack.defense_evasion.timestomp.utime.utime:AttackLinuxUtimeTimestompComponent [linux]
+linux-xlib-screen-capture = helix.components.attack.collection.screen_capture.xlib.xlib:AttackLinuxXLibScreenCaptureComponent [linux]
+linux-zlib-compress-data-compressed = helix.components.attack.exfiltration.data_compressed.zlib.zlib:AttackLinuxZLibCompressDataCompressedComponent [linux]
+linux-zlib-decompress-data-compressed = helix.components.attack.exfiltration.data_compressed.zlib.zlib:AttackLinuxZLibDecompressDataCompressedComponent [linux]
+minimal-example = helix.components.examples.minimal.minimal:MinimalExampleComponent
+windows-bitblt-screen-capture = helix.components.attack.collection.screen_capture.bitblt.bitblt:AttackWindowsBitBltScreenCaptureComponent [windows]
+windows-deletefile-file-deletion = helix.components.attack.defense_evasion.file_deletion.deletefile.deletefile:AttackWindowsDeleteFileFileDeletionComponent [windows]
+windows-regqueryvalue-query-registry = helix.components.attack.discovery.query_registry.regqueryvalue.regqueryvalue:AttackWindowsRegQueryValueQueryRegistryComponent [windows]
+
+[helix.tests]
+minimal-example = helix.components.examples.minimal.minimal:MinimalExampleComponentTests [testing]
+replace-example = helix.transforms.examples.replace.replace:ReplaceExampleTransformTests [testing]
+upx = helix.transforms.upx.tests:UPXTests [testing]
+
+[helix.transforms]
+mpress = helix.transforms.mpress.mpress:MPRESSTransform [windows]
+replace-example = helix.transforms.examples.replace.replace:ReplaceExampleTransform
+strip = helix.transforms.strip.strip:StripTransform [linux]
+upx = helix.transforms.upx.upx:UPXTransform
+
