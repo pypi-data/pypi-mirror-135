@@ -1,0 +1,7 @@
+# Tasa Representativa de Mercado Colombia
+Modulo que retornara en JSON el valor de la TRM vigente del servicio web de la superintendencia financiera de colombia
+
+pyTRM() -> Retorna el valor de la TRM vigente del dia actual
+pyTRM("2021-06-1") -> Retorna el valor de la TRM del dia 1 de junio del 2021
+
+Documentacion del servicio: https://www.superfinanciera.gov.co/jsp/60819
