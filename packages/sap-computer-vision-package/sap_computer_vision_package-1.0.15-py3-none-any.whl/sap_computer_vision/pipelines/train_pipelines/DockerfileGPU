@@ -1,0 +1,21 @@
+#FROM pytorch/pytorch:1.8.1-cuda10.2-cudnn7-runtime
+FROM pytorch/pytorch:1.10.0-cuda11.3-cudnn8-runtime
+RUN apt update -y && \
+    apt install -y libglib2.0-0 libsm6 libxrender1 libxext6 libgl1-mesa-glx build-essential wget git
+RUN mkdir -p /sap_cv/data
+RUN mkdir -p /sap_cv/module
+RUN mkdir -p /tmp/model
+WORKDIR /sap_cv
+ENV HOME=/sap_cv
+RUN python -m pip install --upgrade pip
+COPY requirements.txt /sap_cv/requirements.txt
+RUN pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
+RUN pip install awscli
+COPY sap_computer_vision /sap_cv/module/sap_computer_vision
+ENV PYTHONPATH="/sap_cv/module:${PYTHONPATH}"
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH$:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda-11.0/targets/x86_64-linux/lib:/usr/local/cuda-10.2/targets/x86_64-linux/lib:/usr/local/cuda-11/targets/x86_64-linux/lib:/usr/local/cuda-11.1/targets/x86_64-linux/lib:/usr/local/cuda-11.3/targets/x86_64-linux/lib
+RUN python -m pip install -r /sap_cv/requirements.txt
+RUN chgrp -R nogroup /sap_cv && \
+    chmod -R 777 /sap_cv
+RUN chgrp -R nogroup /tmp && \
+    chmod -R 777 /tmp

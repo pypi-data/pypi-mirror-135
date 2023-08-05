@@ -1,0 +1,134 @@
+Metadata-Version: 2.1
+Name: sap-computer-vision-package
+Version: 1.0.15
+Summary: SAP Computer Vision Package
+Home-page: https://www.sap.com/
+Author: SAP SE
+License: SAP DEVELOPER LICENSE AGREEMENT
+Download-URL: https://pypi.python.org/pypi/sap-computer-vision-package
+Keywords: SAP Computer Vision,SAP Computer Vision Package,SAP AI Core
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Legal Industry
+Classifier: Intended Audience :: Manufacturing
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: Other/Proprietary License
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Operating System :: Microsoft :: Windows :: Windows 7
+Classifier: Operating System :: Microsoft :: Windows :: Windows 8
+Classifier: Operating System :: Microsoft :: Windows :: Windows 8.1
+Classifier: Operating System :: Microsoft :: Windows :: Windows Server 2008
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Scientific/Engineering :: Image Recognition
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: click (~=8.0.1)
+Requires-Dist: fvcore (~=0.1.5.post20210630)
+Requires-Dist: Jinja2 (~=3.0.1)
+Requires-Dist: numpy (~=1.22.0)
+Requires-Dist: opencv-python (~=4.5.3.56)
+Requires-Dist: scipy (~=1.7.0)
+Requires-Dist: torch (~=1.10.0)
+Requires-Dist: torchvision (~=0.11.1)
+Requires-Dist: Pillow (~=8.3.1)
+Requires-Dist: slugify (~=0.0.1)
+Requires-Dist: termcolor (~=1.1.0)
+Requires-Dist: tabulate (~=0.8.9)
+Requires-Dist: timm (~=0.4.12)
+Requires-Dist: setuptools (==58.0.4)
+Requires-Dist: pyyaml (~=5.4.1)
+Requires-Dist: jinja2 (~=3.0.1)
+Requires-Dist: environs (==9.0.0)
+Requires-Dist: ujson (==4.0.0)
+Requires-Dist: psutil (==5.7.2)
+Requires-Dist: shortuuid (==1.0.1)
+Requires-Dist: requests-toolbelt (==0.9.1)
+
+# SAP Computer Vision Package
+
+This package extends [detectron2](https://detectron2.readthedocs.io/en/latest/) and among other things it adds image classification and feature extraction functionalities. Additionally it offers an CLI to create [SAP AI Core](https://help.sap.com/viewer/2d6c5984063c40a59eda62f4a9135bee/LATEST/en-US/d029a32c22fb45fbb607e6a2c48c8a0e.html) template for training and serving.
+
+## Supported use-cases
+
+* Object Detection
+* Image Classification
+* Image Feature Extraction
+* Model Training and Deployment on SAP AI Core
+
+## Installation
+### Prerequisites
+
+Before installing the package `detectron2` has to be installed. Please check the [detectron2 installation guide](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) to select the proper version.
+
+### Installation from Source
+
+When building from source please use the `setup_without_centaur.py` file. To allow local changes use:
+```
+python setup_with_centaur.py develop
+```
+
+### Installation using `pip`
+
+```
+pip install sap-computer-vision-package
+```
+
+
+## Getting Started
+
+### Python Library
+
+If you are interested to use our package as a simple extension to `detectron2`, we recommend running `sap_cv examples <target_dir>` to copy our example notebooks to `<target_dir>` and take a look at those.
+
+### AI Core Templates
+
+To show all available templates run `sap_cv show`. The command `sap_cv show <pipeline_name>` shows detailed information about a specific pipeline.
+
+The training pipelines are templates for AI Core execution. To run it under your tenant you need the template and the matching docker image:
+
+- To create a template execute `sap_cv create-template <pipeline_name> -o/--output-file=<choose_name>.json`. The template contains several tenant specific entries like `imagePullSecrets` etc. Please adjust them by hand or use a pipeline config YAML (see section below).
+- To create a docker image execute `sap_cv create-template <pipeline_name> -t <tag/docker-image-target>`
+
+The template has to be pushed into the onboarded git repo (consult AI Core documentation to set it up) and the container to the onboarded docker repository.
+
+Templates are built using `metaflow` using a plugin to create Argo templates. Make sure that a proper `metaflow` version (for the argo plugin install this fork: https://github.com/sappier/metaflow) is installed and that the storage is configured correctly.
+
+#### Pipeline Config .yaml
+
+Tenant specific values for the template can either be provided through the CLI through additional options. For more information execute `sap_cv create-template <pipeline_name> --argo-help`. To simplify the command and make the creation of the template trackable in git it is possible to use a .yaml containing the values.
+
+Example:
+```
+labels:
+  scenarios.ai.sap.com/id: "<scenario-id>"
+  ai.sap.com/version: "<version-number>"
+annotations:
+  scenarios.ai.sap.com/name: "<scenario-name>"
+  executables.ai.sap.com/name: "<executable-name>"
+image: <tag/docker-image-target>`
+imagePullSecrets:
+  - name: "<docker-repo-secret>"
+envFrom:
+  - secretRef:
+      name: "<object-store-secret>"
+```
+
+To use the pipeline config during the creation process use the `--pipeline-config` options, e.g. `sap_cv create-template <pipeline_name> -o/--output-file=<choose_name>.json --pipeline-config=pipeline_cfg.yaml`.
+
+## License
+
+This package is distributed under the SAP Developers License, see LICENSE file in the package. The package uses several third party open source components. Please see file DISCLAIMER for more details on their licensing.
+
+

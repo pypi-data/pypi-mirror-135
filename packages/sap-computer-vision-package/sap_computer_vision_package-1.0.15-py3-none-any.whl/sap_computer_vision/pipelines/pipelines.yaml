@@ -1,0 +1,42 @@
+image_classification_train:
+    py: train_pipelines.image_classification_train
+    class_name: ImageClassificationTrain
+    dockerfile:
+        gpu:
+            file: train_pipelines/Dockerfile
+            docker_needs_context: True
+        cpu:
+            file: train_pipelines/DockerfileGPU
+            docker_needs_context: True
+object_detection_train:
+    py: train_pipelines.object_detection_train
+    class_name: ObjectDetectionTrain
+    dockerfile:
+        gpu:
+            file: train_pipelines/DockerfileGPU
+            docker_needs_context: True
+        cpu:
+            file: train_pipelines/Dockerfile
+            docker_needs_context: False
+triplet_distance_learning_train:
+    py: train_pipelines.contrastive_learning_triplet_loss
+    class_name: TripletDistanceMetricTrain
+    dockerfile:
+        gpu:
+            file: train_pipelines/DockerfileGPU
+            docker_needs_context: True
+        cpu:
+            file: train_pipelines/Dockerfile
+            docker_needs_context: True
+
+model_serving:
+    py: model_serving.serve_models
+    class_name: Model
+    dockerfile:
+        gpu:
+            file: model_serving/DockerfileGPU
+            docker_needs_context: True
+        cpu:
+            file: model_serving/Dockerfile
+            docker_needs_context: True
+    template: model_serving/template.yaml
