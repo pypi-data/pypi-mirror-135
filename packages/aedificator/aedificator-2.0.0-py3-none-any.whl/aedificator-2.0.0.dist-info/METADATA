@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: aedificator
+Version: 2.0.0
+Summary: Aedificator - Python project scaffolding tool
+Keywords: automation,scaffolding
+Author-email: Libor Martinek <libasmartinek@protonmail.com>
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Quality Assurance
+Requires-Dist: Jinja2
+Requires-Dist: click
+Requires-Dist: tox ; extra == "dev"
+Requires-Dist: flit ; extra == "dev"
+Project-URL: Home, https://github.com/bibajz/aedificator
+Provides-Extra: dev
+
+# aedificator
+Python project scaffolding tool.
+
+## Installation
+
+```bash
+$ pip install aedificator
+```
+
+## Usage
+In the directory where you want the scaffolding to happen, type
+```bash
+$ aedificate your_project_name
+```
+This will create a following structure:
+```
+current_working_directory
+├── .dockerignore
+├── .flake8
+├── .gitignore
+├── Makefile
+├── mypy.ini
+├── README.md
+├── src
+│   └── your_project_name
+│       └── __init__.py
+├── tests
+│   └── __init__.py
+└── tox.ini
+
+```
+
+You can now start putting your code in the `src/your_project_name` directory. 
+
+### Additional options
+
+- `--target-dir` change the directory where the scaffolding happens (default: `.`)
+- `--line-length` change the maximum line length to be enforced by `Black` and `flake8`
+
+Consult `$ aedificate --help` for up-to-date info.
+
+---------------------------------------------------------------------------------------
+
+Aedificator comes with preconfigured formatting, linting, type checking and testing
+options, leveraging the power of `tox`. If you do not have `tox` installed, type
+```bash
+$ pip install tox
+```
+
+Now, use
+```bash
+$ tox -e linters
+```
+for formatting, linting, and type checking (or `tox -e format|flake8|mypy` for just one
+of them) and
+```bash
+$ tox -e py37|py38|py39|p310
+```
+for your test suites. 
+
+Use
+```
+$ tox
+``` 
+if you want it all. ;)
+
+---------------------------------------------------------------------------------------
+A small note: `tox` will fail as long as you have no tests in your `tests` directory.
+If you like to see green colour, while you still have no tests, limit yourself to
+`tox -e linters` (and hurry to add some tests)
+
