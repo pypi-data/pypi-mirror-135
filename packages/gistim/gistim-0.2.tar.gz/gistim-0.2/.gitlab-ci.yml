@@ -1,0 +1,25 @@
+image: continuumio/miniconda3:latest
+
+before_script:
+  - apt-get update -q -y
+  - apt-get install -y build-essential
+  - conda update -n base conda
+  - conda env create -f environment.yml
+  - source activate tim
+  - pip install -e .
+
+tests:
+  script:
+    - black --check . 
+
+pages:
+  script:
+  - cd docs
+  - make html
+  - cd ..
+  - mv docs/_build/html/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
