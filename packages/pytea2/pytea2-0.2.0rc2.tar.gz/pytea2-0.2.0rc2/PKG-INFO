@@ -1,0 +1,50 @@
+Metadata-Version: 2.1
+Name: pytea2
+Version: 0.2.0rc2
+Summary: tea encrypt and decrypt
+Home-page: https://github.com/synodriver/pytea
+Author: synodriver
+Author-email: diguohuangjiajinweijun@gmail.com
+License: GPLv3
+Keywords: tea,encrypt,decrypt
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Topic :: Security :: Cryptography
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Cython
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+## pytea
+
+### 极其快速的TEA加密解密工具
+
+[![pypi](https://img.shields.io/pypi/v/pytea2.svg)](https://pypi.org/project/pytea2/)
+![python](https://img.shields.io/pypi/pyversions/pytea2)
+![implementation](https://img.shields.io/pypi/implementation/pytea2)
+![wheel](https://img.shields.io/pypi/wheel/pytea2)
+![license](https://img.shields.io/github/license/synodriver/pytea.svg)
+![action](https://img.shields.io/github/workflow/status/synodriver/pytea/run%20unitest)
+
+- 速度是其他PYTEA算法实现的300倍
+
+### usage
+
+```python
+import pytea
+
+tea = pytea.TEA(secret_key=bytes(16), encrypt_times=16)
+data = tea.encrypt("哈哈哈".encode())
+print(tea.decrypt(data).decode())
+```
+
