@@ -1,0 +1,111 @@
+Twitter follower scraper is a python library to scrape twitter followers and profile data, using browser automation. 
+It currently runs only on windows.
+
+## Twitter Login With Cookies
+* In this example we first import library, then we fetched data using simple function. 
+* Replace below sample cookies with your **cookies**.
+```sh
+from twitter_scraper_in import *
+twitter.login_with_cookies(cookies="list_of_cookies")
+```
+
+## Twitter Login With Email and Password
+
+* In this example we first import library, then we fetched data using simple function. 
+* Replace **email_address** and **password** with your credentials.
+```sh
+from twitter_scraper_in import *
+twitter.login(text="email_address",password="password")
+```
+
+## Scrape Twitter Followers
+* In this example we will scrape followers in the twitter account. 
+* Replace the **url** with **your url**. 
+```sh
+from twitter_scraper_in import *
+response =twitter.login(text="email_address",password="password")
+response =twitter.follower_scrape(profile_url="url")
+```
+
+### Response Data
+```json
+      {
+        "name": "Tazeem Mukhtar",
+        "username": "@Tazeem_mukhtar",
+        "profile_link": "/Tazeem_mukhtar",
+        "bio": "Deals in Digital Marketing, Web Development and Social Media Marketing\n\nLife is either a daring adventure or nothing."
+      }
+```
+
+
+## Scrape Profile Data
+* In this example we will scrape followers in the twitter account. 
+* Replace the **url** with **twitter profile url**. 
+```sh
+from twitter_scraper_in import *
+response=twitter.login(text="email_address",password="password")
+response=twitter.analyzer(profile_link="url")
+```
+
+### Response Data
+```json
+      "profile": "Malaysia Airlines",
+      "tweets": "70.3K Tweets",
+      "description": "Proudly flying the nation's flag and connecting places and hearts through our inimitable Malaysian Hospitality.",
+      "following": "Following",
+      "joined": "Joined January 2009",
+      "followers": "1.7M"
+```
+
+
+#### Bot Studio
+[Bot_Studio](https://pypi.org/project/bot_studio/) is needed for browser automation. As soon as this library is imported in code, automated browser will open up in which twitter page is loaded and scrapes the data accordingly.
+
+### Installation
+```sh
+pip install twitter-scraper-in
+```
+
+### Import
+```sh
+from twitter_scraper_in import *
+```
+### Login with credentials
+```sh
+twitter.login(text="email_address",password="password")
+```
+
+### Login with cookies
+```sh
+twitter.login_with_cookies(cookies=list_of_cookies)
+```
+
+### Get Twitter followers
+```sh
+twitter.login(text="email_address",password="password")
+response=twitter.follower_scraper(profile_url="url")
+```
+
+### Get Profile Data
+```sh
+twitter.login(text="email_address",password="password")
+response=twitter.analyzer(profile_link="url")
+```
+
+### Run bot on cloud
+* Twitter followers - You can run bot on [Cloud](https://datakund.com/products/twitter-com-scraper?_pos=1&_sid=bf64afd4f&_ss=r).
+* Profile Data - You can run bot on [Cloud](https://datakund.com/products/scrape-any-twitter-user-profile-followers?_pos=10&_sid=069be1dc8&_ss=r).
+
+
+### Send Feedback to Developers
+```sh
+bot_studio.send_feedback(feedback="Need help with this ......")
+```
+
+### Cookies
+To login with cookies [Edit this Cookie Extension](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=en) can be added to browser. Please check [this](https://abhishek-chaudhary.medium.com/how-to-get-cookies-of-any-website-from-browser-22b3d6348ed2) link how to get cookies to login to your amazon.
+
+### Contact Us
+* [Telegram](https://t.me/datakund)
+* [Website](https://datakund.com)
+
