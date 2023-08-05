@@ -1,0 +1,1110 @@
+test_getter_repr:
+  -
+    getter: Key(Config)
+    expected: byoc.Key\(Config\)
+  -
+    getter: Key(Config, 'x')
+    expected: byoc.Key\(Config, 'x'\)
+  -
+    getter: Key(Config, cast=int)
+    expected: byoc.Key\(Config, cast=<class 'int'>\)
+  -
+    getter: Key(Config, toggle=True)
+    expected: byoc.Key\(Config, toggle=True\)
+  -
+    getter: ImplicitKey(WrappedConfig(Config(None)), 'x')
+    expected: byoc.ImplicitKey\(WrappedConfig\(Config\(\), is_loaded=False\), 'x'\)
+  -
+    getter: Method(lambda self: 1)
+    expected: byoc.Method\(<function <lambda> at 0x.*>\)
+  -
+    getter: Func(lambda: 1)
+    expected: byoc.Func\(<function <lambda> at 0x.*>\)
+  -
+    getter: Value(1)
+    expected: byoc.Value\(1\)
+
+test_getter_cast_value:
+  -
+    id: value
+    getter: Value(None)
+    given: 1
+    expected: 1
+  -
+    id: value
+    getter: Value(None)
+    param: byoc.param(cast=int)
+    given: '1'
+    expected: 1
+  -
+    id: value-err
+    getter: Value(None)
+    param: byoc.param(cast=int)
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+
+  -
+    id: func
+    getter: Func(lambda: None)
+    given: 1
+    expected: 1
+  -
+    id: func
+    getter: Func(lambda: None)
+    param: byoc.param(cast=int)
+    given: '1'
+    expected: 1
+  -
+    id: func-err
+    getter: Func(lambda: None)
+    param: byoc.param(cast=int)
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+
+  -
+    id: method
+    getter: Method(lambda self: None)
+    given: 1
+    expected: 1
+  -
+    id: method
+    getter: Method(lambda self: None)
+    param: byoc.param(cast=int)
+    given: '1'
+    expected: 1
+  -
+    id: method-err
+    getter: Method(lambda self: None)
+    param: byoc.param(cast=int)
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+
+  -
+    id: key
+    getter: Key(Config)
+    given: 1
+    expected: 1
+  -
+    id: key
+    getter: Key(Config, cast=int)
+    given: '1'
+    expected: 1
+  -
+    id: key
+    getter: Key(Config)
+    param: byoc.param(cast=int)
+    given: '1'
+    expected: 1
+  -
+    id: key
+    getter: Key(Config, cast=int)
+    param: byoc.param(cast=lambda x: x+1)
+    given: '1'
+    expected: 2
+  -
+    id: key-err
+    getter: Key(Config, cast=int)
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+  -
+    id: key-err
+    getter: Key(Config)
+    param: byoc.param(cast=int)
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+
+  -
+    id: compose
+    getter: Key(Config, cast=[int, lambda x: x+1])
+    given: '1'
+    expected: 2
+  -
+    id: compose-err
+    getter: Key(Config, cast=[int, lambda x: x])
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+  -
+    id: compose-err
+    getter: Key(Config, cast=[lambda x: x, int])
+    given: 'a'
+    error:
+      type: ValueError
+      message:
+        - invalid literal for int() with base 10: 'a'
+
+test_getter_iter_values:
+  -
+    id: value
+    getter: Value(1)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: GetterMeta
+          getter: Value
+          getter.value: 1
+      dynamic:
+        - False
+      log:
+        - got hard-coded value: 1
+
+  -
+    id: func
+    getter: Func(lambda: 1)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: GetterMeta
+          getter: Func
+      dynamic:
+        - False
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 1
+  -
+    id: func-partial
+    getter: Func(lambda x: x + 1).partial(1)
+    expected:
+      values: [2]
+      meta:
+        -
+          type: GetterMeta
+          getter: Func
+      dynamic:
+        - False
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 2
+  -
+    id: func-dynamic
+    getter: Func(lambda: 1, dynamic=True)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: GetterMeta
+          getter: Func
+      dynamic:
+        - True
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 1
+  -
+    id: func-err
+    getter: Func(lambda: 1/0)
+    error:
+      type: ZeroDivisionError
+  -
+    id: func-err-skip
+    getter: Func(lambda: 1/0, skip=ZeroDivisionError)
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > raised ZeroDivisionError: division by zero
+
+  -
+    id: method
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = 1
+      >
+    getter: Method(lambda self: self.x)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: GetterMeta
+          getter: Method
+      dynamic:
+        - True
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 1
+  -
+    id: method
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = 1
+      >
+      >     def helper(self):
+      >         return self.x + 1
+      >
+    getter: Method(DummyObj.helper)
+    expected:
+      values: [2]
+      meta:
+        -
+          type: GetterMeta
+          getter: Method
+      dynamic:
+        - True
+      log:
+        -
+          > called: <function DummyObj.helper at .*>
+          > returned: 2
+  -
+    id: method
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = 1
+      >
+    getter: Method(lambda self, y: self.x + y).partial(1)
+    expected:
+      values: [2]
+      meta:
+        -
+          type: GetterMeta
+          getter: Method
+      dynamic:
+        - True
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 2
+  -
+    id: method-dynamic
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = 1
+      >
+    getter: Method(lambda self: self.x, dynamic=False)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: GetterMeta
+          getter: Method
+      dynamic:
+        - False
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > returned: 1
+  -
+    id: method-err
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >
+    getter: Method(lambda self: 1/0)
+    error:
+      type: ZeroDivisionError
+  -
+    id: method-err-skip
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >
+    getter: Method(lambda self: 1/0, skip=ZeroDivisionError)
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > raised ZeroDivisionError: division by zero
+  -
+    id: method-err-skip-no-value
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = byoc.param()
+      >
+    getter: Method(lambda self: self.x)
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        -
+          > called: <function <lambda> at .*>
+          > raised NoValueFound: can't find value for parameter
+          > . getting 'x' parameter for <DummyObj object at .*>
+          > . nowhere to look for values
+          > . did you mean to provide a default\?
+
+  -
+    id: key-implicit
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >     x = byoc.param()
+    getter:
+      > Key(DummyConfig)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-explicit
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'y': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'y')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'y': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'y': 1
+  -
+    id: key-callable
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'y': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >
+      > from operator import itemgetter
+    # Avoid using `lambda` because it doesn't have a consistent string 
+    # representation.
+    getter:
+      > Key(DummyConfig, itemgetter('y'))
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'y': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > called: operator.itemgetter\('y'\)
+          > returned: 1
+  -
+    id: key-iter
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': {'y': 1}},
+      >                 location='/path/to/file',
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, ('x', 'y'))
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': {'y': 1}}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found \('x', 'y'\): 1
+  -
+    id: key-falsy
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={None: 1},
+      >                 location='/path/to/file',
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >     x = byoc.param()
+    getter:
+      > Key(DummyConfig, None)
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {None: 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found None: 1
+  -
+    id: key-config-cls
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location='/path/to/a',
+      >         )
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 2},
+      >                 location='/path/to/b',
+      >         )
+      >
+      > class DummyConfigC(Config):
+      >     pass
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(DummyConfigC, 'x')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - no configs of class DummyConfigC
+  -
+    id: key-config-cls
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location='/path/to/a',
+      >         )
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 2},
+      >                 location='/path/to/b',
+      >         )
+      >
+      > class DummyConfigC(Config):
+      >     pass
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(DummyConfigA, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/a
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfigA\(\):
+        -
+          > /path/to/a:
+          > found 'x': 1
+  -
+    id: key-config-cls
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location='/path/to/a',
+      >         )
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 2},
+      >                 location='/path/to/b',
+      >         )
+      >
+      > class DummyConfigC(Config):
+      >     pass
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(DummyConfigB, 'x')
+    expected:
+      values: [2]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/b
+          layer.values: {'x': 2}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfigB\(\):
+        -
+          > /path/to/b:
+          > found 'x': 2
+  -
+    id: key-config-factory
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [lambda obj: DummyConfig(obj)]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-config-setup
+    obj:
+      > class DummyConfig(Config):
+      >
+      >     def __init__(self, obj, **kwargs):
+      >         super().__init__(obj)
+      >         self.kwargs = kwargs
+      >
+      >     def load(self):
+      >         yield DictLayer(self.kwargs)
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig.setup(x=1)]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        - found 'x': 1
+  -
+    id: key-multi-config
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location='/path/to/a',
+      >         )
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 2},
+      >                 location='/path/to/b',
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(Config, 'x')
+    expected:
+      values: [1, 2]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/a
+          layer.values: {'x': 1}
+        -
+          type: LayerMeta
+          location: /path/to/b
+          layer.values: {'x': 2}
+      dynamic:
+        - False
+        - False
+      log:
+        - queried DummyConfigA\(\):
+        -
+          > /path/to/a:
+          > found 'x': 1
+        - queried DummyConfigB\(\):
+        -
+          > /path/to/b:
+          > found 'x': 2
+  -
+    id: key-multi-layer
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location='/path/to/a',
+      >         )
+      >         yield DictLayer(
+      >                 values={'x': 2},
+      >                 location='/path/to/b',
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1, 2]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/a
+          layer.values: {'x': 1}
+        -
+          type: LayerMeta
+          location: /path/to/b
+          layer.values: {'x': 2}
+      dynamic:
+        - False
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/a:
+          > found 'x': 1
+        -
+          > /path/to/b:
+          > found 'x': 2
+  -
+    id: key-deferred-layer-values
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values=lambda: obj.values,  # not yet defined
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >
+      > obj = DummyObj()
+      > obj.values = {'x': 1}
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        - found 'x': 1
+  -
+    id: key-deferred-layer-loc
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(
+      >                 values={'x': 1},
+      >                 location=lambda: obj.loc,  # not yet defined
+      >         )
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >
+      > obj = DummyObj()
+      > obj.loc = '/path/to/file'
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-load-status-with-layers
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         self.load_status = lambda log: log.hint('config status')
+      >         yield DictLayer({'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        - config status
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-load-status-without-layers
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         self.load_status = lambda log: log.hint('config status')
+      >         return
+      >         yield
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - skipped DummyConfig\(\): loaded, but no layers
+        - config status
+  -
+    id: key-autoload
+    obj:
+      > class DummyConfig(Config):
+      >     autoload = False
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - skipped DummyConfig\(\): not loaded
+        - did you mean to call `byoc.load\(\)`?
+  -
+    id: key-autoload
+    obj:
+      > class DummyConfig(Config):
+      >     autoload = False
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+      >
+      > obj = DummyObj()
+      > byoc.load(obj)
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-dynamic
+    obj:
+      > class DummyConfig(Config):
+      >     dynamic = True
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'x')
+    expected:
+      values: [1]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/file
+          layer.values: {'x': 1}
+      dynamic:
+        - True
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > found 'x': 1
+  -
+    id: key-no-layers
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         return
+      >         yield
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'y')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - skipped DummyConfig\(\): loaded, but no layers
+  -
+    id: key-missing
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/file')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'y')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/file:
+          > did not find 'y' in {'x': 1}
+  -
+    id: key-missing
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/a')
+      >         yield DictLayer(values={'x': 2}, location='/path/to/b')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'y')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/a:
+          > did not find 'y' in {'x': 1}
+        -
+          > /path/to/b:
+          > did not find 'y' in {'x': 2}
+  -
+    id: key-missing
+    obj:
+      > class DummyConfig(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/a')
+      >         yield DictLayer(values={'y': 2}, location='/path/to/b')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfig]
+    getter:
+      > Key(DummyConfig, 'y')
+    expected:
+      values: [2]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/b
+          layer.values: {'y': 2}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfig\(\):
+        -
+          > /path/to/a:
+          > did not find 'y' in {'x': 1}
+        -
+          > /path/to/b:
+          > found 'y': 2
+  -
+    id: key-missing
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/a')
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 2}, location='/path/to/b')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(Config, 'y')
+    expected:
+      values: []
+      meta:
+      dynamic:
+      log:
+        - queried DummyConfigA\(\):
+        -
+          > /path/to/a:
+          > did not find 'y' in {'x': 1}
+        - queried DummyConfigB\(\):
+        -
+          > /path/to/b:
+          > did not find 'y' in {'x': 2}
+  -
+    id: key-missing
+    obj:
+      > class DummyConfigA(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'x': 1}, location='/path/to/a')
+      >
+      > class DummyConfigB(Config):
+      >     def load(self):
+      >         yield DictLayer(values={'y': 2}, location='/path/to/b')
+      >
+      > class DummyObj:
+      >     __config__ = [DummyConfigA, DummyConfigB]
+    getter:
+      > Key(Config, 'y')
+    expected:
+      values: [2]
+      meta:
+        -
+          type: LayerMeta
+          location: /path/to/b
+          layer.values: {'y': 2}
+      dynamic:
+        - False
+      log:
+        - queried DummyConfigA\(\):
+        -
+          > /path/to/a:
+          > did not find 'y' in {'x': 1}
+        - queried DummyConfigB\(\):
+        -
+          > /path/to/b:
+          > found 'y': 2
+
+test_getter_kwargs_err:
+  -
+    id: kwargs-err
+    getter: Value(1, toggle=True)
+    error:
+      type: byoc.ApiError
+      message:
+        - unexpected keyword argument
+        - param() allows the following kwargs:
+        - cast
+        - Value(1, toggle=True) has the following unexpected kwargs:
+        - toggle
+  -
+    id: kwargs-err
+    getter: Value(1, cats=int, toggle=True)
+    error:
+      type: byoc.ApiError
+      message:
+        - unexpected keyword argument
+        - param() allows the following kwargs:
+        - cast
+        - Value(1, cats=<class 'int'>, toggle=True) has the following
+        - cats
+        - toggle
+  -
+    id: kwargs-err
+    obj:
+      > class DummyObj:
+      >     __config__ = []
+      >     x = byoc.toggle_param()
+
+    getter: Value(1, cats=int, toggle=True)
+    error:
+      type: byoc.ApiError
+      message:
+        - unexpected keyword argument
+        - param() allows the following kwargs:
+        - cast
+        - toggle
+        - Value(1, cats=<class 'int'>, toggle=True) has the following
+        - cats
