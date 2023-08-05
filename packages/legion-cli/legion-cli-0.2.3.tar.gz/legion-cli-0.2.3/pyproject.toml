@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "legion-cli"
+version = "0.2.3"
+description = "Commandline Utilities for the Legion Alerting and Monitoring System"
+authors = ["Eugene Kovalev <eugene@kovalev.systems>"]
+classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+]
+documentation="https://gitlab.com/legion-robotnik/legion-cli"
+repository="https://gitlab.com/legion-robotnik/legion-cli"
+readme="README.md"
+license="GPL-3.0-only"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.0"
+legion-utils = "^0.2.10"
+rich = "^10.8.0"
+termcolor = "^1.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
+pytest = "^6.2.1"
+pytest-cov = "^2.11.1"
+pytest-mock = "^3.6.1"
+pylint = "^2.6.0"
+mypy = "^0.790"
+
+[tool.poetry.scripts]
+legion = 'legion_cli.cli:cli'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
