@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Archives API Reference &mdash; imagedata 1.4.0rc1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Transports API Reference" href="APIReferenceTransports.html" />
+    <link rel="prev" title="Formats API Reference" href="APIReferenceFormats.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> imagedata
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.0rc1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="UserGuide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Introduction.html">Motivation and goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Introduction.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Introduction.html#series-class">Series Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Input_output.html">Input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Sorting.html">Sorting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DICOMAttributes.html">DICOM Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CommandLine.html">Imagedata on the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Plugins.html">Plugin Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ReleaseNotes.html">ReleaseNotes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="APIReference.html">API Reference</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="APIReferenceSeries.html">Series Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="APIReferenceViewer.html">Viewer Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="APIReferenceImagedata.html">Imagedata packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="APIReferenceFormats.html">Formats API Reference</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Archives API Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-imagedata.archives.abstractarchive">Module imagedata.archives.abstractarchive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-imagedata.archives.filesystemarchive">Module imagedata.archives.filesystemarchive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-imagedata.archives.zipfilearchive">Module imagedata.archives.zipfilearchive</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="APIReferenceTransports.html">Transports API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DeveloperDocumentation.html">Developer Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">imagedata</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="UserGuide.html">User Guide</a> &raquo;</li>
+        
+          <li><a href="APIReference.html">API Reference</a> &raquo;</li>
+        
+      <li>Archives API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/APIReferenceArchives.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="archives-api-reference">
+<span id="apireferencearchives"></span><h1>Archives API Reference<a class="headerlink" href="#archives-api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-imagedata.archives.abstractarchive">
+<span id="module-imagedata-archives-abstractarchive"></span><h2>Module imagedata.archives.abstractarchive<a class="headerlink" href="#module-imagedata.archives.abstractarchive" title="Permalink to this headline">¶</a></h2>
+<p>Abstract class for image archives.</p>
+<p>Defines generic functions.</p>
+<dl class="py class">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive">
+<em class="property">class </em><code class="sig-prename descclassname">imagedata.archives.abstractarchive.</code><code class="sig-name descname">AbstractArchive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">authors</span></em>, <em class="sig-param"><span class="n">version</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">_mimetypes</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class definition for imagedata archive plugins.
+Plugins must be a subclass of AbstractPlugin and
+must define the atttributes set in __init__() and
+the following methods:</p>
+<p>__init__() method
+use_query() method
+getnames() method
+basename() method
+open() method
+getmembers() method
+to_localfile() method
+read() method
+write() method</p>
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.add_localfile">
+<em class="property">abstract </em><code class="sig-name descname">add_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_file</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.add_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.add_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a local file to the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_file</strong> – named local file</p></li>
+<li><p><strong>filename</strong> – filename in the archive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>filehandle to file in the archive</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.authors">
+<em class="property">property </em><code class="sig-name descname">authors</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.authors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin authors</p>
+<p>Multi-line string naming the author(s) of the plugin.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.basename">
+<em class="property">abstract </em><code class="sig-name descname">basename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basename of file.</p>
+<p class="rubric">Examples</p>
+<p>if archive.basename(filehandle) == “DICOMDIR”:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filehandle</strong> – reference to member object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.close">
+<em class="property">abstract </em><code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close archive.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.description">
+<em class="property">property </em><code class="sig-name descname">description</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin description</p>
+<p>Single line string describing the image format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.getmembers">
+<em class="property">abstract </em><code class="sig-name descname">getmembers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.getmembers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.getmembers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the members of the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members of the archive as an OrderedDict of member objects.</dt><dd><p>The keys are the member names as given by getnames().</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.getnames">
+<em class="property">abstract </em><code class="sig-name descname">getnames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.getnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.getnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get name list of the members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members as a list of their names.</dt><dd><p>It has the same order as the members of the archive.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.is_file">
+<em class="property">abstract </em><code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the named file is a single file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.mimetypes">
+<em class="property">property </em><code class="sig-name descname">mimetypes</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.mimetypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>MIME types supporte by this plugin.</p>
+<p>List of strings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin name</p>
+<p>Single word string describing the image format.
+Typical names: dicom, nifti, itk.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.open">
+<em class="property">abstract </em><code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'rb'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a member object for member given its filehandle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.to_localfile">
+<em class="property">abstract </em><code class="sig-name descname">to_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.to_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.to_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access a member object through a local file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.transport">
+<em class="property">property </em><code class="sig-name descname">transport</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underlying transport plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.url">
+<em class="property">property </em><code class="sig-name descname">url</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin URL</p>
+<p>URL string to the site of the plugin or the author(s).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.use_query">
+<em class="property">abstract </em><code class="sig-name descname">use_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.use_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.use_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the plugin need the ?query part of the url?</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.version">
+<em class="property">property </em><code class="sig-name descname">version</code><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plugin version</p>
+<p>String giving the plugin version.
+Version scheme: 1.0.0</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.abstractarchive.AbstractArchive.writedata">
+<em class="property">abstract </em><code class="sig-name descname">writedata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#AbstractArchive.writedata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.AbstractArchive.writedata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write data to a named file in the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – named file in the archive</p></li>
+<li><p><strong>data</strong> – data to write</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="imagedata.archives.abstractarchive.NoOtherInstance">
+<em class="property">exception </em><code class="sig-prename descclassname">imagedata.archives.abstractarchive.</code><code class="sig-name descname">NoOtherInstance</code><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#NoOtherInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.NoOtherInstance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="imagedata.archives.abstractarchive.WriteMultipleArchives">
+<em class="property">exception </em><code class="sig-prename descclassname">imagedata.archives.abstractarchive.</code><code class="sig-name descname">WriteMultipleArchives</code><a class="reference internal" href="_modules/imagedata/archives/abstractarchive.html#WriteMultipleArchives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.abstractarchive.WriteMultipleArchives" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-imagedata.archives.filesystemarchive">
+<span id="module-imagedata-archives-filesystemarchive"></span><h2>Module imagedata.archives.filesystemarchive<a class="headerlink" href="#module-imagedata.archives.filesystemarchive" title="Permalink to this headline">¶</a></h2>
+<p>Read/Write local image files</p>
+<dl class="py class">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive">
+<em class="property">class </em><code class="sig-prename descclassname">imagedata.archives.filesystemarchive.</code><code class="sig-name descname">FilesystemArchive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transport</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em>, <em class="sig-param"><span class="n">read_directory_only</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">opts</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read/write local files.</p>
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.add_localfile">
+<code class="sig-name descname">add_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_file</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.add_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.add_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a local file to the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_file</strong> – named local file</p></li>
+<li><p><strong>filename</strong> – filename in the archive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>filehandle to file in the archive</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.basename">
+<code class="sig-name descname">basename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basename of file.</p>
+<p class="rubric">Examples</p>
+<p>if archive.basename(filehandle) == “DICOMDIR”:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filehandle</strong> – reference to member object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.getmembers">
+<code class="sig-name descname">getmembers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.getmembers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.getmembers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the members of the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members of the archive as a list of member objects.</dt><dd><p>The list has the same order as the members in the archive.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.getnames">
+<code class="sig-name descname">getnames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.getnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.getnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get name list of the members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members as a list of their names.</dt><dd><p>It has the same order as the members of the archive.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.is_file">
+<code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the named file is a single file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'rb'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a member object for member with filehandle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.to_localfile">
+<code class="sig-name descname">to_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.to_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.to_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access a member object through a local file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.transport">
+<em class="property">property </em><code class="sig-name descname">transport</code><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underlying transport plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.use_query">
+<code class="sig-name descname">use_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.use_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.use_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the plugin need the ?query part of the url?</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.filesystemarchive.FilesystemArchive.writedata">
+<code class="sig-name descname">writedata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#FilesystemArchive.writedata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.FilesystemArchive.writedata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write data to a named file in the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – named file in the archive</p></li>
+<li><p><strong>data</strong> – data to write</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="imagedata.archives.filesystemarchive.NoSuchFile">
+<em class="property">exception </em><code class="sig-prename descclassname">imagedata.archives.filesystemarchive.</code><code class="sig-name descname">NoSuchFile</code><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#NoSuchFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.NoSuchFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="imagedata.archives.filesystemarchive.ReadOnlyError">
+<em class="property">exception </em><code class="sig-prename descclassname">imagedata.archives.filesystemarchive.</code><code class="sig-name descname">ReadOnlyError</code><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#ReadOnlyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.ReadOnlyError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="imagedata.archives.filesystemarchive.WriteOnFile">
+<em class="property">exception </em><code class="sig-prename descclassname">imagedata.archives.filesystemarchive.</code><code class="sig-name descname">WriteOnFile</code><a class="reference internal" href="_modules/imagedata/archives/filesystemarchive.html#WriteOnFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.filesystemarchive.WriteOnFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-imagedata.archives.zipfilearchive">
+<span id="module-imagedata-archives-zipfilearchive"></span><h2>Module imagedata.archives.zipfilearchive<a class="headerlink" href="#module-imagedata.archives.zipfilearchive" title="Permalink to this headline">¶</a></h2>
+<p>Read/Write image files from a zipfile</p>
+<dl class="py class">
+<dt id="imagedata.archives.zipfilearchive.WriteFileIO">
+<em class="property">class </em><code class="sig-prename descclassname">imagedata.archives.zipfilearchive.</code><code class="sig-name descname">WriteFileIO</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">archive</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">localfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#WriteFileIO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.WriteFileIO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Local object making sure the new file is written to zip
+archive before closing.</p>
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.WriteFileIO.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#WriteFileIO.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.WriteFileIO.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close file, copy it to archive, then delete local file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive">
+<em class="property">class </em><code class="sig-prename descclassname">imagedata.archives.zipfilearchive.</code><code class="sig-name descname">ZipfileArchive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transport</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em>, <em class="sig-param"><span class="n">read_directory_only</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">opts</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read/write image files from a zipfile.</p>
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.add_localfile">
+<code class="sig-name descname">add_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_file</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.add_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.add_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a local file to the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_file</strong> – named local file</p></li>
+<li><p><strong>filename</strong> – filename in the archive</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>filehandle to file in the archive</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.basename">
+<code class="sig-name descname">basename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basename of file.</p>
+<p class="rubric">Examples</p>
+<p>if archive.basename(filehandle) == “DICOMDIR”:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filehandle</strong> – reference to member object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close zip file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.getmembers">
+<code class="sig-name descname">getmembers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.getmembers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.getmembers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the members of the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members of the archive as a list of member objects.</dt><dd><p>The list has the same order as the members in the archive.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.getnames">
+<code class="sig-name descname">getnames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.getnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.getnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get name list of the members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The members as a list of their names.</dt><dd><p>It has the same order as the members of the archive.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.is_file">
+<code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine whether the named file is a single file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'rb'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A member object for member with filehandle.</p>
+</dd>
+</dl>
+<p>Extract the member object to local file space.
+This is necessary to allow the seek() operation on open files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.to_localfile">
+<code class="sig-name descname">to_localfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filehandle</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.to_localfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.to_localfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access a member object through a local file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.transport">
+<em class="property">property </em><code class="sig-name descname">transport</code><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underlying transport plugin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.use_query">
+<code class="sig-name descname">use_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.use_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.use_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the plugin need the ?query part of the url?</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imagedata.archives.zipfilearchive.ZipfileArchive.writedata">
+<code class="sig-name descname">writedata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/imagedata/archives/zipfilearchive.html#ZipfileArchive.writedata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagedata.archives.zipfilearchive.ZipfileArchive.writedata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write data to a named file in the archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – named file in the archive</p></li>
+<li><p><strong>data</strong> – data to write</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="APIReferenceTransports.html" class="btn btn-neutral float-right" title="Transports API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="APIReferenceFormats.html" class="btn btn-neutral float-left" title="Formats API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Erling Andersen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
