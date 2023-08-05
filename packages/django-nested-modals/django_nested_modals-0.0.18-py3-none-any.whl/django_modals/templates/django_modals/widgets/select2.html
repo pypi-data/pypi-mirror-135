@@ -1,0 +1,29 @@
+{% spaceless %}
+    <select name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+        {{ options_str|safe }}
+    </select>
+
+    <script>
+        (function () {
+            var data {% if widget.select_data %}= JSON.parse(`{{ widget.select_data }}`)
+                for (f of data) {
+                    f.text = decodeURI(f.text);
+                }
+            {% endif %}
+            select2_widget.initselect2(
+                "{{ widget.attrs.id }}",
+                {{ widget.attrs.ajax|yesno:"true,false" }},
+                {enabled: {{widget.attrs.tags|yesno:"true,false" }}, new_marker: "{{ widget.attrs.new_marker}}"},
+                data,
+                "{{ widget.attrs.placeholder|default:'-' }}",
+                {{ widget.attrs.html_template|safe|default:"undefined" }}
+            )
+        })()
+        {% comment %}
+            Below is tempprary fix due to issue reported in https://github.com/select2/select2/issues/5993
+        {% endcomment %}
+        $('#{{ widget.attrs.id }}').on('select2:open', () => {
+            document.querySelector('[aria-controls="select2-{{ widget.attrs.id }}-results"]').focus();
+        });
+    </script>
+{% endspaceless %}

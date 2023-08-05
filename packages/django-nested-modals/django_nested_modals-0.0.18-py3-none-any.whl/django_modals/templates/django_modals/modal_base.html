@@ -1,0 +1,50 @@
+<div class="modal show fade" tabindex="-1" role="dialog" aria-hidden="true" data-url="{{ modal_url }}" data-backdrop="static" data-keyboard="false" {% if modal_type %}data-modaltype="{{ modal_type }}"{% endif %}>
+    {{ ajax_helpers_script }}
+    {% block style %}
+        {{ style }}
+    {% endblock %}
+    <div class="modal-dialog modal-{% if size %}{{ size }}{% else %}lg{% endif %}" role="document" style="left:10px;top:10px">
+        <div class="modal-content">
+            <input type="hidden" name="modal_style" value="{{ slug.modalstyle }}">
+            {% block modal_header %}
+                {% if header_title %}
+                    <div class="modal-header">
+                        <div class="modal-title{% if center_header %} text-center flex-grow-1{% endif %}">
+                            {% block header_title %}
+                                {{ header_title }}
+                            {% endblock %}
+                        </div>
+                        <div>
+                        {% if not no_header_x %}
+                            <button type="button" data-dismiss="modal">
+                                <i class="fas fa-times pt-1"></i>
+                            </button>
+                        {% endif %}
+                        {% if scratchpad %}
+                            <button type="button" onclick="ajax_helpers.post_json({url:django_modal.modal_div().attr('data-url'), data:{button:'scratchpad', scratchpad:$('#scratchpad').length}})" title="Scratch Pad">
+                                <i class="far fa-sticky-note pt-1"></i>
+                            </button>
+                        {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock %}
+            <div class="modal-body">
+                {% block modal_content %}
+                    {{ contents }}
+                    {{ form }}
+                {% endblock %}
+            </div>
+            {% block footer %}
+                {{ footer }}
+            {% endblock %}
+        </div>
+    </div>
+    {% block javascript %}
+        {% if script %}
+            <script>
+                {{ script }}
+            </script>
+        {% endif %}
+    {% endblock %}
+</div>
