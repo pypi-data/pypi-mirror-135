@@ -1,0 +1,110 @@
+{% macro dataflow_from_definition(data_service_id, dataflow, dataflow_alias, renderer, ordered_components, inline_code_map, classname_map) -%}
+
+## Data feed connectors for this dataflow
+data_feed_connectors = []
+{% for data_feed_connector in dataflow.data_feed_connectors %}
+{% set attribute_overrides = {
+      ("input_data_service_id",): (
+        'data_service_id' if data_feed_connector.input_data_service_id == data_service_id else "'"+data_feed_connector.input_data_service_id+"'"
+      )
+    }
+%}
+
+data_feed_connector_{{data_feed_connector.id}} = {{renderer(data_feed_connector, classname_map=classname_map, attribute_overrides=attribute_overrides)}}
+data_feed_connectors.append(data_feed_connector_{{data_feed_connector.id}})
+{% endfor %}
+
+
+## Components for this dataflow
+components = []
+{% for component in ordered_components(dataflow.components) %}
+{% set attribute_overrides = inline_code_map.attribute_path_to_loader(dataflow.id, component.id) %}
+
+component_{{component.id}} = {{renderer(component, classname_map=classname_map, attribute_overrides=attribute_overrides)}}
+components.append(component_{{component.id}})
+{% endfor %}
+
+
+## Data feeds for this dataflow
+data_feeds = []
+{% for data_feed in dataflow.data_feeds %}
+{% set data_services_shared_with = [] %}
+{% for ds_id in data_feed.data_services_shared_with %}
+{% do data_services_shared_with.append('data_service_id' if ds_id == data_service_id else "'"+ds_id+"'") %}
+{% endfor %}
+{% set attribute_overrides = {("data_services_shared_with",): '[' + ', '.join(data_services_shared_with) + ']'} %}
+
+data_feed_{{data_feed.id}} = {{renderer(data_feed, classname_map=classname_map, attribute_overrides=attribute_overrides)}}
+data_feeds.append(data_feed_{{data_feed.id}})
+{% endfor %}
+
+
+## Component groups for this dataflow
+groups = []
+
+{% for group in dataflow.groups %}
+
+group_{{group.id}} = {{renderer(group, classname_map=classname_map)}}
+groups.append(group_{{group.id}})
+{% endfor %}
+
+{% set attribute_overrides = {
+      ("components",): "components",
+      ("data_feeds",): "data_feeds",
+      ("data_feed_connectors",): "data_feed_connectors",
+      ("groups",): "groups",
+      ("id",): "dataflow_id",
+      ("name",): ("'" + dataflow.name + "' if dataflow_id == GENERATED_FROM_DATAFLOW_ID else dataflow_id"),
+    }
+-%}
+dataflow = {{renderer(dataflow, classname_map=classname_map, attribute_overrides=attribute_overrides)}}
+{%- endmacro %}
+
+{% macro data_service_from_definition(data_service, renderer, ordered_dataflows, classname_map) -%}
+
+credentials = []
+{% for credential in data_service.credentials %}
+{% set cred_var = "credential_" + (credential.id | replace("-", "_")) %}
+
+{{cred_var}} = {{renderer(credential, classname_map=classname_map)}}
+credentials.append({{cred_var}})
+{% endfor %}
+
+
+# Connections for this data service
+connections = []
+{% for connection in data_service.connections %}
+{% set conn_var = "connection_" + (connection.id | replace("-", "_")) %}
+
+{{conn_var}} = {{renderer(connection, classname_map=classname_map)}}
+connections.append({{conn_var}})
+{% endfor %}
+
+
+# Dynamically load dataflows for this data service by looking for sub directories with `dataflow.py`
+# If you prefer to load specific Dataflows, you can remove this section and add specific imports like
+#
+# from Foo import dataflow as dataflow_Foo
+# dataflows.append(dataflow_Foo.construct_dataflow(data_service_id))
+dataflows = []
+d = os.path.dirname(os.path.realpath(__file__))
+for f in os.listdir(d):
+  dataflow_file = os.path.join(d, f, 'dataflow.py')
+  if os.path.exists(dataflow_file):
+    spec = importlib.util.spec_from_file_location("local", dataflow_file)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    dataflows.append(module.construct_dataflow(data_service_id))
+
+
+# Data service
+{% set attribute_overrides = {
+      ("credentials",): "credentials",
+      ("connections",): "connections",
+      ("dataflows",): "dataflows",
+      ("id",): "data_service_id",
+      ("name",): ("'" + data_service.name + "' if data_service_id == GENERATED_FROM_DATA_SERVICE_ID else data_service_id"),
+    }
+-%}
+data_service = {{renderer(data_service, classname_map=classname_map, attribute_overrides=attribute_overrides)}}
+{%- endmacro %}

@@ -1,0 +1,44 @@
+{% from 'common.jinja' import data_service_from_definition -%}
+import argparse
+import base64
+import importlib
+import os
+import pathlib
+
+from ascend.sdk import definitions, field, value
+from ascend.sdk.applier import DataServiceApplier
+from ascend.sdk.client import Client
+
+{% for mod in proto_mods %}
+import ascend.protos.{{mod}}.{{mod}}_pb2 as {{mod}}
+{% endfor %}
+
+{% for gmod, cls in gmod_classes %}
+from {{gmod}} import {{cls}}
+{% endfor %}
+
+
+GENERATED_FROM_HOSTNAME = "{{hostname}}"
+GENERATED_FROM_DATA_SERVICE_ID = "{{data_service.id}}"
+
+
+def construct_data_service(data_service_id: str = GENERATED_FROM_DATA_SERVICE_ID):
+  {{ data_service_from_definition(data_service, renderer, ordered_dataflows, classname_map) | indent(2)}}
+  return data_service
+
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--hostname", default=os.getenv("ASCEND_HOSTNAME", default=GENERATED_FROM_HOSTNAME))
+  parser.add_argument("-ds", "--data-service-id", default=os.getenv("ASCEND_DATA_SERVICE_ID", default=GENERATED_FROM_DATA_SERVICE_ID))
+  parser.add_argument("--update-credentials", action='store_true')
+  parser.add_argument("--update-connections", action='store_true')
+  args = parser.parse_args()
+
+  client = Client(args.hostname)
+  data_service = construct_data_service(args.data_service_id)
+  if not args.update_credentials:
+    data_service.credentials = None
+  if not args.update_connections:
+    data_service.connections = None
+  DataServiceApplier(client).apply(data_service)
