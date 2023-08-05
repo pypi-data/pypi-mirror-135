@@ -1,0 +1,60 @@
+<clr-tabs>
+
+    <clr-tab *ngIf="res">
+        <button clrTabLink>Data</button>
+        <clr-tab-content>
+            <clr-datagrid [clrDgLoading]="loading">
+                <clr-dg-column *ngFor="let col of resultColumns" [clrDgField]="col">{{ col }}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let row of res.data">
+                    <clr-dg-cell *ngFor="let col of resultColumns">{{ row[col] }}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    <clr-dg-pagination *ngIf="!loading" #pagination [clrDgTotalItems]="res.data.length">
+                        Total: {{ res.data.length }} row{{ res.data.length > 0 ? 's' : '' }}
+                    </clr-dg-pagination>
+                </clr-dg-footer>
+
+            </clr-datagrid>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab *ngIf="res && res.explain">
+      <button clrTabLink>Analyse</button>
+      <clr-tab-content>
+        <code>
+          <pre [innerHTML]="res.explain"></pre>
+        </code>
+      </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab *ngIf="res && res.data && res.data.length > 1">
+      <button clrTabLink>Plot</button>
+      <clr-tab-content *clrIfActive>
+        <app-result-plot [data]="res.data"></app-result-plot>
+      </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab *ngIf="res">
+        <button clrTabLink>Performance</button>
+        <clr-tab-content>
+            <clr-datagrid>
+                <clr-dg-column>Measure</clr-dg-column>
+                <clr-dg-column>Value</clr-dg-column>
+
+                <clr-dg-row>
+                    <clr-dg-cell>Execution Time</clr-dg-cell>
+                    <clr-dg-cell>{{ res.perf.executionTime }}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-row>
+                    <clr-dg-cell>Backend Time</clr-dg-cell>
+                    <clr-dg-cell>{{ res.perf.backendTime }}</clr-dg-cell>
+                </clr-dg-row>
+
+            </clr-datagrid>
+        </clr-tab-content>
+    </clr-tab>
+
+</clr-tabs>

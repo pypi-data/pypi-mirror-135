@@ -1,0 +1,57 @@
+<h3>Used Versions</h3>
+<app-version></app-version>
+
+<h3>Backend</h3>
+
+<p>
+  The connected API endpint is: <code>{{ backendUrl }}</code>.<br>
+  The backend is {{ backendStatus }}
+</p>
+
+<h3>Problems?</h3>
+
+<p>
+  This is an experimental application. Bug reports and feature requests are highly appreciated.
+  <br>
+  Please use the Button below:
+</p>
+<a class="btn btn-primary" href="https://github.com/data-hydenv/hydenv-database/issues/new" target="_blank">OPEN ISSUE ON GITHUB</a>
+
+<h3>Google Analytics</h3>
+<p>
+  Google Analytics is currently <code>{{ analyticsEnabled ? 'enabled' : 'disabled'}}</code> for this application.
+</p>
+<button class="btn btn-primary" (click)="toggleAnalytics()">
+  {{ analyticsEnabled ? 'REJECT' : 'ALLOW' }} ANONYMOUS ANALYTICS
+</button>
+<p>
+  You can enable Google Analytics on this page to send anonymous usage data.<br>
+  <strong>This is completely optional and the application will work without it.</strong>
+  We anonymize the IP before sending the data and don't track user profiles. Our
+  main aim is to understand how the application is used and how it could be improved.
+  We also log, without personal information or IP addresses, which exercises are solved
+  on first tries and how often students fail on a specific exercise.
+  <strong>We are not using usage data to provide personalized ads or any other service
+    than the afforementioned and we won't do that in the future.
+  </strong>
+</p>
+
+<h3>Query History</h3>
+<p>
+  The Query History is currently <code>{{ historyEnabled ? 'enabled' : 'disabled' }}</code>.
+</p>
+<button class="btn btn-primary" (click)="toggleHistory()">
+  {{ historyEnabled ? 'DISABLE' : 'ENABLE' }} QUERY HISTORY
+</button>
+<p>
+  You can enable query history for this application. If enabled, the application will store
+  the queries you run and the results of these queries into the local storage of your browser.
+  If there are too many queries, this might slow the application down.
+  You can empty the query history below.
+</p>
+<div *ngIf="historyEnabled">
+  <h4>Stored Data</h4>
+  <app-history-table></app-history-table>
+</div>
+
+<p></p><p></p><p></p>
