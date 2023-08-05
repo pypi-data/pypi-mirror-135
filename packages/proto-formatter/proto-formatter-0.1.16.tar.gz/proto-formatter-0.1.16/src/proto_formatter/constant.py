@@ -1,0 +1,13 @@
+class Constant(object):
+    SLASH_STAR = '/*'
+    STAR_SLASH = '*/'
+    STAR = '*'
+    DOUBLE_SLASH = '//'
+    LEFT_BRACE = '{'
+    RIGHT_BRACE = '}'
+    LEFT_SQUARE_BRACKET = '['
+    RIGHT_SQUARE_BRACKET = ']'
+    EQUAL_SIGN = '='
+    SEMICOLON = ';'
+    LEFT_ANGLE_BRACKET = '<'
+    RIGHT_ANGLE_BRACKET = '>'
