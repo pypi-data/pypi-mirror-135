@@ -1,0 +1,112 @@
+Metadata-Version: 2.1
+Name: datagrepper
+Version: 1.0.0
+Summary: A webapp to query datanommer
+Home-page: https://github.com/fedora-infra/datagrepper
+License: GPL-2.0-or-later
+Author: Fedora Infrastructure
+Author-email: admin@fedoraproject.org
+Requires-Python: >=3.7,<4.0
+Classifier: License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Provides-Extra: deploy
+Provides-Extra: schemas
+Requires-Dist: Pygments (>=2.9.0,<3.0.0)
+Requires-Dist: SQLAlchemy (<1.4.23)
+Requires-Dist: anitya-schema (>=2.0.0,<3.0.0); extra == "schemas"
+Requires-Dist: arrow (>=1.1.1,<2.0.0)
+Requires-Dist: bodhi-messages (>=5.5,<6.0); extra == "schemas"
+Requires-Dist: cffi (>=1.14.6,<2.0.0)
+Requires-Dist: datanommer.models (>=1.0.0,<2.0.0)
+Requires-Dist: docutils (>=0.17.1,<0.18.0)
+Requires-Dist: fedocal-messages (>=1.5.0,<2.0.0); extra == "schemas"
+Requires-Dist: fedora-messaging-the-new-hotness-schema (>=1.1.0,<2.0.0); extra == "schemas"
+Requires-Dist: fedora-planet-messages (>=1.0.0,<2.0.0); extra == "schemas"
+Requires-Dist: fedorainfra-ansible-messages; extra == "schemas"
+Requires-Dist: flask (>=1.1,<2.0)
+Requires-Dist: flask-healthz (>=0.0.1,<0.0.2)
+Requires-Dist: gunicorn (>=20.0,<21.0); extra == "deploy"
+Requires-Dist: moksha.common (>=1.2.5,<2.0.0)
+Requires-Dist: noggin-messages (>=1.0.0,<2.0.0); extra == "schemas"
+Requires-Dist: nuancier-messages (>=1.0.0,<2.0.0); extra == "schemas"
+Requires-Dist: psycopg2 (>=2.9.1,<3.0.0)
+Requires-Dist: pygal (>=2.4.0,<3.0.0)
+Requires-Dist: python-dateutil (>=2.8.2,<3.0.0)
+Project-URL: Repository, https://github.com/fedora-infra/datagrepper
+Description-Content-Type: text/markdown
+
+# datagrepper
+
+Datagrepper is a web application and JSON API to retrieve historical messages sent via Fedora Messaging. [Datanommer](https://github.com/fedora-infra/datanommer/) is a seperate project and service that consumes messages from the Fedora Messaging queue and puts them in a database. These messages is what datagrepper queries. 
+
+Datagrepper is curently running in production at https://apps.fedoraproject.org/datagrepper/
+
+## Development Environment
+
+Vagrant allows contributors to get quickly up and running with a datagrepper development environment by automatically configuring a virtual machine. 
+
+The datagrepper Vagrant environment configures configures and enables a datanommer service and database. The datanommer instance is configured to be empty when first provisioned, but to consume messages from the stage Fedora Messaging queue.
+
+### Install vagrant
+To get started, run the following commands to install the Vagrant and Virtualization packages needed, and start the libvirt service:
+
+    $ sudo dnf install ansible libvirt vagrant-libvirt vagrant-sshfs vagrant-hostmanager
+    $ sudo systemctl enable libvirtd
+    $ sudo systemctl start libvirtd
+
+### Checkout and Provision
+Next, check out the datagrepper code and run vagrant up:
+
+    $ git clone https://github.com/fedora-infra/datagrepper
+    $ cd datanommer
+    $ vagrant up
+
+### Interacting with your development datagrepper
+After successful provisioning of the Datagrepper vagrant setup, the datagrepper web application will be accessible from your host machine's web browser at
+
+http://datagrepper.test:5000/
+
+
+
+
+### Using the development environment
+SSH into your newly provisioned development environment:
+
+    $ vagrant ssh
+
+The vagrant setup also defines 4 handy commands to interact with the service that runs the datagrepper flask application: 
+
+    $ datagrepper-start
+    $ datagrepper-stop
+    $ datagrepper-restart
+    $ dataprepper-logs
+
+Additionally, the following commands are also available for interacting with the datanommer service:
+
+    $ datanommer-consumer-start
+    $ datanommer-consumer-stop
+    $ datanommer-consumer-restart
+    $ datanommer-consumer-logs
+
+### Running the tests
+Datanommer is comprised of 3 seperate modules in this single repository. There is a handy script in the top directory of this repo to run the tests on all 3 modules:
+
+    $ ./runtests.sh
+
+However, tests can also be run on a single module by invotking tox in that modules' directory. For example:
+
+    $ cd datanommer.models/
+    $ tox
+
+Note, that the tests use virtual environments that are not created from scratch with every subsequent run of the tests. Therefore, **when changes happen to dependencies, the tests may fail to run correctly**. To recreate the virtual envrionments,  run the tests commands with the `-r` flag, for example:
+
+    $ ./runtests.sh -r
+
+or
+
+    $ cd datanommer.models/
+    $ tox -r
+
