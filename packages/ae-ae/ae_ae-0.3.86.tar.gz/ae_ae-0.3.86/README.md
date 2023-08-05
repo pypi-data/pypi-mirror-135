@@ -1,0 +1,76 @@
+<!-- THIS FILE IS EXCLUSIVELY MAINTAINED by the project aedev.tpl_namespace_root V0.3.8 -->
+# __ae__ namespace-root project
+
+ae namespace-root: common helper classes and functions for Python packages, apps and services.
+
+
+## ae namespace root package use-cases
+
+this project is maintaining all the portions (modules and sub-packages) of the ae namespace to:
+
+* update and deploy common outsourced files, optionally generated from templates
+* merge docstrings of all portions into a single combined and cross-linked documentation
+* publish documentation via Sphinx onto [ReadTheDocs](https://ae.readthedocs.io "ae on RTD")
+* refactor multiple or all portions of this namespace simultaneously using the grm portions actions
+
+this namespace-root package is only needed for development tasks, so never add it to the installation requirements
+file (requirements.txt) of a project.
+
+to ensure the update and deployment of outsourced files generated from the templates provided by this root package via
+the [git repository manager tool](https://github.com/aedev-group/aedev_git_repo_manager), add this root package to the
+development requirements file (dev_requirements.txt) of a portion project of this namespace.
+
+
+## installation
+
+to use this root package first clone it to your local machine and then install it as editable package with `pip`:
+
+   cd projects-parent-folder
+   git clone https://gitlab.com/ae-group
+   pip install -e ae_ae
+
+
+## namespace portions
+
+the following portions are currently included in this namespace:
+
+* [ae_base](https://pypi.org/project/ae_base "ae namespace portion ae_base")
+* [ae_deep](https://pypi.org/project/ae_deep "ae namespace portion ae_deep")
+* [ae_droid](https://pypi.org/project/ae_droid "ae namespace portion ae_droid")
+* [ae_valid](https://pypi.org/project/ae_valid "ae namespace portion ae_valid")
+* [ae_files](https://pypi.org/project/ae_files "ae namespace portion ae_files")
+* [ae_paths](https://pypi.org/project/ae_paths "ae namespace portion ae_paths")
+* [ae_core](https://pypi.org/project/ae_core "ae namespace portion ae_core")
+* [ae_lockname](https://pypi.org/project/ae_lockname "ae namespace portion ae_lockname")
+* [ae_inspector](https://pypi.org/project/ae_inspector "ae namespace portion ae_inspector")
+* [ae_i18n](https://pypi.org/project/ae_i18n "ae namespace portion ae_i18n")
+* [ae_parse_date](https://pypi.org/project/ae_parse_date "ae namespace portion ae_parse_date")
+* [ae_literal](https://pypi.org/project/ae_literal "ae namespace portion ae_literal")
+* [ae_progress](https://pypi.org/project/ae_progress "ae namespace portion ae_progress")
+* [ae_updater](https://pypi.org/project/ae_updater "ae namespace portion ae_updater")
+* [ae_console](https://pypi.org/project/ae_console "ae namespace portion ae_console")
+* [ae_sys_core](https://pypi.org/project/ae_sys_core "ae namespace portion ae_sys_core")
+* [ae_sys_data](https://pypi.org/project/ae_sys_data "ae namespace portion ae_sys_data")
+* [ae_sys_core_sh](https://pypi.org/project/ae_sys_core_sh "ae namespace portion ae_sys_core_sh")
+* [ae_sys_data_sh](https://pypi.org/project/ae_sys_data_sh "ae namespace portion ae_sys_data_sh")
+* [ae_db_core](https://pypi.org/project/ae_db_core "ae namespace portion ae_db_core")
+* [ae_db_ora](https://pypi.org/project/ae_db_ora "ae namespace portion ae_db_ora")
+* [ae_db_pg](https://pypi.org/project/ae_db_pg "ae namespace portion ae_db_pg")
+* [ae_transfer_service](https://pypi.org/project/ae_transfer_service "ae namespace portion ae_transfer_service")
+* [ae_sideloading_server](https://pypi.org/project/ae_sideloading_server "ae namespace portion ae_sideloading_server")
+* [ae_gui_app](https://pypi.org/project/ae_gui_app "ae namespace portion ae_gui_app")
+* [ae_gui_help](https://pypi.org/project/ae_gui_help "ae namespace portion ae_gui_help")
+* [ae_lisz_app_data](https://pypi.org/project/ae_lisz_app_data "ae namespace portion ae_lisz_app_data")
+* [ae_kivy_glsl](https://pypi.org/project/ae_kivy_glsl "ae namespace portion ae_kivy_glsl")
+* [ae_kivy_auto_width](https://pypi.org/project/ae_kivy_auto_width "ae namespace portion ae_kivy_auto_width")
+* [ae_kivy_dyn_chi](https://pypi.org/project/ae_kivy_dyn_chi "ae namespace portion ae_kivy_dyn_chi")
+* [ae_kivy_relief_canvas](https://pypi.org/project/ae_kivy_relief_canvas "ae namespace portion ae_kivy_relief_canvas")
+* [ae_kivy_help](https://pypi.org/project/ae_kivy_help "ae namespace portion ae_kivy_help")
+* [ae_kivy_app](https://pypi.org/project/ae_kivy_app "ae namespace portion ae_kivy_app")
+* [ae_kivy_user_prefs](https://pypi.org/project/ae_kivy_user_prefs "ae namespace portion ae_kivy_user_prefs")
+* [ae_kivy_file_chooser](https://pypi.org/project/ae_kivy_file_chooser "ae namespace portion ae_kivy_file_chooser")
+* [ae_kivy_qr_displayer](https://pypi.org/project/ae_kivy_qr_displayer "ae namespace portion ae_kivy_qr_displayer")
+* [ae_kivy_iterable_displayer](https://pypi.org/project/ae_kivy_iterable_displayer "ae namespace portion ae_kivy_iterable_displayer")
+* [ae_kivy_sideloading](https://pypi.org/project/ae_kivy_sideloading "ae namespace portion ae_kivy_sideloading")
+* [ae_enaml_app](https://pypi.org/project/ae_enaml_app "ae namespace portion ae_enaml_app")
+
