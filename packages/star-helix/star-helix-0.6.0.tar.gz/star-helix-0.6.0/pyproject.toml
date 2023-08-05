@@ -1,0 +1,38 @@
+[project]
+name = "star-helix"
+description = "Logging service client code and cli"
+dynamic = []
+dependencies = [ "typer", "haikunator", "asynchronousfilereader", "httpx>=0.21.3", "websocket-client>=1.2.3",]
+requires-python = ">=3.7"
+version = "0.6.0"
+[[project.authors]]
+name = "Paul Bailey"
+email = "paul@cognitivespace.com"
+
+[build-system]
+requires = [ "pdm-pep517",]
+build-backend = "pdm.pep517.api"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage = "https://github.com/cognitive-space/star-helix"
+
+[project.scripts]
+shelix = "shelix.main:run_cli"
+
+[project.optional-dependencies]
+
+[tool.pdm.version]
+from = "shelix/__init__.py"
+
+[tool.pdm.scripts]
+noisy = "./shelix/main.py \"python3 noisy.py\""
+publish = "pdm publish --username pizzapanther"
+
+[tool.pdm.dev-dependencies]
+dev = [ "twine>=3.7.1",]
+
+[tool.pdm.scripts._]
+env_file = ".env"
