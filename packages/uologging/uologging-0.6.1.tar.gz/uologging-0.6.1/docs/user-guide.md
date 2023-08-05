@@ -1,0 +1,123 @@
+uologging is a solution for configuring Python's built-in logging module.
+
+## Enable console logging
+
+Simply call init_console_logging() within your package:
+
+    uologging.init_console_logging()
+
+## Enable (Linux) syslog logging
+
+Similarly, call init_syslog_logging():
+
+    uologging.init_syslog_logging()
+
+## argparse 'verbosity flag'
+
+For CLI tools, we provide an integration with argparse to set the logging verbosity.
+This integration enables the tool's user to add `-vv` for maximum logging verbosity.
+
+> `-v` will enable INFO messages, but not DEBUG.
+
+The verbosity_flag can be gathered via argparse using add_verbosity_flag(parser):
+
+    import uologging
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    uologging.add_verbosity_flag(parser)
+
+    args = parser.parse_args(['-vv'])
+    # args.verbosity_flag == 2
+
+Now, simply call set_logging_verbosity() with `args.verbosity_flag` for your package:
+
+    uologging.set_logging_verbosity(args.verbosity_flag)
+
+> Alternately, if you are comfortable with argparse 'Parent parsers', you can integrate with argparse using use get_default_parser() as a parent parser.
+
+    # Alternate 'Parent parser' argparse integration
+    parser = argparse.ArgumentParser(parents=[
+        uologging.get_default_parser(),
+    ])
+
+### Example: Configuring console & syslog logging
+
+Let's imagine you have a package "examplepkg" with a CLI tool in the "mytool" module.
+
+    # mytool.py
+    import argparse
+    import uologging
+
+    uologging.init_console_logging()
+    uologging.init_syslog_logging()
+    
+    # Parse CLI arguments, '-vv' will result in maximum logging verbosity.
+    parser = argparse.ArgumentParser()
+    uologging.add_verbosity_flag(parser)
+    args = parser.parse_args()
+
+    uologging.set_logging_verbosity(args.verbosity_flag)
+
+### Default Log Level
+
+Per Python logging suggestion: WARNING, ERROR, and CRITICAL messages are all logged by default.
+Meanwhile, INFO and DEBUG messages can be enabled by providing `verbosity_flag` of 1 or 2 to `uologging.set_logging_verbosity()`.
+
+### Logging messages format
+
+The formatting for log messages is specified in the (private) uologging._logging_format variable.
+
+Here are a couple of lines showing what you can expect your logs to looks like:
+
+    2022-01-07 15:40:09 DEBUG    Some simle message for you [hello.py:10]
+    2022-01-07 15:40:09 DEBUG    Finished: example.hello:hello((),{}) [hello.py:10] 
+    2022-01-07 15:40:09 DEBUG    example.hello:hello((),{}) execution time: 0.00 sec [hello.py:10] 
+
+
+## Tracing a function
+
+There is a simple `trace` decorator you can use in your python modules to log the 'execution time' of any of your functions.
+
+> The trace decorator has DEBUG severity.
+> Call `set_verbosity_flag(2)` to see the trace messages in your logs.
+
+    # hello.py
+    import logging
+    import uologging
+
+    logger = logging.getLogger(__name__)
+
+    @uologging.trace(logger)
+    def hello():
+        print('hello!')
+    
+    hello()
+
+Expect the following messages to be logged:
+
+    2022-01-07 15:40:09 DEBUG    Starting: example.hello:hello((),{}) [hello.py:10]
+    hello!
+    2022-01-07 15:40:09 DEBUG    Finished: example.hello:hello((),{}) [hello.py:10] 
+    2022-01-07 15:40:09 DEBUG    example.hello:hello((),{}) execution time: 0.00 sec [hello.py:10] 
+
+## `logging` Best Practices
+
+Use the Python logging package per the following best practices:
+
+1. `logger = logging.getLogger(__name__)` to get the logger for each module/script.
+2. Then, use `logger.debug()`, `logger.info()`, `logger.warning()`, etc to add tracing to your Python modules/scripts.
+
+### Example
+
+A trivial example demonstrating best practices:
+
+    # hello.py
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    def hello():
+        logger.debug('About to say "hello!"')
+        print('hello!')
+        logger.debug('Said "hello!"')
