@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec name="RPA.Word.Application" type="LIBRARY" format="REST" scope="GLOBAL" generated="2022-01-18T12:58:31Z" specversion="3" source="./RPA/Word/Application.py" lineno="24">
+<version/>
+<doc>`Word.Application` is a library for controlling a Word application.
+
+**Examples**
+
+**Robot Framework**
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library                 RPA.Word.Application
+    Task Setup              Open Application
+    Suite Teardown          Quit Application
+
+    *** Tasks ***
+    Open existing file
+        Open File           old.docx
+        Write Text          Extra Line Text
+        Write Text          Another Extra Line of Text
+        Save Document AS    ${CURDIR}${/}new.docx
+        ${texts}=           Get all Texts
+        Close Document
+
+**Python**
+
+.. code-block:: python
+
+    from RPA.Word.Application import Application
+
+    app = Application()
+    app.open_application()
+    app.open_file('old.docx')
+    app.write_text('Extra Line Text')
+    app.save_document_as('new.docx')
+    app.quit_application()</doc>
+<tags>
+</tags>
+<inits>
+</inits>
+<keywords>
+<kw name="Close Document" source="./RPA/Word/Application.py" lineno="91">
+<arguments repr="save_changes: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_changes: bool = False">
+<name>save_changes</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Close the active document (if open).</doc>
+<shortdoc>Close the active document (if open).</shortdoc>
+</kw>
+<kw name="Create New Document" source="./RPA/Word/Application.py" lineno="122">
+<arguments repr="">
+</arguments>
+<doc>Create new document for Word application</doc>
+<shortdoc>Create new document for Word application</shortdoc>
+</kw>
+<kw name="Export To Pdf" source="./RPA/Word/Application.py" lineno="127">
+<arguments repr="filename: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filename: str">
+<name>filename</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Export active document into PDF file.
+
+:param filename: PDF to export WORD into</doc>
+<shortdoc>Export active document into PDF file.</shortdoc>
+</kw>
+<kw name="Get All Texts" source="./RPA/Word/Application.py" lineno="214">
+<arguments repr="">
+</arguments>
+<doc>Get all texts from active document
+
+:return: texts</doc>
+<shortdoc>Get all texts from active document</shortdoc>
+</kw>
+<kw name="Open Application" source="./RPA/Word/Application.py" lineno="74">
+<arguments repr="visible: bool = False, display_alerts: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="visible: bool = False">
+<name>visible</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="display_alerts: bool = False">
+<name>display_alerts</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Open the Word application.
+
+:param visible: show window after opening
+:param display_alerts: show alert popups</doc>
+<shortdoc>Open the Word application.</shortdoc>
+</kw>
+<kw name="Open File" source="./RPA/Word/Application.py" lineno="103">
+<arguments repr="filename: str, read_only: bool = True">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filename: str">
+<name>filename</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="read_only: bool = True">
+<name>read_only</name>
+<type>bool</type>
+<default>True</default>
+</arg>
+</arguments>
+<doc>Open Word document with filename.
+
+:param filename: Word document path</doc>
+<shortdoc>Open Word document with filename.</shortdoc>
+</kw>
+<kw name="Quit Application" source="./RPA/Word/Application.py" lineno="96">
+<arguments repr="save_changes: bool = False">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="save_changes: bool = False">
+<name>save_changes</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+</arguments>
+<doc>Quit the application.</doc>
+<shortdoc>Quit the application.</shortdoc>
+</kw>
+<kw name="Replace Text" source="./RPA/Word/Application.py" lineno="149">
+<arguments repr="find: str, replace: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="find: str">
+<name>find</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="replace: str">
+<name>replace</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Replace text in active document
+
+:param find: text to replace
+:param replace: new text</doc>
+<shortdoc>Replace text in active document</shortdoc>
+</kw>
+<kw name="Save Document" source="./RPA/Word/Application.py" lineno="175">
+<arguments repr="">
+</arguments>
+<doc>Save active document</doc>
+<shortdoc>Save active document</shortdoc>
+</kw>
+<kw name="Save Document As" source="./RPA/Word/Application.py" lineno="185">
+<arguments repr="filename: str, fileformat: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filename: str">
+<name>filename</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="fileformat: str | None = None">
+<name>fileformat</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Save document with filename and optionally with given fileformat
+
+:param filename: where to save document
+:param fileformat: see @FILEFORMATS dictionary for possible format,
+    defaults to None</doc>
+<shortdoc>Save document with filename and optionally with given fileformat</shortdoc>
+</kw>
+<kw name="Set Footer" source="./RPA/Word/Application.py" lineno="166">
+<arguments repr="text: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="text: str">
+<name>text</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Set footer for the active document
+
+:param text: footer text to set</doc>
+<shortdoc>Set footer for the active document</shortdoc>
+</kw>
+<kw name="Set Header" source="./RPA/Word/Application.py" lineno="157">
+<arguments repr="text: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="text: str">
+<name>text</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Set header for the active document
+
+:param text: header text to set</doc>
+<shortdoc>Set header for the active document</shortdoc>
+</kw>
+<kw name="Write Text" source="./RPA/Word/Application.py" lineno="137">
+<arguments repr="text: str, newline: bool = True">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="text: str">
+<name>text</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="newline: bool = True">
+<name>newline</name>
+<type>bool</type>
+<default>True</default>
+</arg>
+</arguments>
+<doc>Writes given text at the end of the document
+
+:param text: string to write
+:param newline: write text to newline if True, default to True</doc>
+<shortdoc>Writes given text at the end of the document</shortdoc>
+</kw>
+</keywords>
+<datatypes>
+</datatypes>
+</keywordspec>

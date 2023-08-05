@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec name="RPA.FTP" type="LIBRARY" format="REST" scope="GLOBAL" generated="2022-01-18T12:58:31Z" specversion="3" source="./RPA/FTP.py" lineno="39">
+<version/>
+<doc>`FTP` library can be used to access an FTP server,
+and interact with files.
+
+The library is based on Python's built-in `ftplib`_.
+
+.. _ftplib: https://docs.python.org/3/library/ftplib.html
+
+**Examples**
+
+**Robot Framework**
+
+.. code-block:: robotframework
+
+    *** Settings ***
+    Library    RPA.FTP
+
+    *** Variables ***
+    ${HOST}       127.0.0.1
+    ${PORT}       27345
+    ${USER}       user
+    ${PASS}       12345
+
+    *** Tasks ***
+    List files on the server directory
+        Connect   ${HOST}  ${PORT}  ${USER}  ${PASS}
+        @{files}  List Files
+        FOR  ${file}  IN  @{files}
+            Log  ${file}
+        END
+
+**Python**
+
+.. code-block:: python
+
+    from RPA.FTP import FTP
+
+    library = FTP()
+    library.connect('127.0.0.1', 27345, 'user', '12345')
+    files = library.list_files()
+    for f in files:
+        print(f)</doc>
+<tags>
+</tags>
+<inits>
+</inits>
+<keywords>
+<kw name="Abort" source="./RPA/FTP.py" lineno="276">
+<arguments repr="">
+</arguments>
+<doc>Abort a file transfer in progress</doc>
+<shortdoc>Abort a file transfer in progress</shortdoc>
+</kw>
+<kw name="Close" source="./RPA/FTP.py" lineno="154">
+<arguments repr="">
+</arguments>
+<doc>Close connection to the server unilaterally</doc>
+<shortdoc>Close connection to the server unilaterally</shortdoc>
+</kw>
+<kw name="Connect" source="./RPA/FTP.py" lineno="90">
+<arguments repr="host: str, port: int = 21, user: str | None = None, password: str | None = None, tls: bool = False, transfer: str = passive, keyfile: str | None = None, certfile: str | None = None, timeout: int | None = None, source_address: Tuple[str, int] | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="host: str">
+<name>host</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="port: int = 21">
+<name>port</name>
+<type>int</type>
+<default>21</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="user: str | None = None">
+<name>user</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="password: str | None = None">
+<name>password</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="tls: bool = False">
+<name>tls</name>
+<type>bool</type>
+<default>False</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="transfer: str = passive">
+<name>transfer</name>
+<type>str</type>
+<default>passive</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="keyfile: str | None = None">
+<name>keyfile</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="certfile: str | None = None">
+<name>certfile</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="timeout: int | None = None">
+<name>timeout</name>
+<type>int</type>
+<type>None</type>
+<default>None</default>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="source_address: Tuple[str, int] | None = None">
+<name>source_address</name>
+<type>Tuple[str, int]</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Connect to FTP server
+
+:param host: address of the server
+:param port: port of the server, defaults to 21
+:param user: login name, defaults to None
+:param password: login password, defaults to None
+:param tls: connect using TLS support, defaults to False
+:param transfer: mode of the transfer, defaults to "passive"
+:param keyfile: path to private key file
+:param certfile: path to certificate file
+:param timeout: a timeout in seconds for the connection attempt
+:param source_address: socket to bind to as its source address before connecting
+:raises AuthenticationException: on authentication error with the server</doc>
+<shortdoc>Connect to FTP server</shortdoc>
+</kw>
+<kw name="Cwd" source="./RPA/FTP.py" lineno="199">
+<arguments repr="dirname: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="dirname: str">
+<name>dirname</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Change working directory on the server
+
+:param dirname: name of the directory</doc>
+<shortdoc>Change working directory on the server</shortdoc>
+</kw>
+<kw name="Delete" source="./RPA/FTP.py" lineno="239">
+<arguments repr="filepath: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filepath: str">
+<name>filepath</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Delete file on the server
+
+:param filepath: path to server file</doc>
+<shortdoc>Delete file on the server</shortdoc>
+</kw>
+<kw name="Download" source="./RPA/FTP.py" lineno="171">
+<arguments repr="remotefile: str, localfile: str | None = None">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="remotefile: str">
+<name>remotefile</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="localfile: str | None = None">
+<name>localfile</name>
+<type>str</type>
+<type>None</type>
+<default>None</default>
+</arg>
+</arguments>
+<doc>Download file from FTP server
+
+:param remotefile: path to remote file on the server
+:param localfile: name of the downloaded file on the local filesystem,
+    if `None` will have same name as remote file</doc>
+<shortdoc>Download file from FTP server</shortdoc>
+</kw>
+<kw name="File Size" source="./RPA/FTP.py" lineno="267">
+<arguments repr="filepath: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="filepath: str">
+<name>filepath</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Return byte size of the file on the server
+
+:param filepath: path to server file</doc>
+<shortdoc>Return byte size of the file on the server</shortdoc>
+</kw>
+<kw name="Get Welcome Message" source="./RPA/FTP.py" lineno="281">
+<arguments repr="">
+</arguments>
+<doc>Get server welcome message
+
+:return: welcome message</doc>
+<shortdoc>Get server welcome message</shortdoc>
+</kw>
+<kw name="List Files" source="./RPA/FTP.py" lineno="228">
+<arguments repr="dirname: str = ">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="dirname: str = ">
+<name>dirname</name>
+<type>str</type>
+<default/>
+</arg>
+</arguments>
+<doc>List files on the server directory
+
+:param dirname: name of the directory</doc>
+<shortdoc>List files on the server directory</shortdoc>
+</kw>
+<kw name="Mkd" source="./RPA/FTP.py" lineno="212">
+<arguments repr="dirname: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="dirname: str">
+<name>dirname</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Create a new directory on the server
+
+:param dirname: name of the directory</doc>
+<shortdoc>Create a new directory on the server</shortdoc>
+</kw>
+<kw name="Pwd" source="./RPA/FTP.py" lineno="207">
+<arguments repr="">
+</arguments>
+<doc>Get current working directory on the server</doc>
+<shortdoc>Get current working directory on the server</shortdoc>
+</kw>
+<kw name="Quit" source="./RPA/FTP.py" lineno="144">
+<arguments repr="">
+</arguments>
+<doc>Send QUIT command to the server and close connection</doc>
+<shortdoc>Send QUIT command to the server and close connection</shortdoc>
+</kw>
+<kw name="Rename" source="./RPA/FTP.py" lineno="247">
+<arguments repr="fromname: str, toname: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="fromname: str">
+<name>fromname</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="toname: str">
+<name>toname</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Rename file on the server
+
+:param fromname: current name of the file
+:param toname: new name for the file</doc>
+<shortdoc>Rename file on the server</shortdoc>
+</kw>
+<kw name="Rmd" source="./RPA/FTP.py" lineno="220">
+<arguments repr="dirname: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="dirname: str">
+<name>dirname</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Remove directory on the server
+
+:param dirname: name of the directory</doc>
+<shortdoc>Remove directory on the server</shortdoc>
+</kw>
+<kw name="Send Command" source="./RPA/FTP.py" lineno="256">
+<arguments repr="command: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="command: str">
+<name>command</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Execute command on the server
+
+List of FTP commands:
+https://en.wikipedia.org/wiki/List_of_FTP_commands
+
+:param command: name of the command to send</doc>
+<shortdoc>Execute command on the server</shortdoc>
+</kw>
+<kw name="Set Ascii Mode" source="./RPA/FTP.py" lineno="303">
+<arguments repr="">
+</arguments>
+<doc>Set transfer mode to ASCII</doc>
+<shortdoc>Set transfer mode to ASCII</shortdoc>
+</kw>
+<kw name="Set Binary Mode" source="./RPA/FTP.py" lineno="307">
+<arguments repr="">
+</arguments>
+<doc>Set transfer mode to BINARY</doc>
+<shortdoc>Set transfer mode to BINARY</shortdoc>
+</kw>
+<kw name="Set Debug Level" source="./RPA/FTP.py" lineno="289">
+<arguments repr="level: int = 0">
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="level: int = 0">
+<name>level</name>
+<type>int</type>
+<default>0</default>
+</arg>
+</arguments>
+<doc>Set debug level for the library
+
+:param level: integer value of debug level, defaults to 0
+
+0 - no debugging output
+1 - moderate amount of debugging
+2+ - higher amount of debugging</doc>
+<shortdoc>Set debug level for the library</shortdoc>
+</kw>
+<kw name="Upload" source="./RPA/FTP.py" lineno="161">
+<arguments repr="localfile: str, remotefile: str">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="localfile: str">
+<name>localfile</name>
+<type>str</type>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="remotefile: str">
+<name>remotefile</name>
+<type>str</type>
+</arg>
+</arguments>
+<doc>Upload file to FTP server
+
+:param localfile: path to file to upload
+:param remotefile: name of uploaded file in the server</doc>
+<shortdoc>Upload file to FTP server</shortdoc>
+</kw>
+</keywords>
+<datatypes>
+</datatypes>
+</keywordspec>
