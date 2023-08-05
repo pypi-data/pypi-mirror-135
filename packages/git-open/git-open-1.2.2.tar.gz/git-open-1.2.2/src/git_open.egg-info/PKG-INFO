@@ -1,0 +1,189 @@
+Metadata-Version: 2.1
+Name: git-open
+Version: 1.2.2
+Summary: Open a git repo in the browser from the terminal.
+Home-page: https://github.com/cfp2000/git-open
+Author: 
+Author-email: cfp@highball.se
+Maintainer: 
+Maintainer-email: cfp@highball.se
+License: GPLv3
+Project-URL: Bug Tracker, https://github.com/cfp2000/git-open/issues
+Project-URL: Source Code, https://github.com/cfp2000/git-open
+Keywords: terminal,git,web
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Utilities
+Description-Content-Type: text/markdown
+Provides-Extra: docs
+Provides-Extra: setup
+Provides-Extra: tests
+Provides-Extra: dev
+License-File: LICENSE
+
+# git-open
+
+[![Test](https://github.com/cfarvidson/git-open/workflows/Test/badge.svg?branch=master)](https://github.com/cfarvidson/git-open/actions)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Maintainability](https://api.codeclimate.com/v1/badges/09be50f0293cfed0e89a/maintainability)](https://codeclimate.com/github/cfp2000/git-open/maintainability)
+[![Downloads](http://pepy.tech/badge/git-open)](http://pepy.tech/project/git-open)
+[![pypi](https://img.shields.io/pypi/v/git-open.svg)](https://pypi.python.org/pypi/git-open)
+
+Open a git repo in the browser from the terminal.
+
+## Features
+
+From the terminal type the following command to open the current repository in your browser.
+
+### Usage
+
+```
+$ git-open --help
+Usage: git-open [OPTIONS] COMMAND [ARGS]...
+
+  Open a git repo in the browser from the terminal.
+
+  Running the command without any sub-command will open the main page of the
+  repository.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  branch   Open the current branch
+  commit   Open the current commit
+  compare  Open a compare view
+  version  Show the current git-open version
+```
+
+## Installation
+
+### Using pip
+
+    pip install git-open
+
+### Using pipx (recommended)
+
+[pipx](https://github.com/pipxproject/pipx) is a great tool to install python tools globally.
+
+Installing pipx on macOS:
+
+    brew install pipx
+    pipx ensurepath
+
+Installing git-open using pipx:
+
+    pipx install git-open
+
+## Credits
+
+This package was initially created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the
+[audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage) project template.
+
+## License
+
+GNU General Public License v3.0
+
+See [LICENSE](LICENSE) to see the full text.
+
+
+Changelog
+=========
+
+**unreleased**
+
+v1.2.2
+-----
+- Bumps dependencies
+- Fixes the issue with `git+ssh://` in remotes <https://github.com/cfarvidson/git-open/pull/267>
+
+v1.2.1
+-----
+- Bumps dependencies
+
+v1.2.0
+-----
+- Adds "git open compare" command
+
+v1.1.2
+-----
+- Upgraded dependencies
+
+v1.1.1
+-----
+- Fixes a bug when custom ports are used in the remote
+
+v1.1.0
+-----
+- Upgraded dependencies
+- Updated readme to recommend the use of pipx over pipsi
+- Adds a "git open commit" sub-command
+- Adds a "git open branch" sub-command
+
+v1.0.8
+-----
+- Updated dependencies
+
+v1.0.7
+-----
+- Updated dependencies
+- Moves to the new repository
+
+v1.0.6
+-----
+- Updated dependencies
+
+v1.0.5
+-----
+- Deploy to pypi from travis
+
+v1.0.4
+-----
+- Add a download badge from http://pepy.tech/project/git-open to the readme
+- Add a test that will ensure that the dependencies will be checked by snyk.io
+  when versions are bumped by dependabot
+- Fixes an [issue](https://github.com/cfarvidson/git-open/issues/23) with opening public repositories
+
+v1.0.3
+-----
+- Fix the build
+
+v1.0.2
+-----
+- Fix the manifest.in
+
+v1.0.1
+-----
+- Add a vulnerabilities checking to the CI pipeline (snyk.io)
+
+v1.0.0
+-----
+- Add the package to pypi
+- Update the install readme
+
+v0.0.3
+-----
+- Updated ci pipeline 
+
+v0.0.2
+-----
+- Update the install description
+
+v0.0.1
+-----
+* Implemented tox testing
+* Created
+
+
