@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: bitbucketpy
+Version: 0.1.12
+Summary: Simple library for interacting with the Bitbucket Cloud API
+Home-page: https://github.com/sarvin/bitbucketpy
+Author: Sarvin Coachbuilder
+Author-email: sarvinc@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/sarvin/bitbucketpy/issues
+Keywords: Bitbucket
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Natural Language :: English
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Provides-Extra: develop
+Provides-Extra: test
+License-File: LICENSE
+
+# bitbucketpy
+WIP Python package for interacting with Bitbucket Cloud's API.
+
+## Usage
+You'll need three items:
+
+* EMAIL: The email address used to interact with Bitbucket.
+* PASSWORD: An API key used to authenticate with Bitbucket.
+* API_ENDPOINT: ex https://api.bitbucket.org/2.0
+
+### Interact with the [repository API](https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Bworkspace%7D/%7Brepo_slug%7D#get)
+```python
+import bitbucket
+api = bitbucket.API(WORKSPACE, EMAIL, PASSWORD)
+repository = api.get_repository(REPOSITORY_NAME)
+```
+
+#### Get branches in repository
+```python
+branches = repository.branches()
+for branch in branches:
+    print(branch.name)
+```
+
+#### The latest commit on a branch
+```python
+commit = next(branch.commits)
+```
+
+#### Find commits ahead of master
+```python
+feature_branch = repository.branch('feature_branch_name')
+
+commits = [
+    commit
+    for commit in feature_branch.commits({'exclude': 'master', 'pagelen': 100})
+]
+
+print(f"feature_branch_name is {len(commits)} commits ahead of master")
+```
+
+#### Find a tag in the repository
+```python
+tag = repository.tag('1.0.0')
+```
+
+#### Find pipelines for a branch
+
+```python
+pipelines = list(api.get_pipelines(
+    'REPO_SLUG',
+    {
+        'target.branch':'BRANCH_NAME',
+        'sort': '-created_on',
+        'pagelen':20}))
+```
+
+
