@@ -1,0 +1,33 @@
+<%BEGIN_DEFINITION_TEMPLATE>
+/********************
+    Dense.h
+
+    Code generated using nn4mc.
+
+    This file defines a densely connected layer.
+
+*/
+
+#ifndef __DENSE_H__
+#define __DENSE_H__
+#include "activations.h"
+#include <math.h>
+#include <stdlib.h>
+
+struct Dense {
+	<%WEIGHT_DATATYPE_DELIMITER>* weights;
+	<%WEIGHT_DATATYPE_DELIMITER>* biases;
+
+    <%ACTIVATION_DATATYPE_DELIMITER> activation;
+
+    <%INDEX_DATATYPE_DELIMITER> weight_shape[2];
+	<%INDEX_DATATYPE_DELIMITER> input_shape[1];
+	<%INDEX_DATATYPE_DELIMITER> output_shape[1];
+};
+
+struct Dense build_layer_dense(<%WEIGHT_DATATYPE_DELIMITER>*, <%WEIGHT_DATATYPE_DELIMITER>*, <%INDEX_DATATYPE_DELIMITER>, <%INDEX_DATATYPE_DELIMITER>, <%ACTIVATION_DATATYPE_DELIMITER>);
+
+<%LAYER_DATATYPE_DELIMITER> * fwd_dense(struct Dense, <%LAYER_DATATYPE_DELIMITER>*);
+
+#endif
+<%END_DEFINITION_TEMPLATE>
