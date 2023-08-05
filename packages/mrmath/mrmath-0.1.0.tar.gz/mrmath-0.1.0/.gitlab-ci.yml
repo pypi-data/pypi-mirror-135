@@ -1,0 +1,64 @@
+# Tagged releases of Python docker images can be found at:
+# https://hub.docker.com/r/library/python/tags/
+image: "python:3.9"
+
+before_script:
+  - python --version
+  - python3 -m venv venv
+  - source venv/bin/activate
+  - pip install -r requirements_rnd.txt
+  - pip install .
+
+stages:
+  - Static Analysis
+  - Test
+  - deploy
+
+flake8:
+  stage: Static Analysis
+  script:
+  - flake8
+
+pylint:
+  stage: Static Analysis
+  allow_failure: true
+  script:
+  - pylint mrmath/*.py
+
+mypy:
+  stage: Static Analysis
+  script:
+  - mypy mrmath/*.py
+
+unittest:
+  stage: Test
+  script:
+  - coverage run -m unittest discover -s tests
+
+coverage:
+  stage: Test
+  script:
+  - coverage run -m unittest discover -s tests
+  - coverage report -m --include='*/mrmath/*'
+
+test_doc:
+  stage: Test
+  script:
+  - cd docs
+  - sphinx-build -b html . public
+  only:
+  - branches
+  except:
+  - master
+
+pages:
+  stage: deploy
+  script:
+  - cd docs
+  - sphinx-build -b html . public
+  - mv public ../
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
