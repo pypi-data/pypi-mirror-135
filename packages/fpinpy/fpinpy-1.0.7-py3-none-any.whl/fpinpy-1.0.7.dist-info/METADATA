@@ -1,0 +1,42 @@
+Metadata-Version: 2.1
+Name: fpinpy
+Version: 1.0.7
+Summary: A functional library for Python.
+Home-page: https://github.com/metzenseifner/py_fpinpy
+Author: Jonathan L. Komar
+Author-email: jonathan.komar@uibk.ac.at
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Utilities
+Classifier: Topic :: Software Development :: Libraries
+Description-Content-Type: text/markdown
+
+# Description
+
+This library provides a functional programming interface for Python.
+
+# Result
+
+The Result monad handles the three most common cases in
+programming:
+
+1. computation succeeded
+2. computation failed
+3. computation valid, but resulted in nothing
+
+# Examples
+
+```
+from fpinpy import Result
+
+startValue = Result.of(1).map(lambda x: x + 1).forEachOrFail(lambda x: print(x))
+```
+
+# Design
+
+It is based on the work by Pierre-Yves Saumont in his books,
+*Functional Programming in Java* (2017) and The Joy of Kotlin (2019).
+
+
