@@ -1,0 +1,1835 @@
+Metadata-Version: 2.1
+Name: ScarfKit
+Version: 1.0.0
+Summary: A Simple Way To Create Web Server
+Home-page: https://github.com/KeepRepeatLoop/Scarf
+Author: Qc
+Author-email: qcsdfsdvdac@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/KeepRepeatLoop/Scarf/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.5
+Description-Content-Type: text/markdown
+
+## Scarf
+
+
+
+**Scarf是一个简易的python（python3.5及以上） Web框架。**
+
+**没有更多的描述了，希望的就是追求快速更好的集成Web框架**
+
+## 安装
+```bash
+pip install ScarfKit
+```
+
+## **1.1 项目结构**
+
+```
+|-- project name  // 项目根目录
+	|-- application.yml // 配置文件
+	|-- main.py // 入口文件
+	|-- logs // 日志存放文件夹
+		|-- WebServer.log
+	|-- models // 数据库实体类
+		|-- User.py
+		|-- SQLConnectionManager.py // 数据库管理类
+	|-- routers // 路由
+        |-- RequestProcessor.py // 请求拦截器|响应过滤器
+		|-- User.py // 路由模板
+	|-- ssl // ssl 证书文件夹
+		|-- 1_fqqcalltime.cn_bundle.crt
+		|-- 2_fqqcalltime.cn.key
+    |-- config // 项目所使用模块各个配置
+    	|-- routers.User.Auth.yml // User模块的配置文件
+	|-- static // 静态文件目录
+```
+
+
+
+## **1.2 起步**
+
+
+
+就着上面的目录我们实现一个小的接口范例代码，当然一个简简单单的Hello World还是要有的
+
+``` python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods
+
+class Auth:
+    def __init__(self):
+        self.username = "admin"
+        self.password = "admin"
+
+        @RequestReslove.route("/hello")
+        def hello(self):
+            return "hello world"
+
+```
+
+接下来入口文件中就需要将模块注册到Scarf
+
+```python
+# main.py
+from Scarf.Main import Scarf
+from routers.User import Auth
+
+server = Scarf()
+server.scan_module(Auth())
+server.start_server()
+```
+
+此时当我们在浏览器访问http://localhost:81/hello， 将能看到页面上的字符串"hello world"。其中scan_module用于扫描模块中被修饰的函数，@RequestReslove.route用于修饰标注这个函数为路由注册函数，最后start_server则当然是启动服务并监听请求。
+
+当然一个简单的hello world是不能解决所有问题的。接下来我们用一个用户登录的例子来介绍其他的用法。假设我们需要实现一个登录模块，路径是/api/login,参数有username和password返回值是一个JSON对象包含操作的状态值和一些附加信息。我们来为这个类新增一个方法叫user_login函数
+
+
+
+``` python
+# routers/User.py
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods
+
+class Auth:
+    def __init__(self):
+        self.username = "admin"
+        self.password = "admin"
+
+        @RequestReslove.route("/hello")
+        def hello(self):
+            return "hello world"
+
+        @RequestReslove.route(
+            "/api/login",
+            (Methods.GET, ),
+            (("username","password"),(),(),())
+        )
+        def user_login(self, username: str, password: str):
+
+            print("username : %s , password: %s" % (username, password))
+
+```
+
+
+
+此时当浏览器访问http://locahost:81时， 将会看到打印：
+
+```
+username : admin , password: admin
+```
+
+
+
+接下来我们完成这个登录的接口，现在需要验证用户名和密码是否正确，并返回相对的提示码和一个token来通知用户是否登录成功
+
+``` python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods
+import hashlib
+
+class Auth:
+    def __init__(self):
+        self.username = "admin"
+        self.password = "admin"
+        # 用于存放用户的token信息
+        self.user_list = []
+
+        @RequestReslove.route("/hello")
+        def hello(self):
+            return "hello world"
+
+        @RequestReslove.route(
+            "/api/login",
+            (Methods.GET, ),
+            (("username","password"),(),(),())
+        )
+        def user_login(self, username: str, password: str):
+            print("username : %s , password: %s" % (username, password))
+            if self.username == username and self.password == password:
+                # 生成MD5的Token,将用户名作为参数
+                md5_ = hashlib.md5()
+                md5_.update(self.username.encode())
+                token = md5_.hexdigest()
+                return {"code": 200, "msg": "Login Success", "data": token}
+            else:
+                return {"code": 500, "msg": "Login Fail", "data": None}
+```
+
+此时当访问http://localhost:81/api/login?username=admin&password=admin 将看到返回值：
+
+```json
+{"code": 200, "msg": "Login Success", "data": "21232f297a57a5a743894a0e4a801fc3"}
+```
+
+当然如果将密码或用户名改成别的也会看到：
+
+```json
+{"code": 500, "msg": "Login Fail", "data": null}
+```
+
+这就是一个完整的简单例子
+
+
+
+## **1.3 路由注册**
+
+
+
+一个路由需由一个类和这个类的成员共同组成，其中成员函数通过修饰实例化后通过Scarf的scan_module函数即可完成注册，而被修饰的函数可以称之为路由实体函数。完整的@RequestReslove.route的参数如下
+
+``` python
+"""
+路由注册修饰器
+:param path(str): 路径规则 /api/:username/:password 路径参数 || /api/login/* 后缀通配符匹配
+:param methods(tuple): 支持的请求方法（支持的请求方法可在Scarf.Tip.Methods中查看）
+:param arg_source(tuple(tuple)): 二维tuple,((通过路径query获取), (通过请求体获取), (请求头获取), (路径参数获取))
+每一个被修饰的路由实体函数中的参数名需要与arg_source中的参数名对应，在请求过程中Scarf可通过类型标注反射对应类型
+"""
+@RequestReslove.route(path, methods = (Methods.GET), arg_source=((),(),(),()))
+```
+
+
+
+我们接着上面登录接口的例子介绍以下几种用法
+
+
+
+```python
+# 请求方式: http://localhost:81/api/login?username=admin&password=admin
+@RequestReslove.route(
+    "/api/login",
+    (Methods.GET, ),
+    (("username","password"),(),(),())
+)
+def user_login(self, username: str, password: str):
+    print("username : %s , password: %s" % (username, password))
+    return {"username": username, "password": password}
+
+#------------------------------------------SplitLine-----------------------------------------------
+
+# 请求方式: http://localhost:81/api/login 请求头(request header)中：username: admin & passowrd: admin
+@RequestReslove.route(
+    "/api/login",
+    (Methods.GET, ),
+    ((),(),("username","password"),())
+)
+def user_login(self, username: str, password: str):
+    print("username : %s , password: %s" % (username, password))
+    return {"username": username, "password": password}
+
+#------------------------------------------SplitLine-----------------------------------------------
+
+# 请求方式: http://localhost:81/api/login/admin/admin
+@RequestReslove.route(
+    "/api/login/:username/:password",
+    (Methods.GET, ),
+    ((),(),(),("username","password"))
+)
+def user_login(self, username: str, password: str):
+    print("username : %s , password: %s" % (username, password))
+    return {"username": username, "password": password}
+
+#------------------------------------------SplitLine-----------------------------------------------
+
+
+# 最后一种方式使请求体中获取这种方式相对于其他的方式较为灵活,这种方式会根据请求体(Request Body)中的请求内容以及参数内容进行推断该如何解析并且检查这些解析方式是否被允许。
+# 目前请求体中的数据支持 form-data, form-urlencoded, json。需要注意的是arg_source参数中的第二个tuple中的第一个元素是被占用的，他的作用是用来判断那些格式可以被支持
+
+from Scarf.Tip import Methods, ClassSource
+
+@RequestReslove.route(
+    "/api/login",
+    (Methods.GET, Methods.POST),
+    ((),(ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'),(),())
+)
+def user_login(self, username: str, password: str):
+    print("username : %s , password: %s" % (username, password))
+    return {"username": username, "password": password}
+
+# 请求方式: http://localhost:81/api/login 请求体(Request Body): username=admin&password=admin
+# 请求方式: http://localhost:81/api/login 请求体(Request Body): {"username": "admin", "password": "admin"}
+# 请求方式: http://localhost:81/api/login 请求体(Request Body):
+# (JavaScript代码)
+# const form = new FormData(); form.append("username", "admin"); form.append("password","admin")
+
+# 正常情况下只会用一种方式进行解析，JSON或者FORM_DATA或者FORM_URLENCODE。如果客户端发送了一个无法解析的参数时，那么路由实体函数将接收到参数对应类型的默认值(实体函数的参数都应改有一个类型标注)
+```
+
+## **1.4 配置文件**
+
+
+
+有些使用者肯定会发现，如果我出现端口占用，那我该怎么办。我还想启用https等等问题可以在配置文件中试着寻找答案，我们先用一些简单的配置，完整的配置项会放在文档末尾。
+
+Scarf的核心配置文件为**1.1所示目录结构中的application.yml**。配置文件可通过**load_config_from_file**进行导入和生效。
+
+
+
+```yml
+server:
+	release: false # 标注是否是发行模式
+	ports:
+ 		http: 8085 # http端口
+datasource: # 数据源
+	- { name: main, host: 127.0.0.1, port: 3306, user: root, password: admin, max_connections: 10, database: test_database, autoconnect: false, autocommit: 1 }
+	# name: 数据源名称(标识数据源)，剩余的则是数据库驱动初始化参数
+```
+
+
+
+## **1.5 数据库**
+
+
+
+有人会说你这都是死数据有什么好多说的。我要用自己的数据库方式进行操作。OK，我们就以Mysql的数据库为例，在这里数据库驱动我们使用[peewee](http://docs.peewee-orm.com/en/latest/peewee/installation.html "peewee")。
+
+首先我们需要创建一个数据库连接管理类
+
+
+
+```python
+# models/SQLConnectionManager.py
+
+from Scarf.Tip import SQLModel
+
+try:
+    from peewee import *
+    from playhouse.pool import PooledMySQLDatabase, PooledSqliteExtDatabase, PooledPostgresqlExtDatabase
+    except ModuleNotFoundError:
+        print("error : peewee is not installed please 'pip install peewee' ")
+
+        class SQLFactory(SQLModel):
+            def __init__(self, **config):
+                # 这里的config参数则是application.yml中datasource配置除了name字段的参数
+                self.__sql = PooledMySQLDatabase(**config)
+
+                def get_con(self):
+                    if self.__sql.is_closed():
+                        self.__sql.connect()
+                        return self.__sql
+
+                    # con 为get_con申请到的数据库连接(SQL Connection)
+                    def destory_con(self,con):
+                        con.close()
+```
+
+
+
+数据库连接管理类需要继承于SQLModel，且需要实现get_con函数和destory_con函数。get_con在请求解析完成后申请可用连接而destory_con则是请求完成后销毁连接。这两个函数会在特定时机被Scarf调用。
+
+接下来我们改造一下main.py，既然有管理类但还是需要注册到Scarf中让其生效
+
+
+
+```python
+# main.py
+from Scarf.Main import Scarf
+from routers.User import Auth
+
+server = Scarf()
+
+# 导入配置文件
+server.load_config_from_file("./application.yml")
+# 注册SQL连接管理类
+server.register_sql_model("main", SQLFactory)
+# 注册实体类函数
+server.scan_module(Auth())
+
+# 启动服务
+server.start_server()
+```
+
+
+
+现在SQL模块已经被注册到了全局。接下来我们构建一个数据库实体类。
+
+
+
+```python
+# models/User.py
+from peewee import *
+
+"""
+假设我们的数据库模型和注释如下:
+"""
+class USER(Model):
+    userId = IntegerField(null=False, primary_key=True) # 用户ID(主键,自增)
+    createTime = DateTimeField(null=False) # 创建时间
+    username = CharField(null=False, max_length=32) # 用户名
+    password = CharField(null=False, max_length=32) # 密码
+    email = TextField(null=False) # 电子邮件
+    phone = CharField(null=False, max_length=11) # 手机号码
+```
+
+最后我们就可以直接在路由中直接使用了
+
+```python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel
+
+from models.User import USER
+
+class Auth:
+    def __init__(self):
+        pass
+
+    @RequestReslove.route("/hello")
+    def hello(self):
+        return "hello world"
+
+    @RequestReslove.route(
+        "/api/login",
+        (Methods.POST, Methods.HEAD),
+        ((), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (), ())
+    )
+    def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection):
+        # SQLModel.DataBaseConnection 类型标注了该路由实体函数需要数据库连接注入
+        # SQLModel.DataBaseConnection("main") 如果没有调用则默认是第一个数据源，如果带有名字则指向对应名字的数据源连接
+        user = USER(username=username, password=password)
+        user.bind(sql)
+        result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+        if result is None:
+            return {"code": 500, "data": None, "msg": "Login Fail"}
+        else:
+            return {"code": 500, "data": None, "msg": "Login Success"}
+```
+
+像这样。有了数据库的帮助下，数据的操作和存储将会更加方便。接下来我们再实现一个注册用户的接口,我们先提前想一下如果用户注册需要按照这样的方式来构建函数
+
+```python
+# 用户注册函数(伪函数)
+def user_register(self,username:str, password:str, create_time: datetime, email: str, phone: str):
+ 	pass
+# 那如果参数比较多就显得非常麻烦，我们可以将一个完整的请求体参数看做一个整体然后进行整体反射
+```
+
+数据整体反射:
+
+```python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel
+
+from models.User import USER
+
+class Auth:
+    def __init__(self):
+        pass
+
+    @RequestReslove.route("/hello")
+    def hello(self):
+        return "hello world"
+
+    @RequestReslove.route(
+        "/api/login",
+        (Methods.POST, Methods.HEAD),
+        ((), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (), ())
+    )
+    def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection):
+        # SQLModel.DataBaseConnection 类型标注了该路由实体函数需要数据库连接注入
+        user = USER(username=username, password=password)
+        user.bind(sql)
+        result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+        if result:
+            # 获取Token
+            md5_ = hashlib.md5()
+            md5_.update(str(result.userId).encode())
+            return {"code": 500, "data": None, "msg": "Login Fail"}
+        else:
+            return {"code": 500, "data": None, "msg": "Login Success"}
+
+        @RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),
+                              ((), (ClassSource.JSON, '_user'), (), ())
+                             )
+        def user_register(self, _user: USER):
+            print(_user.phone)
+            print(_user.createTime)
+            print(isinstance(_user.phone, int)) # True
+            print(isinstance(_user.createTime, str)) # True
+```
+
+这样通过POST或者PUT方式访问 http://localhost:8085/api/register 并携带以下参数即可看到控制台的打印。
+
+
+
+```json
+{
+    "createTime": "2021-12-01 19:00:00",
+    "username": "user123",
+    "password": "user123",
+    "email": "sdfsdvdac@google.com",
+    "phone": 12345678912
+}
+```
+
+
+
+需要注意的是首先类型必须是一个实体类型，其次变量名前需要加一个下划线 '_' 用以告知Scarf该参数需要整体获取而不是在请求体中寻找user这个字段。但是这样还是会有一个问题 ：类型不一致。当打印到最后两行打印的时候返回值都为True，但是希望的是createTime是datetime类型，而phone应该要和数据库保持一致为str类型。这个时候就需要对实体类的字段进行类型标注。类型标注时需要注意大部分情况下，类型之间转换会通过类型本身的构造函数进行实现，但也有些情况比如时间，对于字符串时间的转换是无效的，那么我们需要为其实现一个可调用(callable)的函数进行获取:
+
+
+
+```python
+# models/User.py
+
+from peewee import *
+from datetime import datetime
+
+def translate_str_to_datetime(date_str):
+    try: # 注意异常捕捉,否则为None处理
+        return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+    except:
+        return datetime.min
+
+    class USER(Model):
+        userId: int = IntegerField(null=False, primary_key=True)
+            createTime: translate_str_to_datetime = DateTimeField(null=False) # 无法获取实现一个转换函数
+                username: str = CharField(null=False, max_length=32)
+                    password: str = CharField(null=False, max_length=32)
+                        email: str = TextField(null=False)
+                            phone: str = CharField(null=False, max_length=11)
+```
+
+
+
+这样一个完整的类型分配函数就完成了，让我们把整个注册函数实现（只改动注册函数同文件其他内容不变）
+
+
+
+```python
+
+# routers/User.py
+
+@RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),((), (ClassSource.JSON, '_user'), (), ()))
+
+def user_register(self, _user: USER, sql: SQLModel.DataBaseConnection):
+    code = 200
+    msg = "注册成功"
+    if len(_user.username.strip()) == 0:
+        msg = "请填写用户名"
+        elif len(_user.password.strip()) == 0:
+            msg = "请填写密码"
+            elif len(_user.email.strip()) == 0:
+                msg = "请填写邮箱"
+                elif len(_user.phone.strip()) == 0:
+                    msg = "请填写手机号"
+                    elif _user.createTime == datetime.min:
+                        msg = "请选择正确的时间"
+
+                        if msg != "注册成功":
+                            code = 500
+                            else:
+                                _user.bind(sql)
+                                _user.save()
+                                return {"code": code, "msg": msg, "data": _user.userId}
+
+```
+
+
+
+可能又有疑问了，那如果我需要批量添加呢，这一个一个添加太费事儿了。接下就需要用到Scarf的Vector类型对数组形式，批量数据的形式的数据进行标注了，我们将接口改为支持批量获取的方式。
+
+```python
+# routers/User.py
+
+# 还是需要下划线的变量，毕竟要将整体数据进行操作
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+
+@RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),((), (ClassSource.JSON, '_users'), (), ()))
+
+def user_register(self, _users: Vector(USER), sql: SQLModel.DataBaseConnection):
+    USER.bind(sql)
+    for item in _user:
+        item.save()
+        return {"code": 200, "msg": "Add Success", "data": None}
+
+```
+
+或者使用**bulk_create**，对实体对象插入
+
+```python
+
+# routers/User.py - bulk_create
+
+# 还是需要下划线的变量，毕竟要将整体数据进行操作
+
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+
+
+
+@RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),((), (ClassSource.JSON, '_users'), (), ()))
+
+def user_register(self, _users: Vector(USER), sql: SQLModel.DataBaseConnection):
+
+    USER.bind(sql)
+
+    USER.bulk_create(_user)
+
+    return {"code": 200, "msg": "Add Success", "data": None}
+
+```
+
+再或者可以使用原生的**insert_many**,需要注意的是类型该变为**dict**
+
+```python
+# routers/User.py - insert_many
+
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+
+@RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),
+                      ((), (ClassSource.JSON, '_users'), (), ())
+                     )
+def user_register(self, _users: Vector(dict), sql: SQLModel.DataBaseConnection("main")):
+    print(_users)
+    USER.bind(sql)
+    USER.insert_many(_users).execute()
+    return {"code": 200, "msg": "Add Success", "data": None}
+
+```
+
+**关于文件**
+
+文件一般可以通过form_data进行参数传递，我们还是将注册接口变为单个注册，但需要新增个人照片的一个字段，我们称这个字段为icon。提前需要知道的是文件类型可以使用Scarf.Tip.FileDeliver类型进行替代。
+
+```python
+# models/User.py
+
+from peewee import *
+from Scarf.Tip import FileDeliver
+from datetime import datetime
+
+def translate_str_to_datetime(date_str):
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+    except:
+        return datetime.min
+
+class USER(Model):
+    userId: int = IntegerField(null=False, primary_key=True)
+    createTime: translate_str_to_datetime = DateTimeField(null=False)
+    username: str = CharField(null=False, max_length=32)
+    password: str = CharField(null=False, max_length=32)
+    email: str = TextField(null=False)
+    phone: str = CharField(null=False, max_length=11)
+    icon: FileDeliver = TextField(null=False) # 新增icon字段
+```
+
+此时User.py需要做出以下改动
+
+```python
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+
+from models.User import USER
+
+import hashlib, time
+from datetime import datetime
+
+class Auth:
+   def __init__(self):
+       pass
+
+   @RequestReslove.route("/hello")
+   def hello(self):
+       return "hello world"
+
+   @RequestReslove.route(
+       "/api/login",
+       (Methods.POST, Methods.HEAD),
+       ((), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (),())
+   	)
+   def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection):
+       user = USER(username=username, password=password)
+       user.bind(sql)
+       result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+       if result:
+           # 获取Token
+           md5_ = hashlib.md5()
+           md5_.update(str(result.userId).encode())
+           return {"code": 200, "data": md5_.hexdigest(), "msg": "Login Success"}
+       else:
+           return {"code": 500, "data": None, "msg": "Login Fail"}
+
+   @RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),
+                         ((), (ClassSource.JSON | ClassSource.FORM_DATA, '_user'), (), ())
+                         )
+   def user_register(self, _user: USER, sql: SQLModel.DataBaseConnection):
+       if not _user.icon.invaild():
+           _md5 = hashlib.md5()
+           filename = _user.icon.filename + str(time.time())
+           _md5.update(filename.encode())
+           # 生成不重名文件
+           filename = _md5.hexdigest() + _user.icon.ext_name
+           # 保存文件至指定目录
+            _user.icon.save("./static/icons/" + filename)
+           _user.icon = "http://localhost:8085/icons/" + filename
+           _user.bind(sql)
+           _user.save()
+           return {"code": 200, "msg": "Add Success", "data": None}
+       else:
+           return {"code": 500, "msg": "Photo File Error", "data": None}
+```
+
+## **接口返回值**
+
+
+
+上面已经说明了接口参数的接收和使用，接下来就是接口的返回值了。返回值通过return将参数反射给Scarf。回到hello world的例子，那的确是一个最简单的返回值一个str。返回值的响应头(respone header)则为**Content-Type: text/plain**。第二种返回值方式可以像上面我们登录和注册接口的例子可以看出接口可以返回一个**dict**，以此应该大致能推断出返回值是一个**JSON**并且**Content-Type: application/json**，这两种方式基本上是遇到比较模板化的接口可以直接返回，但是如果我需要修改响应中的状态码或者增加自己的响应头该怎么办呢，那么这个时候就需要另一种灵活的方式，Scarf允许的返回值也可以是一个tuple,tuple最少需要三个元素，从前往后分别是**(状态码:int, 响应头内容: dict, 响应体: bytes, 状态描述: str(选填-若不填则通过当前状态码进行推断))**。就上面三个例子我们新增一个接口，路径为:/api/test/:choice,通过choice我们直接返回对应的内容看一下效果
+
+```python
+@RequestReslove.route("/api/test/:choice", (Methods.GET,), ((), (), (), ('choice',)))
+def test_result(self, choice: int):
+       if choice == 0:
+           return "text"
+       elif choice == 1:
+           return {"code": 200, "data": "json", "msg": "success"}
+       elif choice == 2:
+           return (200, {"Content-Type": "application/octet-stream"}, b"{'code': 200, 'data': 'json', 'msg': 'success'}")
+       else:
+       		return None # 如果返回None则为空响应体(Respone Body)返回值204
+```
+
+通过访问http://localhost:8085/api/test/0 | 1 | 2将会看到不同的返回值
+
+这些返回值可能还是不够用的，在遇到大型数据或者流数据时就会遇到些许麻烦，那么可以试试下面这种方式进行返回。我们新增一个获取文件接口
+
+```python
+@RequestReslove.route("/get/file", (Methods.GET,))
+    def get_file(self):
+        fd = open("./test.exe", "rb+")
+        file_size = os.path.getsize("./test.exe")
+        yield bytes # 告知Scarf本次传输数据的类型，支持的有:str(text/plain) | dict(application/json) | bytes(application/octet-stream) | "Custom type"(直接更改Content-Type)
+        while file_size > 0:
+            yield fd.read(1024 if file_size > 1024 else file_size) # 每次读取1024B
+            file_size -= 1024
+        yield None # 发送结束
+        fd.close() # 关闭文件
+        print("send complate")
+        yield None
+```
+
+通过上述例子我们可以对流式数据进行处理和发送，另外在最后一次发送后可进行一些销毁的操作。但是除了上述情况还会遇到一些问题，比如我从数据库查值但返回的是实体类，现在希望的是将实体类序列化为JSON给前端解析。那么就需要一个新的方式来处理,首先需要告知Scarf需要序列化的字段，改造一下USER类:
+
+```python
+# models/User.py
+
+@SQLModel.model_factory(Model)
+class USER:
+    userId: int = IntegerField(null=False, primary_key=True)
+    createTime: translate_str_to_datetime = DateTimeField(null=False)
+    username: str = CharField(null=False, max_length=32)
+    password: str = CharField(null=False, max_length=32)
+    email: str = TextField(null=False)
+    phone: str = CharField(null=False, max_length=11)
+    icon: FileDeliver = TextField(null=False) # 新增icon字段
+```
+
+然后我们再新增一个接口通过用户名密码查询用户信息(get_user)的接口。
+
+```python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+
+from models.User import USER
+
+import hashlib, time, os
+from datetime import datetime
+
+class Auth:
+    def __init__(self):
+        pass
+
+    @RequestReslove.route("/hello")
+    def hello(self):
+        return "hello world"
+
+    @RequestReslove.route(
+        "/api/login",
+        (Methods.POST, Methods.HEAD),
+        (
+            (), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (),
+            ())
+    )
+    def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection):
+        user = USER(username=username, password=password)
+        user.bind(sql)
+        result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+        if result:
+            # 获取Token
+            md5_ = hashlib.md5()
+            md5_.update(str(result.userId).encode())
+            return {"code": 200, "data": md5_.hexdigest(), "msg": "Login Success"}
+        else:
+            return {"code": 500, "data": None, "msg": "Login Fail"}
+
+        @RequestReslove.route("/api/getuser", (Methods.GET,), (('username', 'password'), (), (), ()))
+        def get_user(self, username: str, password: str, sql: SQLModel.DataBaseConnection):
+            # 通过用户名密码查询用户信息
+            USER.bind(sql)
+            return USER.select().where(USER.password == password and USER.password == password)
+
+        @RequestReslove.route("/api/register", (Methods.POST, Methods.PUT),
+                              ((), (ClassSource.JSON | ClassSource.FORM_DATA, '_user'), (), ())
+                             )
+        def user_register(self, _user: USER, sql: SQLModel.DataBaseConnection):
+            if not _user.icon.invaild():
+                _md5 = hashlib.md5()
+                filename = _user.icon.filename + str(time.time())
+                _md5.update(filename.encode())
+                filename = _md5.hexdigest() + _user.icon.ext_name
+                _user.icon.save("./static/icons/" + filename)
+                _user.icon = "http://localhost:81/icons/" + filename
+                _user.bind(sql)
+                _user.save()
+                return {"code": 200, "msg": "Add Success", "data": None}
+            else:
+                return {"code": 500, "msg": "Photo File Error", "data": None}
+
+            @RequestReslove.route("/api/test/:choice", (Methods.GET,), ((), (), (), ('choice',)))
+            def test_result(self, choice: int):
+                if choice == 0:
+                    return "text"
+                elif choice == 1:
+                    return {"code": 200, "data": "json", "msg": "success"}
+                elif choice == 2:
+                    return (
+                        200, {"Content-Type": "application/octet-stream"}, b"{'code': 200, 'data': 'json', 'msg': 'success'}")
+                else:
+                    return None
+
+                @RequestReslove.route("/get/file", (Methods.GET,))
+                def get_file(self):
+                    fd = open("./test.exe", "rb+")
+                    file_size = os.path.getsize("./test.exe")
+                    yield bytes
+                    while file_size > 0:
+                        yield fd.read(1024 if file_size > 1024 else file_size)
+                        file_size -= 1024
+                        yield None
+                        fd.read()
+                        print("send complate")
+                        yield None
+```
+
+此时当我们访问 http://localhost:8085/api/getuser?username=admin&password=admin 通过实现的get_user函数我们可以直接观察到返回值即为USER类中的所有字段组成的JSON序列化字符串。但是这些字段有些是应该隐蔽或者不需要的，那我们可以在USER类上自己实现一个 **fields**指定序列化，而使用修饰器则是将所有字段进行返回。
+
+```python
+# models/User.py
+
+class USER(Model):
+    __fields__ = ('userId', 'createTime', 'username', 'phone', 'email', 'icon')
+    userId: int = IntegerField(null=False, primary_key=True)
+    createTime: translate_str_to_datetime = DateTimeField(null=False)
+    username: str = CharField(null=False, max_length=32)
+    password: str = CharField(null=False, max_length=32)
+    email: str = TextField(null=False)
+    phone: str = CharField(null=False, max_length=11)
+    icon: FileDeliver = TextField(null=False)
+```
+
+
+
+返回值也可以是嵌套型，只要是Scarf支持的序列化方式就可以了
+
+```json
+
+{"code":200, "data":[USER,USER,USER], "msg": "Success"}
+// 序列化后
+{"code":200, "data":[{
+        "userId": 62,
+        "createTime": "2021-12-01 18:27:15",
+        "username": "admin",
+        "phone": "12345678912",
+        "email": "test@email.com",
+        "icon": null
+    },{
+        "userId": 62,
+        "createTime": "2021-12-01 18:27:15",
+        "username": "admin",
+        "phone": "12345678912",
+        "email": "test@email.com",
+        "icon": null
+    },{
+        "userId": 62,
+        "createTime": "2021-12-01 18:27:15",
+        "username": "admin",
+        "phone": "12345678912",
+        "email": "test@email.com",
+        "icon": null
+    }], "msg": "Success"}
+```
+
+
+
+最后一种返回值也可以是一个**异常(Exception),异常通常会被格式化错误字符并将返回值状态码变为500。**
+
+
+
+## **Cookie**
+
+现在我们需要再增加一个需求，在访问获取用户信息（get_user）接口之前需要知道用户是否已经登录过，如果没有登录则应该阻止用户访问获取用户信息接口。那么Cookie是一个不错的选择，在获取Cookie钱我们先了解两个重要的实例对象**HTTPRequest**和**HTTPResponse**,这两个实例前者是用来获取用户请求中的数据信息，而后者则是设置和分配响应中的数据信息。获取Cookie前得先对客户端设置Cookie，我们在登录接口先做一个例子,同样我们在登录路由实体函数的形参中直接加入**HTTPResponse**获取当前响应实例，在返回Cookie的同时记录当前活跃的用户的Cookie信息（可使用Redis）。
+
+```python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector
+from Scarf.Protocol.HTTP import HTTPResponse, HTTPRequest
+
+from models.User import USER
+
+import hashlib, time, os
+from datetime import datetime
+
+class Auth:
+    def __init__(self):
+        # 用户信息保存 token : username
+        self.__tokens = {}
+
+        @RequestReslove.route("/hello")
+        def hello(self):
+            return "hello world"
+
+        @RequestReslove.route(
+            "/api/login",
+            (Methods.POST, Methods.HEAD),
+            (
+                (), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (),
+                ())
+        )
+        def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection, res: HTTPResponse):
+            user = USER(username=username, password=password)
+            user.bind(sql)
+            result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+            if result:
+                # 获取Token
+                md5_ = hashlib.md5()
+                md5_.update(str(result.userId).encode())
+                res.cookies = ('token', md5_.hexdigest())
+                res.cookies = ('HttpOnly',)
+                res.cookies = ('Path', '/')
+                self.__tokens[md5_.hexdigest()] = username
+                return {"code": 200, "data": None, "msg": "Login Success"}
+            else:
+                return {"code": 500, "data": None, "msg": "Login Fail"}
+
+            @RequestReslove.route("/api/getuser", (Methods.GET,), ((), (), (), ()))
+            def get_user(self, sql: SQLModel.DataBaseConnection, req: HTTPRequest):
+                username = self.__tokens.get(req.cookies.get("token"))
+                if username:
+                    user = USER(useranem=username)
+                    user.bind(sql)
+                    return user.select().where(USER.username == username)
+                else:
+                    return (400, {"Content-Type": "text/plain"}, b"User Not Login")
+```
+
+Cookie在HTTPRequest中的用法即HTTPRequest.cookies(dict)。
+
+Cookie在HTTPResponse中的用法若直接打印(print)则显示序列化后的Cookie字符串，可以使用get_cookie_by_name(name,default=None)获取，若需要删除Cookie则可以使用del_cookie(name)，另外添加Cookie时需要一个两个元素或一个元素的元祖。
+
+现在通过Cookie查询后就不需要username和password了，这样也可以校验用户的状态和安全性的提升，但是这只能针对于单独的接口。在大部分场景下更希望能够通过全局的一种方式进行把控，只放开登录（user_login）接口的调用，限制其他接口需要核对Cookie后才能放行。
+
+
+
+## **拦截器和过滤器**
+
+
+
+针对于以上的问题，我们可以使用过滤器进行对接口的审查和进入对应路由实体函数前的修改。我们首先创建一个拦截器,并实现Cookie拦截。
+
+```python
+# routers/RequestProcessor.py
+
+from Scarf.Context.RequestReslove import FilterRegister
+
+# 需要继承于 FilterRegister
+class RequestProcessor(FilterRegister):
+    def __init__(self):
+     	# 父类初始化 参数1：是否实现请求拦截器，参数2：是否实现请求返回过滤器
+        super().__init__(True, False)
+
+    def enter_intercept(self, req:HTTPRequest,res:HTTPResponse ): # 若告知父类打开了请求拦截选项，该抽象方法需要实现，前两个参数固定分别是:HTTPRequest和HTTPResponse
+		if req.path == "/api/login":  # 登录接口不做校验
+            return RequestsState.NEXT
+        elif req.cookies.get("token"):  # 其他接口Cookie中是否有Token
+            return RequestsState.NEXT
+        else:	# 否则拒绝服务
+            # return RequestsState.CLOSE
+            res.set_data((400, {"Content-Type": "text/plain"}, b"User Not Login"))
+            return RequestsState.PUSHNOW
+```
+
+另外还需要在 main.py入口文件中注册过滤器和拦截器
+
+```python
+# main.py
+
+from Scarf.Main import Scarf
+from routers.User import Auth
+from routers.RequestProcessor import RequestProcessor
+
+from models.SQLConnectionManager import SQLFactory
+
+server = Scarf()
+
+server.load_config_from_file("./application.yml")
+
+server.register_sql_model("main", SQLFactory)
+
+# 注册拦截器和过滤器
+server.register_hook(RequestProcessor())
+
+server.scan_module(Auth())
+
+server.start_server()
+```
+
+通过上面的代码，可以看到按照特定规则进行审查，当然也看到了return的一些返回值，**RequestsState可以理解为枚举，NEXT-进入下一个拦截器，PUSHNOW-立刻发送前设置的Reponse数据，CLOSE-关闭与客户端的连接(断开式拒绝服务)**但是有些接口的返回值比如字典(dict)都将划归为JSON，那么我们可以对接口做以下改动，拿用户登录(user_login)和用户信息查询(get_user)两个接口为例。因为返回值固定是{"code": 200, "msg": "msg", "data": None}若路由实体函数返回值是一个字典(dict)或None则直接将数据放入data字段中：
+
+
+
+```python
+# routers/User.py
+
+@RequestReslove.route(
+    "/api/login",
+    (Methods.POST, Methods.HEAD),
+    ((), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (), ())
+)
+def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection("main"), res: HTTPResponse):
+    user = USER(username=username, password=password)
+    user.bind(sql)
+    result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+    if result:
+        # 获取Token
+        md5_ = hashlib.md5()
+        md5_.update(str(result.userId).encode())
+        res.cookies = ('token', md5_.hexdigest())
+        res.cookies = ('HttpOnly',)
+        res.cookies = ('Path', '/')
+        self.__tokens[md5_.hexdigest()] = username
+        return None
+    else:
+        return None
+
+    @RequestReslove.route("/api/getuser", (Methods.GET,), ((), (), (), ()))
+    def get_user(self, sql: SQLModel.DataBaseConnection, req: HTTPRequest):
+        username = self.__tokens.get(req.cookies.get("token"))
+        if username:
+            user = USER(useranem=username)
+            user.bind(sql)
+            return user.select().where(USER.username == username)
+        else:
+            # return (400, {"Content-Type": "text/plain"}, b"User Not Login")
+            return (400, {}, "User Not Login") # 按照正常的返回规范,tuple的第三个参数的类型应该是bytes，但是经过过滤器修改后可自定义返回类型
+```
+
+```python
+# routers/RequestProcessor.py
+
+from Scarf.Context.RequestReslove import FilterRegister
+from Scarf.Protocol.HTTP import HTTPRequest, HTTPResponse
+from Scarf.Tip import RequestsState, SQLModel
+from peewee import Model
+
+import json
+
+class RequestProcessor(FilterRegister):
+    def __init__(self):
+        super().__init__(True, True)
+
+        def enter_intercept(self, req: HTTPRequest, res: HTTPResponse, sql: SQLModel.DataBaseConnection("main2")):
+            if req.path == "/api/login":  # 登录接口不做校验
+                return RequestsState.NEXT
+
+            elif req.cookies.get("token"):  # 其他接口Cookie中是否有Token
+                return RequestsState.NEXT
+            else:
+                # return RequestsState.CLOSE
+                res.set_data((400, {"Content-Type": "text/plain"}, b"User Not Login"))
+                return RequestsState.PUSHNOW
+
+            def outer_filter(self, req: HTTPRequest, res: HTTPResponse):
+                result = res.get_data()
+                data = {"code": 200, "msg": "Success", "data": None}
+                if result is None:
+                    res.set_data(data)
+                    elif isinstance(result, dict) or isinstance(result, Model) or isinstance(result, list):
+                        data["data"] = result
+                        res.set_data(data)
+                        elif isinstance(result, Exception):
+                            data["code"] = 500
+                            data["msg"] = "Fail"
+                            data["data"] = str(result)
+                            res.set_data(data)
+                            elif isinstance(result, tuple):
+                                result = list(result)
+                                data["code"] = result[0]
+                                result[0] = 200
+                                result[1]["Content-Type"] = "application/json"
+                                if len(result) > 3:
+                                    data["msg"] = result[3]
+                                    data["data"] = result[2]
+                                    result[2] = json.dumps(data).encode()
+                                    res.set_data(tuple(result))
+                                    return RequestsState.NEXT
+```
+
+
+
+此时所有的请求都可以进行过滤和拦截处理，接下来我们光有接口可不行还需要提供静态文件的服务和一些配置上的其他参数。
+
+
+
+## **静态文件服务**
+
+
+
+静态文件大部分都是配置性的，我们再回到application.yml，我们的静态文件应存放在一个专门的文件夹，就以此项目为例，static文件夹存放各种静态文件。首先我们需要配置静态文件夹的位置在哪里
+
+```yml
+server:
+ release: false
+ ports:
+   http: 8085
+ static:
+   visitpath: ./static # 静态文件路径
+   entryfile: index.html # 文件夹默认入口文件
+```
+
+在我们之前注册接口中有一个图片其本地路径为\Project Flodder\static\icons\a86711817f33fb16a701a74d925965fc.jpg。我们则可以直接访问 http://localhost:8085/icons/a86711817f33fb16a701a74d925965fc.jpg 但是这样访问的结果为User Not Login,显然这不是我们想要的结果，对于接口的访问我们应予以拦截，但对于静态文件甚至后面的WebSocket的请求我们则应予以放行，则需要修改拦截器和过滤器
+
+```python
+# routers/RequestProcessor.py
+
+from Scarf.Context.RequestReslove import FilterRegister
+from Scarf.Protocol.HTTP import HTTPRequest, HTTPResponse
+from Scarf.Tip import RequestsState, SQLModel
+from peewee import Model
+
+import json,os
+
+class RequestProcessor(FilterRegister):
+    def __init__(self):
+        super().__init__(True, True)
+
+        def enter_intercept(self, req: HTTPRequest, res: HTTPResponse, sql: SQLModel.DataBaseConnection("main2")):
+            if req.path == "/api/login" or req.is_file or req.is_not_found:  # 登录接口，静态文件，404，不做校验
+                return RequestsState.NEXT
+            elif req.cookies.get("token"):  # 其他接口Cookie中是否有Token
+                return RequestsState.NEXT
+            else:
+                # return RequestsState.CLOSE
+                res.set_data((400, {"Content-Type": "text/plain"}, b"User Not Login"))
+                return RequestsState.PUSHNOW
+
+            def outer_filter(self, req: HTTPRequest, res: HTTPResponse):
+                result = res.get_data()
+                data = {"code": 200, "msg": "Success", "data": None}
+                if req.is_file or req.is_not_found and res.code != 200 and res.code != 500 and res.code != 400:
+                    # 当返回的是文件类型或者状态码404以及200，500，400不做过滤
+                    return RequestsState.NEXT
+                elif result is None:
+                    res.set_data(data)
+                    elif isinstance(result, dict) or isinstance(result, Model) or isinstance(result, list):
+                        data["data"] = result
+                        res.set_data(data)
+                        elif isinstance(result, Exception):
+                            data["code"] = 500
+                            data["msg"] = "Fail"
+                            data["data"] = str(result)
+                            res.set_data(data)
+                            elif isinstance(result, tuple):
+                                result = list(result)
+                                data["code"] = result[0]
+                                result[0] = 200
+                                result[1]["Content-Type"] = "application/json"
+                                if len(result) > 3:
+                                    data["msg"] = result[3]
+                                    data["data"] = result[2]
+                                    result[2] = json.dumps(data).encode()
+                                    res.set_data(tuple(result))
+                                    return RequestsState.NEXT
+```
+
+现在再次访问我们就可以看到图片了。而对于application.yml中static下entryfile则是当访问一个文件夹路径时主动寻找当前文件夹下的默认文件，我们在static目录下新建一个文件夹home，然后在home中新增一个index.html文件，并编辑内容
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <h1>Hello World</h1>
+    </body>
+</html>
+```
+
+此时当我们访问 http://localhost:8085/home 时则可直接访问index.html文件。
+我们现在设置多个项目，我们新建一个home文件夹，在文件夹中放入一个[Vue](https://cn.vuejs.org/index.html "Vue")经过打包的项目包。项目包结构如下：
+```
+|-- home
+    |-- favicon.ico
+    |-- index.html
+    |-- manifest.json
+    |-- precache-manifest.b5ea767956a04e1a46fbdab2a8eca0dc.js
+    |-- robots.txt
+    |-- service-worker.js
+    |-- css
+    |   |-- app.ed2a99d6.css
+    |   |-- chunk-vendors.5cbbb097.css
+    |-- fonts
+    |   |-- ionicons.143146fa.woff2
+    |   |-- ionicons.99ac3308.woff
+    |   |-- ionicons.d535a25a.ttf
+    |-- img
+    |   |-- ionicons.a2c4a261.svg
+    |   |-- icons
+    |       |-- android-chrome-192x192.png
+    |       |-- android-chrome-512x512.png
+    |       |-- android-chrome-maskable-192x192.png
+    |       |-- android-chrome-maskable-512x512.png
+    |       |-- apple-touch-icon-120x120.png
+    |       |-- apple-touch-icon-152x152.png
+    |       |-- apple-touch-icon-180x180.png
+    |       |-- apple-touch-icon-60x60.png
+    |       |-- apple-touch-icon-76x76.png
+    |       |-- apple-touch-icon.png
+    |       |-- favicon-16x16.png
+    |       |-- favicon-32x32.png
+    |       |-- msapplication-icon-144x144.png
+    |       |-- mstile-150x150.png
+    |       |-- safari-pinned-tab.svg
+    |-- js
+        |-- app.7a63ada9.js
+        |-- app.7a63ada9.js.map
+        |-- chunk-vendors.b1c772aa.js
+        |-- chunk-vendors.b1c772aa.js.map
+```
+当前项目包设置的路由模式为history模式，我们可以使用路由映射将路径定向到home文件夹，仅需在yml文件中进行配置即可实现:
+```yml
+server:
+ release: false
+ ports:
+   http: 8085
+ static:
+   visitpath: ./static # 静态文件路径
+   entryfile: index.html # 文件夹默认入口文件
+   map: # 路由映射配置
+     - {router: /home/*, path: /home/index.html} # 当访问/home时服务会自动将请求定向到/home/index.html(若没有任何匹配的路径)
+     - {router: /test/*, path: /main/*} # 当访问/test/*时所有的文件将会被映射到/home的子目录下
+```
+## 事件
+
+现在我们将对Cookie做更进一步的修改，我们现在不仅仅是要验证请求是否含有Cookie还要对Cookie进行校验，查看来自客户端的Cookie是否是数据库或者曾经登录过的用户。我们可能直接可以想到的是，在请求拦截器中嵌入Cookie拦截。但是这样，我们需要重新编码一个查询Cookie的方法，有时在特定情况下可能还需要调用别的模块的接口，那我们就可以使用事件来替代我们完成这个事情。
+我们的流程应该是这样：当请求到达拦截器时，将查询请求递交给Auth模块进行处理，Auth模块应现在本地查询是否用户曾经登录，若没有记录则再查询数据库，然后再在拦截器中对Cookie验证的返回值进行验证。
+我们首先需要注册事件：在用户路由模块中我们编写一个用户Cookie查询以及事件的注册。当需要注册一个事件时应该先在事件接收模块中编写好对应的方法
+```python
+# routers/User.py
+
+# 注册事件需要使用修饰函数
+# @RequestReslove.event("event_name")
+
+#该修饰函数使用两种方式进行注册事件
+#直接在类的成员函数上直接
+class Auth:
+	@RequestReslove.event("verfity_cookie")
+    def verfity(self,cookie,sql):
+    	USER.bind(sql)
+        return self.__tokens.get(cookie) or USER.select().where(USER.token == cookie).count() > 0
+
+#======================================================= or =======================================================
+
+#直接对类进行修饰
+@RequestReslove.event("verfity_cookie", "verfity", modules=True)
+class Auth:
+	def verfity(self, cookie, sql)
+		USER.bind(sql)
+        return self.__tokens.get(cookie) or USER.select().where(USER.token == cookie).count() > 0
+
+#如果对函数进行修饰，那么RequestReslove.event的参数即为一个事件名称
+#如果对类进行修饰，那么Request.event的参数应该是偶数个，奇数参数为事件名称，偶数为事件名称对应类中所要接受的回调函数。另外当对类进行修饰时可以使用modules参数(default: False)，当modules=True时则事件的名称前还会加上模块的__module__。
+#后面的例子我们使用第二种事件注册的方式
+```
+另外我们还需要在main.py中通知Scarf哪些模块被注册事件
+```python
+# main.py
+from Scarf.Main import Scarf
+from routers.User import Auth
+from routers.RequestProcessor import RequestProcessor
+
+
+from models.SQLConnectionManager import SQLFactory
+
+if __name__ == "__main__":
+    server = Scarf()
+
+    auth = Auth()
+
+    server.load_config_from_file("./application.yml")
+
+    server.register_sql_model("main", SQLFactory)
+    server.register_hook(RequestProcessor())
+	# 通知Scarf事件完成注册的模块
+    server.register_events(auth)
+    server.scan_module(auth)
+
+    server.start_server()
+```
+现在已经完成了事件的注册，接下来只要在需要的地方进行事件触发即可。
+```python
+# routers/RequestProcessor.py
+
+# 若模块或类被Scarf在入口文件中注册过，则默认会注入_emit("event_name", *args, **kwargs)函数，调用该函数即可触发对应的事件回调并通过_emit返回回调的返回值。
+class RequestProcessor(FilterRegister):
+    def enter_intercept(self, req: HTTPRequest, res: HTTPResponse, sql: SQLModel.DataBaseConnection("main")):
+        if req.path == "/api/login" or req.path == "/api/upload" or req.path == "/get/file" or req.is_file or req.is_not_found:
+        	# 登录接口不做校验
+            return RequestsState.NEXT
+        elif req.cookies.get("token") and self._emit("verfity_cookie", req.cookies.get("token"), sql):
+        	# 其他接口Cookie中是否有Token,并且验证Cookie中的token是否有效
+            return RequestsState.NEXT
+        else:
+            # return RequestsState.CLOSE
+            res.set_data((400, {"Content-Type": "text/plain"}, b"User Not Login"))
+            return RequestsState.PUSHNOW
+```
+
+在_emit触发事件的事件名称参数中，事件的匹配规则若全局事件名没有冲突则可以直接使用事件名，若事件名有重复则可以使用之前提到的modules=Treu的方式，使用"routers.User.Auth.verfity_cookie"
+
+我们再举一个例子，我们在接口即将结束的时候对其进行记录，并打印输出。
+假设再在Auth模块中添加一个日志记录事件，对每一个即将接口时记录接口的请求路径和响应结果并打印输出。
+
+```python
+# routers/User.py
+
+# 添加日志日志接收事件
+@RequestReslove.event("verfity_cookie", "verfity", "log_record", "main_log", modules=True)
+class Auth:
+    def main_log(self, path, code, plain):
+        print("%s %i %s" % (path, code, plain))
+
+    def verfity(self, cookie, sql):
+        print(cookie)
+        USER.bind(sql)
+        return self.__tokens.get(cookie) or USER.select().where(USER.token == cookie).count() > 0
+```
+在拦截器和过滤器中加入事件触发
+```python
+class RequestProcessor(FilterRegister):
+    def __init__(self):
+        super().__init__(True, True)
+
+    def enter_intercept(self, req: HTTPRequest, res: HTTPResponse, sql: SQLModel.DataBaseConnection("main")):
+        if req.path == "/api/login" or req.path == "/api/upload" or req.path == "/get/file" or req.is_file or req.is_not_found:  # 登录接口不做校验
+            return RequestsState.NEXT
+        elif req.cookies.get("token") and self._emit("routers.User.Auth.verfity_cookie", req.cookies.get("token"), sql):  # 其他接口Cookie中是否有Token
+            return RequestsState.NEXT
+        else:
+            # return RequestsState.CLOSE
+            res.set_data((400, {"Content-Type": "text/plain"}, b"User Not Login"))
+            self._emit("routers.User.Auth.log_record", req.path, 400, "User Not Login")
+            return RequestsState.PUSHNOW
+
+    def outer_filter(self, req: HTTPRequest, res: HTTPResponse):
+        result = res.get_data()
+        data = {"code": 200, "msg": "Success", "data": None}
+        if req.is_file or req.is_not_found:
+            self._emit("routers.User.Auth.log_record", req.path, res.code, data["msg"])
+            return RequestsState.NEXT
+        elif result is None:
+            res.set_data(data)
+        elif isinstance(result, dict) or isinstance(result, Model) or isinstance(result, list) or isinstance(result,
+                                                                                                             ModelSelect):
+            data["data"] = result
+            res.set_data(data)
+        elif isinstance(result, Exception):
+            data["code"] = 500
+            data["msg"] = "Server Error"
+            data["data"] = str(result)
+            res.set_data(data)
+        elif isinstance(result, tuple):
+            result = list(result)
+            data["code"] = result[0]
+            result[0] = 200
+            result[1]["Content-Type"] = "application/json"
+            if len(result) > 3:
+                data["msg"] = result[3]
+            data["data"] = result[2]
+            result[2] = json.dumps(data).encode()
+            res.set_data(tuple(result))
+        # 请求即将结束时触发事件
+        self._emit("routers.User.Auth.log_record", req.path, data["code"], data["msg"])
+        return RequestsState.NEXT
+```
+此时当请求处理完成时可在控制台中即可观察到打印。
+
+## 模块初始化
+
+有的时候我们需要在模块被载入前提前做一些事情，比如查询提前将一些非常高频率访问的静态数据提前放在内存中，待到用户访问时将这些数据返回，假设以我们目前的项目为例，在每次登录前将所有用户的Cookie信息载入到内存中，这样在访问需要Cookie鉴权的一些接口就不再需要每次都查询一遍数据库这样就可以减轻对数据库的负担并提高响应速度。首先我们需要了解的是项目模块的局部配置，Scarf在初始化时会检查目录下是否有config文件夹，该文件夹中存放的是所有配置文件的位置，每一个模块对应一个自己的配置文件(__module__ + "." + __name__ 和 事件名一样),因此我们添加一个文件routers.User.Auth.yml。配置可以使用yml文件或json文件进行配置，其文件内容如下(以yml文件为例)：
+```yml
+init_handle: _init # 模块的初始化入口函数
+# config/routers.User.Auth.yml
+log_format: '%(asctime)s - $filename[line:%(lineno)d | %(funcName)s] - %(levelname)s: %(message)s' # 日志翻译格式化方式文本(参见 logging)
+config: # 模块所使用的自定义配置
+    module_name: Auth
+```
+我们现在再实现入口函数的函数，并完成在模块初始化时查询到所有用户Cookie的获取。
+```python
+# routers/User.py
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector, LogHandle
+
+class Auth:
+	def __init__(self):
+        # 用户信息保存 token : username
+        self.__tokens = {}
+        # 模块日志
+        self.__logger = None
+        # Scarf核心日志
+        self.__log_server = None
+
+    def _init(self, sql: SQLModel.DataBaseConnection, log: LogHandle("routers.User.Auth"),
+              log_server: LogHandle("WebServer"), config: dict):
+        print(config)
+        try:
+            USER.bind(sql)
+            for item in USER.select().where(USER.token.is_null(False)):
+                self.__tokens[item.token] = item.username
+            log.info("Auth Module Init Success")
+        except Exception as e:
+            log.info("Auth Module Init Fail ,Error: %s" % (str(e)))
+        finally:
+            self.__logger = log
+            self.__log_server = log_server
+            log.info("Auth Module Init Complate")
+```
+当Scarf读取到该配置时，通过init_handle确定了模块入口的位置，并且在扫描模块后就会调用初始化函数，通过初始化函数的形参类型，注入相对应的实参，完成模块的初始化。其中的参数sql将不再解释见上文。LogHandle("module_name")这中类型标注将通过modulename获取到指定的日志对象，获取的方式和事件触发的方式类似，而除此之外还有"WebServer"这种方式是用以获取webserver核心日志所使用。config:dict则是获取在配置文件中的config参数，是对应模块的自定义参数。**日志对象**目前可以使用以下函数：
+```python
+import logging
+# 调试 - application为release时忽略
+logger.debug - logging.debug
+# 普通
+logger.info - logging.info
+# 警告
+logger.warn - logging.warn
+# 严重警告
+logger.critical - logging.critical
+# 出错
+logger.error - logging.error
+
+def log_callback(record: logging.LogRecord):
+	pass
+
+# 注册日志回调
+logger.add_handle(log_callback)
+```
+我们还可以对于一些全局模块做出配置,例如假设很多接口需要依赖到Core模块，我们也可以对其在Scarf入口中进行全局注册:
+```python
+# main.py
+from Scarf.Main import Scarf
+from routers.User import Auth
+from routers.RequestProcessor import RequestProcessor
+
+
+from models.SQLConnectionManager import SQLFactory
+
+class Core:
+    def __init__(self):
+        pass
+
+if __name__ == "__main__":
+    server = Scarf()
+
+    auth = Auth()
+
+    server.load_config_from_file("./application.yml")
+
+    # Core是全局需要依赖的模块
+    server.register_global("Core", Core())
+
+    server.register_sql_model("main", SQLFactory)
+    server.register_hook(RequestProcessor())
+
+    server.register_events(auth)
+    server.scan_module(auth)
+
+    server.start_server()
+```
+此时我们在User.Auth中尝试导入：
+```python
+# routers/User.py
+
+class Auth:
+	    def __init__(self):
+        # 用户信息保存 token : username
+        self.__tokens = {}
+        # 模块日志
+        self.__logger = None
+        # Scarf核心日志
+        self.__log_server = None
+
+    def _init(self, sql: SQLModel.DataBaseConnection, log: LogHandle("routers.User.Auth"),
+              log_server: LogHandle("WebServer"), core: str("Core"), config: dict):
+ 		# 当然你也可以使用: core: Core
+        print(config)
+        print(core)
+        try:
+            USER.bind(sql)
+            for item in USER.select().where(USER.token.is_null(False)):
+                self.__tokens[item.token] = item.username
+            log.info("Auth Module Init Success")
+        except Exception as e:
+            log.info("Auth Module Init Fail ,Error: %s" % (str(e)))
+        finally:
+            self.__logger = log
+            self.__log_server = log_server
+            log.info("Auth Module Init Complate")
+```
+
+## 定时任务和异步任务
+大部分情况下Cookie不可能永久保存，当达到某个周期时，我们需要删除一些过期的Cookie，使用户恢复未登录状态重新登录或鉴权；这时我们就需要一个东西去在一个周期内管理这些任务，当然我们还需要改造一下,添加一个存放Cookie时间的变量用以记录用户Cookie的失效时间。定时任务的添加方法如下：
+```python
+#routers/User.py
+
+#我们需要使用一个修饰器，RequestReslove.timer(interval, times=-1, user_arg=None)
+# 其中interval是执行周期（单位ms），times为执行次数,默认值为-1(永久执行)，user_arg:自定义参数(默认:None)
+# 被修饰的函数中emit_time是定时器被触发的当前时间，以及自定义参数，返回值是一个Bool，True则是继续下次定时器任务，否则终止。
+# 我们需要设置一下Cookie的过期时间为30分钟
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector, LogHandle, async_taker
+from Scarf.Protocol.HTTP import HTTPResponse, HTTPRequest, FileDeliver
+
+import time
+
+class Auth:
+	def __init__(self):
+    	# 用户信息保存 token : username
+        self.__tokens = {}
+        # 用户Cookie有效时间保存
+        self.__vaild_cookie = {}
+        # 模块日志
+        self.__logger = None
+        # Scarf核心日志
+        self.__log_server = None
+
+   def _init(self, sql: SQLModel.DataBaseConnection, log: LogHandle("routers.User.Auth"),
+        log_server: LogHandle("WebServer"), config: dict):
+        print(config)
+        try:
+            USER.bind(sql)
+            for item in USER.select().where(USER.token.is_null(False)):
+                self.__tokens[item.token] = item.username
+                # 添加Cookie失效时间，并设置失效时间为30分钟
+                self.__vaild_cookie[item.token] = time.time() * 1000 + 30 * 60 * 1000
+            log.info("Auth Module Init Success")
+        except Exception as e:
+            log.info("Auth Module Init Fail ,Error: %s" % (str(e)))
+        finally:
+            self.__logger = log
+            self.__log_server = log_server
+            log.info("Auth Module Init Complate")
+
+    @RequestReslove.route(
+        "/api/login",
+        (Methods.POST, Methods.HEAD),
+        (
+                (), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (),
+                ())
+    )
+    def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection("main"), res: HTTPResponse):
+        user = USER(username=username, password=password)
+        user.bind(sql)
+        result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+        if result:
+            # 获取Token
+            md5_ = hashlib.md5()
+            md5_.update(str(result.userId).encode())
+            res.cookies = ('token', md5_.hexdigest())
+            res.cookies = ('HttpOnly',)
+            res.cookies = ('Path', '/')
+            user.token = md5_.hexdigest()
+            user.update({USER.token: user.token}).where(USER.userId == result.userId).execute()
+            self.__tokens[user.token] = username
+            # 登录接口同理
+            self.__vaild_cookie[user.token] = time.time() * 1000 + 30 * 60 * 1000
+            return None
+        else:
+            return (500, {}, "Username or password error", "Login Error")
+
+    @RequestReslove.timer(1000, times=-1, user_arg=None)
+    def check_cookie(self, emit_time, user_arg):
+    	for item in self.__vaild_cookie.copy().items():
+            k, v = item
+            # 超时用户注销登录
+            if v <= emit_time:
+            	self.__logger.info("%s need relogin" % (self.__tokens[k],))
+                del self.__tokens[k]
+                del self.__vaild_cookie[k]
+        return True
+```
+目前我们已经将本地的Cookie在规定周期内进行了规整，若我们在完成本地更新的同时可能还需要通过HTTP去通知其他服务器Cookie的更新，但是HTTP的请求算得上是比较耗时的，我们可以让这些请求在后台执行，不需要等待其完成，那么我们可以使用Scarf的异步任务，我们需要通过模块初始化函数被调用时引入异步任务控制器，实现如下：
+```python
+
+# 其中async_taker为异步任务调度过程
+# @parma:fn_callback 需要异步调用的函数
+# @param:*args 调用时所需要的自定义参数
+# async_taker(fn_callback, *args)
+
+from Scarf.Context.RequestReslove import RequestReslove
+from Scarf.Tip import Methods, ClassSource, SQLModel, Vector, LogHandle, async_taker
+from Scarf.Protocol.HTTP import HTTPResponse, HTTPRequest, FileDeliver
+
+# 第三方库requests
+import time, requests
+
+class Auth:
+	def __init__(self):
+    	# 用户信息保存 token : username
+        self.__tokens = {}
+        # 用户Cookie有效时间保存
+        self.__vaild_cookie = {}
+        # 模块日志
+        self.__logger = None
+        # Scarf核心日志
+        self.__log_server = None
+        # Scarf异步任务调度过程
+        self.__async_taker = None
+
+   def _init(self, sql: SQLModel.DataBaseConnection,async_controller: async_taker, log: LogHandle("routers.User.Auth"),
+        log_server: LogHandle("WebServer"), config: dict):
+        print(config)
+        try:
+            USER.bind(sql)
+            for item in USER.select().where(USER.token.is_null(False)):
+                self.__tokens[item.token] = item.username
+                # 添加Cookie失效时间，并设置失效时间为30分钟
+                self.__vaild_cookie[item.token] = time.time() * 1000 + 30 * 60 * 1000
+            log.info("Auth Module Init Success")
+        except Exception as e:
+            log.info("Auth Module Init Fail ,Error: %s" % (str(e)))
+        finally:
+            self.__logger = log
+            self.__log_server = log_server
+            # 获取异步任务调度过程
+            self.__async_taker = async_taker
+            log.info("Auth Module Init Complate")
+
+    @RequestReslove.route(
+        "/api/login",
+        (Methods.POST, Methods.HEAD),
+        (
+                (), (ClassSource.FORM_DATA | ClassSource.FORM_URLENCODE | ClassSource.JSON, 'username', 'password'), (),
+                ())
+    )
+    def user_login(self, username: str, password: str, sql: SQLModel.DataBaseConnection("main"), res: HTTPResponse):
+        user = USER(username=username, password=password)
+        user.bind(sql)
+        result = user.get_or_none(USER.username == user.username and USER.password == user.password)
+        if result:
+            # 获取Token
+            md5_ = hashlib.md5()
+            md5_.update(str(result.userId).encode())
+            res.cookies = ('token', md5_.hexdigest())
+            res.cookies = ('HttpOnly',)
+            res.cookies = ('Path', '/')
+            user.token = md5_.hexdigest()
+            user.update({USER.token: user.token}).where(USER.userId == result.userId).execute()
+            self.__tokens[user.token] = username
+            # 登录接口同理
+            self.__vaild_cookie[user.token] = time.time() * 1000 + 30 * 60 * 1000
+            return None
+        else:
+            return (500, {}, "Username or password error", "Login Error")
+
+    def notify_other_server(self, token):
+    	requests.post(url,token)... # 耗时操作
+
+    @RequestReslove.timer(1000, times=-1, user_arg=None)
+    def check_cookie(self, emit_time, user_arg):
+    	for item in self.__vaild_cookie.copy().items():
+            k, v = item
+            # 超时用户注销登录
+            if v <= emit_time:
+            	self.__logger.info("%s need relogin" % (self.__tokens[k],))
+                # 若有用户Cookie过期调用notify_other_server
+                if self.__async_taker:
+                    self.__async_taker(self.notify_other_server, self.__tokens[k])
+                del self.__tokens[k]
+                del self.__vaild_cookie[k]
+        return True
+```
+## 配置文件
+```yml
+server:
+ release: false # 服务是否是生产环境
+ workers: # 线程池配置，若不配置默认会通过CPU核心数量自适配
+ 	min: 3 # 线程池最小线程数
+    max: 6 # 线程池最大线程数
+    max_work_task: 10 # 线程池线程任务队列最大长度
+    single: False # 关闭线程池启用单线程
+ ports: # 端口
+   http: 80 # HTTP 端口
+   https: 443 # HTTPS 端口
+ ssl_options: # 若配置了https，则需要配置ssl证书等信息
+   crt: ./ssl/server.crt # 根证书路径
+   key: ./ssl/server.key # 根证书私钥位置
+   pwd: '123456' # 证书密码
+   ssl_handshake_timeout: 15 # ssl握手限时
+ keep_alive: # HTTP保持长连接配置(以下若无配置则使用下列值作为默认值)
+ 	http_handshake_timeout: 15 # HTTP请求握手限制时间
+    http_data_readtimeout: 3 # HTTP请求体数据读取单位读取限制时间
+    alive_timeout: 3 # HTTP允许存活时间
+ static: # 静态文件服务配置
+   visitpath: ./static # 静态文件服务文件夹位置
+   entryfile: index.html # 入口文件或默认访问搜寻文件名
+   map: # 文件映射
+     - {router: /main/*, path: /home/} # router为访问路径，path为本地物理路径
+     - {router: /test/*, path: /test/index.html}
+ webcached: # 静态资源缓存策略
+ 	range_size: 3145728 # 若客户端要求以bytes访问，那么该参数表示每次获取的字节数（默认:3MB）
+    expires: 0 # Cache-Control:max-age
+    exter_name: # 支持缓存的文件扩展名
+    	- .html
+    	- .css
+    	- .js
+    	- .jpeg
+    	- .png
+ gzip: # 支持gzip压缩的文件扩展名
+ 	- .html
+    - .css
+    - .js
+ cros: # 配置跨域按照顺序[Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Max-Age, Access-Control-Allow-Credentials]
+ 	 - * # Access-Control-Allow-Origin
+ 	 - Content-Type, Token # Access-Control-Allow-Headers
+ 	 - 3600 # Access-Control-Max-Age
+ 	 - true # Access-Control-Allow-Credentials
+ http2: # http2配置项
+   enable: true # 是否启用http2
+   settings: # http2配置 不填写则使用以下默认值
+     init_window_size: 65536
+     header_size: 4096
+     allow_push: 0
+     max_stream: 100
+     max_frame_size: 16384
+     header_list_size: None
+datasource:
+  - { name: main,host: 127.0.0.1, port: 3306, user: root, password: fuqian199611,max_connections: 10, database: networkbridge, autoconnect: false, autocommit: 1 }
+```
+
+# 扩展篇
+## WebSockets
+
+websocket和路由一样，需要使用一个新的修饰器**@RequestReslove.websocket**。必须要实现三个事件回调函数。
+```python
+
+from Scarf.Tip import WebSocketHOOK
+
+"""
+  :param path: 访问
+  :param hook: 事件回调类型
+  * 所有的数据库连接参数都需要放在最后一个形参
+"""
+#需要强制实现
+@RequestReslove.websocket("/api/ws", WebSocketHOOK.HANDSHAKE)
+def on_handshake(req: HTTPRequest, ws: WebSocket, sql: SQLModel.DataBaseConnection("main")):
+	"""
+     当有请求正在尝试升级协议时触发该事件
+     :param req: 升级到WebSocket的HTTP请求
+     :param ws: WebSocket客户端
+     :param sql: SQL Connection 若对数据库有依赖可使用此参数（非固定参数，此参数可删除）
+     :return Bool: True则是允许升级否则拒绝服务
+    """
+	ws.send("Hello World")
+    ws.user_arg = random.randint(0,1000)
+    ws.ping()
+    return True
+
+#需要强制实现
+@RequestReslove.websocket("/api/ws", WebSocketHOOK.MESSAGE)
+def on_message(ws: WebSocket, data: bytes|str, fin:int, sql: SQLModel.DataBaseConnection("main")):
+	"""
+     当有接收消息时触发该事件
+     :param ws: WebSocket客户端
+     :param data: 若协商WebSocket为二进制则是bytes否则为str
+     :param fin: 指示该数据是否已全部发送完成，1：全部完成 0：未完成
+     :param sql: SQL Connection 若对数据库有依赖可使用此参数（非固定参数，此参数可删除）
+    """
+	print(data)
+    ws.send(data)
+
+#需要强制实现
+@RequestReslove.websocket("/api/ws", WebSocketHOOK.CLOSE)
+def on_close(ws:WebSocket, code:int = 0, reason:str = "", sql: SQLModel.DataBaseConnection("main")=None):
+	"""
+     当有客户端被关闭时触发该事件
+     :param ws: WebSocket客户端
+     :param code: 客户端关闭连接代码
+     :param reason: 客户端关闭连接简述
+     :param sql: SQL Connection 若对数据库有依赖可使用此参数（非固定参数，此参数可删除）
+     因为code和reason有可能为空，所有务必需要给他们一个默认值
+    """
+	print("%i %s" % (code, reason))
+
+
+@RequestReslove.websocket("/api/ws", WebSocketHOOK.PING)
+def on_ping(ws:WebSocket, code:int = 0, reason:str = "", sql: SQLModel.DataBaseConnection("main")=None):
+	"""
+     当客户端响应ping指令时触发该事件
+     :param ws: WebSocket客户端
+     :param code: 客户端关闭连接代码
+     :param reason: 客户端关闭连接简述
+     :param sql: SQL Connection 若对数据库有依赖可使用此参数（非固定参数，此参数可删除）
+     因为code和reason有可能为空，所有务必需要给他们一个默认值
+    """
+	print("%i %s %i" % (code, reason, ws.user_arg))
+
+# 另外我们还可以通过WebSocket对象进行一些主动操作
+"""
+发送数据给WebSocket客户端
+:param data(bytes|str): 需要发送给WebSocket客户端的数据
+"""
+WebSocket.send(data)
+
+"""
+关闭WebSocket客户端连接
+:param code(int): 关闭代码
+:param reason(str): 关闭描述
+"""
+WebSocket.close(code,reason)
+
+"""
+向WebSocket客户端发送ping指令以确定客户端与服务器的连接是否存活
+与WebSocketHOOK.PING事件相对应
+"""
+WebSocket.ping()
+
+"""
+用于为各个客户端存放自定义数据，默认为None
+"""
+WebSocket.user_arg = None
+```
+
+## HTTP/2
+
+目前HTTP/2只适配用于HTTPS之下，HTTP的情况下并不支持HTTP/2连接；当HTTP2被访问时，HTTPRequest.http_version版本号将被设置2.0，目前也并不支持 **PUSH_PROMISE**。
+
+
