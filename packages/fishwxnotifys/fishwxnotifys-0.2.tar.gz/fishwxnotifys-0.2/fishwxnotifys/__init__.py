@@ -1,0 +1,1 @@
+from fishwxnotifys.tasks import send_message
