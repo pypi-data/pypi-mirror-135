@@ -1,0 +1,59 @@
+'''文本比较'''
+
+
+if __name__ == '__main__':
+    import __init__
+    __init__.test_editor(__file__)
+
+
+# TODO 中文html显示问题
+
+
+import os
+import difflib
+import webbrowser
+# import tkinter as tk
+
+import sys
+if sys.version_info > (3, 6):
+    from idlelib.textview import view_text
+else:
+    from idlelib.textView import view_text
+
+
+# TODO 支持选择py或全部格式文件
+# TODO 优先比对已经打开的文件（列表）
+
+def Comparing(parent, file1, file2):  # TODO 移植到不依赖输入，支持任意文件接口
+    with open(file1, encoding='u8') as f:
+        ss1 = f.read().split('\n')
+    with open(file2, encoding='u8') as f:
+        ss2 = f.read().split('\n')
+    title = 'Different between %s and %s' % (os.path.basename(file1), os.path.basename(file2))  # TODO 我之前时怎么命名的？
+
+    d = difflib.Differ()
+    ss3 = d.compare(ss1, ss2)
+    text = '\n'.join(ss3)
+    dlg = view_text(parent, title, text)
+
+    def show_html():
+        d = difflib.HtmlDiff()
+        with open(title + '.html', 'w', encoding='u8') as f:
+            f.write(d.make_file(ss1, ss2))
+        webbrowser.open(title + '.html')
+
+    show_html()
+
+
+class CompareFile:
+    def __init__(self, parent):
+        self.text = parent.text
+        self.io = parent.io
+
+        parent.add_adv_menu('Compare to File', self.OnCompareFile, sp=True)
+
+    def OnCompareFile(self):
+        file1 = self.io.filename
+        file2 = self.io.askopenfile()
+        if file2:
+            Comparing(self.text, file1, file2)
