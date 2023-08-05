@@ -1,0 +1,260 @@
+Metadata-Version: 2.1
+Name: pyrasgo
+Version: 0.4.9
+Summary: Alpha version of the Rasgo Python interface.
+Home-page: https://www.rasgoml.com/
+Author: Patrick Dougherty
+Author-email: patrick@rasgoml.com
+License: GNU Affero General Public License v3 or later (AGPLv3+)
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: more-itertools
+Requires-Dist: pandas
+Requires-Dist: pydantic
+Requires-Dist: pyyaml
+Requires-Dist: requests
+Requires-Dist: tqdm
+Requires-Dist: snowflake-connector-python (>=2.7.1)
+Requires-Dist: snowflake-connector-python[pandas]
+Requires-Dist: idna (>=3.3)
+Requires-Dist: pyarrow (>=5.0.0)
+Provides-Extra: df
+Requires-Dist: shap ; extra == 'df'
+Requires-Dist: catboost ; extra == 'df'
+Provides-Extra: snowflake
+Requires-Dist: snowflake-connector-python (>=2.7.1) ; extra == 'snowflake'
+Requires-Dist: snowflake-connector-python[pandas] ; extra == 'snowflake'
+Requires-Dist: idna (>=3.3) ; extra == 'snowflake'
+Requires-Dist: pyarrow (>=5.0.0) ; extra == 'snowflake'
+
+pyRasgo is a python SDK to interact with the Rasgo API. Rasgo accelerates feature engineering for Data Scientists.
+
+Visit us at https://www.rasgoml.com/ to turn your data into Features in minutes!
+
+Documentation is available at:
+https://docs.rasgoml.com/rasgo-docs/pyrasgo/
+
+
+Package Dependencies
+-------------------------------------------------------------------------------
+- idna>=3.3
+- more-itertools
+- pandas
+- pyarrow>=5.0.0
+- pydantic
+- pyyaml
+- requests
+- snowflake-connector-python>=2.7.0
+- tqdm
+
+
+Release Notes
+-------------------------------------------------------------------------------
+- v0.4.9 (Jan 17, 2022)
+  - Adds parameters `filters`, `order_by`, and `columns` to dataset.to_df() and dataset.preview() methods
+
+- v0.4.8 (Jan 14, 2022)
+  - Adds `experimental_async` flag to transforms to take advantage of experimental long-running operation creation
+
+- v0.4.7 (Jan 13, 2022)
+  - Return errors for operation creation
+
+- v0.4.6 (Jan 12, 2022)
+  - Adds support for long running operation creations
+
+- v0.4.5 (Dec 21, 2021)
+  - Fixes dependency installation
+
+- v0.4.4 (Dec 21, 2021)
+  - Adds support for Python versions `3.7.12`, `3.8`, `3.9`, and `3.10`
+
+- v0.4.3 (Dec 17, 2021)
+  -  Method added `rasgo.update.transform()` to update a transform
+  
+
+- v0.4.2 (Dec 15, 2021)
+   - Adds the ability to reference Dataset attributes directly
+      - `Dataset.id`
+      - `Dataset.name`
+      - `Dataset.description`
+      - `Dataset.status`
+      - `Dataset.fqtn`
+      - `Dataset.columns`
+      - `Dataset.created_date`
+      - `Dataset.update_date`
+      - `Dataset.attributes`
+      - `Dataset.dependencies`
+      - `Dataset.sql`
+   - Adds ability function for getting Datasets by `fqtn`
+      - `rasgo.get.dataset(fqtn='MY_FQTN'>)`
+
+
+- v0.4.1 (Dec 13, 2021)
+   - "Updates"
+
+
+- v0.4.0 (Dec 07, 2021)
+   - Add Rasgo Datasets
+      - Datasets are the new, single primitive available in Rasgo. Users can explore, transform, and create new data warehouse tables using this single primitive object. 
+      - Transforming a previously saved Dataset will produce a new Dataset definition that builds on top of the transformed Dataset. This new dataset will consist of a new operation that references the transformed Dataset as the `source_table` in the applied transform. Further transforms will add to the list of operations until `.save` is called to persist the created operations as a new Dataset in Rasgo. 
+      - New Rasgo Functions:
+         - `rasgo.get.datasets` - Get a list of all available Datasets
+         - `rasgo.get.dataset` - Get a single Dataset by ID, including the list of operations that created it (if they exist)
+         - `rasgo.update.dataset` - Update name and description
+         - `rasgo.delete.dataset` - Delete a Dataset
+         - `rasgo.publish.dataset` - Save a new dataset to Rasgo. Can only save new Datasets that have been created by transforming old Datasets
+         - `rasgo.publish.df` - Publish a Pandas DataFrame as a Rasgo Dataset
+         - `rasgo.publish.table` - Publish an existing table as a Rasgo dataset
+      - Dataset Primitive Functions:
+         - `Dataset.transform` - Transform a previously existing Dataset with a given Transform to create a new Dataset definition
+            - You can also reference transforms by name directly. 
+            - e.g. `dataset.join(...)` as opposed to `dataset.transform(transform_name='join', ...)`
+         - `Dataset.to_df` - Read a Dataset into a Pandas DataFrame
+         - `Dataset.preview` - Get a Pandas DataFrame consisting of the top 10 rows produced by this Dataset
+      - Dataset Attributes:
+         - `Dataset.sql` - A sql string representation of the operations that produce this dataset (if they exist)
+
+
+- v0.3.4 (Dec 03, 2021)
+   - Temporary hotfix: DataSource.to_dict() returns `sourceTable` attribute as a table name, instead of fqtn. Plan is to revert to fqtn in a future version when publish methods offer first-class handling of fqtn.
+
+
+- v0.3.3 (Nov 08, 2021)
+   - Added detailed Transform Argument Definitions during Transform creation
+   - Allow null values for User Defined Transform arguments
+
+
+- v0.3.2 (Oct 13, 2021)
+   - Adds [Jinja](https://jinja.palletsprojects.com/) as the templating engine for User Defined Transforms
+   	- Source transforms may now be previewed, tested and deleted to enable a full creation experience.
+   	- Adds Rasgo template functions to enable dynamic template building
+
+
+- v0.3.1 (Sept 27, 2021)
+   - Adds `filter` and `limit` params to `read.collection_snapshot_data` function
+   - Fixes Collection response model bug
+
+
+- v0.3.0 (Sept 22, 2021)
+   - Deprecates FeatureSet primitive (see docs for migration path: https://docs.rasgoml.com/rasgo-docs/pyrasgo-version-log/version-0.3)
+   - Adds support for creating features using python source code
+   - Adds support for user-defined transformation functionality
+   - Adds methods to interact with Collection snapshots:
+     - `get.collection_snapshots()`
+     - `read.collection_snapshot_data()`
+   - Adds methods to Collection primitive:
+     - `.preview()` to view data in a pandas df
+     - `.get_compatible_features()` to list features available to join
+   - Adds `.to_dict` and `.to_yml` methods to DataSource primitive
+
+- v0.2.5 (Aug 18, 2021)
+   - adds handling and user notification for highly null dataframes which would otherwise not function well with `evaluate.profile` or `evaluate.feature_importance`
+
+- v0.2.4 (Aug 4, 2021)
+   - supports tables named as restricted Snowflake keywords (e.g. ACCOUNT, CASE, ORDER) to be registered as Rasgo Sources
+
+- v0.2.3 (July 30, 2021)
+   - introduces `publish.features_from_source_code()` function. This function allows users to pass a custom SQL string to create a view in Snowflake using their own code. This function will: register a child source based off the parent source provided as input, register features from the new child source table.
+   - introduces new workflow to `publish.source_data()` function. Pass in `source_type="sql", sql_definition="<valid sql select string>"` to create a new Rasgo DataSource as a view in Snowflake using custom SQL.
+   - makes the `features` parameter optional in `publish.features_from_source()` function. If param is not passed, all columns in the underlying table that are not in the `dimensions` list will be registered as features
+   - adds `trigger_stats` parameter to all publish method. When set to False, statistical profiling will not run for the data objects being published. Default = True
+   - adds `verbose` parameter to all publish methods. When set to True, prints status messages to stdout to update users on progress of the function. Default = False.
+   - introduces `.sourceCode` property on Rasgo DataSource and FeatureSet classes to display the SQL or python source code used to build the underlying table
+   - introduces `.render_sql_definition()` method on Collection class to display the SQL used to create the underlying collection view
+   - introduces `.dimensions` property on Rasgo Collection class to display all unique dimension columns in a Collection
+   - introduces `trigger_stats` parameter in `collection.generate_training_data()` method to allow users to generate a sql view without kicking off correlation and join stats. Set to False to suppress stats jobs. Default=True.
+   - Add support for optional catboost parameter `train_dir` in `evaluate.feature_importance()` function, which allows users to dictate where temporary training files are generated
+
+- v0.2.2(July 14, 2021)
+   - Allow for consistency in `evaluate.feature_importance()` evaluation metrics for unchanged dataframes
+   - Allow users to control certain CatBoost parameters when running `evaluate.feature_importance()`
+
+- v0.2.1(July 01, 2021)
+   - expand `evaluate.feature_importance()` to support calculating importance for collections
+
+- v0.2.0(June 24, 2021)
+   - introduce `publish.experiment()` method to fast track dataframes to Rasgo objects
+   - fix register bug
+
+- v0.1.14(June 17, 2021)
+   - improve new user signup experience in `register()` method
+   - fix dataframe bug when experiment wasn't set
+
+- v0.1.13(June 16, 2021)
+   - intelligently run Regressor or Classifier model in `evaluate.feature_importance()`
+   - improve model performance statistics in `evaluate.feature_importance()`: include AUC, Logloss, precision, recall for classification
+
+- v0.1.12(June 11, 2021)
+   - support fqtn in `publish.source_data(table)` parameter
+   - trim timestamps in dataframe profiles to second grain
+
+- v0.1.11(June 9, 2021)
+   - hotfix for unexpected histogram output
+
+- v0.1.10(June 8, 2021)
+   - pin pyarrow dependency to < version 4.0 to prevent segmentation fault errors
+
+- v0.1.9(June 8, 2021)
+   - improve model performance in `evaluate.feature_importance()` by adding test set to catboost eval
+
+- v0.1.8(June 7, 2021)
+   - `evaluate.train_test_split()` function supports non-timeseries dataframes
+   - `evaluate.feature_importance()` function now runs on an 80% training set
+   - adds `timeseries_index` parameter to `evaluate.feature_importance()` & `prune.features()` functions
+
+- v0.1.7(June 2, 2021)
+   - expands dataframe series type recognition for profiling
+
+- v0.1.6(June 2, 2021)
+   - cleans up dataframe profiles to enhance stats and visualization for non-numeric data
+
+- v0.1.5(June 2, 2021)
+   - introduces `pip install "pyrasgo[df]"` option which will install: shap, catboost, & scikit-learn
+
+- v0.1.4(June 2, 2021)
+   - various improvements to dataframe profiles & feature_importance
+
+- v0.1.3(May 27, 2021)
+   - introduces experiment tracking on dataframes
+   - fixes errors when running feature_importance on dataframes with NaN values
+
+- v0.1.2(May 26, 2021)
+   - generates column profile automatically when running feature_importance
+
+- v0.1.1(May 24, 2021)
+   - supports sharing public dataframe profiles
+   - enforces assignment of granularity to dimensions in Publish methods based on list ordering
+
+- v0.1.0(May 17, 2021)
+   - introduces dataframe methods: evaluate, prune, transform
+   - supports free pyrago trial registration
+
+- v0.0.79(April 19, 2021)
+   - support additional datetime data types on Features
+   - resolve import errors
+
+- v0.0.78(April 5, 2021)
+   - adds include_shared param to get_collections() method
+
+- v0.0.77(April 5, 2021)
+   - adds convenience method to rename a Feature’s displayName
+   - adds convenience method to promote a Feature from Sandbox to Production status
+   - fixes permissions bug when trying to read Community data sources from a public org
+
+- v0.0.76(April 5, 2021)
+   - adds columns to DataSource primitive
+   - adds verbose error message to inform users when a Feature name conflict is preventing creation
+
+- v0.0.75(April 5, 2021)
+   - introduce interactive Rasgo primitives
+
+- v0.0.74(March 25, 2021)
+   - upgrade Snowflake python connector dependency to 2.4.0
+   - upgrade pyarrow dependency to 3.0
+
+
