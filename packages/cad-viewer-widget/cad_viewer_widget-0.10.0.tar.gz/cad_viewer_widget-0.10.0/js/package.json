@@ -1,0 +1,66 @@
+{
+  "name": "cad-viewer-widget",
+  "version": "0.10.0",
+  "description": "A Jupyter widget to view cad objects",
+  "license": "MIT",
+  "author": "Bernhard Walter",
+  "main": "lib/index.js",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bernhard-42/cad-viewer-widget.git"
+  },
+  "keywords": [
+    "jupyter",
+    "widgets",
+    "ipython",
+    "ipywidgets",
+    "jupyterlab-extension"
+  ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/ && rimraf ../cad_viewer_widget/labextension/ && rimraf ../cad_viewer_widget/nbextension",
+    "prepublish": "yarn run clean && yarn run build:prod",
+    "build": "webpack --mode=development && yarn run build:labextension:dev",
+    "build:prod": "webpack --mode=production && yarn run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "watch": "webpack --watch --mode=development",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "npx prettier lib --check",
+    "prettier:fix": "npx prettier lib --write"
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^4.0.0",
+    "@jupyter-widgets/jupyterlab-manager": "^3.0.0",
+    "@jupyterlab/apputils": "^3.2.4",
+    "js-base64": "^3.7.2",
+    "pako": "^2.0.4",
+    "three-cad-viewer": "1.2.5"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.0.0",
+    "css-loader": "^6.4.0",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "2.3.2",
+    "rimraf": "^2.6.1",
+    "style-loader": "^3.3.1",
+    "svg-inline-loader": "^0.8.2",
+    "terser-webpack-plugin": "^5.2.4",
+    "webpack": "^5"
+  },
+  "jupyterlab": {
+    "extension": "lib/labplugin",
+    "outputDir": "../cad_viewer_widget/labextension",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
+  }
+}
