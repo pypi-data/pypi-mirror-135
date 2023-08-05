@@ -1,0 +1,51 @@
+All movie scraper is a python library to search for movies details on all movies website, using browser automation. 
+It currently runs only on windows.
+
+## Scrape allmovies.com
+* In this, we first import library to scrape top 250 movies.
+* Then we provide a keyword in place of  **"horror"**.
+```sh
+from allmovie_scraper import *
+response = horror.movie_scraper(Search="horror")
+```
+
+### Response Data
+
+```json
+        "movie name": "#Horror",
+        "movie detailed page": "https://www.allmovie.com/movie/horror-v644609",
+        "directed by": "Tara Subkoff",
+        "genres": "Genres: Drama, Horror, Mystery"
+```
+#### Bot Studio
+[Bot_Studio](https://pypi.org/project/bot_studio/) is needed for browser automation. As soon as this library is imported in code, automated browser will open up in which allmovies.com website will open and data is scraped from the search results of the given keyword.
+
+
+### Installation
+
+```sh
+pip install allmovie-scraper
+```
+
+### Import
+```sh
+from allmovie_scraper import *
+```
+
+### Get Allmovie Data
+```sh
+response = horror.movie_scraper(Search="horror")
+```
+
+### Run bot on cloud
+You can run bot on [Cloud](https://datakund.com/products/horror-movie-scraper-bot).
+
+### Send Feedback to Developers
+```sh
+bot_studio.send_feedback(feedback="Need help with this ......")
+```
+
+### Contact Us
+* [Telegram](https://t.me/datakund)
+* [Website](https://datakund.com)
+
