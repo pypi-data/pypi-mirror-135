@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: ukb_loader
+Version: 0.0.6
+Summary: Package for fast loading of UK Biobank phenotype and genotype datasets
+Home-page: https://github.com/alex-medvedev-msc/ukb_loader
+Author: Aleksandr Medvedev
+Author-email: aleksandr.medvedev@skoltech.ru
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/alex-medvedev-msc/ukb_loader/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# UK Biobank data loader
+
+This repository provides a library and set of utilities for the efficient loading of phenotype and genotype data from the [UK Biobank](https://www.ukbiobank.ac.uk/).
+
+Features include:
+* Loading quantitative and categorical phenotypes, includeding self-reported phenotypes and phenotypes based on [ICD-10 disease codes](https://biobank.ndph.ox.ac.uk/ukb/field.cgi?id=41202).
+* Fast parallelized loading that leverages chunked and compressed [Zarr arrays](https://zarr.readthedocs.io/en/stable/).
+* Utilities for splitting the dataset samples randomly, or based on a predefined structure.
+
+## Usage
+
+First, the UKB dataset needs to be converted into the Zarr format with the desired test/train/validation split. For this, use the provided [conversion script](src/ukb_loader/convert_all.py).
+
+For examples on loading various types of phenotypes, see [this example notebook](examples/load-phenotype-example.ipynb).
+
