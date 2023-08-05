@@ -1,0 +1,59 @@
+{% extends "machina/board_base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'ashley/css/main.css' %}"/>
+{% endblock css %}
+
+{% block body %}
+  {# Wrap all body content in an ID'd element to easily remove it from view (using aria-hidden) #}
+  {# when a modal is open. This is important for accessibility. #}
+  <div id="modal-exclude__react">
+    {% block header %}
+    {% endblock header %}
+    <div class="my-0 px-2 container-fluid" id="main_container">
+        <div class="row">
+            <div class="col-12">
+                {% block breadcrumb %}{% include "partials/breadcrumb.html" %}{% endblock breadcrumb %}
+            </div>
+        </div>
+
+        {% block search %}
+        <div class="row">
+            <form class="form-inline my-2 ml-3 my-lg-0" role="search" action="{% url 'forum_search:search' %}">
+                <input class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" required>
+                <button class="btn btn-primary btn-sm my-2 my-sm-0" type="submit">{% trans "Search" %}</button>
+                <a class="small pl-2" href="{% url 'forum_search:search' %}">{% trans "Advanced search" %}</a>
+            </form>
+        </div>
+        {% endblock search %}
+
+        <div class="row">
+            {% block username_warning %}
+                {% if request.user is not None and not request.user.public_username %}
+                    <div class="col-12 pt-3">
+                        <div class="alert alert-info fade show">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {% trans "Welcome to the discussion forum! First of all, please set a display name that will be associated with your messages." %} <a class="btn btn-sm btn-primary" href="{% url 'forum.username.change' %}">{% trans "Set my display name" %}</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock username_warning %}
+            <div class="col-12 pt-3">
+                {% block messages %}{% include "partials/messages.html" %}{% endblock messages %}
+            </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+            window.__ashley_frontend_context__ = JSON.parse('{{ FRONTEND_CONTEXT|safe }}');
+    </script>
+    <script src="{% static 'ashley/js/build/ashley.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock js %}
