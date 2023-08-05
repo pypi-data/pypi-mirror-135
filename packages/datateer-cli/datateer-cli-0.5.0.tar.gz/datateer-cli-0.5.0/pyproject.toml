@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "datateer-cli"
+version = "0.5.0"
+description = "Datateer CLI to support devops and infrastructure"
+authors = ["Datateer <dev@datateer.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+boto3 = "^1.20.37"
+click = "^8.0.3"
+PyYAML = "^6.0"
+erd-python = "^0.6.0"
+pathspec = "^0.9.0"
+
+[tool.poetry.dev-dependencies]
+coverage = "^6.2"
+pytest = "^6.2.5"
+moto = "^2.3.2"
+flake8 = "^4.0.1"
+
+[tool.poetry.scripts]
+datateer = "datateer_cli.cli:cli"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+version_variable = [
+    "datateer_cli/__init__.py:__version__",
+    "pyproject.toml:version"
+]
+branch = "main"
+upload_to_pypi = true
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
