@@ -1,0 +1,66 @@
+Metadata-Version: 2.1
+Name: Lmgeo
+Version: 1.0
+Summary: Python raster GIS library with low memory requirements.
+Home-page: https://git.wur.nl/hoek008/lmgeo/
+Author: Steven Hoek
+Author-email: dobedani@gmx.net
+License: LGPL
+Download-URL: https://git.wur.nl/hoek008/lmgeo/-/archive/master/lmgeo-master.tar.gz
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering
+License-File: LICENSE
+Requires-Dist: pyshp (>=2.1.0)
+Requires-Dist: pyproj (>=1.9.5.1)
+Requires-Dist: numpy (>=1.14.3)
+Requires-Dist: tifffile (>=2019.3.18)
+Requires-Dist: tables (>=3.5.2)
+Requires-Dist: netCDF4 (>=1.5.1.2)
+Requires-Dist: libtiff (>=0.4.2)
+
+Low-Memory GEOgraphic information system library - lmgeo
+
+Lmgeo is a Python raster GIS library with low memory requirements. Aim is to provide software building blocks with a low-memory footprint that can be used to automate specific tasks without necessarily requiring common GIS software like ArcGIS or QGIS. 
+
+These building blocks can be used in the following ways:
+- as basis for easy-to-use GIS applications with an interface designed according to the so-called LIME approach (less is more). Non-expert users can be taught how to use such applications for recurring tasks which would otherwise require the intervention of expert users.
+- as part of integrated software that deals with more than only the domain of GIS
+- to automate tasks which would cause ArcGIS / QGIS to reserve a lot of memory and would slow down the execution 
+- to automate tasks that are error-prone in ArcGIS - e.g. certain raster GIS operations.
+
+The folllowing principles were used in the implementation of lmgeo:
+- should work on any platform (Windows, Linux or Mac)
+- the library was implemented as much as possible in pure python with as few dependencies as possible
+- modular design, allowing easy replacement of components 
+- a common interface for all classes dedicated to image formats
+- reading, processing and writing of image data as much as possible line by line, to limit memory usage.
+
+Supported image formats:
+- ASCII grid (*.asc)
+- Floating point rasters (*.flt)
+- Band interleaved by line (*.bil)
+- Band sequential (*.bsq)
+- GeoTiff (*.tif)
+- PCRaster (*.map)
+- HDF5 (*.hdf5)
+- NetCDF4 (*.nc4).
+
+Dependencies:
+- numpy
+- pylibtiff
+- PyTables
+- netCDF4
+- pyproj
+- cython.
+
+More documentation is in preparation. Feel free to ask if you need assistance.
+
+
