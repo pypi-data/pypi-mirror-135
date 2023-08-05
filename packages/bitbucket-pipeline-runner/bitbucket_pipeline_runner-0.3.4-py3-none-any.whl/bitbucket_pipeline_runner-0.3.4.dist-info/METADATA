@@ -1,0 +1,80 @@
+Metadata-Version: 2.1
+Name: bitbucket-pipeline-runner
+Version: 0.3.4
+Summary: Run a bitbucket pipeline locally
+Home-page: https://github.com/mathieu-lemay/pipeline-runner
+License: MIT
+Author: Mathieu Lemay
+Author-email: acidrain1@gmail.com
+Requires-Python: >=3.7,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: GitPython (>=3.1.12,<4.0.0)
+Requires-Dist: PyYAML (>=5.4.1,<6.0.0)
+Requires-Dist: appdirs (>=1.4.4,<2.0.0)
+Requires-Dist: boto3 (>=1.16.63,<2.0.0)
+Requires-Dist: click (>=8.0.1,<9.0.0)
+Requires-Dist: coloredlogs (>=15.0,<16.0)
+Requires-Dist: cryptography (>=3.4.8,<4.0.0)
+Requires-Dist: docker (>=5.0.2,<6.0.0)
+Requires-Dist: pydantic (>=1.8.2,<2.0.0)
+Requires-Dist: pyfzf (>=0.2.2,<0.3.0)
+Requires-Dist: python-dotenv (>=0.19.0,<0.20.0)
+Requires-Dist: python-slugify (>=5.0.2,<6.0.0)
+Requires-Dist: requests (>=2.25.1,<3.0.0)
+Requires-Dist: tenacity (>=7.0.0,<8.0.0)
+Project-URL: Repository, https://github.com/mathieu-lemay/pipeline-runner
+Description-Content-Type: text/markdown
+
+# Bitbucket Pipeline Runner
+
+Tool to run Bitbucket Pipelines locally.
+
+## Installation
+```shell
+pip install bitbucket-pipeline-runner
+```
+
+## Basic usage
+To run a pipeline
+```shell
+cd <project-directory>
+pipeline-runner run <pipeline-name>
+```
+
+To list available pipelines
+```shell
+cd <project-directory>
+pipeline-runner list
+```
+
+## Environment variables
+bitbucket pipeline runner already sets all `BITBUCKET_*` enviromnent variables in the step's run enviromnent.
+It will also source any `.env` file in the current directory, for all project specific enviromnent variables.
+
+## Artifacts and logs
+Persistent data like artifacts generated from your pipelines and execution logs can be found in your user's data directory.
+
+On Linux:
+
+    ${XDG_DATA_HOME:-~/.local/share}/pipeline-runner
+
+On macOS:
+
+    ~/Library/Application Support/pipeline-runner
+
+## Caches
+Caches defined in your pipelines are stored in your user's cache directory.
+
+On Linux:
+
+    ${XDG_CACHE_HOME:-~/.cache}/pipeline-runner
+
+On macOS:
+
+    ~/Library/Caches/pipeline-runner
+
