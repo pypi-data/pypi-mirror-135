@@ -1,0 +1,3430 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SIMULTAN.Util</name>
+    </assembly>
+    <members>
+        <member name="T:SIMULTAN.Util.ByteSerializer">
+            <summary>
+            Provides serialization and deserialization of objects into byte streams
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ByteSerializer.ObjectToByteArray(System.Object)">
+            <summary>
+            Converts object to byte array
+            </summary>
+            <param name="obj">Object to serialize</param>
+            <returns>Serialized byte array</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.ByteSerializer.ByteArrayToObject(System.Byte[])">
+            <summary>
+            Converts byte array to object
+            </summary>
+            <param name="arrBytes">Serialized byte array</param>
+            <returns>Deserialized object</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.CachedResourceDictionary">
+            <summary>
+            Resource dictionary that makes sure that a single dictionary is only loaded once.
+            Behaves like a normal ResourceDictionary for the first time. Then always returns the first dictionary.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.CachedResourceDictionary.Source">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.CachedResourceDictionary.UpdateAll">
+            <summary>
+            Reloads all cached dictionaries. Needed when the theme has changed
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Caching.DownloadImageCache">
+            <summary>
+            A Cache that downloads files and caches them.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the Download cache.
+            </summary>
+            <param name="basePath">The base path of the cache.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.Contains(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.Remove(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.Put(System.String,System.String)">
+            <summary>
+            Adds an item to the cache. It downloads the file to the path determined by the key and base path of the cache.
+            </summary>
+            <param name="key">The key of the file. (filename or relative path)</param>
+            <param name="url">The URL to the file that needs downloading.</param>
+            <returns>True if successful, false if an error occurred and it could not be cached.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.DownloadImageCache.TryGet(System.String,System.String@)">
+            <summary>
+            Tries to retrieve the element from the cache.
+            </summary>
+            <param name="key">The key of the file. (filename or relative path)</param>
+            <param name="absolutePath">The absolute path to the downloaded and cached file if it is  in the cache, else null.</param>
+            <returns>True if the file is in the cache, otherwise false.</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Caching.FileImageCache">
+            <summary>
+            A file based image cache.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the File cache.
+            </summary>
+            <param name="basePath">The base path of the cache.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.Contains(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.Remove(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.Put(System.String,System.Drawing.Image)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.FileImageCache.TryGet(System.String,System.Drawing.Image@)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Caching.IImageCache`1">
+            <summary>
+            Provides base methods to cache images.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.IImageCache`1.Put(System.String,`0)">
+            <summary>
+            Adds the given image to the cache.
+            Duplicates are overridden.
+            </summary>
+            <param name="key">The key of the file. (filname or relative path)</param>
+            <param name="image">The image to cache.</param>
+            <returns>True if successful, false if an error occurred and it could not be cached.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.IImageCache`1.TryGet(System.String,`0@)">
+            <summary>
+            Tries to retrieve the element from the cache.
+            </summary>
+            <param name="key">The key of the file. (filname or relative path)</param>
+            <param name="image">The file if it is in the cache, else null.</param>
+            <returns>True if the file is in the cache, otherwise false.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.IImageCache`1.Contains(System.String)">
+            <summary>
+            Returns if the file with the given key is cached.
+            </summary>
+            <param name="key">The key to the file. (relative path to the file)</param>
+            <returns>Returns if the file with the given key is cached.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.IImageCache`1.Remove(System.String)">
+            <summary>
+            Deletes the file with the given key.
+            </summary>
+            <param name="key">The key to the file. (relative path to the file)</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Caching.IImageCache`1.Clear">
+            <summary>
+            Clears all files in the cache. The base directory will be empty.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.CollectionExtensions">
+            <summary>
+            Provides some usefull extensions for Collections
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ForEach``1(System.Collections.ObjectModel.ObservableCollection{``0},System.Action{``0})">
+            <summary>
+            Executes an action for all elementes in the collection
+            </summary>
+            <typeparam name="T">The datatype</typeparam>
+            <param name="collection">The collection</param>
+            <param name="action">The action</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ForEach(System.Collections.IList,System.Action{System.Object})">
+            <summary>
+            Executes an action for all elementes in the collection
+            </summary>
+            <param name="collection">The collection</param>
+            <param name="action">The action</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ForEach``1(System.Collections.Generic.IReadOnlyCollection{``0},System.Action{``0})">
+            <summary>
+            Executes an action for all elementes in the collection
+            </summary>
+            <typeparam name="T">The datatype</typeparam>
+            <param name="collection">The collection</param>
+            <param name="action">The action</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Executes an action for all elementes in the collection
+            </summary>
+            <typeparam name="T">The datatype</typeparam>
+            <param name="collection">The collection</param>
+            <param name="action">The action</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.AddRange``1(System.Collections.ObjectModel.ObservableCollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Adds a range of items to the collection
+            </summary>
+            <typeparam name="T">Item type</typeparam>
+            <param name="collection">The collecton</param>
+            <param name="items">The items to add</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ArgMin``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Returns the element with the lowest key value
+            </summary>
+            <typeparam name="T">Type of the elements</typeparam>
+            <typeparam name="Key">Type of the key. Has to implement IComparable</typeparam>
+            <param name="collection">The collection</param>
+            <param name="key">Function that calculates the key</param>
+            <returns>The element with the lowest key value</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ArgMax``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Returns the element with the highest key value
+            </summary>
+            <typeparam name="T">Type of the elements</typeparam>
+            <typeparam name="Key">Type of the key. Has to implement IComparable</typeparam>
+            <param name="collection">The collection</param>
+            <param name="key">Function that calculates the key</param>
+            <returns>The element with the highest key value</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveWhere``1(System.Collections.ObjectModel.Collection{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Removes all items from a collection that fulfill the predicate
+            </summary>
+            <typeparam name="T">Item type of the collection</typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveWhere``1(System.Collections.Generic.List{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Removes all items from a collection that fulfill the predicate
+            </summary>
+            <typeparam name="T">Item type of the collection</typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveWhere``1(System.Collections.ObjectModel.Collection{``0},System.Func{``0,System.Boolean},System.Action{``0})">
+            <summary>
+            Removes all items from a collection that fulfill the predicate
+            </summary>
+            <typeparam name="T">Item type of the collection</typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param> 
+            <param name="removeAction">Action that gets called on all elements that are removed</param> 
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveWhere``1(System.Collections.Generic.List{``0},System.Func{``0,System.Boolean},System.Action{``0})">
+            <summary>
+            Removes all items from a collection that fulfill the predicate
+            </summary>
+            <typeparam name="T">Item type of the collection</typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param> 
+            <param name="removeAction">Action that gets called on all elements that are removed</param> 
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveFirst``1(System.Collections.ObjectModel.Collection{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Removes the first occurence that matches the predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param>
+            <returns>True when an item has been removed, otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.RemoveFirst``1(System.Collections.ObjectModel.Collection{``0},System.Func{``0,System.Boolean},``0@)">
+            <summary>
+            Removes the first occurence that matches the predicate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection</param>
+            <param name="predicate">Predicate to determine which elements will be removed</param>
+            <param name="removed">The removed item</param>
+            <returns>True when an item has been removed, otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ToObservableCollection``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts an enumerable to a observable collection
+            </summary>
+            <typeparam name="T">Type of the items</typeparam>
+            <param name="enumerable">The enumerable to convert</param>
+            <returns>An observable collection</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.Average``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Windows.Media.Media3D.Point3D})">
+            <summary>
+            Calculates the average Point3D
+            </summary>
+            <typeparam name="T">Type of the collection</typeparam>
+            <param name="enumerable">The collection</param>
+            <param name="selector">Calculates a Point3D from a collection element</param>
+            <returns>The average Point3D</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.Average``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Windows.Media.Media3D.Vector3D})">
+            <summary>
+            Calculates the average Vector3D
+            </summary>
+            <typeparam name="T">Type of the collection</typeparam>
+            <param name="enumerable">The collection</param>
+            <param name="selector">Calculates a Vector3D from a collection element</param>
+            <returns>The average Vector3D</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.DistinctBy``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Object})">
+            <summary>
+            Returns a distinct list where the equality is determined by the selector
+            </summary>
+            <typeparam name="T">Type of the elements</typeparam>
+            <param name="enumerable">The collection</param>
+            <param name="selector">Method that selects the object to compare</param>
+            <returns>A list where no two items have the same selector value</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.ToList``1(System.Collections.IList)">
+            <summary>
+            Converts an IList into a typed list
+            </summary>
+            <typeparam name="T">Type of the items</typeparam>
+            <param name="iList">The original list</param>
+            <returns>The typed list</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.HandleCollectionChanged``2(System.Collections.Specialized.NotifyCollectionChangedEventArgs,System.Collections.Generic.IList{``1},System.Func{``0,``1})">
+            <summary>
+            Handles a collection change event translation
+            Basically, this method duplicates the CollectionChanged operation onto another list
+            </summary>
+            <typeparam name="TSource">Source element type</typeparam>
+            <typeparam name="TTarget">Target element type</typeparam>
+            <param name="args">CollectionChanged event args</param>
+            <param name="target">Target list</param>
+            <param name="convert">Function to convert from source to target</param>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.TryFirstOrDefault``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0},``0@)">
+            <summary>
+            Tries to find the first element that matches the predicate. Returns True when one is found or False when non is found.
+            </summary>
+            <typeparam name="T">Type of the elements in the collection</typeparam>
+            <param name="source">The collection</param>
+            <param name="predicate">The matching function. Has to return True for a match</param>
+            <param name="value">The found value. Only valid when the method returns True</param>
+            <returns>True when one is found or False when non is found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.FindIndex``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Returns the index of the first item that matches the predicate, or -1 when no matching item exists
+            </summary>
+            <typeparam name="T">Type of the collection elements</typeparam>
+            <param name="list">The collection</param>
+            <param name="predicate">The predicate to search for</param>
+            <returns>The index of the first item that matches the predicate, or -1 when no matching item exists</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CollectionExtensions.Split``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Splits a list into two lists: One with elements matching the predicate, the other with elements not matching.
+            </summary>
+            <typeparam name="T">Type of the list elements</typeparam>
+            <param name="list">The input list</param>
+            <param name="predicate">Predicate to decide into which list elements should be sorted</param>
+            <returns>Two lists:
+             - trueItems contains all items where predicate returns true. 
+             - falseItems returns all items where predicate returns false.
+            </returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.BulkObservableCollection`1">
+            <summary>
+            ObservableCollectiont hat allows for bulk-adds
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.BulkObservableCollection`1.SuppressNotification">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.BulkObservableCollection`1.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.BulkObservableCollection`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Adds a number of elements to the collection. Issues only one event
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1">
+            <summary>
+            Observable collection that allows suppressing the CollectionChanged event w/o side-effects. The default state does not suppress events.
+            The Clear method sends a remove event in addition to the reset event.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.SuppressNotification">
+            <summary>
+            When true, the ElectiveCollectionChanged event is not emitted at all. The CollectionChanged is emitted always.
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.ElectiveCollectionChanged">
+            <summary>
+            This event is emitted only when <see cref="P:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.SuppressNotification"/> is set to True.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.ClearItems">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.#ctor">
+            <summary>
+            Initializes an empty ElectivelyObservableCollection.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a ElectivelyObservableCollection with the given collection.
+            </summary>
+            <param name="collection"></param>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2">
+            <summary>
+            Provides a dictionary that notifies on Add, Remove, Reset according to user preference.
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.ElectiveCollectionChanged">
+            <summary>
+            Emitted when the collection changes and the notifications are not suppressed.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.SuppressNotification">
+            <summary>
+            When true, the ElectiveCollectionChanged event is not emitted at all. The CollectionChanged is emitted always.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.SuppressedEvents">
+            <summary>
+            Holds the supressed events until the next change of <see cref="P:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.SuppressNotification"/>.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.NotifyObserversOfChange(System.Collections.Specialized.NotifyCollectionChangedAction,`0,`1,`0,`1)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Uses a copy of the input dictionary to intialize an instance of ElectivelyObservableDictionary.
+            </summary>
+            <param name="dictionary">the given input dictionary</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ElectivelyObservableDictionary`2.#ctor">
+            <summary>
+            Initalizes an empty ElectivelyObservableDictionary.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.IReadOnlyObservableCollection`1">
+            <summary>
+            A combination of IReadOnlyCollection and INotifyCollectionChanged. Used to return readonly collections while still giving change notifications
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.IReadonlyObservableDictionary`2">
+            <summary>
+            A combination of IReadOnlyDictionary and INotifyCollectionChanged. Used to return readonly dictionaries while still giving change notifications
+            </summary>
+            <typeparam name="TKey"></typeparam>
+            <typeparam name="TValue"></typeparam>
+        </member>
+        <member name="T:SIMULTAN.Util.Collections.ObservableDictionary`2">
+            <summary>
+            Provides a dictionary that notifies on Add, Remove, Reset.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Collections.ObservableDictionary`2.dictionary">
+            <summary>
+            The internal container holding the dictionary data.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.#ctor">
+            <summary>
+            Initalizes an empty observable dictionary.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Uses a copy of the input dictionary to intialize an instance of ObservableDictionary.
+            </summary>
+            <param name="dictionary">the given input dictionary</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+            <summary>
+            Initializes an instance of ObservableDictionary from an enumerable collection of key-value pairs.
+            </summary>
+            <param name="input">the key-value pairs to be translated</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Initalizes an instance of ObservableDictionary from separate collections of keys and values.
+            Throws an exception if one of the collections is empty, or the number of elements in the collections differ.
+            </summary>
+            <param name="keys">the keys</param>
+            <param name="values">the values aligned with the keys</param>
+        </member>
+        <member name="E:SIMULTAN.Util.Collections.ObservableDictionary`2.CollectionChanged">
+            <summary>
+            Emitted when the collection changes.
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Collections.ObservableDictionary`2.PropertyChanged">
+            <summary>
+            Emitted when a property on the collection changes.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.NotifyObserversOfChange(System.Collections.Specialized.NotifyCollectionChangedAction,`0,`1,`0,`1)">
+            <summary>
+            Notifies observers of CollectionChanged or PropertyChanged of an update to the dictionary.
+            </summary>
+            <param name="_action">indicates the type of change</param>
+            <param name="_new_key">the new key</param>
+            <param name="_new_value">the new value</param>
+            <param name="_old_key">the old key</param>
+            <param name="_old_value">the old value</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.NotifyObserversOfChange(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList)">
+            <summary>
+            Notifies observers of CollectionChanged or PropertyChanged of an update to the dictionary.
+            </summary>
+            <param name="_action">indicates the type of change. Has to be Reset or Add</param>
+            <param name="modifiedObjects">A list of objects that were modified.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Add(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.Clear">
+            <summary>
+            Public clear method.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Contains(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#IsReadOnly">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{TKey,TValue}}#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.Count">
+            <summary>
+            Gives the number of elements in the dictionary.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.Add(`0,`1)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.AddRange(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
+            <summary>
+            Adds a range of key-value pairs to the dictionary.
+            </summary>
+            <param name="range">the key-value pairs to be added</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.AddRange(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Adds a range of key-value pairs to the dictionary.
+            Throws an exception if one of the collections is empty, or the number of elements in the collections differ.
+            </summary>
+            <param name="keys">the keys in the correct order</param>
+            <param name="values">the values in the correct order.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.ContainsKey(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.Keys">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.Remove(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.TryGetValue(`0,`1@)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.Values">
+            <inheritdoc/>
+        </member>
+        <member name="P:SIMULTAN.Util.Collections.ObservableDictionary`2.Item(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.Collections.ObservableDictionary`2.ContainsValue(`1)">
+            <summary>
+            Determines if the given value is contained here.
+            </summary>
+            <param name="value">the value we are looking for</param>
+            <returns>true if found, false otherwise</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.AdmissibilityQueries">
+            <summary>
+            Provides methods for checking the admissibility of various names of files or properties
+            by applying user-defined predicates for admissibility testing.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.AdmissibilityQueries.FileNameIsAdmissible(System.IO.FileInfo,System.Predicate{System.String})">
+            <summary>
+            Checks if the given file name is admissible by applying the given predicate. If the name
+            is inadmissible, returns an alternative name.
+            </summary>
+            <param name="new_file">the proposed file</param>
+            <param name="isAdmissible">the predicate checking for admissibility</param>
+            <returns>if the file is admissible, and an alternative if not</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.AdmissibilityQueries.DirectoryNameIsAdmissible(System.IO.DirectoryInfo,System.Predicate{System.String})">
+            <summary>
+            Checks if the given directory name is admissible by applying the given predicate. If the name
+            is inadmissible, returns an alternative name.
+            </summary>
+            <param name="new_dir">the proposed directory</param>
+            <param name="isAdmissible">the predicate checking for admissibility</param>
+            <returns>if the directory is admissible, and an alternative if not</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.AdmissibilityQueries.PropertyNameIsAdmissible(System.String,System.Predicate{System.String})">
+            <summary>
+            Checks if the given name is admissible by checking via the given predicate.
+            If the name is inadmissible, return an alternative name.
+            </summary>
+            <param name="name">the proposed name</param>
+            <param name="isAdmissible">the predicate checking for admissibility</param>
+            <returns>if the name is admissible, and an alternative name if not</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.AdmissibilityQueries.FindCopyName(System.String,System.Predicate{System.String})">
+            <summary>
+            Finds a valid name while copying objects
+            </summary>
+            <param name="name">The proposed name</param>
+            <param name="isUsed">A predicate that returns True when the name is already in use</param>
+            <returns>A valid name</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.CommonExtensions">
+            <summary>
+            Contains extensions for common types
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.InRange``1(``0,``0,``0)">
+            <summary>
+            Return true when the value is inside the range boundaries
+            </summary>
+            <typeparam name="T">Type of all values</typeparam>
+            <param name="value">The value</param>
+            <param name="minRange">Minimum value</param>
+            <param name="maxRange">Maximum value</param>
+            <returns>True when value in [minRange, maxRange]</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.SecureEquals(System.Security.SecureString,System.Security.SecureString)">
+            <summary>
+            Compares two SecureStrings for equality.
+            </summary>
+            <param name="s1">The current string</param>
+            <param name="s2">The other string</param>
+            <returns>True when both strings contain the same text. Otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.Clamp``1(``0,``0,``0)">
+            <summary>
+            Clamps a value to a range
+            </summary>
+            <typeparam name="T">Type of the value</typeparam>
+            <param name="val">The value</param>
+            <param name="min">Minimum</param>
+            <param name="max">Maximum</param>
+            <returns>val when val in [min, max], otherwise min or max</returns>
+            Code from https://stackoverflow.com/questions/2683442/where-can-i-find-the-clamp-function-in-net/20443081
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.IsCollinear(System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Vector3D,System.Double)">
+            <summary>
+            Checks whether two given vectors are collinear using a custom threshold
+            </summary>
+            <param name="v1">The current vector</param>
+            <param name="v2">The other vector</param>
+            <param name="threshold">Threshold to test for collinearity</param>
+            <returns>true if vectors are collinear, otherwise false</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.Transpose(System.Windows.Media.Media3D.Matrix3D)">
+            <summary>
+            Transposes a matrix and returns it as a new object
+            </summary>
+            <param name="m">This</param>
+            <returns>A new matrix which is the transpose of this</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.EqualsWithNan(System.Double,System.Double)">
+            <summary>
+            Checks if two doubles are equal or if both are NaN
+            </summary>
+            <param name="d">First double</param>
+            <param name="other">Second double</param>
+            <returns>True when both doubles have the same value or both doubles are NaN</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.MatrixFromAxes(System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Creates a Matrix3D from 3 orthogonal axes x,y and z and an offset p
+            </summary>
+            <param name="x">x-axis, 1st row</param>
+            <param name="y">y-axis, 2nd row</param>
+            <param name="z">z-axis, 3rd row</param>
+            <param name="p">offset, 4th row</param>
+            <returns>Matrix</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CommonExtensions.GetVersion(System.Version,System.Int32)">
+            <summary>
+            Returns a new version instance which contains only the first fieldCount components
+            </summary>
+            <param name="version">The version</param>
+            <param name="fieldCount">The number of components to copy to the output</param>
+            <returns>A new version containing the selected components. All other values have their default value</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Comparer.AlphaNumericComparer">
+            <summary>
+            Compares two strings while correctly comparing numbers inside the strings.
+            From: https://www.dotnetperls.com/alphanumeric-sorting
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Comparer.AlphaNumericComparer.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Debugging.DebuggingManager">
+            <summary>
+            Handles debug settings. This is a Singleton class
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Debugging.DebuggingManager.Instance">
+            <summary>
+            Returns the singleton instance
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Debugging.DebuggingManager.ShowDebugInfo">
+            <summary>
+            When set to True, additional debug information is shown
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Debugging.DebuggingManager.ShowDebugInfoValue">
+            <summary>
+            Helper getter that returns the underlying value for ShowDebugInfo (should only be used for saving the setting)
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Debugging.DebuggingManager.#ctor">
+            <summary>
+            Initializes a new instance of the DebuggingManager class
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Debugging.DebuggingVisible">
+            <summary>
+            Hides Elements unless the Debugger is attached or debugging is enabled in the AppSettings.
+            Returns a Visibility
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Debugging.DebuggingVisible.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Debugging.DebuggingVisible.UpdateOnEndpoint(XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.BulkElevationProviderAttribute">
+            <summary>
+            Attribute to mark an BulkElevationProvider. Used to categorise BulkElevationProvider Addons.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.ElevationProviderAttribute">
+            <summary>
+            Attribute to mark an ElevationProvider. Used to categorise ElevationProvider Addons.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider">
+            <inheritdoc />
+        </member>
+        <member name="P:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider.MaxZoomLevel">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider.#ctor">
+            <summary>
+            Initializes a new instance of the GeolandElevationProvider class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider.GetElevationAtPoint(System.Double,System.Double,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider.GetZoomLevelForGridCellSize(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.GeolandElevationProvider.GetDisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.IBulkElevationProvider">
+            <summary>
+            Interface defining a provider for elevation data.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.IBulkElevationProvider.GetElevationAtPoints(System.Collections.Generic.IList{System.ValueTuple{System.Double,System.Double}},System.Int32)">
+            <summary>
+            Fetches the elevations of the given coordinates in WSG84 format.
+            Throws an ElevationNotFoundException when one the elevation could not be determined or an error occurred.
+            </summary>
+            <param name="coordinates">The coordinates to retrieve the elevation for. In (latitude, longitude) pairs.</param>
+            <param name="zoomLevel">The zoom level to retrieve the data for. 0 = lowest resolution. Will only change result if implemented.</param>
+            <returns>Height in reference to the implementation. Reference 0 point can vary between implementations. Ordering matches the input coordinate ordering.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.IBulkElevationProvider.GetTileData(System.ValueTuple{System.Double,System.Double},System.Int32)">
+            <summary>
+            Fetches the data of a whole tile. Data is in a row by row format.
+            </summary>
+            <param name="pointInTile">A point somewhere inside of the tile you want to fetch.</param>
+            <param name="zoomLevel">The zoom level at which the tile should be fetched.</param>
+            <returns>The data of the tile in a row-by-row format, the width and the height.</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.ElevationNotFoundException">
+            <summary>
+            Exception thrown when the elevation of a point could not be found.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.ElevationNotFoundException.#ctor">
+            <summary>
+            Creates an instance of this exception.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.ElevationNotFoundException.#ctor(System.String)">
+            <summary>
+            Creates an instance of this exception.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.ElevationNotFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates an instance of this exception.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The inner exception.</param>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.ElevationNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.ElevationProvider.IElevationProvider">
+            <summary>
+            Interface defining a provider for elevation data.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.ElevationProvider.IElevationProvider.MaxZoomLevel">
+            <summary>
+            The maximum supported zoom level of this elevation provider.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.IElevationProvider.GetElevationAtPoint(System.Double,System.Double,System.Int32)">
+            <summary>
+            Fetches the elevation of the given longitude and latitude in WSG84 format.
+            Throws an ElevationNotFoundException when the elevation could not be determined.
+            </summary>
+            <param name="longitude">Longitude of the point in WSG84 format.</param>
+            <param name="latitude">Latitude of the point in WSG84 format.</param>
+            <param name="zoomLevel">The zoom level to retrieve the data for. 0 = lowest resolution. Will only change result if implemented.</param>
+            <returns>Height in reference to the implementation. Reference 0 point can vary between implementations.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.IElevationProvider.GetZoomLevelForGridCellSize(System.Double)">
+            <summary>
+            If supported, returns the zoom level to use for a certain grid cell size. Unit of cell size depends on implementation.
+            </summary>
+            <param name="gridCellSize">The grid cell size.</param>
+            <returns>The zoom level to use for a certain grid cell size.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.ElevationProvider.IElevationProvider.GetDisplayName">
+            <summary>
+            Return the localized display name of this Provider implementation.
+            </summary>
+            <returns>The localized display name of this Provider implementation.</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1">
+            <summary>
+            Base class for Weak EventHandler (EventHandler that don't keep the target alive)
+            </summary>
+            <typeparam name="EventHandlerT">Type of the eventhandler delegate</typeparam>
+        </member>
+        <member name="P:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1.Target">
+            <summary>
+            The target object
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1.Method">
+            <summary>
+            The eventhandler method in the Target object
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1.#ctor">
+            <summary>
+            Inititializes a new instance of the WeakEventHandlerBase class
+            Call Assign from a derived class to set the Handler
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1.#ctor(`0)">
+            <summary>
+            Inititializes a new instance of the WeakEventHandlerBase class
+            </summary>
+            <param name="handler">The EventHandler</param>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventHandlerBase`1.Assign(`0)">
+            <summary>
+            Assigns an event handler to this instance
+            </summary>
+            <param name="handler">The event handler</param>
+        </member>
+        <member name="T:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3">
+            <summary>
+            Weak EventHandler for events that have the default form (object sender, EventArgs args)
+            </summary>
+            <typeparam name="EventArgsT">The type of the EventArgs</typeparam>
+            <typeparam name="EventSourceT">Type of the event source</typeparam>
+            <typeparam name="WeakHandlerT">Type of the actual Weak EventHandler implementation</typeparam>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.Attach(`1)">
+            <summary>
+            Called when the event handler should be attached to the event
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.Detach(`1)">
+            <summary>
+            Called when the event handler should be detached from the event
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.#ctor">
+            <summary>
+            Initializes a new instance of the WeakEventArgsEventHandler class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.AddHandler(`1,System.EventHandler{`0})">
+            <summary>
+            Creates a new weak eventhandler and attaches it to the event
+            </summary>
+            <param name="sender">The sender object</param>
+            <param name="handler">The event handler</param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.RemoveHandler(`1,`2)">
+            <summary>
+            Removes a weak eventhandler from an event
+            </summary>
+            <param name="sender">The event owner</param>
+            <param name="handler">The eventhandler that should be detached</param>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakEventArgsEventHandler`3.Handler(System.Object,`0)">
+            <summary>
+            EventHandler which has to be attached to the actual event
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="args">The event args</param>
+        </member>
+        <member name="T:SIMULTAN.Util.EventHandling.WeakPropertyChangedEventHandler">
+            <summary>
+            Weak eventhandler for the PropertyChanged event
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakPropertyChangedEventHandler.Attach(System.ComponentModel.INotifyPropertyChanged)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.EventHandling.WeakPropertyChangedEventHandler.Detach(System.ComponentModel.INotifyPropertyChanged)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Exceptions.ExceptionToFileWriter">
+            <summary>
+            Provides methods for writing an Exception to a log file
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Exceptions.ExceptionToFileWriter.Write(System.Exception)">
+            <summary>
+            Writes an exception to a log file. The path of the log is .\simultan_exception_{DATETIME}.txt
+            </summary>
+            <param name="e">The exception</param>
+            <returns>Returns the exception log file</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Exceptions.ExceptionToFileWriter.Write(System.Exception,System.IO.FileInfo)">
+            <summary>
+            Writes an exception to a log file.
+            </summary>
+            <param name="e">The exception</param>
+            <param name="exceptionFile">The file into which the exception should be written</param>
+            <returns>Returns the exception log file</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Exceptions.FileInUseException">
+            <summary>
+            Thrown when a file is already in use
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Exceptions.FileInUseException.File">
+            <summary>
+            The file in question
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Exceptions.FileInUseException.#ctor(System.IO.FileInfo)">
+            <summary>
+            Initializes a new instance of the FileInUseException class
+            </summary>
+            <param name="file">The file that has already been in use</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Exceptions.InvalidStateException">
+            <summary>
+            Exception thrown whenever an operation sets the datamodel in an invalid state
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Exceptions.InvalidStateException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the InvalidStateException class
+            </summary>
+            <param name="message">An error message for the user</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Exceptions.InvalidStateException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the InvalidStateException class
+            </summary>
+            <param name="message">An error message for the user</param>
+            <param name="innerException">The exception which caused this exception</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.DirectoryOperations">
+            <summary>
+            Contains methods for querying and manipulating directories.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.DirectoryOperations.DirectoryCopy(System.String,System.String,System.Boolean)">
+            <summary>
+            Copies a directory and its contents.
+            </summary>
+            <param name="_source">the source directory</param>
+            <param name="_target">the target directory</param>
+            <param name="_recursive">if true, the copy includes all sub-directories and files</param>
+            <remarks>source: "https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories"</remarks>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.LockTools">
+            <summary>
+            Tools for determining the processes locking down a file.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.LockTools.RM_UNIQUE_PROCESS">
+            <summary>
+            Uniquely identifies a process by its PID and the time the process began. 
+            An array of RM_UNIQUE_PROCESS structures can be passed
+            to the RmRegisterResources function.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.LockTools.RM_PROCESS_INFO">
+            <summary>
+            Describes an application that is to be registered with the Restart Manager.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.LockTools.RM_APP_TYPE">
+            <summary>
+            Specifies the type of application that is described by
+            the RM_PROCESS_INFO structure.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.LockTools.RmRegisterResources(System.UInt32,System.UInt32,System.String[],System.UInt32,SIMULTAN.Util.Files.LockTools.RM_UNIQUE_PROCESS[],System.UInt32,System.String[])">
+            <summary>
+            Registers resources to a Restart Manager session. The Restart Manager uses 
+            the list of resources registered with the session to determine which 
+            applications and services must be shut down and restarted. Resources can be 
+            identified by filenames, service short names, or RM_UNIQUE_PROCESS structures
+            that describe running applications.
+            </summary>
+            <param name="pSessionHandle">
+            A handle to an existing Restart Manager session.
+            </param>
+            <param name="nFiles">The number of files being registered</param>
+            <param name="rgsFilenames">
+            An array of null-terminated strings of full filename paths.
+            </param>
+            <param name="nApplications">The number of processes being registered</param>
+            <param name="rgApplications">An array of RM_UNIQUE_PROCESS structures</param>
+            <param name="nServices">The number of services to be registered</param>
+            <param name="rgsServiceNames">
+            An array of null-terminated strings of service short names.
+            </param>
+            <returns>The function can return one of the system error codes that 
+            are defined in Winerror.h
+            </returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.LockTools.RmStartSession(System.UInt32@,System.Int32,System.String)">
+            <summary>
+            Starts a new Restart Manager session. A maximum of 64 Restart Manager 
+            sessions per user session can be open on the system at the same time. 
+            When this function starts a session, it returns a session handle and 
+            session key that can be used in subsequent calls to the Restart Manager API.
+            </summary>
+            <param name="pSessionHandle">
+            A pointer to the handle of a Restart Manager session.
+            </param>
+            <param name="dwSessionFlags">Reserved. This parameter should be 0.</param>
+            <param name="strSessionKey">
+            A null-terminated string that contains the session key to the new session.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.LockTools.RmEndSession(System.UInt32)">
+            <summary>
+            Ends the Restart Manager session. This function should be called by the 
+            primary installer that has previously started the session by calling the 
+            RmStartSession function. The RmEndSession function can be called by a 
+            secondary installer that is joined to the session once no more resources 
+            need to be registered by the secondary installer.
+            </summary>
+            <param name="pSessionHandle">
+            A handle to an existing Restart Manager session.
+            </param>
+            <returns>
+            The function can return one of the system error codes
+            that are defined in Winerror.h.
+            </returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.LockTools.RmGetList(System.UInt32,System.UInt32@,System.UInt32@,SIMULTAN.Util.Files.LockTools.RM_PROCESS_INFO[],System.UInt32@)">
+            <summary>
+            Gets a list of all applications and services that are currently using 
+            resources that have been registered with the Restart Manager session.
+            </summary>
+            <param name="dwSessionHandle">
+            A handle to an existing Restart Manager session.
+            </param>
+            <param name="pnProcInfoNeeded">A pointer to an array size necessary to 
+            receive RM_PROCESS_INFO structures required to return information for 
+            all affected applications and services.
+            </param>
+            <param name="pnProcInfo">
+            A pointer to the total number of RM_PROCESS_INFO structures in an array
+            and number of structures filled.
+            </param>
+            <param name="rgAffectedApps">
+            An array of RM_PROCESS_INFO structures that list the applications and 
+            services using resources that have been registered with the session.
+            </param>
+            <param name="lpdwRebootReasons">
+            Pointer to location that receives a value of the RM_REBOOT_REASON
+            enumeration that describes the reason a system restart is needed.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.LockTools.FindLockers(System.String)">
+            <summary>
+            Returns a list of processes that have locks on a file.
+            </summary>
+            <param name="filename">the name of the file that is locked</param>
+            <returns>a list pof processes</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.FileState">
+            <summary>
+            Contains methods for querying information about files in the file system.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileState.IsInUse(System.IO.FileInfo)">
+            <summary>
+            Checks if the file is in use by applications that lock files. Attention: the state of 
+            the file can change immediately after calling this method. So an attempts at deleting it
+            might still throw an exception!
+            </summary>
+            <param name="file">the file to check</param>
+            <returns>true if the given file is in use, false otherwise</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileState.WaitFile(System.IO.FileInfo,System.Int32,System.Int32)">
+            <summary>
+            Waits on the current thread till the lock on the file is removed.
+            Throws a <see cref="T:System.TimeoutException"/> if the timeout is reached.
+            </summary>
+            <param name="file">File to wait for.</param>
+            <param name="sleepTime">Time in ms to wait between checks. Default 1 second.</param>
+            <param name="timeout">Timeout in ms. Default 1 minute.</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Files.FileSystemNavigation">
+            <summary>
+            Handles different types of paths to targets on the local file system.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.GetRelativePath(System.String,System.String)">
+            <summary>
+            Calculates the relative from a directory to a file.
+            Throws exception, if any of the paths is not rooted. If the paths do not share the same root,
+            the absolute path of 'toPath' is returned.
+            </summary>
+            <param name="fromPath">the base from which to calculate the relative path</param>
+            <param name="toPath">the directory or file path for which to calculate the relative path</param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.IsPathFullyQualified(System.String)">
+            <summary>
+            Determines if the path is rooted and absolute.
+            </summary>
+            <param name="path">the path to be evaluated</param>
+            <returns>the result of the check</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.ReconstructFullPath(System.String,System.String,System.Boolean)">
+            <summary>
+            Resolves a relative path relative to the given directory.
+            </summary>
+            <param name="fromPath">the full path of the directory from which to resolve the relative path</param>
+            <param name="toPath">the relative path itself</param>
+            <param name="overlapPossible">if true, the relative path can have overlaps with the full path</param>
+            <returns>the full path corresponding to 'toPath'</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.IsSubdirectoryOf(System.String,System.String,System.Boolean)">
+            <summary>
+            Checks if the child directory is a true subdirectory of the parent directory.
+            </summary>
+            <param name="fullPathParent">the absolute path to the potential parent</param>
+            <param name="fullPathChild">the absolute path to the potential child</param>
+            <param name="directoriesExist">if true, the check is perfomed on the file system</param>
+            <returns>true if the child is a subdirectory of the parent</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.IsContainedIn(System.String,System.String,System.Boolean)">
+            <summary>
+            Checks if the given paths fulfill the following condition: 
+            if both paths are folders, the child is in the parent or the same as the parent;
+            if the child is a file, its directory is in the parent or the same as the parent.
+            </summary>
+            <param name="fullPathParent">the absolute path to the potential parent</param>
+            <param name="fullPathChildFileOrFolder">the absolute path to the potential child</param>
+            <param name="elementsExist">if true, the check is perfomed on the file system</param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.CheckPaths(System.String,System.String,System.String)">
+            <summary>
+            Tests the given paths to determine the actual absolute and relative paths.
+            </summary>
+            <param name="fullPath">the candidate for an absolute path</param>
+            <param name="relPath">the candidate for the relative path</param>
+            <param name="invalidPathString">an invalid string that indicates an invalid path</param>
+            <returns>feedback and corrected paths</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.GetSubPathContaining(System.String,System.String,System.Boolean)">
+            <summary>
+            Extracts the shortest or longest path containing the given symbol sequence. If the sequence 
+            could not be found, it returns an empty string.
+            </summary>
+            <param name="fullPath">the path to be analysed</param>
+            <param name="queryText">the text to look for</param>
+            <param name="shortestPath">if true returns the shortest path; otherwise - the longest path</param>
+            <returns>the found path</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.ExtractNameFromPath(System.String)">
+            <summary>
+            Extracts the file name of any path of any quality.
+            </summary>
+            <param name="path">the path</param>
+            <returns>the found file name</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.FindUNCPaths">
+            <summary>
+            prints all drives to stdout
+            </summary>
+            <returns>a dictionary assigning the network address to each drive letter</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.TranslateToUNCPath(System.String)">
+            <summary>
+            Translates the path refering to a network: replaces the drive letter with the ip address.
+            </summary>
+            <param name="path">the path</param>
+            <returns>the transalted path</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.GetUNCPath(System.String)">
+            <summary>
+            gets the UNC path for the given path.
+            </summary>
+            <param name="path">the given path</param>
+            <returns>the corresponding UNC path</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Files.FileSystemNavigation.IsFileLocked(System.IO.FileInfo)">
+            <summary>
+            Checks whether a file is locked by trying to open it in exclusive read mode
+            </summary>
+            <param name="file">The file to check</param>
+            <returns>True when the file is already in use. False otherwise.</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.AnyOfGesture">
+            <summary>
+            Gesture that tests whether the input matches any of the contained gestures
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.AnyOfGesture.#ctor(System.Collections.Generic.IEnumerable{System.Windows.Input.InputGesture})">
+            <summary>
+            Initializes a new instance of the AnyOfGesture class
+            </summary>
+            <param name="gestures">The contained gestures</param>
+        </member>
+        <member name="M:SIMULTAN.Util.AnyOfGesture.Matches(System.Object,System.Windows.Input.InputEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.AnyOfGesture.InvariantGestureString">
+            <summary>
+            Returns a culture invariant string representation
+            </summary>
+            <returns>A culture invariant string representation</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.CustomGestureConverter">
+            <summary>
+            Converter that handles normal KeyGestures, SingleKeyGestures and AnyOfGesture
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.CustomGestureConverter.FromInvariantString(System.String)">
+            <summary>
+            Converts a string into an InputGesture
+            </summary>
+            <param name="str">The keybinding string</param>
+            <returns>The converted InputGesture</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.CustomGestureConverter.ToInvariantString(System.Windows.Input.InputGesture)">
+            <summary>
+            Converts an input gesture into a culture invariant string
+            </summary>
+            <param name="g">The gesture</param>
+            <returns>A culture invariant string representation</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.SingleKeyGesture">
+            <summary>
+            A input gesture for single keys
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.SingleKeyGesture.Key">
+            <summary>
+            The key the Gesture represents 
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.SingleKeyGesture.#ctor(System.Windows.Input.Key)">
+            <summary>
+            Initializes a new instance of the SingleKeyGesture class
+            </summary>
+            <param name="key">The key</param>
+        </member>
+        <member name="M:SIMULTAN.Util.SingleKeyGesture.Matches(System.Object,System.Windows.Input.InputEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.IntIndex2D">
+            <summary>
+            A 2D integer index
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex2D.X">
+            <summary>
+            The X index
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex2D.Y">
+            <summary>
+            The Y index
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the IntIndex2D class
+            </summary>
+            <param name="x">The x index</param>
+            <param name="y">The y index</param>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex2D.Item(System.Int32)">
+            <summary>
+            Returns the index for a given dimension (0 means X, 1 means Y)
+            </summary>
+            <param name="key">The dimension (0 means X, 1 means Y)</param>
+            <returns>The index along the given dimension</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.Equals(SIMULTAN.Util.IntIndex2D)">
+            <summary>
+            Returns true when both instances point to the same index
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.op_Equality(SIMULTAN.Util.IntIndex2D,SIMULTAN.Util.IntIndex2D)">
+            <summary>
+            Returns True when the two instances are Equal, otherwise False
+            </summary>
+            <param name="lhs">First argument</param>
+            <param name="rhs">Second argument</param>
+            <returns>True when the two instances are Equal, otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex2D.op_Inequality(SIMULTAN.Util.IntIndex2D,SIMULTAN.Util.IntIndex2D)">
+            <summary>
+            Returns True when the two instances are not Equal, otherwise False
+            </summary>
+            <param name="lhs">First argument</param>
+            <param name="rhs">Second argument</param>
+            <returns>True when the two instances are not Equal, otherwise False</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.IntIndex3D">
+            <summary>
+            Class for storing a 3D integer index
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex3D.X">
+            <summary>
+            Returns the X-axis value
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex3D.Y">
+            <summary>
+            Returns the Y-axis value
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex3D.Z">
+            <summary>
+            Returns the Z-axis value
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex3D.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the IntIndex3D class
+            </summary>
+            <param name="x">Value on the x-axis</param>
+            <param name="y">Value on the y-axis</param>
+            <param name="z">Value on the z-axis</param>
+        </member>
+        <member name="P:SIMULTAN.Util.IntIndex3D.Item(System.Int32)">
+            <summary>
+            Returns The value along and index (0=X, 1=Y, 2=Z)
+            </summary>
+            <param name="key">The index</param>
+            <returns>The value along the corresponding axis</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex3D.Equals(SIMULTAN.Util.IntIndex3D)">
+            <summary>
+            Returns True when the data in both IntIndex3D instances is the same
+            </summary>
+            <param name="other">The instance to compare with</param>
+            <returns>True when the data in both IntIndex3D instances is the same, otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.IntIndex3D.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Randomize.IRandomizer">
+            <summary>
+            Interface for random number generators
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Randomize.IRandomizer.Next">
+            <summary>
+            Returns the next random number
+            </summary>
+            <returns>A random number</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Randomize.NormalDistributedRandomizer">
+            <summary>
+            Provides normal distributed random numbers in the [0, 1] range
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Randomize.NormalDistributedRandomizer.Next">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.LambdaComparer`1">
+            <summary>
+            An IEqualityComparer which uses a Func to determine equality
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SIMULTAN.Util.LambdaComparer`1.#ctor(System.Func{`0,`0,System.Boolean})">
+            <summary>
+            Initializes a new instance of the LambdaComparer class
+            </summary>
+            <param name="lambdaComparer">The comparison function</param>
+        </member>
+        <member name="M:SIMULTAN.Util.LambdaComparer`1.#ctor(System.Func{`0,`0,System.Boolean},System.Func{`0,System.Int32})">
+            <summary>
+            Initializes a new instance of the LambdaComparer class
+            </summary>
+            <param name="lambdaComparer">The comparison function</param>
+            <param name="lambdaHash">The hash function</param>
+        </member>
+        <member name="M:SIMULTAN.Util.LambdaComparer`1.Equals(`0,`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.LambdaComparer`1.GetHashCode(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Util.LCommand">
+            <summary>
+            A command that executes an action
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.LCommand.CanExecuteChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.LCommand.#ctor(System.Action{System.Object})">
+            <summary>
+            Initializes a new instance of the LCommand class
+            </summary>
+            <param name="execute">The action to exectue</param>
+        </member>
+        <member name="M:SIMULTAN.Util.LCommand.#ctor(System.Action{System.Object},System.Predicate{System.Object})">
+            <summary>
+            Initializes a new instance of the LCommand class
+            </summary>
+            <param name="execute">The action to exectue</param>
+            <param name="canExecute">A predicate to determine if the command can be executed</param>
+        </member>
+        <member name="M:SIMULTAN.Util.LCommand.CanExecute(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.LCommand.Execute(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.LCommand.RaiseExecuteChanged">
+            <summary>
+            Reevaluates the canExecute property
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocalizationAssembly">
+            <summary>
+            Stores information about localization assemblies that have to be loaded at runtime
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationAssembly.Assembly">
+            <summary>
+            The name of the assembly
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationAssembly.Dictionary">
+            <summary>
+            The name of the resource inside the assembly
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationAssembly.#ctor">
+            <summary>
+            Initializes a new instance of the LocalizationAssembly class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationAssembly.#ctor(System.String,System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of the LocalizationAssembly class
+            </summary>
+            <param name="dictionary">Name of the resource inside </param>
+            <param name="assembly">The assembly that includes the resource</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationAssembly.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the LocalizationAssembly class
+            </summary>
+            <param name="dictionary">Name of the resource inside </param>
+            <param name="assembly">The name of the assembly</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocalizationAssemblyCollection">
+            <summary>
+            Collection to store LocalizationAssembly instances
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocalizationProvider">
+            <summary>
+            Provides access to localizable data
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.Instance">
+            <summary>
+            Returns the singleton instance
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.Culture">
+            <summary>
+            Gets or sets the current application culture.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.UICulture">
+            <summary>
+            Gets or sets the curren ui culture
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.ResourceManagers">
+            <summary>
+            Provides all ResourceManager instances loaded for the current culture
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.AvailableCultures">
+            <summary>
+            Returns a list of all cultures available for this application
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Localize.LocalizationProvider.LocalizationChanged">
+            <summary>
+            Issued when the localization has changed.
+            E.g. when additional assemblies are loaded.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.#ctor">
+            <summary>
+            Initializes a new instance of the LocalizationProvider class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.RegisterDictionary(SIMULTAN.Util.Localize.LocalizationAssembly)">
+            <summary>
+            Registers a new Localization Dictionary
+            </summary>
+            <param name="assembly">Assembly in which the localization is stored</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.SupportedCultureFromCulture(System.Globalization.CultureInfo)">
+            <summary>
+            Returns the best supported culture for a culture
+            </summary>
+            <param name="culture">The request culturee</param>
+            <returns>The best fitting supported culture. Can be the fallback language (en)</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.GetResource(System.String)">
+            <summary>
+            Returns the resource with a given key.
+            </summary>
+            <param name="key">The key</param>
+            <returns>The resource with that name. Or null when the key does not exist.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.GetResourceStream(System.String)">
+            <summary>
+            Returns a resource as a resource stream
+            </summary>
+            <param name="key">Name of the resource</param>
+            <returns>A resource stream to the resource or Null when no such resource exists</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.ResourceToImageSource(System.String)">
+            <summary>
+            Converts a Bitmap resource to an ImageSource
+            </summary>
+            <param name="key">The Bitmap</param>
+            <returns>An ImageSource</returns>
+        </member>
+        <member name="F:SIMULTAN.Util.Localize.LocalizationProvider.DesignTimeAssembliesProperty">
+            <summary>
+            List of additional assemblies that have to be loaded at design time to get localization support running
+            Attached property.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.GetDesignTimeAssemblies(System.Windows.DependencyObject)">
+            <summary>
+            Returns the Value of DesignTimeAssembliesProperty
+            </summary>
+            <param name="obj">The object</param>
+            <returns>The dependency property value</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.SetDesignTimeAssemblies(System.Windows.DependencyObject,SIMULTAN.Util.Localize.LocalizationAssemblyCollection)">
+            <summary>
+            Sets the value of DesignTimeAssembliesProperty 
+            </summary>
+            <param name="obj">The object</param>
+            <param name="value">The new value</param>
+        </member>
+        <member name="F:SIMULTAN.Util.Localize.LocalizationProvider.DesignTimeCultureProperty">
+            <summary>
+            Sets the culture displayed in the designer
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.GetDesignTimeCulture(System.Windows.DependencyObject)">
+            <summary>
+            Returns the Value of DesignTimeCultureProperty
+            </summary>
+            <param name="obj">The object</param>
+            <returns>The dependency property value</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocalizationProvider.SetDesignTimeCulture(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the value of DesignTimeCultureProperty 
+            </summary>
+            <param name="obj">The object</param>
+            <param name="value">The new value</param>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocalizationProvider.DesignTimeCulture">
+            <summary>
+            Returns the culture used during design time
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocExtension">
+            <summary>
+            Provides localized data depending on the target type.
+            Supports ImageSource, InputGesture and String
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.LocExtension.Key">
+            <summary>
+            The identifier of the resource
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Localize.LocExtension.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the LocExtension class
+            </summary>
+            <param name="key">The identifier of the resource</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.#ctor">
+            <summary>
+            Initializes a new instance of the LocExtension class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.Finalize">
+            <summary>
+            Finalizer. Detaches all event handler to allow for garbage collection
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.GetResource(System.String)">
+            <summary>
+            Returns a resource with a given key from the current LocalizationProvider
+            </summary>
+            <param name="key">Identifier of the resource</param>
+            <returns>The loaded resource or null when the resource could not be found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.UpdateOnEndpoint(XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocExtension.OnPropertyChanged(System.String)">
+            <summary>
+            Emits the PropertyChanged event
+            </summary>
+            <param name="prop">Name of the property</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocImg">
+            <summary>
+            Provides localized ImageSource data.
+            </summary>
+            <remarks>This class is required because LocExtensions determines the result type automatically.
+            Some libraries expect image resources as object which confuses LocExtension</remarks>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocImg.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocImg.#ctor">
+            <summary>
+            Initializes a new instance of the LocImg class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocImg.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the LocImg class
+            </summary>
+            <param name="key">The language key</param>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.LocWeakEventHandler">
+            <summary>
+            Weak EventHandler for the Loc extension. Do not use anywhere else.
+            This handler makes sure that the finalizer of the loc class is called which will then also release this class
+            Make sure to attach LocWeakEventHandler.Handler to the event instead of the original event handler.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocWeakEventHandler.#ctor(System.EventHandler)">
+            <summary>
+            Initializes a new instance of the LocWeakEventHandler class
+            </summary>
+            <param name="localizationChangedEventHandler">The actual event handler</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.LocWeakEventHandler.Handler(System.Object,System.EventArgs)">
+            <summary>
+            Attach this method to the event instead of the actual event handler
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.XamlFlowDocument">
+            <summary>
+            Xaml extension for loading a FlowDocument from the Language Resources
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Localize.XamlFlowDocument.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.XamlFlowDocument.Path">
+            <summary>
+            Gets or sets the path of the XAML file
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.XamlFlowDocument.EnableWebLinks">
+            <summary>
+            When set to true, all Link instances open in the webbrowser
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlFlowDocument.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the XamlFlowDocument class
+            </summary>
+            <param name="path">The path to the file (or better to say, the resource name of the file)</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlFlowDocument.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlFlowDocument.UpdateOnEndpoint(XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Localize.XamlImg">
+            <summary>
+            Loads a XAML File and returns the loaded object
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.Localize.XamlImg.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.XamlImg.Path">
+            <summary>
+            Gets or sets the path of the XAML file
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.XamlImg.Width">
+            <summary>
+            Sets the width of the Viewbox
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Localize.XamlImg.Height">
+            <summary>
+            Sets the height of the Viewbox
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlImg.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the XamlImg class
+            </summary>
+            <param name="path">The path of the XAML file</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlImg.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlImg.UpdateOnEndpoint(XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.Localize.XamlImg.GetXamlIcon(System.String,System.Windows.Size)">
+            <summary>
+            Loads a XAML icon from the resources
+            </summary>
+            <param name="key">The localization key</param>
+            <param name="size">The desired size of the icon</param>
+            <returns>The icon (wrapped in a ViewBox unless the top-level element is already a ViewBox)</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.NullableTypeExtension">
+            <summary>
+            Extension for getting a Nullable type
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.NullableTypeExtension.Type">
+            <summary>
+            The type
+            </summary>
+        </member>
+        <member name="E:SIMULTAN.Util.NullableTypeExtension.PropertyChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.NullableTypeExtension.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the NullableTypeExtension type
+            </summary>
+            <param name="type">The type of the nullable</param>
+        </member>
+        <member name="M:SIMULTAN.Util.NullableTypeExtension.NotifyPropertyChanged(System.String)">
+            <summary>
+            Invokes the PropertyChanged event
+            </summary>
+            <param name="prop">The property name</param>
+        </member>
+        <member name="M:SIMULTAN.Util.NullableTypeExtension.FormatOutput(XAMLMarkupExtensions.Base.TargetInfo,XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.NullableTypeExtension.UpdateOnEndpoint(XAMLMarkupExtensions.Base.TargetInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.NumberUtils">
+            <summary>
+            Contains methods for formatting/displaying numbers
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.NumberUtils.ToDisplayString(System.Double,System.String)">
+            <summary>
+            Converts a double to a displayable string. Handles inf, min, max
+            </summary>
+            <param name="d">The double</param>
+            <param name="format">The format for number formatting</param>
+            <returns>A string representation of the number</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.NumberUtils.ToDisplayString(System.Int32,System.String)">
+            <summary>
+            Converts a integer to a displayable string. Handles MinValue and MaxValue
+            </summary>
+            <param name="i">The integer</param>
+            <param name="format">The format for number formatting</param>
+            <returns>A string representation of the number</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.NumberUtils.TryFromDisplayString(System.String,System.Double@)">
+            <summary>
+            Converts a display string to a double. Handles inf, min, max
+            </summary>
+            <param name="str">The string</param>
+            <param name="result">Contains the number when the conversion was successful</param>
+            <returns>True when the conversion was successful, False otherwise</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.NumberUtils.TryFromDisplayString(System.String,System.Int32@)">
+            <summary>
+            Converts a display string to a double. Handles inf, min, max
+            </summary>
+            <param name="str">The string</param>
+            <param name="result">Contains the number when the conversion was successful</param>
+            <returns>True when the conversion was successful, False otherwise</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.PointVectorExtensions">
+            <summary>
+            Contains extension methods for Point3D and Vector3D
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.PointVectorExtensions.At(System.Windows.Media.Media3D.Point3D,System.Int32)">
+            <summary>
+            Allows to get XYZ with an index
+            </summary>
+            <param name="p">The point</param>
+            <param name="idx">The index (0=X, 1=Y, 2=Z, 3.. = Exception)</param>
+            <returns>The desired axis</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Progress.ActionProgress`1">
+            <summary>
+            IProgress implementation which calls an action for reporting
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SIMULTAN.Util.Progress.ActionProgress`1.#ctor(System.Action{`0})">
+            <summary>
+            Initializes a new instance of the ActionProgress class
+            </summary>
+            <param name="action">The action which gets called by the Report method</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Progress.ActionProgress`1.Report(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.Range3D">
+            <summary>
+            Stores a 3 dimensional range (AABB)
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Range3D.Minimum">
+            <summary>
+            The minimum value along each axis
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Range3D.Maximum">
+            <summary>
+            The maximum value along each axis
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Range3D.#ctor(System.Windows.Media.Media3D.Point3D,System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Initializes a new instance of the Range3D class
+            </summary>
+            <param name="minimum">The minimum value along each axis</param>
+            <param name="maximum">The maximum value along each axis</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Range3D.#ctor(SIMULTAN.Util.Range3D)">
+            <summary>
+            Initializes a new instance of the Range3D class by copying values from another instance
+            </summary>
+            <param name="original">The instance from which values should be taken</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Range3D.Contains(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Tests if a point is inside the range or not. (between min and max along all axis)
+            </summary>
+            <param name="position">The position</param>
+            <returns>True when the position lies between minimum and maximum, otherwise False</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Range3D.Contains(SIMULTAN.Util.IntIndex3D)">
+            <summary>
+            Tests if a point is inside the range or not. (between min and max along all axis)
+            </summary>
+            <param name="position">The position</param>
+            <returns>True when the position lies between minimum and maximum, otherwise False</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.DispatcherProgress`1">
+            <summary>
+            A progress callback which uses a dispatcher to invoke the action
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:SIMULTAN.Util.DispatcherProgress`1.#ctor(System.Action{`0},System.Windows.Threading.Dispatcher)">
+            <summary>
+            Initializes a new instance of the DispatcherProgress class
+            </summary>
+            <param name="progress">The action which should be executed when the progress has changed</param>
+            <param name="dispatcher">The dispatcher on which the action should be executed</param>
+        </member>
+        <member name="M:SIMULTAN.Util.DispatcherProgress`1.Report(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:SIMULTAN.Util.RowColumnRange">
+            <summary>
+            Specifies a range of columns and rows
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.RowColumnRange.RowStart">
+            <summary>
+            The first row in the range
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.RowColumnRange.RowCount">
+            <summary>
+            The number of rows in the range
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.RowColumnRange.ColumnStart">
+            <summary>
+            The first column in the range
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.RowColumnRange.ColumnCount">
+            <summary>
+            The number of columns in the range
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the RowColumnRange class
+            </summary>
+            <param name="rowStart">The first row in the range</param>
+            <param name="columnStart">The first column in the range</param>
+            <param name="rowCount">The number of rows in the range</param>
+            <param name="columnCount">The number of columns in the range</param>
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.Equals(SIMULTAN.Util.RowColumnRange)">
+            <inheritdoc />
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.op_Equality(SIMULTAN.Util.RowColumnRange,SIMULTAN.Util.RowColumnRange)">
+            <summary>
+            Tests whether two instances describe the same range
+            </summary>
+            <param name="lhs">First instance</param>
+            <param name="rhs">Second instance</param>
+            <returns>True when the two instances describe the same range</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.RowColumnRange.op_Inequality(SIMULTAN.Util.RowColumnRange,SIMULTAN.Util.RowColumnRange)">
+            <summary>
+            Tests whether two instances describe the same range
+            </summary>
+            <param name="lhs">First instance</param>
+            <param name="rhs">Second instance</param>
+            <returns>True when the two instances do not describe the same range</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Streams.DelimiterStreamReader">
+            <summary>
+            Reads delimiter separated (';') values from a stream
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Streams.DelimiterStreamReader.Column">
+            <summary>
+            The current row
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Streams.DelimiterStreamReader.Row">
+            <summary>
+            The current column
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of the DelimiterStreamReader class
+            </summary>
+            <param name="stream">The stream</param>
+            <param name="encoding">Encoding of the string</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.Finalize">
+            <summary>
+            Disposes the stream
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.Dispose">
+            <summary>
+            Disposes the stream
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.Close">
+            <summary>
+            Closes the stream. Also closes the source stream.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.ReadToDelimiter">
+            <summary>
+            Reads until the next delimiter
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.ReadString">
+            <summary>
+            Reads a string from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.ReadNumber``1">
+            <summary>
+            Reads a number from the stream
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.ReadBool">
+            <summary>
+            Reads a boolean from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamReader.SkipString">
+            <summary>
+            Skips the next string. Has the same behaviour as readstring but doesn't store anything in memory.
+            Use this method when reading through a file with passwords to skip them when not needed
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Streams.DelimiterStreamWriter">
+            <summary>
+            Writes delimiter (';') separated values to a stream
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of the DelimiterStreamWriter class
+            </summary>
+            <param name="stream">The stream</param>
+            <param name="encoding">Encoding of the target</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Finalize">
+            <summary>
+            Disposes the stream
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Dispose">
+            <summary>
+            Disposes the stream
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Close">
+            <summary>
+            Closes the stream. Also closes the target stream.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.String)">
+            <summary>
+            Writes to the stream. Strings are stored with [Length];[Content]
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Char)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Decimal)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Double)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Int32)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Int64)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Single)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.UInt32)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.UInt64)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.Write(System.Boolean)">
+            <summary>
+            Writes to the stream
+            </summary>
+            <param name="value">The value to be written</param>
+        </member>
+        <member name="M:SIMULTAN.Util.Streams.DelimiterStreamWriter.WriteLine">
+            <summary>
+            Writes a linebreak to the stream
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Strings.FastStringSplitter">
+            <summary>
+            Source: https://github.com/meikeric/String.Split
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.#ctor(System.Int32)">
+            <summary>
+            Create a new StringSplitter object with the given buffer size.
+            </summary>
+            <param name="bufferSize"></param>
+        </member>
+        <member name="F:SIMULTAN.Util.Strings.FastStringSplitter.buffer">
+            <summary>
+            The string buffer container
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.Strings.FastStringSplitter.Results">
+            <summary>
+            Get the results of the last split call
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.Char)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.Char)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array.
+            This method is safe and will
+            automatically adjust the buffer if needed
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.String)">
+            <summary>            
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            a specified string or Unicode character array.
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.String)">
+            <summary>
+            Split the string
+            </summary>
+            <param name="value">The number of results found</param>
+            <param name="separator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.Char[])">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separators"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.Char[])">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separators"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.Char,System.StringSplitOptions)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            /// <param name="options"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.Char,System.StringSplitOptions)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array.
+            This method is safe and will
+            automatically adjust the buffer if needed
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            <param name="options"></param>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.String,System.StringSplitOptions)">
+            <summary>            
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            a specified string or Unicode character array.
+            </summary>
+            <param name="value"></param>
+            <param name="separator"></param>
+            <param name="options"></param>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.String,System.StringSplitOptions)">
+            <summary>
+            Split the string
+            </summary>
+            <param name="value">The number of results found</param>
+            <param name="separator"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.Split(System.String,System.Char[],System.StringSplitOptions)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separators"></param>
+            <param name="options"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.FastStringSplitter.SafeSplit(System.String,System.Char[],System.StringSplitOptions)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by 
+            elements of a specified string or Unicode character array. This method is unsafe and can throw 
+            IndexOutOfRange exception if we overflow the buffer
+            </summary>
+            <param name="value"></param>
+            <param name="separators"></param>
+            <param name="options"></param>
+            <exception cref="T:System.IndexOutOfRangeException">IndexOutOfRange</exception>
+            <returns>The number of results found</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Strings.StringUtils">
+            <summary>
+            A collection of operations on strings as an alternative to LINQ.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Strings.StringUtils.GetSplit(System.String,System.String)">
+            <summary>
+            An alternative string splitter.
+            Adapted from: https://stackoverflow.com/questions/568968/does-any-one-know-of-a-faster-method-to-do-string-split
+            Answer of John Leidegren
+            </summary>
+            <param name="s">the string to split</param>
+            <param name="delimiter">the delilimter as a string</param>
+            <returns>an emumerable of the string fragments</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.UndoRedoAction">
+            <summary>
+            Defines which operation has to be reverted
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoRedoAction.Insert">
+            <summary>
+            A insert (or add) operation
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoRedoAction.Remove">
+            <summary>
+            A remove action
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoRedoAction.Clear">
+            <summary>
+            A clear action
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.CollectionUndoItem">
+            <summary>
+            Methods for creating CollectionUndoItem instances
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem.Clear``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            Creates an UndoItem for a Clear operation
+            </summary>
+            <typeparam name="T">The type of the collection items</typeparam>
+            <param name="list">The collection</param>
+            <returns>The created collection item</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem.Add``1(System.Collections.Generic.IList{``0},``0)">
+            <summary>
+            Creates an UndoItem for a Add operation
+            </summary>
+            <typeparam name="T">The type of the collection items</typeparam>
+            <param name="list">The collection</param>
+            <param name="item">The item to add</param>
+            <returns>The created collection item</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem.Insert``1(System.Collections.Generic.IList{``0},``0,System.Int32)">
+            <summary>
+            Creates an UndoItem for a Insert operation
+            </summary>
+            <typeparam name="T">The type of the collection items</typeparam>
+            <param name="list">The collection</param>
+            <param name="item">The item to insert</param>
+            <param name="idx">The position where the item will be inserted</param>
+            <returns>The created collection item</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem.Remove``1(System.Collections.Generic.IList{``0},``0)">
+            <summary>
+            Creates an UndoItem for a Remove operation
+            </summary>
+            <typeparam name="T">The type of the collection items</typeparam>
+            <param name="list">The collection</param>
+            <param name="item">The item to remove</param>
+            <returns>The created collection item</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem.RemoveAt``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Creates an UndoItem for a RemoveAt operation
+            </summary>
+            <typeparam name="T">The type of the collection items</typeparam>
+            <param name="list">The collection</param>
+            <param name="idx">The position where the item will be removed</param>
+            <returns>The created collection item</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.CollectionUndoItem`1">
+            <summary>
+            A IUndoItem for collection modifications.
+            </summary>
+            <typeparam name="T">The item type of the collection</typeparam>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem`1.#ctor(System.Collections.Generic.IList{`0},SIMULTAN.Util.UndoRedo.UndoRedoAction,System.Int32,System.Collections.Generic.IList{`0},System.Int32,System.Collections.Generic.IList{`0})">
+            <summary>
+            Initializes a new instance of the CollectionUndoItem class
+            </summary>
+            <param name="list">The collection</param>
+            <param name="action">The action that should be undo-able</param>
+            <param name="oldStartIndex">Old start index (for clear, remove)</param>
+            <param name="oldItems">A list of old items</param>
+            <param name="newStartIndex">New start index</param>
+            <param name="newItems">A list of new items</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem`1.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem`1.Redo">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.CollectionUndoItem`1.Undo">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.GroupUndoItem">
+            <summary>
+            A IUndoItem for grouping other items for a common undo operation
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.UndoRedo.GroupUndoItem.Items">
+            <summary>
+            Returns a list of contanied undo items. Do not change this after registering to the undo manager
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.GroupUndoItem.#ctor">
+            <summary>
+            Initializes a new instance of the GroupUndoItem class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.GroupUndoItem.#ctor(System.Collections.Generic.List{SIMULTAN.Util.UndoRedo.IUndoItem})">
+            <summary>
+            Initializes a new instance of the GroupUndoItem class
+            </summary>
+            <param name="items">The list of IIUndoItems</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.GroupUndoItem.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.GroupUndoItem.Redo">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.GroupUndoItem.Undo">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.UndoExecutionResult">
+            <summary>
+            Defines the result of a undo/redo operation
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoExecutionResult.Executed">
+            <summary>
+            The operation has been fully executed
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoExecutionResult.PartiallyExecuted">
+            <summary>
+            Parts of the operation have been executed (e.g. in a GroupOperation)
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.UndoRedo.UndoExecutionResult.Failed">
+            <summary>
+            No operation has been executed
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.IUndoItem">
+            <summary>
+            Interface for all undo items
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.IUndoItem.Execute">
+            <summary>
+            Called when the item is executed for the first time
+            </summary>
+            <returns>The execution result. Partially should only be returned in case of grouping undo items.</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.IUndoItem.Undo">
+            <summary>
+            Executed when the item is undone
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.IUndoItem.Redo">
+            <summary>
+            Executed when the item is redone
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.PropertyUndoItem">
+            <summary>
+            An IUndoItem for properties
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUndoItem.#ctor(System.Object,System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the PropertyUndoItem class
+            </summary>
+            <param name="target">The target object</param>
+            <param name="property">The property name (for reflection)</param>
+            <param name="value">The new value for this property</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUndoItem.Execute">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUndoItem.Redo">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUndoItem.Undo">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.PropertyUnsupportedValueException">
+            <summary>
+            Exception thrown by properties when a value is not allowed. Notifies the PropertyUndoItem that the operation has failed
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUnsupportedValueException.#ctor">
+            <summary>
+            Initializes a new instance of the PropertyUnsupportedValueException class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUnsupportedValueException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the PropertyUnsupportedValueException class
+            </summary>
+            <param name="message">The message text</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUnsupportedValueException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the PropertyUnsupportedValueException class
+            </summary>
+            <param name="message">The message text</param>
+            <param name="innerException">The inner exception</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.PropertyUnsupportedValueException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the PropertyUnsupportedValueException class
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:SIMULTAN.Util.UndoRedo.UndoRedoManager">
+            <summary>
+            Manages Undo and Redo operations
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.UndoRedo.UndoRedoManager.UndoCommand">
+            <summary>
+            Returns the command for an Undo action
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Util.UndoRedo.UndoRedoManager.RedoCommand">
+            <summary>
+            Returns the command for an Redo action
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.UndoRedoManager.#ctor">
+            <summary>
+            Initializes a new instance of the UndoRedoManager class
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.UndoRedoManager.Register(SIMULTAN.Util.UndoRedo.IUndoItem)">
+            <summary>
+            Registers a new IUndoItem and executes it
+            </summary>
+            <param name="item">The item</param>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.UndoRedoManager.ClearRedo">
+            <summary>
+            Clears the redo list.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.UndoRedo.UndoRedoManager.UnRegister(SIMULTAN.Util.UndoRedo.IUndoItem)">
+            <summary>
+            Removes a undo item from both, the undo and the redo list
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.Shell32">
+            <summary>
+            Contains structs and definitions for working with the Win32 API
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_LARGE">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_SMALL">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_EXTRALARGE">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_SYSSMALL">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_JUMBO">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.SHIL_LAST">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.ILD_TRANSPARENT">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags">IMAGELISTDRAWFLAGS</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.Shell32.ILD_IMAGE">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags">IMAGELISTDRAWFLAGS</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Shell32.SHGetImageList(System.Int32,System.Guid@,SIMULTAN.Util.Win32Interop.IImageList@)">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetimagelist">SHGetImageList</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Shell32.DestroyIcon(System.IntPtr)">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon">DestroyIcon</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Shell32.SHGetIDListFromObject(System.Object,System.IntPtr@)">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetidlistfromobject">SHGetIDListFromObject</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Shell32.SHGetFileInfo(System.String,System.UInt32,SIMULTAN.Util.Win32Interop.SHFILEINFO@,System.UInt32,System.UInt32)">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfoa">SHGetFileInfoA</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Shell32.SHOpenWithDialog(System.Windows.Interop.IWin32Window,SIMULTAN.Util.Win32Interop.OpenAsInfo@)">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shopenwithdialog">SHOpenWithDialog</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.User32">
+            <summary>
+            Provides access to some user32.dll functions
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.User32.SetCursorPos(System.Int32,System.Int32)">
+            <summary>
+            Sets the cursor position.
+            </summary>
+            <param name="X">The x coordinate.</param>
+            <param name="Y">The y coordinate.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.SHGFI">
+            <summary>
+            Contains Win32 Enumerations
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.Icon">
+            <summary>get icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.DisplayName">
+            <summary>get display name</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.TypeName">
+            <summary>get type name</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.Attributes">
+            <summary>get attributes</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.IconLocation">
+            <summary>get icon location</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.ExeType">
+            <summary>return exe type</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.SysIconIndex">
+            <summary>get system icon index</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.LinkOverlay">
+            <summary>put a link overlay on icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.Selected">
+            <summary>show icon in selected state</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.Attr_Specified">
+            <summary>get only specified attributes</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.LargeIcon">
+            <summary>get large icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.SmallIcon">
+            <summary>get small icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.OpenIcon">
+            <summary>get open icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.ShellIconSize">
+            <summary>get shell size icon</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.PIDL">
+            <summary>pszPath is a pidl</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.UseFileAttributes">
+            <summary>use passed dwFileAttribute</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.AddOverlays">
+            <summary>apply the appropriate overlays</summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHGFI.OverlayIndex">
+            <summary>Get the index of the overlay in the upper 8 bits of the iIcon</summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.SHFILEINFO">
+            <summary>
+            See <see href="http://pinvoke.net/default.aspx/Structures/SHFILEINFO.html">SHFILEINFO (Structures)</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.NAMESIZE">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.hIcon">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.iIcon">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.dwAttributes">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.szDisplayName">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.SHFILEINFO.szTypeName">
+            <summary>
+            See <see href="https://msdn.microsoft.com/en-us/ie/bb759792(v=vs.80)">SHFILEINFO structure</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.RECT">
+            <summary>
+            See <see href="https://www.pinvoke.net/default.aspx/Structures/rect.html">rect (Structures)</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.RECT.left">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect">RECT structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.RECT.top">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect">RECT structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.RECT.right">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect">RECT structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.RECT.bottom">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect">RECT structure</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.POINT">
+            <summary>
+            See <see href="https://www.pinvoke.net/default.aspx/Structures/POINT.html">POINT (Structures)</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.POINT.x">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point">POINT structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.POINT.y">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point">POINT structure</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS">
+            <summary>
+            See <see href="https://www.pinvoke.net/default.aspx/Structures/IMAGELISTDRAWPARAMS.html">IMAGELISTDRAWPARAMS (Structures)</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.cbSize">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.himl">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.i">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.hdcDst">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.x">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.y">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.cx">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.cy">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.xBitmap">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.yBitmap">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.rgbBk">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.rgbFg">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.fStyle">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.dwRop">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.fState">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.Frame">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS.crEffect">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams">IMAGELISTDRAWPARAMS structure</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.IMAGEINFO">
+            <summary>
+            See <see href="https://www.pinvoke.net/default.aspx/Structures/IMAGEINFO.html">IMAGEINFO (Structures)</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGEINFO.hbmImage">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo">IMAGEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGEINFO.hbmMask">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo">IMAGEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGEINFO.Unused1">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo">IMAGEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGEINFO.Unused2">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo">IMAGEINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.IMAGEINFO.rcImage">
+            <summary>
+            See <see href="https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imageinfo">IMAGEINFO structure</see>
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.IImageList">
+            <summary>
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nn-commoncontrols-iimagelist">IImageList interface</see>
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Add(System.IntPtr,System.IntPtr,System.Int32@)">
+            <summary>
+            Adds an image or images to an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-add">IImageList::Add</see>
+            </summary>
+            <param name="hbmImage">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-add">IImageList::Add</see></param>
+            <param name="hbmMask">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-add">IImageList::Add</see></param>
+            <param name="pi">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-add">IImageList::Add</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-add">IImageList::Add</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.ReplaceIcon(System.Int32,System.IntPtr,System.Int32@)">
+            <summary>
+            Replaces an image with an icon or cursor.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replaceicon">IImageList::ReplaceIcon</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replaceicon">IImageList::ReplaceIcon</see></param>
+            <param name="hicon">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replaceicon">IImageList::ReplaceIcon</see></param>
+            <param name="pi">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replaceicon">IImageList::ReplaceIcon</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replaceicon">IImageList::ReplaceIcon</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.SetOverlayImage(System.Int32,System.Int32)">
+            <summary>
+            Adds a specified image to the list of images used as overlay masks.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see>
+            </summary>
+            <param name="iImage">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see></param>
+            <param name="iOverlay">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Replace(System.Int32,System.IntPtr,System.IntPtr)">
+            <summary>
+            Replaces an image in an image list with a new image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replace">IImageList::Replace</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replace">IImageList::Replace</see></param>
+            <param name="hbmImage">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replace">IImageList::Replace</see></param>
+            <param name="hbmMask">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replace">IImageList::Replace</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-replace">IImageList::Replace</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.AddMasked(System.IntPtr,System.Int32,System.Int32@)">
+            <summary>
+            Adds an image or images to an image list, generating a mask from the specified bitmap.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-addmasked">IImageList::AddMasked</see>
+            </summary>
+            <param name="hbmImage">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-addmasked">IImageList::AddMasked</see></param>
+            <param name="crMask">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-addmasked">IImageList::AddMasked</see></param>
+            <param name="pi">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-addmasked">IImageList::AddMasked</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-addmasked">IImageList::AddMasked</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Draw(SIMULTAN.Util.Win32Interop.IMAGELISTDRAWPARAMS@)">
+            <summary>
+            Draws an image list item in the specified device context.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-draw">IImageList::Draw</see>
+            </summary>
+            <param name="pimldp">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-draw">IImageList::Draw</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-draw">IImageList::Draw</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Remove(System.Int32)">
+            <summary>
+            Removes an image from an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-remove">IImageList::Remove</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-remove">IImageList::Remove</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-remove">IImageList::Remove</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetIcon(System.Int32,System.Int32,System.IntPtr@)">
+            <summary>
+            Creates an icon from an image and a mask in an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticon">IImageList::GetIcon</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticon">IImageList::GetIcon</see></param>
+            <param name="flags">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticon">IImageList::GetIcon</see></param>
+            <param name="picon">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticon">IImageList::GetIcon</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticon">IImageList::GetIcon</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetImageInfo(System.Int32,SIMULTAN.Util.Win32Interop.IMAGEINFO@)">
+            <summary>
+            Gets information about an image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimageinfo">IImageList::GetImageInfo</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimageinfo">IImageList::GetImageInfo</see></param>
+            <param name="pImageInfo">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimageinfo">IImageList::GetImageInfo</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimageinfo">IImageList::GetImageInfo</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Copy(System.Int32,SIMULTAN.Util.Win32Interop.IImageList,System.Int32,System.Int32)">
+            <summary>
+            Copies images from a given image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see>
+            </summary>
+            <param name="iDst">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see></param>
+            <param name="punkSrc">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see></param>
+            <param name="iSrc">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see></param>
+            <param name="uFlags">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-copy">IImageList::Copy</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Merge(System.Int32,SIMULTAN.Util.Win32Interop.IImageList,System.Int32,System.Int32,System.Int32,System.Guid@,System.IntPtr@)">
+            <summary>
+            Creates a new image by combining two existing images. This method also creates a new image list in which to store the image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see>
+            </summary>
+            <param name="i1">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="punk2">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="i2">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="dx">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="dy">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="riid">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <param name="ppv">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-merge">IImageList::Merge</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.Clone(System.Guid@,System.IntPtr@)">
+            <summary>
+            Clones an existing image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-clone">IImageList::Clone</see>
+            </summary>
+            <param name="riid">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-clone">IImageList::Clone</see></param>
+            <param name="ppv">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-clone">IImageList::Clone</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-clone">IImageList::Clone</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetImageRect(System.Int32,SIMULTAN.Util.Win32Interop.RECT@)">
+            <summary>
+            Gets an image's bounding rectangle.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagerect">IImageList::GetImageRect</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagerect">IImageList::GetImageRect</see></param>
+            <param name="prc">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagerect">IImageList::GetImageRect</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagerect">IImageList::GetImageRect</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetIconSize(System.Int32@,System.Int32@)">
+            <summary>
+            Gets the dimensions of images in an image list. All images in an image list have the same dimensions.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticonsize">IImageList::GetIconSize</see>
+            </summary>
+            <param name="cx">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticonsize">IImageList::GetIconSize</see></param>
+            <param name="cy">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticonsize">IImageList::GetIconSize</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-geticonsize">IImageList::GetIconSize</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.SetIconSize(System.Int32,System.Int32)">
+            <summary>
+            Sets the dimensions of images in an image list and removes all images from the list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-seticonsize">IImageList::SetIconSize</see>
+            </summary>
+            <param name="cx">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-seticonsize">IImageList::SetIconSize</see></param>
+            <param name="cy">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-seticonsize">IImageList::SetIconSize</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-seticonsize">IImageList::SetIconSize</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetImageCount(System.Int32@)">
+            <summary>
+            Gets the number of images in an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagecount">IImageList::GetImageCount</see>
+            </summary>
+            <param name="pi">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagecount">IImageList::GetImageCount</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getimagecount">IImageList::GetImageCount</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.SetImageCount(System.Int32)">
+            <summary>
+            Adds a specified image to the list of images used as overlay masks.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see>
+            </summary>
+            <param name="uNewCount">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setoverlayimage">IImageList::SetOverlayImage</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.SetBkColor(System.Int32,System.Int32@)">
+            <summary>
+            Sets the background color for an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setbkcolor">IImageList::SetBkColor</see>
+            </summary>
+            <param name="clrBk">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setbkcolor">IImageList::SetBkColor</see></param>
+            <param name="pclr">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setbkcolor">IImageList::SetBkColor</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setbkcolor">IImageList::SetBkColor</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetBkColor(System.Int32@)">
+            <summary>
+            Gets the current background color for an image list.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getbkcolor">IImageList::GetBkColor</see>
+            </summary>
+            <param name="pclr">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getbkcolor">IImageList::GetBkColor</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getbkcolor">IImageList::GetBkColor</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.BeginDrag(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Begins dragging an image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-begindrag">IImageList::BeginDrag</see>
+            </summary>
+            <param name="iTrack">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-begindrag">IImageList::BeginDrag</see></param>
+            <param name="dxHotspot">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-begindrag">IImageList::BeginDrag</see></param>
+            <param name="dyHotspot">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-begindrag">IImageList::BeginDrag</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-begindrag">IImageList::BeginDrag</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.EndDrag">
+            <summary>
+            Ends a drag operation.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-enddrag">IImageList::EndDrag</see>
+            </summary>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-enddrag">IImageList::EndDrag</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.DragEnter(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+            Locks updates to the specified window during a drag operation and displays the drag image at the specified position within the window.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragenter">IImageList::DragEnter</see>
+            </summary>
+            <param name="hwndLock">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragenter">IImageList::DragEnter</see></param>
+            <param name="x">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragenter">IImageList::DragEnter</see></param>
+            <param name="y">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragenter">IImageList::DragEnter</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragenter">IImageList::DragEnter</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.DragLeave(System.IntPtr)">
+            <summary>
+            Unlocks the specified window and hides the drag image, which enables the window to update.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragleave">IImageList::DragLeave</see>
+            </summary>
+            <param name="hwndLock">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragleave">IImageList::DragLeave</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragleave">IImageList::DragLeave</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.DragMove(System.Int32,System.Int32)">
+            <summary>
+            Moves the image that is being dragged during a drag-and-drop operation. This function is typically called in response to a WM_MOUSEMOVE message.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragmove">IImageList::DragMove</see>
+            </summary>
+            <param name="x">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragmove">IImageList::DragMove</see></param>
+            <param name="y">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragmove">IImageList::DragMove</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragmove">IImageList::DragMove</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.SetDragCursorImage(SIMULTAN.Util.Win32Interop.IImageList@,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a new drag image by combining the specified image, which is typically a mouse cursor image, with the current drag image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see>
+            </summary>
+            <param name="punk">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see></param>
+            <param name="iDrag">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see></param>
+            <param name="dxHotspot">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see></param>
+            <param name="dyHotspot">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-setdragcursorimage">IImageList::SetDragCursorImage</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.DragShowNolock(System.Int32)">
+            <summary>
+            Shows or hides the image being dragged.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragshownolock">IImageList::DragShowNolock</see>
+            </summary>
+            <param name="fShow">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragshownolock">IImageList::DragShowNolock</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-dragshownolock">IImageList::DragShowNolock</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetDragImage(SIMULTAN.Util.Win32Interop.POINT@,SIMULTAN.Util.Win32Interop.POINT@,System.Guid@,System.IntPtr@)">
+            <summary>
+            Gets the temporary image list that is used for the drag image. The function also retrieves the current drag position 
+            and the offset of the drag image relative to the drag position.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see>
+            </summary>
+            <param name="ppt">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see></param>
+            <param name="pptHotspot">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see></param>
+            <param name="riid">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see></param>
+            <param name="ppv">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getdragimage">IImageList::GetDragImage</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetItemFlags(System.Int32,System.Int32@)">
+            <summary>
+            Gets the flags of an image.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getitemflags">IImageList::GetItemFlags</see>
+            </summary>
+            <param name="i">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getitemflags">IImageList::GetItemFlags</see></param>
+            <param name="dwFlags">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getitemflags">IImageList::GetItemFlags</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getitemflags">IImageList::GetItemFlags</see></returns>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.IImageList.GetOverlayImage(System.Int32,System.Int32@)">
+            <summary>
+            Retrieves a specified image from the list of images used as overlay masks.
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getoverlayimage">IImageList::GetOverlayImage</see>
+            </summary>
+            <param name="iOverlay">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getoverlayimage">IImageList::GetOverlayImage</see></param>
+            <param name="piIndex">See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getoverlayimage">IImageList::GetOverlayImage</see></param>
+            <returns>See <see href="https://docs.microsoft.com/de-de/windows/win32/api/commoncontrols/nf-commoncontrols-iimagelist-getoverlayimage">IImageList::GetOverlayImage</see></returns>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.OpenAsInfo">
+            <summary>
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/shlobj_core/ns-shlobj_core-openasinfo">OPENASINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfo.FileName">
+            <summary>
+            A pointer to the file name.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfo.FileClass">
+            <summary>
+            A pointer to the file type description. Set this parameter to NULL to use the file name extension of pcszFile.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfo.OpenAsFlags">
+            <summary>
+            The characteristics of the SHOpenWithDialog dialog box. 
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags">
+            <summary>
+            See <see href="https://docs.microsoft.com/de-de/windows/win32/api/shlobj_core/ns-shlobj_core-openasinfo">OPENASINFO structure</see>
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.None">
+            <summary>
+            No flag
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.AllowRegistration">
+            <summary>
+            Enable the "always use this program" checkbox. If not passed, it will be disabled.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.RegisterExt">
+            <summary>
+            Do the registration after the user hits the OK button.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.ExecFile">
+            <summary>
+            Execute file after registering.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.ForceRegistration">
+            <summary>
+            Force the Always use this program checkbox to be checked. Typically, you won't use the OAIF_ALLOW_REGISTRATION flag when you pass this value.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.HideRegistration">
+            <summary>
+            Introduced in Windows Vista. Hide the Always use this program checkbox. If this flag is specified, the OAIF_ALLOW_REGISTRATION and OAIF_FORCE_REGISTRATION flags will be ignored.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.UrlProtocol">
+            <summary>
+            Introduced in Windows Vista. The value for the extension that is passed is actually a protocol, so the Open With dialog box should show applications that are registered as capable of handling that protocol.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Util.Win32Interop.OpenAsInfoFlags.FileIsUri">
+            <summary>
+            Introduced in Windows 8. The location pointed to by the pcszFile parameter is given as a URI.
+            </summary>
+        </member>
+        <member name="T:SIMULTAN.Util.Win32Interop.Win32Utils">
+            <summary>
+            Provides methods for Win32 interop
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.Win32Interop.Win32Utils.OpenWith(System.String,System.Windows.Interop.IWin32Window,System.String,SIMULTAN.Util.Win32Interop.OpenAsInfoFlags)">
+            <summary>
+            Executes the OpenWith dialog on a file
+            </summary>
+            <param name="fileName">The file</param>
+            <param name="parent">The parent window</param>
+            <param name="fileClass"></param>
+            <param name="openAsFlags"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SIMULTAN.Util.WindowsServices">
+            <summary>
+            Provides methods to work with the Win32 API
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.WindowsServices.SetWindowExTransparent(System.IntPtr)">
+            <summary>
+            Sets the ExStyle of a window to WS_EX_TRANSPARENT
+            </summary>
+            <param name="hwnd">The window handle</param>
+        </member>
+        <member name="T:SIMULTAN.Util.XamlUtils">
+            <summary>
+            Provides methods to work with XAML structures
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindVisualChildren``1(System.Windows.DependencyObject)">
+            <summary>
+            Searches for visual children of a given type
+            </summary>
+            <typeparam name="T">The type to search for</typeparam>
+            <param name="depObj">The source object</param>
+            <returns>A list of all visual childs of that type</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindLogicalChildren``1(System.Windows.DependencyObject)">
+            <summary>
+            Searches for children of a specific type in the logical tree
+            </summary>
+            <typeparam name="T">The type of the targets</typeparam>
+            <param name="depObj">The root element</param>
+            <returns>All elements in the logical tree that match the given type</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindChild``1(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Searches for a child with a given type (and optionally a given name) in the visual tree
+            </summary>
+            <typeparam name="T">Type of the child</typeparam>
+            <param name="parent">Parent object (root node)</param>
+            <param name="childName">Name of the child, or Null when only a specific type should be found</param>
+            <returns>The child, or Null when no such child has been found</returns>
+            
+            Code from https://stackoverflow.com/questions/636383/how-can-i-find-wpf-controls-by-name-or-type
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindFirstMatch``1(System.Windows.DependencyObject,System.Predicate{``0})">
+            <summary>
+            Searches for the first matching object in the VisualTree
+            </summary>
+            <typeparam name="T">Type of the searched object</typeparam>
+            <param name="parent">Root node for the search</param>
+            <param name="match">The matching condition</param>
+            <returns>Either a valid instance when one is found or Null when no machting object exists</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindParent``1(System.Windows.DependencyObject)">
+            <summary>
+            Searches for a parent object of a given type
+            </summary>
+            <typeparam name="T">The parent object type</typeparam>
+            <param name="depObj">The start object</param>
+            <returns>Either a parent object of the requested type, or Null when no such object is found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindParentLogical``1(System.Windows.DependencyObject)">
+            <summary>
+            Searches for a parent object of a given type, also checks the logical parent
+            </summary>
+            <typeparam name="T">The parent object type</typeparam>
+            <param name="depObj">The start object</param>
+            <returns>Either a parent object of the requested type, or Null when no such object is found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindParentWithPopup``1(System.Windows.DependencyObject)">
+            <summary>
+            Searches for a parent object of a given type
+            </summary>
+            <typeparam name="T">The parent object type</typeparam>
+            <param name="depObj">The start object</param>
+            <returns>Either a parent object of the requested type, or Null when no such object is found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.FindParentOrSelfVisual(System.Windows.DependencyObject)">
+            <summary>
+            Searches for a Visual instance upwards in the VisualTree.
+            </summary>
+            <param name="depObj">The object where the search starts</param>
+            <returns>Returns a Visual instance that is either depObj or one of its parents. Returns Null when no Visual exists</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.Descendants(System.Windows.DependencyObject)">
+            <summary>
+            Returns a collection of descendant elements.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.TryFindResourceRecursive(System.Windows.FrameworkElement,System.Object,System.Int32)">
+            <summary>
+            Tries to find a resource in the resources of the element and in the resources of all children.
+            Performs a breath first search
+            </summary>
+            <param name="element">The element to start the search from</param>
+            <param name="key">The resource key to search for</param>
+            <param name="maxDepth">The maximum search depth</param>
+            <returns>Either a resource, or Null when no such resource could be found</returns>
+        </member>
+        <member name="M:SIMULTAN.Util.XamlUtils.ReplaceSpecialCharacters(System.String)">
+            <summary>
+            Replaces special characters (&gt;, &lt;, &gt;, &quot;) with their xaml equivalents. 
+            </summary>
+            <param name="text">The input text</param>
+            <returns>Text text with special characters replaced</returns>
+        </member>
+        <member name="T:SIMULTAN.Util.XMLIOExtensions">
+            <summary>
+            Contains extensions methods for XML classes
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Util.XMLIOExtensions.WriteKeyValue``1(System.Xml.XmlWriter,System.String,``0)">
+            <summary>
+            Writes a Xml element containing "<key>value</key>"
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sw"></param>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:SIMULTAN.Util.XMLIOExtensions.LoadInnerText(System.Xml.XmlElement,System.String,System.Action{System.String})">
+            <summary>
+            Loads an xml node and converts the content
+            </summary>
+            <param name="node">The XMLElement onto which the xpath is applied</param>
+            <param name="xpath">The xpath expression</param>
+            <param name="converter">Convert to convert the content string</param>
+            <returns>True when the xpath has selected an element, False otherwise</returns>
+        </member>
+    </members>
+</doc>
