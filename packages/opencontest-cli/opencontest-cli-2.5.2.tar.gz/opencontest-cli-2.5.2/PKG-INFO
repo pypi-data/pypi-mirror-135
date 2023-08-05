@@ -1,0 +1,80 @@
+Metadata-Version: 2.1
+Name: opencontest-cli
+Version: 2.5.2
+Summary: A very simple OpenContest command line client written in Python
+Home-page: https://github.com/LadueCS/OpenContest-CLI
+Author: Anthony Wang
+Author-email: ta180m@pm.me
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/LadueCS/OpenContest-CLI/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Console
+Classifier: Intended Audience :: End Users/Desktop
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# OpenContest CLI
+
+A very simple [OpenContest](https://github.com/LadueCS/OpenContest) command line client written in Python and [requests](https://docs.python-requests.org/en/master/index.html).
+
+## Usage
+
+Install this client using `pip`:
+```
+pip install opencontest-cli
+```
+
+Register an account on an OpenContest server:
+```
+occ register -s homeserver.com -N name -E email -U username -P password
+```
+
+Save username, homeserver (the server you registered your account on), and password to disk:
+```
+occ save -U username -H homeserver.com -P pasword
+```
+
+Get information about an OpenContest server:
+```
+occ about -s server.com
+```
+
+Get information about a contest:
+```
+occ info -s server.com -c contest
+```
+
+View the number of solves of each problem:
+```
+occ solves -s server.com -c contest
+```
+
+View the submission history of all users in a contest:
+```
+occ history -s server.com -c contest
+```
+
+Submit code:
+```
+occ submit -s server.com -c contest -p problem -c code_file
+```
+
+Check user status:
+```
+occ status -s server.com -c contest
+```
+
+Query your contest submission history:
+```
+occ submissions -s server.com -c contest
+```
+
+Get code for a specific submission number:
+```
+occ code -s server.com -c contest -n submission_number
+```
+
+
