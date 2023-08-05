@@ -1,0 +1,44 @@
+    # def conger(self):
+    #     for k in range(self.q):
+    #         agree_mat[:, k] = self.ratings[
+    #             self.ratings == self.categories[k]].count(axis=1)
+    #     agree_mat_w = np.transpose(
+    #         np.matmul(self.weights_mat, agree_mat.T))
+    #     classif_mat = np.zeros((self.r, self.q))
+    #     for k in range(self.q):
+    #         with_mis = self.ratings == self.categories[k]
+    #         without_mis = with_mis.T.fillna(False)
+    #         classif_mat[:, k] = without_mis.sum(axis=1)
+    #     ri_vec = agree_mat.sum(axis=1)
+    #     sum_q = (agree_mat * (agree_mat - 1)).sum(axis=1)
+    #     n2more = sum(ri_vec >= 2)
+    #     pa = sum(
+    #         sum_q[ri_vec >= 2] / (ri_vec * (ri_vec - 1))[ri_vec >= 2]) / n2more
+    #     ng_vec = classif_mat.sum(axis=1).reshape(-1, 1)
+    #     pgk_mat = classif_mat / np.broadcast_to(ng_vec, (self.r, self.q))
+    #     p_mean_k = pgk_mat.T.sum(axis=1) / self.r
+    #     p_mean_k = p_mean_k.reshape(-1, 1)
+    #     s2kl_mat = (
+    #         np.matmul(pgk_mat.T, pgk_mat) - self.r *
+    #         (p_mean_k * p_mean_k.T)) / (
+    #             self.r - 1)
+    #     pe = np.sum(
+    #         self.weights_mat * (p_mean_k * p_mean_k.T - s2kl_mat / self.r))
+    #     conger_kappa = (pa - pe) / (1 - pe)
+    #     bkl_mat = (self.weights_mat + self.weights_mat.T) / 2
+    #     pe_ivec1 = self.r * (
+    #         agree_mat * (p_mean_k.T * bkl_mat).sum(axis=1)).sum(axis=1)
+    #     pe_ivec2 = np.zeros((1, self.n))
+    #     lambda_ig_mat = np.zeros((self.n, self.r))
+    #     is_numeric_ratings = self.ratings.applymap(
+    #         lambda x: isinstance(x, (int, float))).all(1).sum() == self.n
+    #     if is_numeric_ratings:
+    #         epsi_ig_mat = 1 - self.ratings.isna()
+    #     else:
+    #         epsi_ig_mat = 1 - self.ratings.applymap(
+    #             lambda x: isinstance(x, str))
+    #     for k in range(self.q):
+    #         lambda_ig_kmat = np.zeros((self.n, self.r))
+    #         for l in range(self.q):
+    #             delta_ig_mat = self.ratings == self.categories[l]
+    #     pass
