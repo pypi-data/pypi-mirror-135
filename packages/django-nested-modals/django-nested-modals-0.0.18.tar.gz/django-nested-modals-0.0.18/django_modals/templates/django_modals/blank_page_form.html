@@ -1,0 +1,27 @@
+<!doctype html>
+{% load ajax_helpers %}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% lib_include 'ajax_helpers' 'Bootstrap' 'FontAwesome' module='ajax_helpers.includes' %}
+    {% lib_include 'Modals' 'Toggle' 'select2' 'JQueryUI' 'TinyMce' module='django_modals.includes' %}
+
+</head>
+<body>
+
+{% block body %}
+{% endblock %}
+
+<div id="modal-1">
+    {{ form }}
+</div>
+
+<script>
+    django_modal.create_modal("");
+</script>
+
+</body>
+</html>
+
