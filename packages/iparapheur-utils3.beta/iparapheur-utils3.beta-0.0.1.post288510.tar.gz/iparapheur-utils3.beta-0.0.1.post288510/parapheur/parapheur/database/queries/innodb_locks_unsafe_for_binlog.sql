@@ -1,0 +1,1 @@
+SELECT @@GLOBAL.innodb_locks_unsafe_for_binlog as res;

@@ -1,0 +1,1 @@
+SELECT @@GLOBAL.innodb_file_per_table as res;

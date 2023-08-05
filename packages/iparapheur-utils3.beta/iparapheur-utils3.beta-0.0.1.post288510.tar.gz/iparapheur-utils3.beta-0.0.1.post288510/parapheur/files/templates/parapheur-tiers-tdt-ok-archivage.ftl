@@ -1,0 +1,1 @@
+Votre dossier '${document.properties['cm:title']}' a été télétransmis avec succès par ${person.properties.firstName}<#if person.properties.lastName?exists> ${person.properties.lastName}</#if>, et est prêt à être récupéré ou archivé.

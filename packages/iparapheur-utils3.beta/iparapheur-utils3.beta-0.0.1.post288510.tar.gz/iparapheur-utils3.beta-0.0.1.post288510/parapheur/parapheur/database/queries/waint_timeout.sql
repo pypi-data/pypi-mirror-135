@@ -1,0 +1,1 @@
+SELECT @@GLOBAL.wait_timeout as res;

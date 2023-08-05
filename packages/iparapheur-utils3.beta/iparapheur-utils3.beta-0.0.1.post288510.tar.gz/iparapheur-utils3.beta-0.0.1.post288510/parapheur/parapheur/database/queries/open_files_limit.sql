@@ -1,0 +1,1 @@
+SELECT @@GLOBAL.open_files_limit as res;

@@ -1,0 +1,1 @@
+SELECT @@GLOBAL.max_connections as res;

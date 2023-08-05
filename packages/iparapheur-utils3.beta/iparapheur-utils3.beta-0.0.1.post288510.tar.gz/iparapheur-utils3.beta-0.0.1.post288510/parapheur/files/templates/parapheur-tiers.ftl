@@ -1,0 +1,1 @@
+Votre dossier '${document.properties['cm:title']}' vient d'être visé/signé par ${person.properties.firstName}<#if person.properties.lastName?exists> ${person.properties.lastName}</#if>, et est prêt pour être récupéré, télétransmis ou archivé.

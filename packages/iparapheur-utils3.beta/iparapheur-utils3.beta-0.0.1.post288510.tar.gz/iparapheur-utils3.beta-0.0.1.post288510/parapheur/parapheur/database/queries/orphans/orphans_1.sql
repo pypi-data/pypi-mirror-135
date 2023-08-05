@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM alf_child_assoc WHERE parent_node_id IN (SELECT id FROM alf_node WHERE node_deleted = 0 AND id NOT IN (SELECT root_node_id FROM alf_store) AND id NOT IN (SELECT child_node_id FROM alf_child_assoc));
