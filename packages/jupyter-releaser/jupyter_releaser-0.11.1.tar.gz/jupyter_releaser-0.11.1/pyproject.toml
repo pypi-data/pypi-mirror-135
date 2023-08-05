@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.check-manifest]
+ignore = ["tbump.toml", ".*", "codecov.yml"]
+
+[tool.tbump.version]
+current = "0.11.1"
+regex = '''
+  (?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)
+  ((?P<channel>a|b|rc|.dev)(?P<release>\d+))?
+'''
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[tool.tbump.file]]
+src = "jupyter_releaser/__init__.py"
+
+[[tool.tbump.file]]
+src = "docs/source/conf.py"
+
+[tool.jupyter-releaser]
+skip = ["check-links"]
+
+[tool.jupyter-releaser.hooks]
+after-draft-release = "bash ./.github/scripts/bump_tag.sh"
