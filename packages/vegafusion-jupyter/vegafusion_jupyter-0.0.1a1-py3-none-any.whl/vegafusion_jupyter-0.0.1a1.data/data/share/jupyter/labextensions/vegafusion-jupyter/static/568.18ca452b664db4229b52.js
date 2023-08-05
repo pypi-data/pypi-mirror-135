@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvegafusion_jupyter=self.webpackChunkvegafusion_jupyter||[]).push([[568],{568:(e,u,s)=>{s.r(u),s.d(u,{MODULE_NAME:()=>a.o,MODULE_VERSION:()=>a.Y,VegaFusionModel:()=>i.VegaFusionModel,VegaFusionView:()=>i.VegaFusionView});var a=s(657),i=s(229)}}]);
