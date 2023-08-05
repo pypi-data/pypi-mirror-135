@@ -1,0 +1,126 @@
+{
+  "name": "sparkmonitor",
+  "version": "2.1.1",
+  "description": "Jupyter Notebook & Lab extension to monitor Apache Spark jobs from a notebook",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swan-cern/sparkmonitor.git"
+  },
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "Spark",
+    "sparkmonitor"
+  ],
+  "main": "lib/lab-extension/index.js",
+  "author": {
+    "name": "Krishnan R",
+    "email": "krishnanr1997@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "SWAN Team",
+      "email": "swan-admins@cern.ch"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/swan-cern/sparkmonitor/issues"
+  },
+  "homepage": "https://github.com/swan-cern/sparkmonitor#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.9",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@jupyterlab/builder": "^3.0.0",
+    "@types/node": "^16.4.10",
+    "@types/plotly.js-basic-dist": "^1.54.0",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-plotly.js": "^2.5.0",
+    "@types/react-timeago": "^4.1.3",
+    "@types/webpack": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^0.28.4",
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "file-loader": "^6.0.0",
+    "html-loader": "^0.4.5",
+    "ify-loader": "^1.0.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.1",
+    "rimraf": "^3.0.2",
+    "style-loader": "^0.18.2",
+    "typescript": "^4.3.5",
+    "url-loader": "^0.5.9",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension && jlpm run build:nbextension && jlpm run build:scalalistener",
+    "build": "jlpm run build:lib && jlpm run build:labextension",
+    "build:lib": "tsc -p tsconfig.lab.json",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:scalalistener": "cd scalalistener && sbt +assembly",
+    "clean": "rimraf lib jupyterlab_sparkmonior:labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:src": "tsc -w -p tsconfig.lab.json",
+    "watch:labextension": "jupyter labextension watch .",
+    "build:nbextension": "webpack --config src/notebook-extension/webpack.config.js",
+    "watch:nbextension": "webpack --config src/notebook-extension/webpack.config.js --mode development --watch",
+    "check:all": "jlpm run check:eslint && jlpm run check:nbextension && jlpm run check:labextension",
+    "check:eslint": "eslint .",
+    "check:nbextension": "tsc -p tsconfig.notebook.json",
+    "check:labextension": "tsc -p tsconfig.lab.json --noEmit"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^3.0.4",
+    "@jupyterlab/cells": "^3.0.4",
+    "@jupyterlab/coreutils": "^5.0.2",
+    "@jupyterlab/docregistry": "^3.0.4",
+    "@jupyterlab/mainmenu": "^3.0.3",
+    "@jupyterlab/notebook": "^3.0.4",
+    "@jupyterlab/services": "^6.0.3",
+    "@lumino/coreutils": "^1.5.3",
+    "@lumino/widgets": "^1.16.1",
+    "es6-promise": "^4.2.8",
+    "javascript-time-ago": "^2.3.8",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.0",
+    "plotly.js-basic-dist": "^2.3.1",
+    "pretty-ms": "^7.0.1",
+    "react-plotly.js": "^2.5.1",
+    "react-timeago": "^6.2.1",
+    "react-vis-timeline": "^2.0.3",
+    "uuid": "^7.0.2",
+    "vis-timeline": "^7.3.4",
+    "webpack": "^5.33.2",
+    "xss": "^1.0.9"
+  },
+  "jupyterlab": {
+    "extension": "lib/lab-extension/index",
+    "outputDir": "sparkmonitor/labextension",
+    "_build": {
+      "load": "static/remoteEntry.b35ad4fe415b42365a1c.js",
+      "extension": "./extension",
+      "style": "./style"
+    }
+  },
+  "style": "style/lab.css",
+  "files": [
+    "lib/*",
+    "src/*"
+  ]
+}
