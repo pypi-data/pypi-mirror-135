@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+from setuptools import setup
+
+packages = \
+['openskill', 'openskill.models']
+
+package_data = \
+{'': ['*']}
+
+install_requires = \
+['scipy>=1.7.3,<2.0.0']
+
+setup_kwargs = {
+    'name': 'openskill',
+    'version': '0.2.0a0',
+    'description': 'Python implementation of Weng-Lin Bayesian ranking, a better, license-free alternative to TrueSkill.',
+    'long_description': "![](https://i.imgur.com/tSTFzZY.gif)\n\n\n[![Tests](https://github.com/OpenDebates/openskill.py/actions/workflows/main.yml/badge.svg)](https://github.com/OpenDebates/openskill.py/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/OpenDebates/openskill.py/branch/main/graph/badge.svg?token=Ep07QEelsi)](https://codecov.io/gh/OpenDebates/openskill.py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/openskill)\n\nPython implementation of Weng-Lin Bayesian ranking, a better, license-free alternative to TrueSkill\n\nThis is a port of the amazing [openskill.js](https://github.com/philihp/openskill.js) package.\n\n## Installation\n```shell\npip install openskill\n```\n\n## Usage\n```python\n>>> from openskill import Rating, rate\n>>> a1 = Rating()\n>>> a1\nRating(mu=25, sigma=8.333333333333334)\n>>> a2 = Rating(mu=32.444, sigma=5.123)\n>>> a2\nRating(mu=32.444, sigma=5.123)\n>>> b1 = Rating(43.381, 2.421)\n>>> b1\nRating(mu=43.381, sigma=2.421)\n>>> b2 = Rating(mu=25.188, sigma=6.211)\n>>> b2\nRating(mu=25.188, sigma=6.211)\n```\n\nIf `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send this into rate:\n\n```python\n>>> [[x1, x2], [y1, y2]] = rate([[a1, a2], [b1, b2]])\n>>> x1, x2, y1, y2\n([28.669648436582808, 8.071520788025197], [33.83086971107981, 5.062772998705765], [43.071274808241974, 2.4166900452721256], [23.149503312339064, 6.1378606973362135])\n```\n\nYou can also create `Rating` objects by importing `create_rating`:\n\n```python\n>>> from openskill import create_rating\n>>> x1 = create_rating(x1)\n>>> x1\nRating(mu=28.669648436582808, sigma=8.071520788025197)\n```\n\n## Ranks\nWhen displaying a rating, or sorting a list of ratings, you can use `ordinal`:\n\n```python\n>>> from openskill import ordinal\n>>> ordinal(mu=43.07, sigma=2.42)\n35.81\n```\n\nBy default, this returns `mu - 3 * sigma`, showing a rating for which there's a [99.7%](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule) likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.\n\n## Artificial Ranks\nIf your teams are listed in one order but your ranking is in a different order, for convenience you can specify a ranks option, such as:\n\n```python\n>>> a1 = b1 = c1 = d1 = Rating()\n>>> result = [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]], rank=[4, 1, 3, 2])\n>>> result\n[[[20.96265504062538, 8.083731307186588]], [[27.795084971874736, 8.263160757613477]], [[24.68943500312503, 8.083731307186588]], [[26.552824984374855, 8.179213704945203]]]\n```\n\nIt's assumed that the lower ranks are better (wins), while higher ranks are worse (losses). You can provide a score instead, where lower is worse and higher is better. These can just be raw scores from the game, if you want.\n\nTies should have either equivalent rank or score.\n\n```python\n>>> a1 = b1 = c1 = d1 = Rating()\n>>> result = [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]], score=[37, 19, 37, 42])\n[[[24.68943500312503, 8.179213704945203]], [[22.826045021875203, 8.179213704945203]], [[24.68943500312503, 8.179213704945203]], [[27.795084971874736, 8.263160757613477]]]\n```\n\n\n## Choosing Models\n\nThe default model is `PlackettLuce`. You can import alternate models from `openskill.models` like so:\n\n```python\n>>> from openskill.models import BradelyTerryFull\n>>> a1 = b1 = c1 = d1 = Rating()\n>>> rate([[a1], [b1], [c1], [d1]], rank=[4, 1, 3, 2], model=BradleyTerryFull)\n[[[17.09430584957905, 7.5012190693964005]], [[32.90569415042095, 7.5012190693964005]], [[22.36476861652635, 7.5012190693964005]], [[27.63523138347365, 7.5012190693964005]]]\n```\n\n### Available Models\n- `BradleyTerryFull`: Full Pairing for Bradley-Terry\n- `BradleyTerryPart`: Partial Pairing for Bradely-Terry\n- `PlackettLuce`: Generalized Bradley-Terry\n- `ThurstoneMostellerFull`: Full Pairing for Thurstone-Mosteller\n- `ThurstoneMostellerPart`: Partial Pairing for Thurstone-Mosteller\n\n### Which Model Do I Want?\n\n- Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.\n- Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Gaussian CDF/PDF functions differ in implementation from system to system (they're all just chebyshev approximations anyway). The accuracy of this model isn't usually as great either, but tuning this with an alternative gamma function can improve the accuracy if you really want to get into it.\n- Full pairing should have more accurate ratings over partial pairing, however in high k games (like a 100+ person marathon race), Bradley-Terry and Thurstone-Mosteller models need to do a calculation of joint probability which involves is a k-1 dimensional integration, which is computationally expensive. Use partial pairing in this case, where players only change based on their neighbors.\n- Plackett-Luce (**default**) is a generalized Bradley-Terry model for k ≥ 3 teams. It scales best.\n\n\n## Implementations in other Languages\n- [Javascript](https://github.com/philihp/openskill.js)\n- [Elixir](https://github.com/philihp/openskill.ex)\n- [Kotlin](https://github.com/brezinajn/openskill.kt)\n- [Lua](https://github.com/Vaschex/openskill.lua)\n\n",
+    'author': 'Taven',
+    'author_email': 'taven@outlook.in',
+    'maintainer': None,
+    'maintainer_email': None,
+    'url': 'https://github.com/OpenDebates/openskill.py',
+    'packages': packages,
+    'package_data': package_data,
+    'install_requires': install_requires,
+    'python_requires': '>=3.9,<3.11',
+}
+
+
+setup(**setup_kwargs)
