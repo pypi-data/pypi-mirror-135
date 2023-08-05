@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Density Gate</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="next" title="FlowPeaks Clustering" href="flowpeaks.html" />
+    <link rel="prev" title="Color Translation" href="color_translation.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="density-gate">
+<h1>Density Gate</h1>
+<p>Computes a gate based on a 2D density plot.  The user chooses what proportion
+of events to keep, and the module creates a gate that selects those events in
+the highest-density bins of a 2D density histogram.</p>
+<p>A single gate may not be appropriate for an entire experiment.  If this is the
+case, you can use <strong>By</strong> to specify metadata by which to aggregate the data
+before computing and applying the gate.</p>
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Name</span></span></dt>
+<dd><p>The operation name; determines the name of the new metadata</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">X</span> <span class="pre">Channel,</span> <span class="pre">Y</span> <span class="pre">Channel</span></span></dt>
+<dd><p>The channels to apply the mixture model to.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">X</span> <span class="pre">Scale,</span> <span class="pre">Y</span> <span class="pre">Scale</span></span></dt>
+<dd><p>Re-scale the data in <strong>Channel</strong> before fitting.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Keep</span></span></dt>
+<dd><p>The proportion of events to keep in the gate.  Defaults to 0.9.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">By</span></span></dt>
+<dd><p>A list of metadata attributes to aggregate the data before estimating
+the model.  For example, if the experiment has two pieces of metadata,
+<code class="docutils literal notranslate"><span class="pre">Time</span></code> and <code class="docutils literal notranslate"><span class="pre">Dox</span></code>, setting <strong>by</strong> to <code class="docutils literal notranslate"><span class="pre">[&quot;Time&quot;,</span> <span class="pre">&quot;Dox&quot;]</span></code> will fit
+the model separately to each subset of the data with a unique combination of
+<code class="docutils literal notranslate"><span class="pre">Time</span></code> and <code class="docutils literal notranslate"><span class="pre">Dox</span></code>.</p>
+</dd></dl>
+
+<figure class="align-default">
+<img alt="../_images/density-1.png" src="../_images/density-1.png" />
+</figure>
+</section>
+
+
+          </div>
+          
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

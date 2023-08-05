@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Gaussian Mixture Model (1D)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="next" title="Gaussian Mixture Model (2D)" href="gaussian_2d.html" />
+    <link rel="prev" title="FlowPeaks Clustering" href="flowpeaks.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="gaussian-mixture-model-1d">
+<span id="user-op-gaussian-1d"></span><h1>Gaussian Mixture Model (1D)</h1>
+<p>Fit a Gaussian mixture model with a specified number of components to one
+channel.</p>
+<p>If <strong>Num Components</strong> is greater than 1, then this module creates a new
+categorical metadata variable named <strong>Name</strong>, with possible values
+<code class="docutils literal notranslate"><span class="pre">{name}_1</span></code> …. <code class="docutils literal notranslate"><span class="pre">name_n</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of components.
+An event is assigned to  <code class="docutils literal notranslate"><span class="pre">name_i</span></code> category if it has the highest posterior
+probability of having been produced by component <code class="docutils literal notranslate"><span class="pre">i</span></code>.  If an event has a
+value that is outside the range of one of the channels’ scales, then it is
+assigned to <code class="docutils literal notranslate"><span class="pre">{name}_None</span></code>.</p>
+<p>Additionally, if <strong>Sigma</strong> is greater than 0, this module creates new  boolean
+metadata variables named <code class="docutils literal notranslate"><span class="pre">{name}_1</span></code> … <code class="docutils literal notranslate"><span class="pre">{name}_n</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the
+number of components.  The column <code class="docutils literal notranslate"><span class="pre">{name}_i</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> if the event is less
+than <strong>Sigma</strong> standard deviations from the mean of component <code class="docutils literal notranslate"><span class="pre">i</span></code>.  If
+<strong>Num Components</strong> is <code class="docutils literal notranslate"><span class="pre">1</span></code>, <strong>Sigma</strong> must be greater than 0.</p>
+<p>Finally, the same mixture model (mean and standard deviation) may not
+be appropriate for every subset of the data.  If this is the case, you
+can use <strong>By</strong> to specify metadata by which to aggregate the data before
+estimating and applying a mixture model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Num Components</strong> and <strong>Sigma</strong> withh be the same for each subset.</p>
+</div>
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Name</span></span></dt>
+<dd><p>The operation name; determines the name of the new metadata</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Channel</span></span></dt>
+<dd><p>The channels to apply the mixture model to.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Scale</span></span></dt>
+<dd><p>Re-scale the data in <strong>Channel</strong> before fitting.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Num</span> <span class="pre">Components</span></span></dt>
+<dd><p>How many components to fit to the data?  Must be a positive integer.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Sigma</span></span></dt>
+<dd><p>How many standard deviations on either side of the mean to include
+in the boolean variable <code class="docutils literal notranslate"><span class="pre">{name}_i</span></code>?  Must be <code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0.0</span></code>.  If
+<strong>Num Components</strong> is <code class="docutils literal notranslate"><span class="pre">1</span></code>, must be <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">By</span></span></dt>
+<dd><p>A list of metadata attributes to aggregate the data before estimating
+the model.  For example, if the experiment has two pieces of metadata,
+<code class="docutils literal notranslate"><span class="pre">Time</span></code> and <code class="docutils literal notranslate"><span class="pre">Dox</span></code>, setting <strong>By</strong> to <code class="docutils literal notranslate"><span class="pre">[&quot;Time&quot;,</span> <span class="pre">&quot;Dox&quot;]</span></code> will fit
+the model separately to each subset of the data with a unique combination of
+<code class="docutils literal notranslate"><span class="pre">Time</span></code> and <code class="docutils literal notranslate"><span class="pre">Dox</span></code>.</p>
+</dd></dl>
+
+<figure class="align-default">
+<img alt="../_images/gaussian_1d-1.png" src="../_images/gaussian_1d-1.png" />
+</figure>
+</section>
+
+
+          </div>
+          
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

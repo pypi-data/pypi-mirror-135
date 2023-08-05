@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Autofluorescence correction</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="next" title="Bead Calibration" href="bead_calibration.html" />
+    <link rel="prev" title="Operation and View Gallery" href="../reference.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="autofluorescence-correction">
+<h1>Autofluorescence correction</h1>
+<p>Apply autofluorescence correction to a set of fluorescence channels.</p>
+<p>This module estimates the arithmetic median fluorescence from cells that are
+not fluorescent, then subtracts the median from the experimental data.</p>
+<p>Check the diagnostic plot to make sure that the sample is actually
+non-fluorescent, and that the module found the population median.</p>
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Channels</span></span></dt>
+<dd><p>The channels to correct</p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">Blank</span> <span class="pre">file</span></span></dt>
+<dd><p>The FCS file containing measurements of blank cells.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You cannot have any operations before this one which estimate model
+parameters based on experimental conditions.  (Eg, you can’t use a
+<strong>Density Gate</strong> to choose morphological parameters and set <em>by</em> to an
+experimental condition.)  If you need this functionality, you can access it
+using the Python module interface.</p>
+</div>
+<figure class="align-default">
+<img alt="../_images/autofluorescence-1.png" src="../_images/autofluorescence-1.png" />
+</figure>
+</section>
+
+
+          </div>
+          
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
