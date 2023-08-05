@@ -1,0 +1,202 @@
+Metadata-Version: 2.1
+Name: mdacli
+Version: 0.1.10
+Summary: A command line client for MDAnalysis Analysis classes.
+Home-page: https://github.com/MDAnalysis/mdacli
+Author: PicoCentauri, joaomcteixeira
+Author-email: philip-loche@gmx.de, joaomcteixeira@gmail.com
+Maintainer: PicoCentauri, joaomcteixeira, MDA devs
+Maintainer-email: philip-loche@gmx.de, joaomcteixeira@gmail.com, mdanalysis@numfocus.org
+License: GPLv3
+Project-URL: Source, https://github.com/MDAnalysis/mdacli
+Project-URL: Documentation, https://mdacli.readthedocs.io/en/latest/
+Project-URL: Changelog, https://github.com/MDAnalysis/mdacli/blob/main/docs/CHANGELOG.rst
+Project-URL: User Group, https://groups.google.com/g/mdnalysis-discussion/
+Project-URL: Issue Tracker, https://github.com/MDAnalysis/mdacli/issues
+Project-URL: Discord, https://discord.com/channels/807348386012987462/
+Project-URL: Blog, https://www.mdanalysis.org/blog/
+Project-URL: Twitter, https://twitter.com/mdanalysis
+Keywords: Science,Molecular Dynamics,MDAnalysis
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Intended Audience :: Science/Research
+Classifier: Natural Language :: English
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows 
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: System :: Shells
+Requires-Python: >=3.7
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: MDAnalysis (>=2.0.0)
+
+MDAnalysis command line interface
+=================================
+
+|pypi| |mdanalysis| |codecov| |docs| |test|
+
+``mdacli`` is a simple command line interface (CLI) to the analysis classes of `MDAnalysis`_
+using argparse_. This project is in an **early development stage** and
+work in progress. `Contributions are welcome <https://github.com/MDAnalysis/mdacli/blob/main/docs/CONTRIBUTING.rst>`_!
+
+To install `mdacli` refer to the `INSTALL file <https://github.com/MDAnalysis/mdacli/blob/main/docs/rst/installation.rst>`_.
+
+Run `mdacli`::
+
+   mda -h
+
+For a help and an overview of the supported modules. A help
+message for each module is available using::
+
+   mda <module> -h
+
+
+Available modules
+-----------------
+
+Currently the following analysis modules are available
+
+.. list-table::
+   :widths: 25 50
+   :header-rows: 1
+
+   * - Module Name
+     - Description
+
+   * - AlignTraj
+     - RMS-align trajectory to a reference structure using a selection.
+   * - AverageStructure
+     - RMS-align trajectory to a reference structure using a selection,
+   * - Contacts
+     - Calculate contacts based observables.
+   * - DensityAnalysis
+     - Volumetric density analysis.
+   * - DistanceMatrix
+     - Calculate the pairwise distance between each frame in a trajectory
+   * - Janin
+     - Calculate χ_1 and χ_2 dihedral angles of selected
+       group
+   * - Ramachandran
+     - Calculate ϕ and ψ dihedral angles of selected group
+   * - GNMAnalysis
+     - Basic tool for GNM analysis.
+   * - closeContactGNMAnalysis
+     - GNMAnalysis only using close contacts.
+   * - HELANAL
+     - Perform HELANAL helix analysis on your trajectory.
+   * - HoleAnalysis
+     - Run program `hole` on a trajectory.
+   * - LinearDensity
+     - Linear density profile
+   * - EinsteinMSD
+     - Class to calculate Mean Squared Displacement by the Einstein relation.
+   * - PCA
+     - Principal component analysis on an MD trajectory.
+   * - InterRDF
+     - Intermolecular pair distribution function
+   * - RMSD
+     - Class to perform RMSD analysis on a trajectory.
+   * - RMSF
+     - Calculate RMSF of given atoms across a trajectory.
+
+More information about each module is available through the help
+page or at the `MDAnalysis documentation`_.
+
+.. _argparse: https://docs.python.org/3/library/argparse.html
+.. _MDAnalysis: https://www.mdanalysis.org
+.. _`MDAnalysis installed`: https://userguide.mdanalysis.org/stable/installation.html
+.. _`MDAnalysis documentation`: https://docs.mdanalysis.org/stable/documentation_pages/analysis_modules.html
+
+ .. |pypi| image:: https://img.shields.io/pypi/v/mdacli.svg
+   :alt: PyPI Package latest release
+   :target: https://pypi.org/project/mdacli
+
+ .. |mdanalysis| image:: https://img.shields.io/badge/powered%20by-MDAnalysis-orange.svg?logoWidth=16&logo=data:image/x-icon;base64,AAABAAEAEBAAAAEAIAAoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJD+XwCY/fEAkf3uAJf97wGT/a+HfHaoiIWE7n9/f+6Hh4fvgICAjwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACT/yYAlP//AJ///wCg//8JjvOchXly1oaGhv+Ghob/j4+P/39/f3IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJH8aQCY/8wAkv2kfY+elJ6al/yVlZX7iIiI8H9/f7h/f38UAAAAAAAAAAAAAAAAAAAAAAAAAAB/f38egYF/noqAebF8gYaagnx3oFpUUtZpaWr/WFhY8zo6OmT///8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAn46Ojv+Hh4b/jouJ/4iGhfcAAADnAAAA/wAAAP8AAADIAAAAAwCj/zIAnf2VAJD/PAAAAAAAAAAAAAAAAICAgNGHh4f/gICA/4SEhP+Xl5f/AwMD/wAAAP8AAAD/AAAA/wAAAB8Aov9/ALr//wCS/Z0AAAAAAAAAAAAAAACBgYGOjo6O/4mJif+Pj4//iYmJ/wAAAOAAAAD+AAAA/wAAAP8AAABhAP7+FgCi/38Axf4fAAAAAAAAAAAAAAAAiIiID4GBgYKCgoKogoB+fYSEgZhgYGDZXl5e/m9vb/9ISEjpEBAQxw8AAFQAAAAAAAAANQAAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjo6Mb5iYmP+cnJz/jY2N95CQkO4pKSn/AAAA7gAAAP0AAAD7AAAAhgAAAAEAAAAAAAAAAACL/gsAkv2uAJX/QQAAAAB9fX3egoKC/4CAgP+NjY3/c3Nz+wAAAP8AAAD/AAAA/wAAAPUAAAAcAAAAAAAAAAAAnP4NAJL9rgCR/0YAAAAAfX19w4ODg/98fHz/i4uL/4qKivwAAAD/AAAA/wAAAP8AAAD1AAAAGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALGxsVyqqqr/mpqa/6mpqf9KSUn/AAAA5QAAAPkAAAD5AAAAhQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADkUFBSuZ2dn/3V1df8uLi7bAAAATgBGfyQAAAA2AAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB0AAADoAAAA/wAAAP8AAAD/AAAAWgC3/2AAnv3eAJ/+dgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9AAAA/wAAAP8AAAD/AAAA/wAKDzEAnP3WAKn//wCS/OgAf/8MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAANwAAADtAAAA7QAAAMAAABUMAJn9gwCe/e0Aj/2LAP//AQAAAAAAAAAA
+   :alt: Powered by MDAnalysis
+   :target: https://www.mdanalysis.org
+
+ .. |docs| image:: https://readthedocs.org/projects/mdacli/badge/?version=latest
+   :target: https://mdacli.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+ .. |test| image:: https://github.com/MDAnalysis/mdacli/actions/workflows/test.yml/badge.svg?branch=main
+   :alt: Github Actions Test Status
+   :target: https://github.com/MDAnalysis/mdacli/actions/workflows/test.yml
+
+ .. |codecov| image:: https://codecov.io/gh/MDAnalysis/mdacli/branch/main/graph/badge.svg?token=ets2mZ6xJD
+    :alt: Codecov mdacli
+    :target: https://codecov.io/gh/MDAnalysis/mdacli
+
+
+Changelog
+=========
+
+v0.1.10 (2022-01-18)
+------------------------------------------
+
+* Removed conda dependency from CI and tox (#86)
+
+v0.1.9 (2022-01-16)
+------------------------------------------
+
+* Fix test banner in README.rst (#85)
+
+v0.1.8 (2022-01-16)
+------------------------------------------
+
+* Use Github actions matrix for tests (#68)
+* Fix Conda permissions on MacOS (#68)
+* Fix Tests failing on Windows (#68)
+
+v0.1.7 (2021-12-18)
+------------------------------------------
+
+* Improves regex to convert from time to frame (#81)
+
+v0.1.6 (2021-12-01)
+-------------------------------------------
+
+* Fixed URL in docs (#80)
+
+v0.1.5 (2021-12-01)
+--------------------------------------------------
+
+* Add doc deployment to CI (#78)
+
+v0.1.4 (2021-11-24)
+-------------------------------------------------------------------------
+
+* Link docs to mdacli.mdanalysis.org (#75)
+
+v0.1.3 (2021-11-24)
+------------------------------------------
+
+* MDA-style documentation pages (#70)
+
+v0.1.2 (2021-11-18)
+------------------------------------------
+
+* Added option to manually set box dimensions (#65)
+
+v0.1.1 (2021-11-18)
+------------------------------------------
+
+* corrects .bumpversion.cfg for CHANGELOG
+* updates docs/CONTRIBUTING.rst accordingly
+
+v0.1.0 (2021-11-18)
+-------------------
+* Initial release
+
+
