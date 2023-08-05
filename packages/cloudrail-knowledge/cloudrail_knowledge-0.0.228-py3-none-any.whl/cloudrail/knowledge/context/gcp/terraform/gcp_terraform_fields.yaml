@@ -1,0 +1,287 @@
+common:
+  known_fields:
+    pass:
+    - id
+    - tags
+    - self_link
+    - labels:
+        known_fields:
+          pass:
+            - name
+        unknown_fields_action: hash
+
+google_sql_database_instance:
+  known_fields:
+    pass:
+    - name
+    - database_version
+    - region
+    - project
+    - settings:
+        known_fields:
+          pass:
+            - tier
+            - user_labels:
+                known_fields:
+                  pass:
+                    - name
+                unknown_fields_action: hash
+            - backup_configuration:
+                known_fields:
+                  pass:
+                    - binary_log_enabled
+                    - enabled
+                    - start_time
+                    - point_in_time_recovery_enabled
+                    - location
+                    - transaction_log_retention_days
+                    - backup_retention_settings:
+                        known_fields:
+                          pass:
+                            - retained_backups
+                            - retention_unit
+            - database_flags:
+                known_fields:
+                  pass:
+                    - name
+                    - value
+            - ip_configuration:
+                known_fields:
+                  pass:
+                    - ipv4_enabled
+                    - private_network
+                    - require_ssl
+                    - authorized_networks:
+                        known_fields:
+                          pass:
+                            - expiration_time
+                            - name
+                            - value
+
+google_compute_instance:
+  known_fields:
+    pass:
+    - name
+    - machine_type
+    - zone
+    - boot_disk
+    - network_interface
+    - attached_disk
+    - can_ip_forward
+    - description
+    - desired_status
+    - deletion_protection
+    - hostname
+    - guest_accelerator
+    - metadata
+    - metadata_startup_script
+    - min_cpu_platform
+    - project
+    - scheduling
+    - scratch_disk
+    - service_account
+    - shielded_instance_config
+    - enable_display
+    - resource_policies
+    - reservation_affinity
+    - confidential_instance_config
+    - advanced_machine_features
+    - network_performance_config
+    - instance_id
+
+google_compute_network:
+  known_fields:
+    pass:
+      - name
+      - self_link
+      - auto_create_subnetworks
+      - routing_mode
+      - delete_default_routes_on_create
+
+google_compute_subnetwork:
+  known_fields:
+    pass:
+      - name
+      - self_link
+      - region
+      - network
+      - ip_cidr_range
+      - log_config:
+          known_fields:
+            pass:
+              - aggregation_interval
+              - flow_sampling
+              - metadata
+              - metadata_fields
+              - filter_expr
+
+google_project:
+  known_fields:
+    pass:
+      - name
+      - number
+      - project_id
+
+google_compute_firewall:
+  known_fields:
+    pass:
+      - name
+      - network
+      - allow
+      - deny
+      - destination_ranges
+      - direction
+      - source_ranges
+      - priority
+      - source_tags
+      - disabled
+
+google_container_cluster:
+  known_fields:
+    pass:
+      - name
+      - location
+      - cluster_ipv4_cidr
+      - enable_shielded_nodes
+      - enable_binary_authorization
+      - master_authorized_networks_config
+      - authenticator_groups_config
+      - network_policy
+      - release_channel
+      - pod_security_policy_config
+      - networking_mode
+      - resource_labels:
+          known_fields:
+            pass:
+              - name
+          unknown_fields_action: hash
+      - private_cluster_config:
+          known_fields:
+            pass:
+              - master_global_access_config
+              - enable_private_nodes
+              - enable_private_endpoint
+      - node_config:
+          known_fields:
+            pass:
+              - metadata
+              - shielded_instance_config
+              - workload_metadata_config
+              - service_account
+      - master_auth:
+          known_fields:
+            pass:
+              - client_certificate_config
+
+
+
+google_compute_target_http_proxy:
+  known_fields:
+    pass:
+      - name
+      - url_map
+      - self_link
+
+google_compute_target_https_proxy:
+  known_fields:
+    pass:
+      - name
+      - url_map
+      - ssl_certificates
+      - ssl_policy
+      - self_link
+
+google_compute_global_forwarding_rule:
+  known_fields:
+    pass:
+      - name
+      - target
+      - self_link
+
+google_compute_target_pool:
+  known_fields:
+    pass:
+      - name
+      - instances
+      - region
+
+google_compute_forwarding_rule:
+  known_fields:
+    pass:
+      - name
+      - target
+      - port_range
+
+google_compute_ssl_policy:
+  known_fields:
+    pass:
+      - name
+      - min_tls_version
+      - profile
+      - custom_features
+      - self_link
+
+google_storage_bucket:
+  known_fields:
+    pass:
+      - name
+      - storage_class
+      - uniform_bucket_level_access
+      - location
+      - logging
+
+
+google_compute_target_ssl_proxy:
+  known_fields:
+    pass:
+      - name
+      - backend_service
+      - ssl_certificates
+      - ssl_policy
+      - self_link
+
+google_dns_managed_zone:
+  known_fields:
+    pass:
+      - name
+      - dns_name
+      - description
+      - dnssec_config
+
+google_storage_bucket_iam_policy:
+  known_fields:
+    pass:
+      - bucket
+      - policy_data
+
+google_storage_bucket_iam_binding:
+  known_fields:
+    pass:
+      - bucket
+      - role
+      - members
+      - condition
+
+google_storage_bucket_iam_member:
+  known_fields:
+    pass:
+      - bucket
+      - role
+      - member
+      - condition
+
+google_binary_authorization_policy:
+  known_fields:
+    pass:
+      - default_admission_rule:
+          known_fields:
+            pass:
+              - evaluation_mode
+              - enforcement_mode
+      - cluster_admission_rules:
+          known_fields:
+            pass:
+              - cluster
+              - evaluation_mode
+              - enforcement_mode
+      - global_policy_evaluation_mode
