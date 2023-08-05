@@ -1,0 +1,65 @@
+[tool.black]
+line-length = 130
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | build
+    | dist
+  )/
+)
+'''
+skip_magic_trailing_comma = true
+
+[tool.isort]
+profile = "black"
+src_paths = [
+    "pika-stubs",
+]
+combine_as_imports = true
+line_length = 130
+force_single_line = true
+use_parentheses = true
+extra_standard_library = [
+    "typing_extensions",
+]
+
+[tool.pyright]
+include = ["pika-stubs"]
+exclude = [
+    "**/__pycache__",
+]
+ignore = []
+stubPath = "."
+
+typeCheckingMode = "strict"
+
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+strictParameterNoneValue = true
+
+reportPrivateUsage = "warning"
+reportPropertyTypeMismatch = "warning"
+reportMissingImports = "error"
+reportMissingModuleSource = "erroor"
+reportMissingTypeStubs = "error"
+reportUnusedImport = false
+reportUnusedClass = "error"
+reportUnusedFunction = "error"
+reportUnusedVariable = "error"
+reportDuplicateImport = "error"
+reportUnknownParameterType = "error"
+reportUnknownArgumentType = "error"
+reportUnknownLambdaType = "error"
+reportUnknownVariableType = "error"
+reportUnknownMemberType = "error"
+reportMissingTypeArgument = "error"
+reportMissingParameterType = "error"
