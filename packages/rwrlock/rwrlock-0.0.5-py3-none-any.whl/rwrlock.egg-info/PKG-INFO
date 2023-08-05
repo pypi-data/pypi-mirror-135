@@ -1,0 +1,39 @@
+Metadata-Version: 1.1
+Name: rwrlock
+Version: 0.0.3
+Summary: A limited re-entrant readwrite lock
+Home-page: https://github.com/Mikemoore63/rwrlock
+Author: Mike Moore
+Author-email: z_z_zebra@yahoo.com
+License: UNKNOWN
+Description: This is rwrlock a yet another python re-entrant rw lock
+        
+        Goals
+        * To make a rentrant read write ock as opposed to non re-entrant
+        * Within one thread multiple readlocks can be obtained in reality only first in stack takes lock restreference count
+        * Within onethreadmultiple write locks can be obtained again first gets lock restreference count
+        * Withion one thread if you want a readlock and have a write lock it acts as if read lock is obtained but keeps the write lock
+        * What this does not do is promote a read lock to a write lock that instead throws a runtime error
+        
+        This does not implement and priority between readers and writers
+          
+        ```
+        Usage:
+                    from rwrlock import RWRLock
+                    
+                    my_obj_rwlock = RWRLock()
+                    
+                    # When reading from my_obj:
+                    with my_obj_rwlock.r_locked():
+                        do_read_only_things_with(my_obj)
+                        
+                    # When writing to my_obj:
+                    with my_obj_rwlock.w_locked():
+                        mutate(my_obj)
+        
+        ```
+            
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
