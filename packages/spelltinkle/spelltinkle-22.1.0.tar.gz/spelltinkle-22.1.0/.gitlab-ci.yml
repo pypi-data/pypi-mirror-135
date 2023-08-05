@@ -1,0 +1,9 @@
+master:
+  image: python:3.10
+  script:
+    - pip install jedi flake8 pygments isort mypy interrogate pytest coverage
+    - coverage run -m pytest
+    - coverage report -i --fail-under=61
+    - mypy -p spelltinkle
+    - flake8 spelltinkle
+    - interrogate -v -m -i -f 2.0 spelltinkle -e spelltinkle/test
