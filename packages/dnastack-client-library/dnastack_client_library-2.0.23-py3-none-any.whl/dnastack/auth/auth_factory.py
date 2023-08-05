@@ -1,0 +1,3 @@
+class AuthFactory:
+    #@classmethod
+    pass
