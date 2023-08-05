@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "jupyter-autograde"
+version = "0.4.1"
+description = "Unittesting & Grading of Jupyter Notebooks"
+authors = ["Lukas Ochse"]
+maintainers = ["Chair for Computational Social Sciences and Humanities at RWTH Aachen University"]
+readme = "README.md"
+repository = "https://github.com/cssh-rwth/autograde"
+keywords = ["jupyter", "notebook", "testing", "grading"]
+license = "MIT"
+packages = [
+    { include = "autograde" },
+]
+include = [
+    "autograde/templates/*",
+    "autograde/static/*",
+    "demo/*",
+    "demo/context/*",
+    ".flake8"
+]
+
+[tool.poetry.scripts]
+autograde = "autograde.cli.__main__:cli"
+
+[tool.poetry.plugins.ag_backends]
+"local" = "autograde.backend.local:Local"
+"podman" = "autograde.backend.container:Podman"
+"docker" = "autograde.backend.container:Docker"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+dataclasses-json = "^0.5"
+numpy = "~1.22"
+scipy = "~1.7"
+pandas = "~1.3"
+matplotlib = "~3.5"
+seaborn = "~0.11"
+ipykernel = "~6.7"
+jupyter = "~1.0"
+Jinja2 = "~3.0"
+Flask = "~2.0"
+django-htmlmin-ajax = "~0.11"
+
+[tool.poetry.dev-dependencies]
+flake8 = "~4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

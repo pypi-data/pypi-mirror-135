@@ -1,0 +1,271 @@
+/* Basic.css, stolen from https://vladocar.github.io/Basic.css */
+
+* {
+    box-sizing: border-box
+}
+
+:root {
+    /* typography */
+    --sans: 1em/1.6 Arial, sans-serif;
+    --mono: SFMono-Regular, monospace;
+    /* layout */
+    --m1: 0.5em;
+    --rc: 0;
+    /* colors */
+    --c-accent: #00549F;
+    --c-background: #fff;
+    --c-foreground: #000;
+    --c-grey-heavy: #CFD1D2;
+    --c-grey-light: #ECEDED;
+    --c-success: #57AB27;
+    --c-warning: #F6A800;
+    --c-danger: #CC071E;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --c-background: #1e1f20;
+        --c-foreground: #ECEDED;
+        --c-grey-light: #505050;
+        --c-grey-heavy: #646567;
+    }
+
+    img {
+        -webkit-filter: invert(1);
+        filter: invert(1);
+    }
+}
+
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* General */
+
+body {
+    margin: 0;
+    font: var(--sans);
+    font-weight: 400;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--c-background);
+    color: var(--c-foreground);
+}
+
+main, footer {
+    margin: 0 auto;
+    width: 90%;
+    text-align: left;
+    padding: 0 20px;
+}
+
+main {
+    min-height: 80vh;
+}
+
+footer {
+    text-align: center;
+}
+
+img, iframe {
+    border: none;
+    max-width: 100%
+}
+
+a {
+    color: var(--c-accent);
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+pre {
+    font: 1em/1.6 var(--mono);
+    background: var(--c-grey-light);
+    padding: 1em;
+    overflow: auto
+}
+
+code {
+    font: 1em/1.6 var(--mono);
+}
+
+blockquote {
+    border-left: 5px solid var(--c-grey-light);
+    padding: 1em 1.5em;
+    margin: 0
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid var(--c-foreground)
+}
+
+/* Headlines */
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0.6em 0;
+    font-weight: normal
+}
+
+h1 {
+    font-size: 2.625em;
+    line-height: 1.2
+}
+
+h2 {
+    font-size: 1.625em;
+    line-height: 1.2
+}
+
+h3 {
+    font-size: 1.3125em;
+    line-height: 1.24
+}
+
+h4 {
+    font-size: 1.1875em;
+    line-height: 1.23
+}
+
+h5, h6 {
+    font-size: 1em;
+    font-weight: bold
+}
+
+/* Table */
+
+table {
+    background-color: var(--c-background);
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 1em 0
+}
+
+th, td {
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid;
+    padding: 0.4em
+}
+
+thead, tfoot, .THead, .TFoot {
+    font-weight: bold;
+    background: var(--c-grey-heavy)
+}
+
+td > pre {
+    font-size: 0.8em;
+    max-width: 80ch;
+}
+
+td > img, td > blockquote {
+    min-width: 40ch;
+}
+
+/* Rounded Corners*/
+
+pre, code, input, select, textarea, button, img {
+    border-radius: var(--rc)
+}
+
+/* Forms */
+
+input, select, textarea {
+    font-size: 1em;
+    color: var(--c-foreground);
+    background: var(--c-background);
+    border: 0;
+    padding: 0.6em;
+    display: inline-block;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--c-accent);
+}
+
+button, input[type=submit], input[type=reset], input[type="button"] {
+    -webkit-appearance: none;
+    font-size: 1em;
+    font-weight: bold;
+    display: inline-block;
+    border: 0;
+    margin: 4px;
+    padding: 0.6em;
+    cursor: pointer;
+    text-align: center
+}
+
+button:hover, button:focus, input:hover, textarea:hover, select:hover {
+    opacity: 0.8
+}
+
+/* Infinite Grid */
+
+section {
+    display: flex;
+    flex-flow: row wrap
+}
+
+[style*="--c:"], section > section, aside, article {
+    flex: var(--c, 1);
+    margin: var(--m1)
+}
+
+/* Cards */
+
+article {
+    min-width: 20em;
+    background: var(--c-grey-light);
+    border-radius: var(--rc);
+    padding: 1em;
+    box-shadow: .25em .25em 0 var(--c-grey-heavy);
+    text-align: left;
+}
+
+main > section {
+    padding: 15px;
+}
+
+section > section {
+    align-items: start;
+}
+
+/* Classes */
+
+.TitleCard {
+    min-width: 15em;
+    margin: var(--m1);
+    padding: 1em;
+    justify-content: left;
+    text-align: left;
+}
+
+.CNeutral {
+    color: var(--c-foreground);
+    background-color: var(--c-grey-heavy);
+}
+
+.CLink {
+    color: #FFFFFF;
+    background-color: var(--c-accent);
+}
+
+.CSuccess {
+    color: #FFFFFF;
+    background-color: var(--c-success);
+}
+
+.CWarning {
+    color: #000000;
+    background-color: var(--c-warning);
+}
+
+.CDanger {
+    color: #FFFFFF;
+    background-color: var(--c-danger);
+}
