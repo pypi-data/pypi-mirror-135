@@ -1,0 +1,208 @@
+Metadata-Version: 2.1
+Name: quick-deploy
+Version: 0.2.2
+Summary: Quick-Deploy optimize and deploy Machine Learning models as fast inference API.
+Home-page: https://github.com/rodrigobaron/quick-deploy
+Author: Rodrigo Baron
+Author-email: baron.rodrigo0@gmail.com
+License: Apache
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy (==1.21.5)
+Requires-Dist: pyaml (==21.10.1)
+Requires-Dist: types-PyYAML (==6.0.1)
+Requires-Dist: onnxruntime (==1.10.0)
+Requires-Dist: onnxruntime-tools (==1.7.0)
+Requires-Dist: onnxmltools (==1.10.0)
+Requires-Dist: sympy (==1.9.0)
+Requires-Dist: unidecode (==1.3.2)
+Provides-Extra: all
+Requires-Dist: torch (==1.10.1) ; extra == 'all'
+Requires-Dist: tensorflow (>=2.3) ; extra == 'all'
+Requires-Dist: tf2onnx (==1.9.3) ; extra == 'all'
+Requires-Dist: transformers (==4.15.0) ; extra == 'all'
+Requires-Dist: scikit-learn (==1.0.1) ; extra == 'all'
+Requires-Dist: skl2onnx (==1.9.0) ; extra == 'all'
+Requires-Dist: xgboost (==1.5.1) ; extra == 'all'
+Provides-Extra: build
+Requires-Dist: python-build (==0.2.13) ; extra == 'build'
+Requires-Dist: coverage-badge (==1.1.0) ; extra == 'build'
+Requires-Dist: build (==0.7.0) ; extra == 'build'
+Requires-Dist: pytest (==6.2.5) ; extra == 'build'
+Requires-Dist: pytest-cov (==3.0.0) ; extra == 'build'
+Requires-Dist: mock (==4.0.3) ; extra == 'build'
+Requires-Dist: black (==21.12b0) ; extra == 'build'
+Requires-Dist: flake8 (==4.0.1) ; extra == 'build'
+Requires-Dist: mypy (==0.930) ; extra == 'build'
+Requires-Dist: isort (==5.10.1) ; extra == 'build'
+Requires-Dist: torch (==1.10.1) ; extra == 'build'
+Requires-Dist: tensorflow (>=2.3) ; extra == 'build'
+Requires-Dist: tf2onnx (==1.9.3) ; extra == 'build'
+Requires-Dist: transformers (==4.15.0) ; extra == 'build'
+Requires-Dist: scikit-learn (==1.0.1) ; extra == 'build'
+Requires-Dist: skl2onnx (==1.9.0) ; extra == 'build'
+Requires-Dist: xgboost (==1.5.1) ; extra == 'build'
+Provides-Extra: dev
+Requires-Dist: pytest (==6.2.5) ; extra == 'dev'
+Requires-Dist: pytest-cov (==3.0.0) ; extra == 'dev'
+Requires-Dist: mock (==4.0.3) ; extra == 'dev'
+Requires-Dist: black (==21.12b0) ; extra == 'dev'
+Requires-Dist: flake8 (==4.0.1) ; extra == 'dev'
+Requires-Dist: mypy (==0.930) ; extra == 'dev'
+Requires-Dist: isort (==5.10.1) ; extra == 'dev'
+Requires-Dist: torch (==1.10.1) ; extra == 'dev'
+Requires-Dist: tensorflow (>=2.3) ; extra == 'dev'
+Requires-Dist: tf2onnx (==1.9.3) ; extra == 'dev'
+Requires-Dist: transformers (==4.15.0) ; extra == 'dev'
+Requires-Dist: scikit-learn (==1.0.1) ; extra == 'dev'
+Requires-Dist: skl2onnx (==1.9.0) ; extra == 'dev'
+Requires-Dist: xgboost (==1.5.1) ; extra == 'dev'
+Provides-Extra: sklearn
+Requires-Dist: scikit-learn (==1.0.1) ; extra == 'sklearn'
+Requires-Dist: skl2onnx (==1.9.0) ; extra == 'sklearn'
+Provides-Extra: tf
+Requires-Dist: tensorflow (>=2.3) ; extra == 'tf'
+Requires-Dist: tf2onnx (==1.9.3) ; extra == 'tf'
+Provides-Extra: torch
+Requires-Dist: torch (==1.10.1) ; extra == 'torch'
+Provides-Extra: transformers
+Requires-Dist: transformers (==4.15.0) ; extra == 'transformers'
+Requires-Dist: torch (==1.10.1) ; extra == 'transformers'
+Requires-Dist: tensorflow (>=2.3) ; extra == 'transformers'
+Requires-Dist: tf2onnx (==1.9.3) ; extra == 'transformers'
+Provides-Extra: xgboost
+Requires-Dist: xgboost (==1.5.1) ; extra == 'xgboost'
+Requires-Dist: scikit-learn (==1.0.1) ; extra == 'xgboost'
+Requires-Dist: skl2onnx (==1.9.0) ; extra == 'xgboost'
+
+# Quick-Deploy
+
+<p align="center">
+    <a href="https://github.com/rodrigobaron/quick-deploy/actions/workflows/build.yaml">
+        <img alt="Build" src="https://github.com/rodrigobaron/quick-deploy/actions/workflows/build.yaml/badge.svg">
+    </a>
+    <a href="https://github.com/rodrigobaron/quick-deploy/blob/main/LICENSE">
+        <img alt="GitHub" src="https://img.shields.io/github/license/rodrigobaron/quick-deploy.svg?color=blue">
+    </a>
+    <a href="https://github.com/rodrigobaron/quick-deploy/releases">
+        <img alt="GitHub release" src="https://img.shields.io/github/release/rodrigobaron/quick-deploy.svg">
+    </a>
+</p>
+
+<h3 align="center">
+    Optimize and deploy machine learning models fast and easy as possible.
+</h3>
+
+quick-deploy provide tools to optimize, convert and deploy machine learning models as fast inference API (low latency and high throughput) by [Triton Inference Server](https://github.com/triton-inference-server/server) using [Onnx Runtime](https://github.com/microsoft/onnxruntime) backend. It support 🤗 transformers, PyToch, Tensorflow, SKLearn and XGBoost models.
+
+
+## Get Started
+
+Let's see an quick example by deploying bert transformers for GPU inference. quick-deploy already have support 🤗 transformers so we can specify the path of pretrained model or just the name from the Hub:
+
+```bash
+$ quick-deploy transformers \
+    -n my-bert-base \
+    -p text-classification \
+    -m bert-base-uncased \
+    -o ./models \
+    --model-type bert \
+    --seq-len 128 \
+    --cuda
+```
+
+The command above created the deployment artifacts by optimizing and converting the model to Onxx. Next just run the inference server:
+```bash
+$ docker run -it --rm \
+    --gpus all \
+    --shm-size 256m \
+    -p 8000:8000 \
+    -p 8001:8001 \
+    -p 8002:8002 \
+    -v $(pwd)/models:/models nvcr.io/nvidia/tritonserver:21.11-py3 \
+    tritonserver --model-repository=/models
+
+```
+
+Now we can use tritonclient which uses gRPC calls to consume our model:
+```python
+import numpy as np
+import tritonclient.http
+from scipy.special import softmax
+from transformers import BertTokenizer, TensorType
+
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+model_name = "my_bert_base"
+url = "127.0.0.1:8000"
+model_version = "1"
+batch_size = 1
+
+text = "The goal of life is [MASK]."
+tokens = tokenizer(text=text, return_tensors=TensorType.NUMPY)
+
+triton_client = tritonclient.http.InferenceServerClient(url=url, verbose=False)
+assert triton_client.is_model_ready(
+    model_name=model_name, model_version=model_version
+), f"model {model_name} not yet ready"
+
+input_ids = tritonclient.http.InferInput(name="input_ids", shape=(batch_size, 9), datatype="INT64")
+token_type_ids = tritonclient.http.InferInput(name="token_type_ids", shape=(batch_size, 9), datatype="INT64")
+attention = tritonclient.http.InferInput(name="attention_mask", shape=(batch_size, 9), datatype="INT64")
+model_output = tritonclient.http.InferRequestedOutput(name="output", binary_data=False)
+
+input_ids.set_data_from_numpy(tokens['input_ids'] * batch_size)
+token_type_ids.set_data_from_numpy(tokens['token_type_ids'] * batch_size)
+attention.set_data_from_numpy(tokens['attention_mask'] * batch_size)
+
+response = triton_client.infer(
+    model_name=model_name,
+    model_version=model_version,
+    inputs=[input_ids, token_type_ids, attention],
+    outputs=[model_output],
+)
+
+token_logits = response.as_numpy("output")
+print(token_logits)
+```
+
+**Note:** This does only model deployment the tokenizer and post-processing should be done in the client side. The full tansformers deployment is comming soon.
+
+For more use cases please check the [examples](examples) page.
+
+## Install
+
+Before install make sure to install just the target model eg.: "torch", "sklearn" or "all". There two options to use quick-deploy, by docker container:
+```bash
+$ docker run --rm -it rodrigobaron/quick-deploy:0.1.1-all --help
+```
+
+or install the python library `quick-deploy`:
+
+```bash
+$ pip install quick-deploy[all]
+```
+
+**Note:** This will install the full vesion `all`.
+
+## Contributing
+
+Please follow the [Contributing](CONTRIBUTING.md) guide.
+
+## License
+
+[Apache License 2.0](LICENSE)
+
+
