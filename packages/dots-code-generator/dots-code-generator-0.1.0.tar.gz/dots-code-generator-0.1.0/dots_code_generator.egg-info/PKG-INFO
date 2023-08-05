@@ -1,0 +1,36 @@
+Metadata-Version: 2.1
+Name: dots-code-generator
+Version: 0.1.0
+Summary: DOTS code generator
+Home-page: https://github.com/pnxs/dots-code-generator
+Author: Thomas Schaetzlein
+Author-email: pypi@thomas.pnxs.de
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# dots-code-generator
+
+# Usage
+Add path with config_txt.py and path to "dots" python module to PYTHONPATH.
+
+Call dcg.py:
+cd examples
+mkdir -p out
+../bin/dcg.py -T templates -C config_txt -o out some_types.dots -v
+
+Generated files will be places in directory "out".
+
+
+# Update DOTS grammar
+
+DOTS grammer is defined in "dots.lark". If the grammar is updated, a new
+parser has to be generated with the "lark" python module:
+
+python -m lark.tools.standalone dots.lark > dots/dots_parser.py
+
