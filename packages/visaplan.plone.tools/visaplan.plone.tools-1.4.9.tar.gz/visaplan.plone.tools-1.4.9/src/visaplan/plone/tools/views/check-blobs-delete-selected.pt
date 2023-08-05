@@ -1,0 +1,49 @@
+<metal:block metal:use-macro="here/main_template/macros/master"
+             i18n:domain="plone"><!--
+Noch kein Formular
+-->
+
+<metal:no-ads fill-slot="column_two_slot"/>
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)"/>
+
+<metal:no-ads metal:fill-slot="ad-block-above-content"/>
+<metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main"
+   >
+
+<div class="area-title">
+    <h1 i18n:translate="">Check for broken BLOBs</h1>
+</div>
+
+<div class="area-content"
+tal:define="
+count python:view.delete_selected();
+">
+    <div class="row">
+
+<table class="table">
+<thead><tr>
+<th>Counter</th>
+<th>value</th>
+</tr></thead>
+<tbody>
+<tal:rows tal:repeat="tup python:count.items()"><tr
+tal:define="
+key python:tup[0];
+val python:tup[1];
+"><th tal:content="key">deleted</th>
+<td tal:content="val">42</td>
+</tr></tal:rows>
+</tbody>
+</table>
+
+<div>
+<a href="@@check-blobs" class="btn btn-default" i18n:translate="">Check for broken BLOBs</a>
+</div>
+
+    </div><!-- .row -->
+</div><!-- .area-content -->
+    </tal:main-macro>
+</metal:main>
+<!-- vim: set et sw=4: --></metal:block>

@@ -1,0 +1,87 @@
+<metal:block metal:use-macro="here/main_template/macros/master"
+             i18n:domain="plone"><!--
+Noch kein Formular
+-->
+
+<metal:no-ads fill-slot="column_two_slot"/>
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)"/>
+
+<metal:no-ads metal:fill-slot="ad-block-above-content"/>
+<metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main"
+   >
+
+<div class="area-title">
+    <h1 i18n:translate="">Check for broken BLOBs</h1>
+</div>
+
+<div class="area-content"
+tal:define="
+data python:view.check_blobs();
+count python:data['count'];
+broken python:data['broken'];
+">
+    <div class="row">
+<tal:if tal:condition="broken">
+<h2 i18n:translate="">
+Found <tal:txt i18n:name="num" tal:content="python:count['objects_broken']">42</tal:txt> broken objects
+</h2>
+<form action="@@check-blobs-delete-selected" class="form">
+<table class="table">
+<thead><tr>
+<th></th>
+<th i18n:translate="">Path</th>
+<th i18n:translate="">portal type</th>
+<th i18n:translate="">title</th>
+<th i18n:translate="">Created</th>
+<th i18n:translate="">Modified</th>
+</tr></thead>
+<tbody><tr tal:repeat="dic broken">
+<tal:row_ns tal:define="
+pa python:dic['path'];
+ti python:dic['title'];
+pt python:dic['portal_type'];
+created python:dic['created'];
+modified python:dic['modified'];
+nr repeat/dic/number;
+"><td>
+<input type="checkbox" id="del-42"
+       name="delpath:list"
+       tal:attributes="
+id string:cb-${nr};
+value pa;
+">
+</td><td>
+<a href="#"
+   tal:attributes="href pa"
+   tal:content="pa">/path/to_broken_object</a>
+</td>
+<td tal:content="pt">
+Document
+</td>
+<td tal:content="ti">
+Document title
+</td>
+<td tal:content="created">
+2016-07-02 5:45
+</td>
+<td tal:content="modified">
+2020-11-28 10:45
+</td>
+</tal:row_ns>
+</tr>
+</tbody>
+</table>
+<button type="submit" name="action" value="delete_selected" i18n:translate="">
+Delete selected objects
+</button>
+</form>
+</tal:if><tal:else condition="not:broken">
+<h2 i18n:translate="">No broken objects found</h2>
+</tal:else>
+    </div><!-- .row -->
+</div><!-- .area-content -->
+    </tal:main-macro>
+</metal:main>
+<!-- vim: set et sw=4: --></metal:block>

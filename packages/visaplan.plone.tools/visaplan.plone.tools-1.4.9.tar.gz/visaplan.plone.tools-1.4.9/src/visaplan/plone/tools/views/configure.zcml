@@ -1,0 +1,27 @@
+<configure
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns="http://namespaces.zope.org/zope">
+
+    <!-- inspired by the fixblobs view by Mikko Ohtamaa
+         (see https://opensourcehacker.com/2012/01/05/fixing-poskeyerror-no-blob-file-content-in-plone/,
+              https://stackoverflow.com/a/8741655/1051649);
+
+         de-grokked:
+      -->
+    <include package="Products.CMFCore" />
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        name="check-blobs"
+        class=".fixblobs.FixBlobs"
+        template="check-blobs.pt"
+        permission="cmf.ManagePortal"
+        />
+    <browser:page
+        for="Products.CMFCore.interfaces.ISiteRoot"
+        name="check-blobs-delete-selected"
+        class=".fixblobs.FixBlobs"
+        template="check-blobs-delete-selected.pt"
+        permission="cmf.ManagePortal"
+        />
+</configure>
+
