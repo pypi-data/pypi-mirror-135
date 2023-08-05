@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "palette_generator"
+version = "0.1.2"
+description = "`palette_generator` is here to turn your images into beautiful palettes"
+readme = "README.md"
+repository = "https://github.com/neonfuzz/palette_generator"
+documentation = "https://neonfuzz.github.io/palette_generator/html/index.html"
+authors = ["neonfuzz"]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.11"
+matplotlib = "@latest"
+numpy = "@latest"
+pandas = "@latest"
+scipy = "@latest"
+Wand = "@latest"
+
+[tool.poetry.dev-dependencies]
+Sphinx = "@latest"
+sphinx-argparse = "@latest"
+sphinx-rtd-dark-mode = "@latest"
+
+[tool.sphinx]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "sphinxarg.ext",
+    "sphinx_rtd_dark_mode",
+]
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+html_theme = "sphinx_rtd_theme"
+html_static_path = ["_static"]
+default_dark_mode = true
+
+[tool.sphinx.html_theme_options]
+collapse_navigation = false
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
