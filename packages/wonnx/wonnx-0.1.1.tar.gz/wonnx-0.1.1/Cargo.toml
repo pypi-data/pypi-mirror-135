@@ -1,0 +1,30 @@
+[dependencies]
+pollster = "0.2.4"
+pyo3 = "0.15.1"
+
+[dependencies.protobuf]
+features = ["with-bytes"]
+version = "2"
+
+[dependencies.wonnx]
+path = "local_dependencies/wonnx"
+
+[features]
+default = ["extension-module"]
+extension-module = ["pyo3/extension-module"]
+
+[lib]
+crate-type = ["cdylib"]
+name = "wonnx"
+
+[package]
+authors = ["haixuanTao <tao.xavier@outlook.com>", "Tommy van der Vorst <tommy@pixelspark.nl>"]
+description = "Wonnx is an ONNX runtime based on wgpu aimed at being a universal GPU runtime, written in Rust."
+edition = "2021"
+homepage = "https://github.com/haixuanTao/wonnx"
+license = "MIT OR Apache-2.0"
+name = "py-wonnx"
+repository = "https://github.com/haixuanTao/wonnx.git"
+version = "0.1.1"
+
+[workspace]
