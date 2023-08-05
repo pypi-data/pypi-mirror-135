@@ -1,0 +1,60 @@
+Metadata-Version: 2.1
+Name: pege
+Version: 1.1.0
+Summary: Protein embeddings to describe local electrostic enviroments
+Home-page: https://github.com/bayer-science-for-a-better-life/pege
+License: MIT
+Author: Pedro Reis
+Author-email: pdreis@fc.ul.pt
+Requires-Python: >=3.6.2,<4.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering
+Requires-Dist: egnn-pytorch (>=0.2.6,<0.3.0)
+Requires-Dist: pandas
+Requires-Dist: pdbmender (>=0.3.3,<0.4.0)
+Requires-Dist: pytorch-lightning (>=1.4.7,<2.0.0)
+Requires-Dist: torch (>=1.9.0,<2.0.0)
+Project-URL: Repository, https://github.com/bayer-science-for-a-better-life/pege
+Description-Content-Type: text/markdown
+
+# Protein Enviroment Graph Embeddings (PEGE)
+
+Protein embeddings to describe local electrostic enviroments
+
+# Installation & Basic Usage
+
+PEGE is installable from the Pypi repo:
+```bash
+python3 -m pip install pege
+```
+
+In order for the structure preprocessing to work python2 and gawk need to installed.
+```bash
+apt install python2 gawk
+```
+
+Pege can be used to obtain protein embeddings as well as descriptors for specific `atom_numbers` from a `pdb` file:
+```python
+from pege import Pege
+
+protein = Pege(<pdb>)
+protein_emb = protein.get_protein()
+atoms_emb = protein.get_atoms([<atom_numbers>])
+```
+
+# Documentation
+TBA
+
+# License
+This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
+
+# Contacts
+Please submit a github issue to report bugs and to request new features. Alternatively, you may email the developer [directly](mailto:pdreis@fc.ul.pt).
+
+
