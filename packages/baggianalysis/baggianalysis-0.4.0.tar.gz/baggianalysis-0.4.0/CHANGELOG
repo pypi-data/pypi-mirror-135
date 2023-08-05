@@ -1,0 +1,82 @@
+v. 0.4.0
+	- Add a few converter executables (oxDNA -> cogli, oxDNA -> LAMMPS, LAMMPS -> cogli)
+	- Add the new `converters` module, which contains utility functions that can be used to easily convert between different formats
+	- Add the new `traj` module, which contains some utility functions that speed up the creation of trajectory objects
+	- Improve the documentation coverage
+	- Add the possibility of using b-factors to compute form factors
+	- Fix a bug in the LAMMPS exporter whereby topology links were sometimes written with wrong indexes 
+
+v. 0.3.1 [f604419]
+	- Fix one of the tests
+	- Strengthen the LAMMPS data file exporter so that it can manage systems with non-integer types and non-positive-defined indexes
+	- Make the LAMMPS data file parser handle the case of a data file not having an empty line at the end
+	- Make the LAMMPS dump parser not print a warning when it encounters an empty dump file (which always happens when initialising a trajectory from a file) 
+	- Remove the compiled documentation from the source tree
+
+v. 0.3.0 [c8cbbb7]
+	- By default neighbour finders will not consider neighbours particles that share bonds (i.e. that are bonded neighbours).
+	- Add a has_bonded_neighbour method to Particle  
+	- The LAMMPS data file parser and exporter now support the "molecular" style
+	- The LAMMPS dump file parser has been completely revamped and now auto-detects the atom/particle properties listed in the dump file.
+	- Bugfixing
+		- Fix a bug whereby parsing of strings having fields separated by multiple spaces would fail
+
+v. 0.2.0 [6dfcb24]
+	- Add the "mass" and "charge" fields to particles
+	- Add support for the "full" atom_style in LAMMPS-related classes
+	- Make it possible to use a data file to initialise a LAMMPS dump conf
+	- Add first class support for angles and dihedrals
+	- Add support for bonds, angles and dihedrals of different types
+	- Use a custom class to manage neighbours as done for bonded neighbours
+	- Add a method to init the orientation vectors of oxDNA confs
+	- Add a new observables that compute cluster sizes (ClusterList)
+	- Add an observable to compute the radial distribution function (RDF)
+	- Add a method to use PBC to reconstruct molecules
+	- Add a method to copy particles (Particle::make_copy)
+	- Make the logger use stderr instead of stdout
+	- Performance improvements (remove dependencies and use better algorithms all over the code), especially for parsing
+	- Add an example featuring parsing and analysis of a LAMMPS data file
+	- Add a method to the Topology class (`remove_unappliable_links`) to remove from an already-initialised topology all those links (bonds, angles and
+dihedrals) that involve particles that are not present in the given system
+	- Bugfixing
+		- Fix a bug whereby Topology::bonds would not work on Python
+		- Fix a bug of the cogli1 exporter
+		- Remove some huge memory leaks due to a circular dependency
+		- Fix a bug that would add particles with random indexes to a System
+
+v. 0.1.0 [f4f90ef]
+	- This is the first beta version
+	- Add a new parser to build systems out of PatchyParticles configurations
+	- Add a method to the oxDNA topology Default's class to get the number of particles of species A
+	- Add flexibility to the LAMMPS parser
+	- Improve the flexibility of the cogli2 exporter
+	- Fix a bug whereby parsers would not complain about unreadable files
+	- Fix a bug whereby the structure factor observable would not take averages in the right way
+	- Update the documentation
+
+v. 0.0.3 [b5dc92c]
+	- Add the MapParticle filter, which takes a list of lists that specify the ids
+	  of particles whose centre of mass will be used as a new particle
+	- Add the FilterById filter, which takes a list of indexes and build systems 
+	  where only those particles with a listed index are present
+	- Add the `set_include_system` method to BaseTrajectory to selectively include 
+	  systems in a trajectory 
+	- Remove boost from the dependencies. boost::math remains a requirement only for
+	  the BondOrderParameters observable
+	- Improve the documentation coverage
+	
+v. 0.0.2 [31322e8]
+	- Add a test that checks the LAMMPS conf and topology parser and exporter
+	- Add the write_topology and write_trajectory methods to BaseExporter
+	- Remove Boost's `signal` from the dependencies
+	- Fix compilation on Ubuntu 20.04 and add some documentation
+	- Add an observable that computes the structure factor (and can optionally return a "destructured" structure factor)
+	- Add an oxDNA exporter and improve the oxDNA parser
+	- Dramatically improve the performance of System::available_index()
+	- Add to the README updated info about the required libraries/packages
+	- Add a mechanism to manage the version number
+	- Bugfixing
+
+v. 0.0.1 [19c49e8]
+	- First release
+	
