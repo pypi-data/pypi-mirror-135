@@ -1,0 +1,64 @@
+Metadata-Version: 2.1
+Name: quantile-data-kit
+Version: 0.0.34
+Summary: An internal Quantile development kit for making working with data easier
+Home-page: https://github.com/quantile-development/quantile-data-kit
+Author: Jules Huisman
+Author-email: jules.huisman@quantile.nl
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/quantile-development/quantile-data-kit/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: pandas (==1.3.3)
+Requires-Dist: dagster (==0.13.10)
+Requires-Dist: mlflow (==1.20.2)
+Requires-Dist: scikit-learn (==1.0)
+Requires-Dist: pyarrow (==6.0.0)
+Requires-Dist: dask (==2021.9.1)
+Requires-Dist: dask-ml (==1.9.0)
+Requires-Dist: distributed (==2021.9.1)
+Requires-Dist: blosc (==1.10.6)
+Requires-Dist: lz4 (==3.1.3)
+Requires-Dist: s3fs (==2021.10.1)
+Requires-Dist: psycopg2-binary (==2.9.2)
+Requires-Dist: stop-words (==2018.7.23)
+Requires-Dist: yake (==0.4.8)
+Requires-Dist: gensim (==4.1.2)
+Requires-Dist: spacy (==3.2.0)
+Requires-Dist: nltk (==3.6.5)
+Provides-Extra: development
+Requires-Dist: black (==21.9b0) ; extra == 'development'
+Requires-Dist: isort (==5.9.3) ; extra == 'development'
+Requires-Dist: setuptools ; extra == 'development'
+Requires-Dist: wheel ; extra == 'development'
+Requires-Dist: twine ; extra == 'development'
+Requires-Dist: ipykernel ; extra == 'development'
+Requires-Dist: pytest (==6.2.5) ; extra == 'development'
+Provides-Extra: test
+Requires-Dist: pytest (==6.2.5) ; extra == 'test'
+
+# Quantile Data Kit 🔍
+
+## Publish to pypi
+How to deploy a new version of the QDK?
+1) Update the package version in `setup.py`.
+2) Run the Makefile `make publish`
+
+## Components
+There are four types of base components in the QDK. 
+1) `LoadComponent`. Takes nothing as input and outputs a DataFrame.
+2) `TransformComponent`. Takes a DataFrame as input and outputs a DataFrame.
+3) `TrainingComponent`. Takes data and a model as input and outputs a trained model.
+4) `InferenceComponent`. Takes data and a model as input and ouputs prediction data.
+
+## Adding a new component?
+Adding a new component to the QDK requires the following steps:
+1) **Type of component:** Decide which type of the four components above you are adding. 
+2) **Add component:** Once you decide which type of component you are adding, add in the corresponding folder (e.g. `qdk/loader`) a new Python file that inherits from the parent component. In this file you can optionally overwrite `input_defs`, `output_defs` and `config_schema`. When adding a new component, you are required to add a classmethod with the same name as the `compute_function` attribute on the parent class. The keys in the `config_schema` are injected into the parameters of the compute function. Lastly, you need to import the new component to `qdk/__init__.py`. This allows you to import it from top-level.
+4) **Write tests**: To continuously check the robustness of the components, we highly encourage you to add tests using `pytest`. The tests can be added at `qdk/tests`. Reminder to prefix the folder, files and functions with `test_`. One is able to test the components using either VScode testing or the terminal (e.g. with `pytest -s qdk/tests/test_loaders`).
+
+
