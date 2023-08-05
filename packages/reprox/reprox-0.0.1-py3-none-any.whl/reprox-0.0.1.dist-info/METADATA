@@ -1,0 +1,242 @@
+Metadata-Version: 2.1
+Name: reprox
+Version: 0.0.1
+Summary: Reprocessing for XENONnT
+Home-page: https://github.com/XENONnT/reprox
+Author: J. R. Angevaare
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Scientific/Engineering :: Physics
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: strax
+Requires-Dist: utilix (>=0.6.6)
+Requires-Dist: straxen (>=1.1.0)
+Requires-Dist: numba
+Requires-Dist: numpy
+Requires-Dist: pandas
+Provides-Extra: docs
+Requires-Dist: autodocsumm (==0.2.7) ; extra == 'docs'
+Requires-Dist: commonmark (==0.9.1) ; extra == 'docs'
+Requires-Dist: gitpython (==3.1.26) ; extra == 'docs'
+Requires-Dist: graphviz (==0.19.1) ; extra == 'docs'
+Requires-Dist: m2r (==0.2.1) ; extra == 'docs'
+Requires-Dist: nbsphinx (==0.8.8) ; extra == 'docs'
+Requires-Dist: numpy (==1.21.0) ; extra == 'docs'
+Requires-Dist: recommonmark (==0.7.1) ; extra == 'docs'
+Requires-Dist: scipy (==1.7.3) ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme (==1.0.0) ; extra == 'docs'
+Requires-Dist: sphinx (==4.4.0) ; extra == 'docs'
+Requires-Dist: sphinxcontrib-applehelp (==1.0.2) ; extra == 'docs'
+Requires-Dist: sphinxcontrib-devhelp (==1.0.2) ; extra == 'docs'
+Requires-Dist: sphinxcontrib-htmlhelp (==2.0.0) ; extra == 'docs'
+Requires-Dist: sphinxcontrib-jsmath (==1.0.1) ; extra == 'docs'
+Requires-Dist: sphinxcontrib-qthelp (==1.0.3) ; extra == 'docs'
+Requires-Dist: typing-extensions (==4.0.1) ; extra == 'docs'
+
+# ReProx: ReProcessing for XENONnT
+
+[![Test package](https://github.com/XENONnT/reprox/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/XENONnT/reprox/actions/workflows/pytest.yml)
+[![Coverage Status](https://coveralls.io/repos/github/XENONnT/reprox/badge.svg?branch=master)](https://coveralls.io/github/XENONnT/reprox?branch=master)
+[![CodeFactor](https://www.codefactor.io/repository/github/xenonnt/reprox/badge)](https://www.codefactor.io/repository/github/xenonnt/reprox)
+[![Documentation Status](https://readthedocs.org/projects/reprox/badge/?version=latest)](https://reprox.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/reprox.svg)](https://pypi.python.org/pypi/reprox/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/reprox.svg)](https://pypi.python.org/pypi/reprox)
+[![PyPI downloads](https://img.shields.io/pypi/dm/reprox.svg)](https://pypistats.org/packages/reprox)
+
+
+## Documentation
+Please visit [the documentation](https://reprox.readthedocs.io/en/latest/?badge=latest) for installation instructions and examples.
+
+
+
+
+# Reprocessing on dali
+
+Process data in so far available on dali with the current container
+
+## Logic
+
+There are several (sequential) steps with (associated scripts):
+
+- Find runs to process (`reprox-find-data`)
+- Process the runs that were found (`reprox-start-jobs`)
+- Move the data that was processed to the desired folder (`reprox-move-folders`)
+
+One can also run these three steps from one file (`reprox-start-jobs`), which runs all three in
+order.
+
+The best place to start is by going over these files and do
+`python run_determine_data.py --help` to see which options there are. Most are discussed below.
+
+## Running step by step
+
+Activate a container:
+
+```bash
+source /cvmfs/xenon.opensciencegrid.org/releases/nT/development/setup.sh
+```
+
+Determine which data to process
+
+```bash
+reprox-find-data \
+    --package cutax \
+    --context xenonnt_v6 \
+    --target event_info event_pattern_fit cuts_basic \
+    --cmt-version global_v6
+```
+
+This takes a while (+/- 30 minutes) and writes a file
+called `/dali/lgrandi/xenonnt/data_management_reprocessing/to_do_runs.csv` (depending on your ini
+file)
+
+```bash
+reprox-start-jobs \
+    --package cutax \
+    --context xenonnt_v6 \
+    --target event_info event_pattern_fit cuts_basic \
+    --cmt-version global_v6 \
+    --ram 12000 \
+    --cpu 2
+```
+
+Now, hopefully most of the data has been processed successfully, we can now move it to the
+production folder
+
+```bash
+reporx-move-folders
+```
+
+Or run it as a single command
+
+```bash
+reprox-reprocess \
+    --package cutax \
+    --context xenonnt_v6 \
+    --target event_info event_pattern_fit cuts_basic \
+    --cmt-version global_v6 \
+    --ram 12000 \
+    --cpu 2 \
+    --move-after-workflow # To move the data into the production folder
+```
+
+# Advanced usage
+
+Below are several more advanced use cases.
+
+## Changing the defaults of processing
+
+You might want to play with the config file that says how many resources one uses by default.
+The [`reprocessing.ini`](https://github.com/XENONnT/reprox/blob/master/reprox/reprocessing.ini)
+file. You can either change the source code of this file, or you can overwrite it as follows:
+
+```bash
+git clone git@github.com:XENONnT/reprox.git
+cp reprox/reprox/reprocessing.ini my_reprocessing_config.ini
+
+# # Edit my_reprocessing_config.ini. For example using vim:
+# vi my_reprocessing_config.ini 
+
+# overwrite the file used using an environment variable
+export export REPROX_CONFIG=$(pwd)/my_reprocessing_config.ini
+```
+
+You will see that your defaults have been changed (e.g. do `reprox-reprocess --help`) reflecting the
+changes you made in the `.ini` file.
+
+## Use custom config
+
+You might want to process some data with slightly different settings, this can be done using
+the`--context_kwargs` argument as follows
+(please don't move it into the production folder unless you know what you are doing):
+
+```bash
+reprox-reprocess \
+    --package cutax \
+    --context xenonnt_v6 \
+    --target event_info event_pattern_fit cuts_basic \
+    --cmt-version global_v6 \
+    --ram 12000 \
+    --cpu 2 \ 
+    --context_kwargs '{"s1_min_coincidence": 2, "s2_min_pmts": 10}'
+```
+
+## Using `reprox` from your jupyter notebook
+
+You can also run the commands from above in a notebook or python script.
+
+```python
+from reprox import find_data, submit_jobs, validate_run
+
+targets = 'event_info event_pattern_fit cuts_basic'.split()
+
+# First determine which data to process
+find_data.main(
+    targets=targets,
+    exclude_from_invalid_cmt_version='global_v6'
+)
+# Now start running the jobs
+submit_jobs.submit_jobs(targets=targets)
+
+# Finally move the jobs to the production folder
+validate_run.move_all.main()
+```
+
+## Processing NV data
+
+By default, the package assumes that only linked-mode or TPC runs are processed, if you want to
+instead process NV data you need to tell the scripts to also take into account the NV detector:
+
+```bash
+reprox-reprocess \
+    --package cutax \
+    --context xenonnt_v6 \
+    --target events_nv \
+    --detectors neutron_veto muon_veto
+    --ram 12000 \
+    --cpu 2
+```
+
+## Using tagged versions
+
+One might want to run with a different tag as so
+
+```bash
+source /cvmfs/xenon.opensciencegrid.org/releases/nT/2021.12.2/setup.sh
+reprox-reprocess \
+    --package cutax  \
+    --context xenonnt_v5  \
+    --targets event_info \
+    --cmt-version global_v5 \
+    --ram 24000  \
+    --cpu 2  \
+    --move-after-workflow \
+    --tag 2021.12.2
+```
+
+
+
+
+0.0.1 / 2022-01-17
+-------------------
+ - Update documentation (#7, #11, 2895ebb5063f7951550c8e57059fdd3bbf600b9e)
+ - Add tests (#1, #9, #10)
+ - Pin requirements (#3, #4, #5, #6, #8)
+ - Release (#12)
+
+0.0.0 / 2022-01-17
+--------------------
+
+- Initial commits
+
+
