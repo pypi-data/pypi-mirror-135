@@ -1,0 +1,126 @@
+Metadata-Version: 2.1
+Name: narrow-down
+Version: 0.5.0
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Dist: numpy~=1.18
+Requires-Dist: scipy
+Requires-Dist: typing_extensions
+Requires-Dist: aiosqlite~=0.17.0
+Requires-Dist: pre-commit~=2.15; extra == 'dev'
+Requires-Dist: invoke~=1.6; extra == 'dev'
+Requires-Dist: flake8~=3.9; extra == 'dev'
+Requires-Dist: flakehell~=0.9; extra == 'dev'
+Requires-Dist: flake8-builtins~=1.5; extra == 'dev'
+Requires-Dist: flake8-blind-except~=0.2; extra == 'dev'
+Requires-Dist: flake8-logging-format~=0.6; extra == 'dev'
+Requires-Dist: flake8-bugbear~=21.9; extra == 'dev'
+Requires-Dist: flake8-annotations~=2.6; extra == 'dev'
+Requires-Dist: flake8-docstrings~=1.6; extra == 'dev'
+Requires-Dist: flake8-bandit~=2.1; extra == 'dev'
+Requires-Dist: darglint~=1.8; extra == 'dev'
+Requires-Dist: isort~=5.9; extra == 'dev'
+Requires-Dist: black~=21.9b0; extra == 'dev'
+Requires-Dist: safety~=1.10; extra == 'dev'
+Requires-Dist: nox; extra == 'dev'
+Requires-Dist: mypy; extra == 'dev'
+Requires-Dist: sphinx~=4.2; extra == 'dev'
+Requires-Dist: bump2version~=1.0; extra == 'dev'
+Requires-Dist: pytest~=6.2; extra == 'dev'
+Requires-Dist: pytest-asyncio; extra == 'dev'
+Requires-Dist: pytest-benchmark; extra == 'dev'
+Requires-Dist: xdoctest~=0.15; extra == 'dev'
+Requires-Dist: coverage[toml]~=6.0; extra == 'dev'
+Requires-Dist: pytest-cov~=3.0; extra == 'dev'
+Requires-Dist: watchdog[watchmedo]~=2.1; extra == 'dev'
+Requires-Dist: myst-parser~=0.16; extra == 'dev'
+Requires-Dist: flake8-pylint~=0.1; extra == 'dev'
+Provides-Extra: dev
+Summary: Fast fuzzy text search
+Keywords: narrow-down,LSH,minhash
+License: Apache Software License 2.0
+	===========================
+	
+	Copyright (c) 2021, Christian Krudewig
+	
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+	
+Requires-Python: <3.11,>=3.7
+Description-Content-Type: text/markdown; charset=UTF-8; variant=GFM
+Project-URL: Bug Tracker, https://github.com/chr1st1ank/narrow-down/issues
+Project-URL: repository, https://github.com/chr1st1ank/narrow-down
+Project-URL: homepage, https://github.com/chr1st1ank/narrow-down
+Project-URL: documentation, https://narrow-down.readthedocs.io
+
+
+# Narrow Down
+
+
+<div align="center">
+
+[![PyPI - Version](https://img.shields.io/pypi/v/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
+[![Tests](https://github.com/chr1st1ank/narrow-down/workflows/tests/badge.svg)](https://github.com/chr1st1ank/narrow-down/actions?workflow=tests)
+[![Codecov](https://codecov.io/gh/chr1st1ank/narrow-down/branch/main/graph/badge.svg)](https://codecov.io/gh/chr1st1ank/narrow-down)
+[![Read the Docs](https://readthedocs.org/projects/narrow-down/badge/)](https://narrow-down.readthedocs.io/)
+[![PyPI - License](https://img.shields.io/pypi/l/narrow-down.svg)](https://pypi.python.org/pypi/narrow-down)
+
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/)
+
+</div>
+
+
+Fast fuzzy text search
+
+
+* GitHub repo: <https://github.com/chr1st1ank/narrow-down.git>
+* Documentation: <https://narrow-down.readthedocs.io>
+* Free software: Apache Software License 2.0
+* Status: Prototype. Solid and fast production quality, but *still subject to API changes until version 1.0 is reached*.
+
+
+## Features
+
+* Document indexing and search based on the Minhash LSH algorithm
+* High performance thanks to a native extension module in Rust
+* Easy-to-use API with automated parameter tuning
+* Works with many storage backends. Currently implemented:
+  * In-Memory
+  * SQLite
+  * Custom backend by implementing a lean interface
+* Native asyncio interface
+
+## Quickstart
+
+TODO
+
+## Similar projects
+- [pylsh](https://github.com/mattilyra/LSH) offers a good implementation of the classic Minhash LSH scheme in Python and Cython. If you only need this and you don't need a database backend it can be a good choice.
+- [Datasketch](https://github.com/ekzhu/datasketch) implements an interesting collection of different data sketching algorithms for similarity matching, cardinality estimation and k-nearest-neighbour search. The implementation is not highly optimized but very well usable, the documentation rich and multiple database backends can be used for some of the sketches.
+
+## Credits
+
+This package was created with [Cookiecutter][cookiecutter] and the [fedejaure/cookiecutter-modern-pypackage][cookiecutter-modern-pypackage] project template.
+
+[cookiecutter]: https://github.com/cookiecutter/cookiecutter
+[cookiecutter-modern-pypackage]: https://github.com/fedejaure/cookiecutter-modern-pypackage
+
