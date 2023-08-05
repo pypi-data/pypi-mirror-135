@@ -1,0 +1,163 @@
+Metadata-Version: 2.1
+Name: workflow-nodes
+Version: 0.13.0
+Summary: Collection of nodes for use in workflows.
+Home-page: https://gitlab.com/iam-cms/workflows/workflow-nodes
+Author: Karlsruhe Institute of Technology
+License: Apache-2.0
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: AUTHORS.md
+Requires-Dist: Click (<9.0.0,>=8.0.0)
+Requires-Dist: defusedxml (<1.0.0)
+Requires-Dist: graphviz (<1.0.0)
+Requires-Dist: kadi-apy (<0.22.0,>=0.21.0)
+Requires-Dist: matplotlib (<4.0.0)
+Requires-Dist: openpyxl (<4.0.0)
+Requires-Dist: pandas (<2.0.0)
+Requires-Dist: paramiko (<3.0.0)
+Requires-Dist: pylatex (<2.0.0)
+Requires-Dist: qrcode (<8.0.0)
+Requires-Dist: scp (<1.0.0)
+Requires-Dist: scipy (<2.0.0)
+Requires-Dist: xmlhelpy (<1.0.0,>=0.9.1)
+Provides-Extra: dev
+Requires-Dist: black (==21.9b0) ; extra == 'dev'
+Requires-Dist: beautifulsoup4 (<5.0.0) ; extra == 'dev'
+Requires-Dist: jinja2 (<4.0.0) ; extra == 'dev'
+Requires-Dist: pre-commit (<3.0.0) ; extra == 'dev'
+Requires-Dist: pylint (<2.11.0) ; extra == 'dev'
+Requires-Dist: tox (<4.0.0) ; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: recommonmark (<1.0.0,>=0.7.1) ; extra == 'docs'
+Requires-Dist: Sphinx (<5.0.0,>=4.2.0) ; extra == 'docs'
+Requires-Dist: sphinx-click (<4.0.0,==3.0.1) ; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme (<1.0.0,>=0.5.2) ; extra == 'docs'
+
+# workflow-nodes
+
+**workflow-nodes** is a collection of nodes written in Python 3, which are
+usable inside a *workflow*. Each node is an executable command line tool
+providing the `--xmlhelp` interface, which can be used to obtain a machine
+readable representation of any command line tool and its parameters (see also
+[xmlhelpy](https://gitlab.com/iam-cms/workflows/xmlhelpy)).
+
+There are nodes for many different tasks, for example to generate pdf reports,
+for working with Microsoft Excel files, to convert data from and to different
+formats, for printing debug output, to execute scripts or other executable
+programs, for plotting data, and for visualizing data from a
+[Kadi4Mat](https://kadi.iam-cms.kit.edu/) repository.
+
+## Installation
+
+The library can be installed using `pip3` (or `pip`, if there is no dedicated
+version of `pip` for Python 3 installed), which generally comes bundled with
+Python installations. Python version >=3.6 is required.
+
+```
+pip3 install workflow-nodes
+```
+
+When installing the library from source for development instead, it is
+recommended to install the library in editable mode, which simply creates a
+link to the sources so all changes are reflected in the installed package
+immediately. The command will also install some additional development
+dependencies as defined in `setup.py`.
+
+```
+pip3 install -e .[dev]
+```
+
+Running the installations inside a virtual environment is recommended, see
+[Virtualenv](https://virtualenv.pypa.io/en/latest/ "Virtualenv") for more
+information.
+
+After installing, make sure the `workflow-nodes` command is runnable from
+anywhere. Depending on the type of installation and if a virtual environment is
+used or not, the `PATH` system variable may need to be adapted accordingly to
+include the path the executable resides in. For example, the following command
+can be used on Linux, assuming the executable resides in `~/.local/bin`:
+
+```
+export PATH=${HOME}/.local/bin:${PATH}
+```
+
+This line can also be added to `.bashrc` so it will be executed each time a new
+terminal is opened:
+
+```
+echo 'export PATH=${HOME}/.local/bin:${PATH}' >> ${HOME}/.bashrc
+```
+
+Autocomplete is available for fish, zsh and bash and can be activated via:
+
+```
+workflow-nodes config activate-autocompletion
+```
+
+## Usage
+
+All commands concerning different resources are available as various
+subcommands. For more information or to get a list of subcommands, the
+following commands can be used:
+
+```
+workflow-nodes --help
+workflow-nodes --commands
+```
+
+Each subcommand has an individual help option, and the main command as well as
+the command groups additionally allow to request a list of all available
+subcommands using the `--commands` option.
+
+To use nodes with the local workflow editor, they have to be added to the file
+`$HOME/.kadistudio/tools.txt`. Afterwards you can insert them using the "Add
+Tool" context menu option in the editor.
+
+To register all available nodes from this repository at once, use the following
+command:
+
+```
+workflow-nodes --commands >> `$HOME/.kadistudio/tools.txt`
+```
+
+## Links
+
+* Source code: https://gitlab.com/iam-cms/workflows/workflow-nodes
+* Releases: https://pypi.org/project/workflow-nodes/
+* Documentation:
+  * Stable (reflecting the latest release):
+  https://workflow-nodes.readthedocs.io/en/stable/
+  * Latest (reflecting the *develop* branch):
+  https://workflow-nodes.readthedocs.io/en/latest/
+
+
+## Contributing
+
+* First, create a fork of this project and clone it. The main repository can be
+  added as an additional remote to the cloned project, often called `upstream`.
+  Also checkout the `development` branch, which is currently used as the main
+  development branch.
+* Install the project in development mode according to the instructions above
+  and setup the [pre-commit](https://pre-commit.com/) hooks by running
+  `pre-commit install`.
+* Create a Python file for the node in the desired package, e.g. in
+  `workflow_nodes/report/` and implement the functionality of the tool. You can
+  use other existing tools as a reference. Afterwards, add the implemented
+  function to a fitting subcommand group, e.g. to
+  `workflow_nodes/report/main.py`.
+* If there are any new dependencies, add them to `setup.py` with appropriate
+  version ranges, if necessary.
+* Add an entry about any new functionality to `HISTORY.md`. You may also add
+  yourself as a contributor to `AUTHORS.md`.
+* Before creating a merge request on the main repository, make sure the GitLab
+  CI runs through successfully in your fork.
+
+
