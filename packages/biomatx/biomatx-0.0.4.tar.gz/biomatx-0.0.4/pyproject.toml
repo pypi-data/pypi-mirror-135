@@ -1,0 +1,93 @@
+[build-system]
+requires = [ "pdm-pep517",]
+build-backend = "pdm.pep517.api"
+
+[project]
+name = "biomatx"
+version = "0.0.4"
+description = "Python API for managing the Biomatx home automation system"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [ "pyserial-asyncio~=0.6",]
+dynamic = [ "classifiers",]
+classifiers = [ "Development Status :: 3 - Alpha",]
+[[project.authors]]
+name = "Damien Merenne"
+email = "dam@cosinux.org"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Repository = "https://github.com/canatella/pybiomatx"
+Homepage = "https://github.com/canatella/pybiomatx"
+
+[project.optional-dependencies]
+
+[tool.pdm]
+package-dir = "src"
+
+[tool.black]
+line-length = 88
+exclude = "/(\n    \\.eggs\n  | \\.git\n  | \\.hg\n  | \\.mypy_cache\n  | \\.tox\n  | \\.venv\n  | _build\n  | buck-out\n  | build\n  | dist\n  | tests/fixtures\n)/\n"
+
+[tool.towncrier]
+package = "biomatx"
+filename = "CHANGELOG.md"
+issue_format = "[#{issue}](https://github.com/canatella/pybiomatx/issues/{issue})"
+directory = "news/"
+start_string = "<!-- insertion marker -->"
+title_format = "[v{version}](https://github.com/canatella/pybiomatx/releases/tag/{version}) ({project_date})"
+template = "news/towncrier_template.md"
+underlines = "-~^"
+[[tool.towncrier.type]]
+directory = "feature"
+name = "Features & Improvements"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bug Fixes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "doc"
+name = "Improved Documentation"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "dep"
+name = "Dependencies"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removal"
+name = "Removals and Deprecations"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "misc"
+name = "Miscellany"
+showcontent = true
+
+[tool.isort]
+profile = "black"
+atomic = true
+skip_glob = [ "*/setup.py",]
+filter_files = true
+known_first_party = [ "biomatx",]
+
+[tool.pdm.dev-dependencies]
+dev = [ "pytest~=6.1", "towncrier~=19.2", "parver~=0.3", "pytest-asyncio~=0.15", "black~=21.10b0", "flake8~=4.0",]
+
+[tool.pdm.scripts]
+release = "python -m tasks.release"
+test = "pytest tests/"
+lint = "pre-commit run --all-files"
+
+[tool.pytest.ini_options]
+filterwarnings = [ "ignore::DeprecationWarning",]
+
+[tool.pdm.scripts.doc]
+shell = "cd docs && mkdocs serve"
+help = "Start the dev server for doc preview"
