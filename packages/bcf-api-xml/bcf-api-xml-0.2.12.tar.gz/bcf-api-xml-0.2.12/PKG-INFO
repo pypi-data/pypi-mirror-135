@@ -1,0 +1,53 @@
+Metadata-Version: 2.1
+Name: bcf-api-xml
+Version: 0.2.12
+Summary: Convert BCF-API to BCF-XML
+Home-page: https://github.com/bimdata/rabbitmq-subprocess-client
+License: MIT
+Author: Hugo Duroux
+Author-email: hugo@bimdata.io
+Requires-Python: >=3.8,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: generateDS (>=2.35.13,<3.0.0)
+Requires-Dist: lxml (>=4.5.0,<5.0.0)
+Requires-Dist: python-dateutil (>=2.8.0,<3.0.0)
+Project-URL: Repository, https://github.com/bimdata/rabbitmq-subprocess-client
+Description-Content-Type: text/markdown
+
+BCF-API-XML-converter
+=====================
+
+BCF-API-XML-converter is a library to open BCFzip and get data similar to BCF API json and to save BCF API data as BCFzip files.
+
+
+# Install
+```bash
+pip install bcf-api-xml
+```
+
+# usage
+```python
+    from bcf_api_xml import to_zip, to_json
+
+    file_like_bcf_zip = to_zip(topics, comments, viewpoints)
+
+    imported_topics = to_json(file_like_bcf_zip)
+```
+
+# develop
+```bash
+poetry shell
+poetry install
+pytest
+pre-commit install
+```
+
+# Publish new version
+```bash
+poetry publish --build --username= --password=
+```
+
