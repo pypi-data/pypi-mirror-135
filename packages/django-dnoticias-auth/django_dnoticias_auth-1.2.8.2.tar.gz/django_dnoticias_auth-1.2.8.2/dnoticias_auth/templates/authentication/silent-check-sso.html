@@ -1,0 +1,12 @@
+<html>
+
+<body>
+    <script>
+        {% if not request.user.is_authenticated %}
+            window.location.href = '{% url "oidc_authentication_init" %}'
+        {% else %}
+        {% endif %}
+    </script>
+</body>
+
+</html>
