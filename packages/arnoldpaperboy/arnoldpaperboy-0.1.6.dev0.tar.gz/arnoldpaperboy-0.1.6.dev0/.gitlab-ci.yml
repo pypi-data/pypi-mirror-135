@@ -1,0 +1,25 @@
+image: "python:3.6"
+
+stages:
+  - testlint
+  - release
+  - deploy
+
+before_script:
+  - pip install -r requirements-tst.txt
+  - pip install -r requirements.txt
+
+lint:
+   stage: testlint
+   tags:
+     - k8s
+   script:
+     - pylint arnoldpaperboy
+
+test:
+   stage: testlint
+   tags:
+     - k8s
+   script:
+     - pytest
+
