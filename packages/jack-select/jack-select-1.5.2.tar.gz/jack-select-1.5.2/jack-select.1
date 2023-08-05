@@ -1,0 +1,182 @@
+.\" Man page generated from reStructuredText.
+.
+.TH JACK-SELECT 1 "2022-01-17" "1.5.2" "audio"
+.SH NAME
+jack-select \- show a systray icon with a pop-up menu to set JACK configuration from presets
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH SYNOPSIS
+.sp
+jack\-select [\-h] [\-\-version] [\-\-a2j\-autostart] [\-\-a2j\-export\-hw] [\-a] [\-c PATH] [\-d] [\-i] [\-v] [preset]
+.SH DESCRIPTION
+.sp
+jack\-select displays an icon in the system tray (also known as notification
+area) of your desktop, which shows the status of the JACK audio server and when
+clicked, presents a pop\-up menu, where the user can select from a list of JACK
+configuration presets created with \fBQjackCtl\fP\&.
+.sp
+When a preset is selected, the JACK configuration is changed according to the
+settings of the preset via DBus and then the JACK server is restarted. This
+allows the user to switch between different JACK audio setups with just two
+mouse clicks.
+.sp
+When the mouse pointer hovers over the systray icon and JACK is running, a
+tooltip will show the name of the active preset (if known), the most important
+parameters of the current configuration and some JACK server statistics.
+.sp
+The entries in the "ALSA\-MIDI Bridge" sub\-menu allow to configure and start and
+stop the \fIa2jmidi\fP service.
+.sp
+Lastly, there are menu entries to stop the JACK server and to quit the
+application.
+.SH STARTUP
+.sp
+jack\-select may be started from the command\-line, from the desktop start menu
+or along with the user\(aqs desktop session, by putting the
+\fBjack\-select.desktop\fP file into the user\(aqs autostart folder
+(\fB<XDG_CONFIG_HOME>/autostart\fP).
+.sp
+When jack\-select starts up, it first checks whether there is already a running
+instance of jack\-select. If so, when called with no command argument arguments,
+it tells the existing jack\-select instance to open its menu.
+.sp
+If a preset name is passed as the first positional command\-line argument the
+preset is activated immediately at application startup. If another instance of
+jack\-select is already running, jack\-select will tell the existing instance to
+activate the preset. An invalid preset name is silently ignored.
+.SH PRESETS
+.sp
+jack\-select reads JACK configuration presets from QjackCtl\(aqs configuration file
+(see \fBFILES\fP section). jack\-select does not create or change this file. It
+parses the file on startup and then checks it at a regular interval. If the
+file is created, changed or deleted, jack\-select will update its menu
+accordingly.
+.sp
+To create or edit presets, the program \fBQjackCtl\fP can be used. Make the
+desired changes in its configuration dialog and close it with "Ok" so the
+changes are saved. The changes will be reflected in the jack\-select menu
+immediately.
+.sp
+QjackCtl stores a nameless preset referred to with the label \fI(default)\fP in its
+interface. Since there is no way to remove this preset from QjackCtl\(aqs
+interface, jack\-select can optionally ignore this preset, unless it is the only
+preset found in the configuration (see \fBOPTIONS\fP section).
+.SH DEVICE DISCOVERY
+.sp
+jack\-select is able to detect the presence of ALSA devices and when they are
+attached or removed. Menu entries for presets, which refer to ALSA devices
+currently unavailable, will be deactivated. ALSA device discovery can be
+disabled via a command line option (see \fBOPTIONS\fP section).
+.SH ALSA-MIDI TO JACK BRIDGE
+.sp
+jack\-select provides a sub\-menu with entries to start and stop the a2jmidid
+ALSA\-MIDI to JACK bridge via D\-BUS and set related options.
+.sp
+The bridge can be automatically started when activating a JACK preset and
+you can select whether the bridge also exports hardware MIDI ports as JACK
+MIDI ports.
+.sp
+The selected options are automatically stored in jack\-select\(aqs own settings
+file and can also be overwritten via commadn line options.
+.SH OPTIONS
+.sp
+usage: jack\-select [\-h] [\-\-version] [\-a] [\-c PATH] [\-d] [\-i] [\-v] [preset]
+.sp
+A systray app to set the JACK configuration from QjackCtl presets via DBus.
+.INDENT 0.0
+.TP
+.B positional arguments:
+preset                Configuration preset to activate on startup.
+.TP
+.B optional arguments:
+.INDENT 7.0
+.TP
+.B \-h\fP,\fB  \-\-help
+show this help message and exit
+.TP
+.B \-\-version
+Show program version and exit.
+.TP
+.B \-\-a2j\-autostart
+Autostart ALSA\-MIDI to JACK bridge with JACK.
+.TP
+.B \-\-a2j\-export\-hw
+Export hardware MIDI ports via ALSA\-MIDI to JACK bridge.
+.TP
+.B \-a\fP,\fB  \-\-no\-alsa\-monitor
+Disable ALSA device monitoring and filtering.
+.TP
+.BI \-c \ PATH\fR,\fB \ \-\-config \ PATH
+Path to configuration file
+(default: \fB<XDG_CONFIG_HOME>/rncbc.org/QjackCtl.conf\fP)
+.TP
+.B \-d\fP,\fB  \-\-default
+Activate default preset.
+.TP
+.B \-i\fP,\fB  \-\-ignore\-default
+Ignore the nameless \(aq(default)\(aq preset if any other
+presets are stored in the configuration.
+.TP
+.B \-v\fP,\fB  \-\-verbose
+Be verbose about what the script does.
+.UNINDENT
+.UNINDENT
+.SH FILES
+.INDENT 0.0
+.TP
+.B \fB<XDG_CONFIG_HOME>/rncbc.org/QjackCtl.conf\fP
+The default path to QjackCtl\(aqs configuration file. This file contains the
+JACK settings and configuration presets jack\-select uses. The path can be
+changed via a command line option.
+.TP
+.B \fB<XDG_CONFIG_HOME>/jack\-select/settings.ini\fP
+This file stores jack\-select\-specific settings.
+.UNINDENT
+.SH ENVIRONMENT
+.INDENT 0.0
+.TP
+.B \fBXDG_CONFIG_HOME\fP
+Specifies the root of the user\(aqs configuration directory tree, under which
+jack\-select will look for QjackCtl\(aqs configuration file and its own
+settings (see FILES section).
+.UNINDENT
+.SH SEE ALSO
+.INDENT 0.0
+.IP \(bu 2
+Project homepage (\fI\%https://github.com/SpotlightKid/jack\-select\fP)
+.IP \(bu 2
+JACK (\fI\%http://jackaudio.org/\fP)
+.IP \(bu 2
+QjackCtl (\fI\%http://qjackctl.sourceforge.net/\fP)
+.UNINDENT
+.SH AUTHOR
+Christopher Arndt <chris@chrisarndt.de>
+.SH COPYRIGHT
+The MIT License (MIT)
+.\" Generated by docutils manpage writer.
+.
