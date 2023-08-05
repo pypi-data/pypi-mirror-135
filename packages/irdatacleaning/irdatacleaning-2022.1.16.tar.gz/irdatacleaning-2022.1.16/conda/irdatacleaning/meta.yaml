@@ -1,0 +1,46 @@
+{% set name = "irdatacleaning" %}
+{% set version = "2021.0.6" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: dcc821c4bc2aef8dda3ba5da6d158fc6429478ca4f735c2ab2d038433b930c9f
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv"
+
+requirements:
+  host:
+    - matplotlib
+    - pandas
+    - pip
+    - pyqt
+    - python
+    - scikit-learn
+  run:
+    - matplotlib
+    - pandas
+    - pyqt
+    - python
+    - scikit-learn
+
+test:
+  imports:
+    - irdatacleaning
+
+about:
+  home: The package home page
+  license: UNKNOWN
+  license_family: OTHER
+  license_file: 
+  summary: "module designed to make your data preprocessing experience easier"
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
