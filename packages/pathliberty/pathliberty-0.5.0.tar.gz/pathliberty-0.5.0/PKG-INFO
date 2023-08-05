@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: pathliberty
+Version: 0.5.0
+Summary: pathlib extensions
+Home-page: UNKNOWN
+Author: Egor Abramov
+Author-email: coreegor@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/coreegor/pathliberty/archive/refs/tags/0.5.0.tar.gz
+Project-URL: Source, https://github.com/coreegor/pathliberty
+Description: # pathliberty
+        Extended object-oriented filesystem paths library.  
+        ``pathliberty`` is the Python package that allows you to subclass a pathlib.PosixPath in a proper way.
+        To define your own custom path subclass, declare subclasses AbstractPathAccessor and AbstractPath.
+        ## Features
+        Support SSH remote path via [Paramiko](https://pypi.org/project/paramiko/):
+        ```python
+        from pathliberty import SSHPath
+        from pathliberty.ssh import SSHSession
+        from getpass import getuser
+        
+        host = 'localhost'
+        ssh_session = SSHSession(
+            host,
+            password=******,
+        )
+        ssh_path = SSHPath(f'/home/{getuser()}', ssh=ssh_session)
+        assert ssh_path.parent == SSHPath('/home', host=host)
+        ```
+        
+        ## Installation
+        
+        ```bash
+        pip install pathliberty
+        ```
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
