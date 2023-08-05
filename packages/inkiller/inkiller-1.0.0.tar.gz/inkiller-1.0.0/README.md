@@ -1,0 +1,21 @@
+<div align="center"><a href="https://facebook.com/AKXVAU"><img style="margin-top: 15%" src="https://ak27x.000webhostapp.com/AKXVAU.png" class="spinner" width="250px" height="250px"><br></img></a></div><br>
+<b><h1 align="center" style="color:black; font-size: 50px;">MR.D3M09</h1>
+<div align="center">#MY SOCIAL MEDIA<br>
+   <a href="https://www.facebook.com/AK27X69" target="_blank"><img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/fb.png" alt="alt text" width="25" height="25"></a>
+   <a href="http://akxvau.ml" target="_blank"><img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/site.png" alt="alt text" width="25" height="25"></a>
+   <a href="https://t.me/AKXVAU"><img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/tg.png" alt="alt text" width="25" height="25"></a>
+</a><a href="https://Instagram.com/AKXVAU" target="_blank"><img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/insta.png" alt="alt text" width="25" height="25"></a>
+ <a href="https://twitter.com/AKXVAU" target="_blank"><img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/twit.png" alt="alt text" width="25" height="25"></a><br><p align="center">
+<img src="https://raw.githubusercontent.com/AKXVAU/AKXVAU/main/mail.png" width="25" height="25">  <a href = "mailto: akxvau@gmail.com">Send Email</a><hr>
+
+## Install
+````
+pip install inkiller
+````
+
+## Run
+````
+inkiller
+````
+
+<br><br><h1 align="center" style="color:black; font-size: 30px;">THANKS.</h1>
