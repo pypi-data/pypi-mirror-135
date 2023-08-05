@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "databricks-bundle"
+version = "1.4.2.dev8"
+description = "Databricks runtime support for the Daipe framework"
+readme = "README.md"
+repository = "https://github.com/daipe-ai/databricks-bundle"
+
+license = "MIT"
+
+authors = [
+    "Jiri Koutny <jiri.koutny@datasentics.com>"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+include = ["*.yaml"]
+
+packages = [
+    { include = "databricksbundle", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+console-bundle = "^0.5"
+pyfony-core = "0.8.*"
+pyfony-bundles = "0.4.*"
+injecta = "0.10.*"
+logger-bundle = "0.7.*"
+pyspark-bundle = "^1.2"
+daipe-core = "^1.2"
+
+[tool.poetry.dev-dependencies]
+databricks-connect = { url = "https://daipe-packages.s3.eu-central-1.amazonaws.com/databricks-connect-9.1.2.tar.gz" }
+pytest = "^5.2"
+flake8 = "^3.9.0"
+black = "^20.8b1"
+flake8-fixme = "^1.1.1"
+pep8-naming = "^0.11.1"
+poethepoet = "^0.10.0"
+
+[tool.poetry.plugins."pyfony.bundle"]
+create = "databricksbundle.DatabricksBundle:DatabricksBundle.autodetect"
+
+[tool.poetry.plugins."daipe"]
+bootstrap_config_reader = "databricksbundle.bootstrap.package_config_reader:read"
+
+[pyfony.bootstrap]
+container_init = "pyfonycore.container.container_init:init_with_current_bundle"
+root_module_name = "databricksbundle"
+allowed_environments = ["test_aws", "test_azure"]
+
+[tool.black]
+line-length = 140
+
+[tool.poe.tasks]
+black = "black src"
+black-check = "black --check src"
+flake8 = "flake8 --ignore=E501,W503 src"
