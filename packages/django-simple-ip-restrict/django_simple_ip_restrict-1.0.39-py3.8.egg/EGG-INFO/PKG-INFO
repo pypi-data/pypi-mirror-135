@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: django-simple-ip-restrict
+Version: 1.0.39
+Summary: Apply an IP restriction to specific routes
+Home-page: UNKNOWN
+Author: STITCH (Aleksey Panov, Mario Brito, Daniel Hengeveld, André Pereira, Kellie English)
+Author-email: panovitch@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.5
+Description-Content-Type: text/markdown
+
+# django-simple-ip-restrict
+
+This middleware allows you to mark Django URL namespaces as unavailable to all
+requests except those coming from a whitelisted IP subnet.
+
+
+## Instructions
+
+Add to the list of MIDDLEWARE:
+
+    "django_simple_ip_restrict.middleware.ip_filter",
+
+Then you can set the following keys on settings.py:
+
+  - IP_PROTECTED_NAMESPACES: list of namespaces to block (default: ["admin"])
+  - IP_NETWORKS_WHITELIST: list of subnets to allow, in CIDR notation
+
+
