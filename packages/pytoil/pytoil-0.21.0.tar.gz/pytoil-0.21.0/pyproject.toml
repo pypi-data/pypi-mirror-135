@@ -1,0 +1,116 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "pytoil"
+version = "0.21.0"
+description = "CLI to automate the development workflow."
+authors = ["Tom Fleet <tomfleet2018@gmail.com>"]
+maintainers = ["Tom Fleet <tomfleet2018@gmail.com>"]
+license = "Apache Software License 2.0"
+homepage = "https://github.com/FollowTheProcess/pytoil"
+readme = "README.md"
+repository = "https://github.com/FollowTheProcess/pytoil"
+documentation = "https://FollowTheProcess.github.io/pytoil/"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+keywords = ["cli", "python", "developer-tools", "automation"]
+
+[tool.poetry.scripts]
+pytoil = "pytoil.cli.root:main"
+
+[tool.poetry.urls]
+Documentation = "https://FollowTheProcess.github.io/pytoil/"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+asyncclick = "8.0.3.2"
+anyio = "3.5.0"
+httpx = { extras = ["http2"], version = "0.21.3" }
+aiofiles = "0.8.0"
+PyYAML = "6.0"
+wasabi = "0.9.0"
+rich = "11.0.0"
+tomlkit = "0.8.0"
+thefuzz = { extras = ["speedup"], version = "0.19.0" }
+cookiecutter = "1.7.3"
+virtualenv = "20.13.0"
+pydantic = "1.9.0"
+humanize = "3.13.1"
+questionary = "1.10.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "6.2.5"
+bump2version = "1.0.1"
+flake8 = "4.0.1"
+isort = "5.10.1"
+nox = "2022.1.7"
+black = "21.12b0"
+pytest-cov = "3.0.0"
+coverage-badge = "1.1.0"
+coverage = { extras = ["toml"], version = "6.2.0" }
+mypy = "0.931"
+mkdocs = "1.2.3"
+mkdocs-material = "8.1.7"
+types-click = "7.1.8"
+pytest-asyncio = "0.17.2"
+pytest-httpx = "0.18.0"
+types-aiofiles = "0.8.3"
+types-PyYAML = "6.0.3"
+pytest-mock = "3.6.1"
+flake8-bugbear = "22.1.11"
+pre-commit = "2.16.0"
+freezegun = "1.1.0"
+
+[tool.isort]
+# Added for compatibility with black
+profile = "black"
+multi_line_output = 3
+
+[tool.coverage.run]
+omit = [
+    "*__init__.py",
+    "*__main__.py",
+    "pytoil/cli/*",
+    "*exceptions.py",
+    "pytoil/environments/base.py",
+    "pytoil/starters/base.py",
+]
+branch = true
+
+[tool.mypy]
+files = ["pytoil/**/*.py", "noxfile.py"]
+ignore_missing_imports = true
+strict = true
+pretty = true
+disallow_untyped_decorators = false
+plugins = "pydantic.mypy"
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+
+[tool.pycln]
+path = "/pytoil"
+expand_stars = true
+all = true
+no_gitignore = false
