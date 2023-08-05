@@ -1,0 +1,122 @@
+Metadata-Version: 2.1
+Name: cannon
+Version: 0.0.56
+Summary: An SSH automation tool based on Exscript
+Home-page: https://github.com/mpenning/cannon
+License: BSD-3-Clause
+Keywords: SSH,Exscript
+Author: Mike Pennington
+Author-email: mike@pennington.net
+Requires-Python: >=3.6
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Plugins
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: Intended Audience :: Telecommunications Industry
+Classifier: License :: OSI Approved :: BSD License
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Communications
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: System :: Networking
+Classifier: Topic :: System :: Networking :: Monitoring
+Requires-Dist: arrow (==1.2.1)
+Requires-Dist: exscript (==2.6.3)
+Requires-Dist: loguru (==0.5.3)
+Requires-Dist: textfsm (==1.1.2)
+Requires-Dist: traits (==6.3.2)
+Project-URL: Documentation, http://www.pennington.net/py/cannon/
+Description-Content-Type: text/markdown
+
+# Introduction
+
+[cannon][1] is a wrapper around [exscript][2] to connect with remote server or network 
+devices with ssh.
+
+
+## Example Usage - Cisco IOS
+
+This script will login, run a few show commands
+
+```python
+import sys
+
+from cannon import Shell, Account
+from loguru import logger
+
+log_stderr_id = logger.add(sink=sys.stderr)
+
+@logger.catch(default=True, onerror=lambda _: sys.exit(1))
+def main():
+    sess = Shell(
+        host='route-views.routeviews.org',
+        # route-views doesn't need password
+        account= Account(name='rviews', password=''),
+        debug=0,
+        json_logfile='/tmp/cmd_log.json',
+        )
+
+    sess.execute('term len 0')
+
+    sess.execute('show clock')
+
+    sess.execute('show version')
+    version_text = sess.response
+
+    # template is a TextFSM template
+    values = sess.execute('show ip int brief',
+        template="""Value INTF (\S+)\nValue IPADDR (\S+)\nValue STATUS (up|down|administratively down)\nValue PROTO (up|down)\n\nStart\n  ^${INTF}\s+${IPADDR}\s+\w+\s+\w+\s+${STATUS}\s+${PROTO} -> Record""")
+    print("VALUES "+str(values))
+    sess.close()
+```
+
+## Example Usage - Linux
+
+```python
+from getpass import getpass
+import sys
+
+from cannon.main import Shell, Account
+
+log_stderr_id = logger.add(sink=sys.stderr)
+
+@logger.catch(default=True, onerror=lambda _: sys.exit(1))
+def main():
+    account = Account("mpenning", getpass("Login password: "))
+    conn = Shell(host="127.0.0.1", port=22, account=account, driver="generic", debug=0)
+    assert conn is not None
+    example_tfsm_template = """Value UNAME_LINE (.+)
+
+Start
+  ^${UNAME_LINE}
+"""
+    print(conn.execute("sudo uname -a", debug=0, template=example_tfsm_template, timeout=2))
+    print(conn.execute("whoami", debug=0, template=None, timeout=2))
+    #print("FOO2", conn.response)
+    conn.close(force=True)
+
+if __name__=="__main__":
+    main()
+```
+
+## Example test suite setup
+
+- `git clone git@github.com:knipknap/Exscript`
+- `cd` into `Exscript/tests/Exscript/protocols` and `chmod 600 id_rsa`
+- exscript spawns a local tests ssh daemon, `pytest Exscript/tests/Exscript/protocols/SSH2Test.py`
+- Connect with `ssh -i id_rsa -p 1236 user@localhost`
+- one command is supported: `ls`
+
+  [1]: https://pypi.python.org/pypi/cannon    # cannon on pypi
+  [2]: https://pypi.python.org/pypi/exscript  # Exscript on pypi
+
