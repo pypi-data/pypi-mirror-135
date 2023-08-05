@@ -1,0 +1,148 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "types" : {
+      "nullable_string" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          }
+        ]
+      },
+      "nullable_number" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "number"
+          }
+        ]
+      }
+    },
+    "type" : {
+      "type" : "string",
+      "enum" : [
+        "fb-bus",
+        "fb-mqtt",
+        "shelly",
+        "tuya",
+        "sonoff",
+        "modbus"
+      ]
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Entity uuid v4 identifier. This identifier is unique"
+    },
+    "type" : {
+      "$ref" : "#/definitions/type"
+    },
+    "key" : {
+      "type" : "string",
+      "description" : "Unique pub/sub identifier per each entity"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "enabled" : {
+      "type" : "boolean",
+      "default" : false
+    },
+    "owner" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "description" : "Entity owner uuid v4 identifier"
+    }
+  },
+  "if" : {
+    "properties" : {
+      "type" : {
+        "const" : "fb-bus"
+      }
+    }
+  },
+  "then" : {
+    "properties" : {
+      "address" : {
+        "$ref" : "#/definitions/types/nullable_number",
+        "default" : null
+      },
+      "serial_interface" : {
+        "$ref" : "#/definitions/types/nullable_string",
+        "default" : null
+      },
+      "baud_rate" : {
+        "$ref" : "#/definitions/types/nullable_number",
+        "default" : null
+      }
+    },
+    "required" : [
+      "id",
+      "type",
+      "key",
+      "name",
+      "enabled",
+      "address",
+      "serial_interface",
+      "baud_rate",
+      "owner"
+    ]
+  },
+  "else" : {
+    "if" : {
+      "properties" : {
+        "type" : {
+          "const" : "fb-mqtt"
+        }
+      }
+    },
+    "then" : {
+      "properties" : {
+        "server" : {
+          "$ref" : "#/definitions/types/nullable_string",
+          "default" : null
+        },
+        "port" : {
+          "$ref" : "#/definitions/types/nullable_number",
+          "default" : null
+        },
+        "secured_port" : {
+          "$ref" : "#/definitions/types/nullable_number",
+          "default" : null
+        },
+        "username" : {
+          "$ref" : "#/definitions/types/nullable_string",
+          "default" : null
+        }
+      },
+      "required" : [
+        "id",
+        "type",
+        "key",
+        "name",
+        "enabled",
+        "server",
+        "port",
+        "secured_port",
+        "username",
+        "owner"
+      ]
+    },
+    "else" : {
+      "required" : [
+        "id",
+        "type",
+        "key",
+        "name",
+        "enabled",
+        "owner"
+      ]
+    }
+  }
+}
