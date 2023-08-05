@@ -1,0 +1,35 @@
+Metadata-Version: 2.1
+Name: infra-enver
+Version: 1.0.2
+Summary: Infra Enver
+Home-page: UNKNOWN
+Author: Daniil Vladimirov
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: pydantic
+
+<h1>INFRA_ENVER</h1>
+
+example
+```py
+from infra_enver import infra_enver
+from pydantic import BaseSettings
+import typing as t
+
+class MySettings(BaseSettings):
+    OPA: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+if __name__ == '__main__':
+    env = infra_enver.Enver("test_enver", "OubTM7ONbgsg1e_Q_LUqPPXdbDqeGhiiYw", True, MySettings())
+    my_sett = env.OPA
+    print(my_sett)
+```
+
+
