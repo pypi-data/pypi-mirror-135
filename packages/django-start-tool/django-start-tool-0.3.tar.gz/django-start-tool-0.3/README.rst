@@ -1,0 +1,70 @@
+=================
+django-start-tool
+=================
+
+.. image:: https://img.shields.io/pypi/v/django-start-tool.svg
+    :target: https://pypi.org/project/django-start-tool
+    :alt: PyPI
+
+.. image:: https://img.shields.io/pypi/l/django-start-tool.svg
+    :target: https://pypi.org/project/django-start-tool
+    :alt: PyPI - License
+
+Introduction
+------------
+
+**django-start-tool** is a full-featured replacement for
+``django-admin startproject``, which provides cli for creating the same
+django project structure.
+
+Usage
+-----
+
+A cli arguments are the same as startproject_ arguments excluding for a few 
+changes.
+
+.. _startproject: https://docs.djangoproject.com/en/4.0/ref/django-admin/#startproject
+
+``--template``
+~~~~~~~~~~~~~~
+
+Changes:
+
+- Creating from archive only supports the **zip** archive.
+
+- Creating from remote source only supports the **GitHub** repositories.
+
+----
+
+``--files``
+~~~~~~~~~~~
+
+This parameter is a replacement for ``--extension`` and ``--name`` parameters.
+
+It takes space-separated glob patterns, like ``*.env *.rst Procfile`` etc.
+
+----
+
+``--extra``
+~~~~~~~~~~~
+
+This parameter takes space-separated key value pairs, which will be available 
+in Jinja2 template from ``extra`` object.
+
+.. code-block:: console
+
+    $ django-start \
+    > -t https://github.com/user/repository/archive/main.zip \
+    > -f '*.env' \
+    > -e 'db_name=mydb db_password=secret!'
+
+``.env``:
+
+.. code-block:: shell
+
+    DB_NAME='{{ extra.db_name }}'
+    DB_PASSWORD='{{ extra.db_password }}'
+
+    # Will be rendered to
+    DB_NAME='mydb'
+    DB_PASSWORD='secret!'
