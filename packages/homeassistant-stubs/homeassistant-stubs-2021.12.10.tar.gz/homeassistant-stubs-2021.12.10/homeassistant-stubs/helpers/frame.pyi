@@ -1,0 +1,16 @@
+from collections.abc import Callable
+from homeassistant.exceptions import HomeAssistantError as HomeAssistantError
+from traceback import FrameSummary
+from typing import Any, TypeVar
+
+_LOGGER: Any
+_REPORTED_INTEGRATIONS: set[str]
+CALLABLE_T = TypeVar('CALLABLE_T', bound=Callable)
+
+def get_integration_frame(exclude_integrations: Union[set, None] = ...) -> tuple[FrameSummary, str, str]: ...
+
+class MissingIntegrationFrame(HomeAssistantError): ...
+
+def report(what: str, exclude_integrations: Union[set, None] = ..., error_if_core: bool = ..., level: int = ...) -> None: ...
+def report_integration(what: str, integration_frame: tuple[FrameSummary, str, str], level: int = ...) -> None: ...
+def warn_use(func: CALLABLE_T, what: str) -> CALLABLE_T: ...
