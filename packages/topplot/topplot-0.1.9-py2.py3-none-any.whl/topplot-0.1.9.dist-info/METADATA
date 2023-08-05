@@ -1,0 +1,326 @@
+Metadata-Version: 2.1
+Name: topplot
+Version: 0.1.9
+Summary: Munge top logs in to graph
+Home-page: https://gitlab.com/ebardie/topplot
+Author: Jonathan Sambrook
+Author-email: ebardie@gmail.com
+License: GPLv3
+Project-URL: Bug Tracker, https://gitlab.com/ebardie/topplot/issues
+Project-URL: Changelog, https://gitlab.com/ebardie/topplot/blob/master/RELEASE.md
+Keywords: top,graphs
+Platform: Linux
+Platform: Windows
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: X11 Applications
+Classifier: Intended Audience :: System Administrators
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Topic :: System :: Logging
+Classifier: Topic :: System :: Monitoring
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENCE
+Requires-Dist: pip (>=21)
+Requires-Dist: setuptools (>=60)
+Requires-Dist: matplotlib (>=3.3.3)
+Requires-Dist: mplcursors
+Requires-Dist: pandas
+Requires-Dist: screeninfo
+
+# topplot
+
+<a href="https://codethink.co.uk" target="_blank"><img src="https://gitlab.com/eBardie/topplot/-/raw/master/resources/codethink_logo.svg" alt="Codethink" height=50 align="right"></a>
+<img src="topplot/logo.png" alt="" height=50 style="align: right">
+
+### Munge logs from the commandline utility **top** in to useful graphs
+
+[For latest updates see [RELEASE.md](https://gitlab.com/eBardie/topplot/-/blob/master/RELEASE.md)]
+
+[[_TOC_]]
+
+## Introduction
+
+**topplot** produces graphs from information it munges from **top** logs. It can select which processes to focus on, and it can split out information by cpu core (if **top** was configured to record the cpu core column, and/or display the cpu summary info by core).
+
+As of version _0.0.5_ **topplot** runs on Linux and Windows. (It should run on any platform that suports Python's tkinter module. Please
+send reports if you can test this.)
+
+**topplot** can save the graphs as PNG files. It can also print information derived from the logs to stdout, with or without emitting the graphs.
+
+There may be better, more efficient ways of collecting live system information, but if for some reason you've hundreds of thousands of lines of **top** logs and you want to *see* what's in them, **topplot** can help. 
+
+(I wrote **topplot** when one of [Codethink](https://codethink.co.uk)'s clients asked us to investigate an issue which had 300,000 lines of **top** logs attached to it.)
+
+#### Turn this...
+
+Snipped first iteration of 300 in the log file:
+
+```
+top - 13:35:22 up 1 min,  0 users,  load average: 0.71, 0.47, 0.18
+Tasks: 203 total,   1 running, 202 sleeping,   0 stopped,   0 zombie
+%Cpu0  :  5.9 us,  5.9 sy,  0.0 ni, 88.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu1  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu2  :  5.6 us,  0.0 sy,  0.0 ni, 94.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+%Cpu3  :  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  15717.0 total,  13778.2 free,   1030.7 used,    908.1 buff/cache
+MiB Swap:  15792.0 total,  15792.0 free,      0.0 used.  14327.6 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ P COMMAND
+ 2430 jonatha+  20   0    9164   3704   3120 R   6.2   0.0   0:00.02 0 top -bd 1 -n 300
+    1 root      20   0  167036  10768   7800 S   0.0   0.1   0:01.33 3 /sbin/init
+    2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 3 [kthreadd]
+    3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 0 [rcu_gp]
+    4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 0 [rcu_par_gp]
+    .
+    .
+------->8  snip 193 lines of process information
+    .
+    .
+ 2057 jonatha+  20   0  270244  35968  32508 S   0.0   0.2   0:00.04 2 /usr/bin/plasma-browser-integration-host /usr+
+ 2064 jonatha+  20   0  341308  38504  32424 S   0.0   0.2   0:00.07 2 /usr/lib/x86_64-linux-gnu/libexec/vvvvvvvvvvv
+ 2069 jonatha+  20   0    6640   3136   2888 S   0.0   0.0   0:00.00 3 /bin/bash /home/jonathansambrook/.config/wwww+
+ 2070 jonatha+  20   0  657204  43148  26504 S   0.0   0.3   0:00.18 3 /home/jonathansambrook/xxxxxxxxxxxxxxxx/yyyyy+
+ 2098 jonatha+  20   0 2414952  77112  54068 S   0.0   0.5   0:00.27 2 /opt/firefox/firefox-bin -contentproc -childI+
+```
+
+#### ... in to these:
+
+The overview figure: ![An image of the overview graphs appears here on the website](https://gitlab.com/eBardie/topplot/-/raw/master/resources/top.multicore4.log_overview.png)
+
+
+Processes of interest (POI) by cpu core: ![An image of the processes of interest by cpu core graphs appears here on the webpage](https://gitlab.com/eBardie/topplot/-/raw/master/resources/top.multicore4.log_poi_by_cpu.png)
+
+Note that the overview figure is a screen capture, hence the coloured background, whilst the POI figure was produced by **topplot**. Click on either image to embiggen it.
+
+You can see that some plotted lines have been turned off (by clicking on a legend line), and that various points have been annotated with text in yellow boxes in the second figure (by clicking on the line itself).
+
+
+## Installing topplot
+
+### Dependencies
+
+Dependencies should mostly be handled by `pip` or your package manager.
+
+The only currently known exception is that your Python3 installation must have the `Tkinter` module available.
+
+On Debian this can be done by running:
+
+    sudo apt install python3-tk
+
+
+### Installing for normal usage
+
+If you just want to have **topplot** installed so you can use it:
+
+If you're running on Debian Linux:
+
+    sudo apt install topplot
+
+Otherwise:
+
+```
+pip3 install topplot
+```
+
+Note: some distros only have Python3 installed, so where I'm using `pip3` you may need to use the unadorned `pip`.
+
+
+### Installing for hacking on **topplot**
+
+If you want to hack on **topplot**, clone the repo and setup a Python virtual environment:
+
+```
+# clone the repo
+git clone https://gitlab.com/eBardie/topplot
+cd topplot
+
+# create and activate a Python virtual environment to isolate dependencies from your base system
+python3 -m venv .venv
+source .venv/bin/activate
+
+# install dependencies inside the virtual environment
+python3 -m pip install -e .
+
+# hack on topplot
+
+# .
+# .
+# .
+
+# When done, leave the virtual environment
+deactivate
+```
+
+For subsequent sessions all you'll need to do is:
+
+```
+# cd to where ever you cloned the topplot repo
+cd topplot
+
+# Active the Python virtual environment
+source venv/bin/activate
+
+# hack some more on topplot
+
+# .
+# .
+# .
+
+# When done, leave the virtual environment
+deactivate
+```
+
+
+
+See also: [External issues: Glitches and fixes in dependencies](#external-issues).
+
+## Getting the logs from top
+
+See [generating top logs](https://gitlab.com/eBardie/topplot/-/blob/master/docs/procps-ng-top.md).
+
+## Specifying which log file to use
+
+By default **topplot** expects the log to be a file called `top.log` in the current working directory. You can use the `-f` commandline option to specify a file path.
+
+
+## Filtering the input
+
+Limit the range of log entries by timestamp: `topplot -s 18:38:00 -S 18:39:15`
+
+```
+  -s TIMESTAMP, --start TIMESTAMP      Start with time stamp ([D:]HH:MM:SS)
+  -S TIMESTAMP, --stop TIMESTAMP       Stop with time stamp  ([D:]HH:MM:SS)
+```
+
+
+
+These arguments select processes of interest for graphing:
+
+```
+  -c [N], --acc-cpu [N]        Top N processes ranked by accumulated CPU use (default: 10)
+  -m [N], --acc-mem [N]        Top N processes ranked by accumulated MEM use (default: 10)
+
+         --peak-cpu [N]        Top N processes ranked by peak CPU use (default: 10)
+         --peak-mem [N]        Top N processes ranked by peak MEM use (default: 10)
+
+        --pct-cpu [PCT]        Any process using more than PCT% of memory will be graphed (default: 20)
+        --pct-mem [PCT]        Any process using more than PCT% of cpu will be graphed (default: 3)
+
+        --prio [cmpPRIO]       Any process with priority =, <=, >=, <, or > to PRIO (default: '=RT', note the prefixed comparison operator)
+```
+
+
+These two arguments can make the processes graph clearer by plotting only one or the other of CPU or MEM related information:
+
+```
+    -C, --only-proc-cpu         Don't plot processes' mem info
+    -M, --only-proc-mem         Don't plot processes' cpu info
+```
+
+
+Filtering by process name:
+
+```
+  REGEX                        Python style regex for names of processes to graph
+  -I REGEX, --ignore REGEX     Python style regex for names of processes to completely ignore
+
+  -i                           Use case insensitive matching
+```
+
+
+
+## Textual output
+
+Use one or more instances of the `--list` argument, or `-l` or `-ll` or `-lll`, to display increasing levels of information about processes.
+
+Use `-v` to increase the verbosity of other optional filtering arguments such as `--peak-cpu`.
+
+Use `--no-graph` or `-G` to surpress graphing.
+
+
+## More commandline options
+
+To see the full set of commandline options:
+
+```
+  -h, --help                   show this help message and exit
+```
+
+
+## The GUI
+
+Once **topplot** has parsed and munged the data, by default it will display the overview graph.
+
+Press the `1` key to display the top left graph in a separate window, `2` to display the top right, `3` lower left, `4` lower right, or `0` to re-open the overview graph from another window.
+
+If **top** was configured to output the process data with teh last core it ran on, press uppercase `c` to display the graphs for processes running on individual cores. 
+
+If **top** was configured to output the CPU data for each individual core, press uppercase `C` to display the CPU graphs for individual graphs. 
+
+Press `h` to display helpful infomation about using **topplot**.
+
+### Limiting the displayed data
+
+If you want to narrow down the data displayed, click on the items in a graph's legend to toggle their visibility.
+
+Click on a legend's title to toggle all of its lines.
+
+Right click on a legend's title to make all of its lines visible.
+
+Caveat: the "mem data" graph's legend doesn't need or implement toggling.
+
+
+### Legends
+
+Press `l` (lowercase 'ell') to toggle legend visibility. If the mouse pointer is over a particular graph, then only the legend(s) on that graph will be affected. If the mouse pointer is between graphs, the legends on all graphs on that figure will be toggled.
+
+Legends can be dragged around within their windows but be careful to not leave a legend from one graph entire within a separate graph - it will not be possible to interact with it any more, including moving it off of that graph!
+
+### Saving to png files
+
+Press `p` to 'print' an image of the current figure to a PNG file to the current working directory.
+
+Press uppercase `P` to 'print' images of all the open figures to PNG files to the current working directoty.
+
+Press `s` to save an image of the current figure via a file dialogue window.
+
+
+### Zooming in
+
+**tl;dr** : Click on the Pan/Zoom button (the arrow-headed cross), then whilst keeping the CONTROL key depressed, _right_ click on the area of a graph you wish to zoom in on, and drag the mouse around.
+
+For full details see: [https://matplotlib.org/3.1.1/users/navigation_toolbar.html](https://matplotlib.org/3.1.1/users/navigation_toolbar.html). [Note that **topplot** overrides some keypresses.]
+
+### Special features of the "processes of interest" graph
+
+Press `t` swap between having the mem axis, the cpu axis, or both axes visible.
+
+### Special features of the "cpu data" graph
+
+
+For top logs with per core cpu data available, the "cpu (grouped)" legend toggles lines across all cores.
+
+
+## Caveat emptor
+
+### top versions
+
+**topplot** is known to work with log formats generated by **top** from the `procps-ng` package versions **3.2.8** and **3.3.15**.
+
+Handling further formats may be as simple as adding new regexes to the Re_Variants instances.
+
+Android uses Toybox to provide **top**, and is not yet handled by **topplot**. Busybox's **top** has not been tried, but seeing as Toybox
+was forked from Busybox I'd guess Busybox's **top** won't be compatible either.
+
+### <a id="external-issues">External Issues: Glitches and fixes in dependencies</a>
+
+Currently the only known issue is Matplotlib not (yet) having adapted to changes in Python's Tk library. The effect for Topplot is that keyboard control doesn't work on Windows if you're using Python 3.10 or a clean install of Python 3.9.9. (If your Python 3.9.9 was upgraded from an earlier install of Python 3.9.x where x<=8, you may be in luck if the Python installer didn't upgrade the Tk DLL.)
+
+See [this Topplot bug report](https://gitlab.com/eBardie/topplot/-/issues/46#note_813754729) for a quick fix. See [this Matplotlib PR](https://github.com/matplotlib/matplotlib/pull/22077) for details of the proposed full fix.
+
+
