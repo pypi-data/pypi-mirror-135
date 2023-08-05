@@ -1,0 +1,423 @@
+# fastutils
+
+Collection of simple utils.
+
+## Install
+
+```shell
+pip install fastutils
+```
+
+## Installed utils
+
+- cipherutils
+- dictutils
+- fsutils
+- funcutils
+- hashutils
+- httputils
+- imageutils
+- jsonutils
+- listutils
+- logutils
+- msgpackutils
+- nameutils
+- numericutils
+- pinyinutils
+- randomutils
+- rsautils
+- strutils
+- sysutils
+- timeutils
+- treeutils
+
+## Help
+
+See pydoc for help.
+
+```
+python3 -m pydoc -b # start pydoc
+```
+
+## Releases
+
+### v0.42.1 2022/01/18
+
+- Fix logutils problem.
+
+### v0.42.0 2022/01/17
+
+- Add msgpackutils.
+- Fix problem in nameutils.
+
+### v0.41.1 2022/01/07
+
+- Fix numericutils.get_float_part problem.
+
+### v0.41.0 2022/01/07
+
+- cipherutils changes.
+- Fix license_files missing problem.
+
+### v0.40.2 2021/04/08
+
+- Add cipherutils.raw_aes_key.
+- Add cipherutils.get_aes_mode.
+
+### v0.40.0 2021/03/24
+
+- Add listutils.chunk.
+- New threadutils.
+- Fix dictutils.Object.
+
+### v0.39.8 2021/03/10
+
+- fsutils.TemporaryFile add auto delete.
+- dictutils.changes can return changed keys.
+- dictutils.change can control do update or not.
+- dictutils.change add ignore_empty_value support.
+
+### v0.39.7 2021/03/03
+
+- Fix strutils.force_byte, strutils.force_text.
+
+### v0.39.6 2021/02/25
+
+- Fix encode_datetime problem.
+
+### v0.39.5 2021/02/24
+
+- Add field name while failed to do typing cast.
+
+### v0.39.4 2021/02/24
+
+- Add more default jsonutils encoders.
+
+### v0.39.1 2021/02/21
+
+- Fix logutils.setup default config for windows.
+
+### v0.39.0 2021/02/19
+
+- Change logutils.setup parameter name.
+- Fix bizerror.BizError encoding problem in jsonutils.
+
+### v0.38.2 2021/02/10
+
+- Add timeutils.TimeService.
+
+### v0.37.11 2021/01/29
+
+- Fix fsutils.write.
+
+### v0.37.10 2021/01/29
+
+- fsutils.readfile add default params. The default value will be returned if the target file is not exists.
+- Add dictutils.diff function.
+- Force folder create in fsutils.write.
+- Make sure log folder exists in logutils.setup.
+- Add sysutils.execute_script.
+
+### v0.37.3 2020/12/28
+
+- Add PyYAML deps in requirements.txt.
+
+### v0.37.2 2020/12/28
+
+- SimpleProducerConsumerServerBase.on_consume_error function add new parameter: task.
+- Fix threadutils problems. Many changes are made.
+
+### v0.37.0 2020/11/22
+
+- Add fsutils.load_application_config.
+
+### v0.36.2 2020/11/17
+
+- Add fsutils.TemporaryFile
+- Add threadutils.SimpleProducerConsumerServer and fix problems in ServiceCore.
+
+### v0.35.0 2020/11/14
+
+- strutils.is_uuid add allow_bad_characters parameter, default to False. For some old bad application using '815f5ecb-eg07-43af-8de2-87d3898093b5' as UUID.
+- Add nameutils.guess_surname.
+- Add fsutils.get_size_deviation, fsutils.get_unit_size and fsutils.get_size_display.
+
+### v0.34.0 2020/11/09
+
+- Add sysutils.get_daemon_application_pid.
+- Add httputils.
+
+### v0.33.0 2020/11/03
+
+- Add fsutils.info
+- Add strutils.encodable and strutils.decodable
+
+### v0.32.0 2020/10/30
+
+- Add funcutils.try_again_on_error.
+
+### v0.31.0 2020/10/30
+
+- Add fsutils.expands.
+- Add fsutils.get_application_config_filepath.
+
+### v0.30.1 2020/09/26
+
+- Add cipherutils result_encoders' typing tips.
+
+### v0.30.0 2020/09/23
+
+- Add strutils.stringlist_append.
+- Add strutils.html_element_css_append.
+- Add strutils.split2.
+- Add strutils.remove_prefix.
+- Add strutils.remove_suffix.
+- Change strutils.split("", [","]) returns [] instead of [""].
+- Add cipherutils.MysqlAesCipher.
+- Add listutils.topological_sort.
+- Add nameutils.
+
+### v0.29.0 2020/09/15
+
+- Use pypinyin module instead of dragonmapper.
+   - Replace the result lve to lue.
+
+### v0.28.2 2020/09/04
+
+- Fix dictutils.update, so that it can works on anything.
+
+### v0.28.1 2020/09/02
+
+- Add default parameter to fsutils.first_exists_file.
+
+### v0.28.0 2020/09/02
+
+- Add fsutils.first_exists_file.
+- Add fsutils.expand.
+- Add listutils.first.
+
+### v0.27.0 2020/08/31
+
+- Add lower_first parameter for strutils.camel.
+- Add dictutils.prefix_key.
+- Add sysutils.get_worker_id.
+
+### v0.26.0 2020/08/26
+
+- Add treeutils.build_tree from list.
+- Add treeutils.walk_tree.
+- Add treeutils.print_tree.
+- Add fsutils.touch.
+
+### v0.25.0 2020/08/25
+
+- Add strutils.is_uuid.
+- Add typingutils.cast_uuid.
+
+### v0.24.2 2020/08/17
+
+- fsutils.file_content_replace add ignore_errors parameter.
+
+### v0.24.1 2020/08/14
+
+- typingutils.cast_xxx treat empty string as None.
+- randomutils.UuidGenerator.next add parameter n, so that it can generate n uuids. If n==1, returns a UUID instance, and if n>1, returns a list of UUIDs.
+
+### v0.24.0 2020/08/13
+
+- Add strutils.unquote.
+
+### v0.23.0 2020/08/13
+
+- Add funcutils.get_default_values.
+- Add funcutils.chain.
+
+### v0.22.0 2020/08/12
+
+- Add none-dict support in dictutils.change and dictutils.changes.
+- Add strutils.format_with_mapping.
+
+### v0.21.0 2020/08/07
+
+- Add listutils.compare(old_set, new_set).
+- Add dictutils.change(object_instance, data_dict, object_key, dict_key=None) -> bool.
+- Add dictutils.changes(object_instance, data_dict, keys) -> bool:
+- Change listutils.replace, turn the default value of parameter inplace from True to False.
+- Fix Object instance problems.
+
+### v0.20.0 2020/08/05
+
+- Add strutils.clean and change strutils.camel.
+- Add dictutils.to_object.
+- Add pinyinutils.
+
+
+### v0.19.0 2020/07/31
+
+- Add fsutils.filecopy and fsutils.treecopy. Tips: fsutils.copy combines the function of filecopy and treecopy, if the src is a file then use filecopy, and if the src is a folder then use treecopy.
+- Fix problem in fsutils.copy.
+
+### v0.18.0 2020/07/31
+
+- Add strutils.camel.
+
+### v0.17.0 2020/07/31
+
+- Add fsutils.file_content_replace.
+- Add fsutils.move.
+- Change fsutils.rename's behavior.
+- Change fsutils.copy's behavior.
+
+### v0.16.0 2020/07/31
+
+- Add fsutils.
+
+### v0.15.2 2020-07-25
+
+- Add hostname, seed1, seed4 in domain_template of randomutils.UuidGenerator.
+
+### v0.15.1 2020-07-24
+
+- Add incr-lock for counter incr in randomutils.UuidGenerator.
+
+### v0.15.0 2020-07-24
+
+- Add randomutils.UuidGenerator.
+
+### v0.14.0 2020-07-16
+
+- Add strutils.substrings.
+- Add strutils.combinations.
+- Add cipherutils.Utf8Encoder.
+- Add cipherutils.S1Cipher.
+- Add cipherutils.S2Cipher.
+- Add funcutils.classproperty
+- WARN: Change a cipherutils.CipherBase's parameter name from encoder to result_encoder.
+
+### v0.13.4 2020-07-11
+
+- Use new algorithm to improve randomutils.shuffle's performance.
+
+### v0.13.3 2020-07-11
+
+- Add randomutils.shuffle.
+- Change randomutils.randint parameters from (max, min=0) to (a, b=None).
+
+### v0.13.2 2020-07-10
+
+- Add listutils.group.
+- Add rsautils.export_key. And rsautils use Crypto.PublicKey.RSA for the base engine.
+
+### v0.13.1 2020-07-01
+
+- Add strutils.force_float and strutils.force_numeric.
+- Add typingutils.cast_numeric support.
+
+### v0.13.0 2020-06-26
+
+- IvfCihper accept integer value when float_digits=0.
+- Fix IvfCihper deviation problem which is caused by wrong module used in decrypt.
+- IvfCihper use new algorithm in computing module and max_value, **so that result encrypted by version v0.12.0 can not decrypted by version v0.13.0**.
+
+### v0.12.0 2020-06-25
+
+- Add IvfCihper for float number encrypt and decrypt. The output of IvfCipher.encrypt is string.
+
+### v0.11.1 2020-06-23
+
+- Use class instead of raw api for s12 and iv ciphers. It's can avoid many times in generating seeds.
+
+### v0.11.0 2020-06-20
+
+- Add cipherutils.
+- Add strutils.binarify and strutils.unbinarify.
+- Add randomutils.Random.
+- Change aesutils functions' return type. Note: use cipherutils instead.
+
+### v0.10.1 2020-05-19
+
+- Add bizerror dependency.
+
+### v0.10.0 2020-04-23
+
+- Add strutils.is_chinese_character to test if the character is a chinese character.
+- Add cacheutils.get_cached_value to get or set cached value.
+
+### v0.9.0 2020-03-05
+
+- Add listutils.append_new to append new value and only new value to the list.
+
+### v0.8.0 2020-01-15
+
+- Add strutils.smart_get_binary_data.
+- Add rsautils.
+
+### v0.7.0 2020-01-14
+
+- Add hashutils.get_file_hash.
+- Add extra install requires for python 2.x.
+- Add imageutils.parse_base64image and imageutils.get_image_bytes.
+- Fix jsonutils.make_simple_json_encoder ignore bases problem.
+
+### v0.6.0 2020-01-07
+
+- Add imageutils, add imageutils.get_base64image to make base64 image that can be rendered by web browser.
+- Add imageutils.resize to scale image size.
+- Add Image-Object-Encode support in jsonutils.
+- Add threadutils, add threadutils.Service to simplify long-run-service programming.
+- Raise bizerror.MissingParameter error in funcutils.get_inject_params while missing required parameter.
+
+### v0.5.4 2019-12-10
+
+- Fix hashutils.get_hash_hexdigest and hashutils.get_hash_base64 problem.
+
+### v0.5.3 2019-12-08
+
+- Using typingutils.smart_cast in funcutils.get_inject_params.
+
+### v0.5.2 2019-12-08
+
+- Add unit test cases for typingutils.
+- Fix cast_list, do strip for every element in comma-separated-list.
+- Fix base64 import missing in typingutils.
+
+### v0.5.1 2019-12-08
+
+- Add typingutils.cast_str.
+
+### v0.5.0 2019-12-08
+
+- Set library property in get_encoder in jsonutils.
+- Add typingutils.
+
+### v0.4.0 2019.12.07
+
+- Add jsonutils, provides simple json encoder register system.
+
+### v0.3.2 2019.10.29
+
+- Fix problems for python 2.7.
+- Fix name error of funcutils.
+
+### v0.3.1 2019.10.28
+
+- Fix problem casued by str.isascii() which is new from python 3.7.
+
+### v0.3.0 2019.09.24
+
+- Add listutils.unique to remove duplicated elements from the list.
+- Add listutils.replace to replace element value in thelist with new_value in collection of map.
+
+### v0.2.0 2019.09.10
+
+- Add functuils.get_inject_params to smartly choose parameters from candidates by determine with the function's signature.
+- Add functuils.call_with_inject to smartly call the function by smartly choose parameters.
+
+### v0.1.1 2019.08.27
+
+- Add strutils.wholestrip function, use to remove all white spaces in text.
+- Fix strutils.is_urlsafeb64_decodable, strutils.is_base64_decodable and strutils.is_unhexlifiable functions, that have problem to test text contains whitespaces.
+
+### v0.1.0 2019.08.23
+
+- Add simple utils about operations of aes, dict, hash, list and str.
