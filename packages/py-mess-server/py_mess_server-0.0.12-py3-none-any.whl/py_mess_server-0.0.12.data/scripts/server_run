@@ -1,0 +1,16 @@
+#!python
+import sys
+import os
+path = os.path.dirname(os.path.abspath(__file__))
+print(path)
+PYTHON_PATH = sys.executable
+print(PYTHON_PATH)
+new_path = path.replace('/bin/', '/lib/') + '/site-packages/server'
+print(new_path)
+sys.path.insert(0, path)
+print(sys.path)
+python_path = '/home/su/Projects/GeekBrains/new_project/venv/bin/python3.9'
+file_path_2 = sys.path[-1] + '/server/server.py'
+print(file_path_2)
+file_path = '/home/su/Projects/GeekBrains/new_project/venv/lib/python3.9/site-packages/server/server.py'
+os.system(f'{PYTHON_PATH} {file_path_2}')
