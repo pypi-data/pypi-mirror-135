@@ -1,0 +1,172 @@
+[tool.poetry]
+name = "incolumepy.gwa"
+version = "0.6.1"
+description = "Prospections from Github Workflows Actions"
+authors = ["Britodfbr <britodfbr@gmail.com>"]
+license = "BSD 2-Clause License"
+packages=[
+    {include = 'incolumepy/gwa', from=''},
+]
+readme="README.md"
+include = [
+  "LICENSE",
+  "pyproject.toml",
+]
+
+[tool.poetry.urls]
+homepage = "https://pypi.org/project/incolumepy.gwa"
+repository = "https://github.com/incolumepy-prospections/incolumepy.gwa"
+"Bug Tracker" = "https://github.com/incolumepy-prospections/incolumepy.gwa/issues"
+license = "https://github.com/incolumepy-prospections/incolumepy.gwa/blob/main/LICENSE"
+
+[tool.poetry.dependencies]
+python = ">=3.6.8,<4"
+toml = {extras = ["tomli"], version = "^0.10.2"}
+
+[tool.poetry.dev-dependencies]
+pytest-cov = "^3.0.0"
+pytest = "^6.2.5"
+isort = "^5.10.1"
+pydocstyle = "^6.1.1"
+pylint = "^2.12.2"
+mypy = "^0.910"
+black = [
+  { version = "*", python = "^3.6", allow-prereleases = true, markers = "platform_python_implementation == 'CPython'"},
+]
+flake8 = "^4.0.1"
+tox = "^3.24.4"
+types-toml = "^0.10.1"
+tox-gh-actions = "^2.8.1"
+Sphinx = "^4.3.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--cov=incolumepy.gwa"
+testpaths = [
+  "tests",
+]
+
+[flake8]
+max-line-length = 160
+
+[tool.pylint.format]
+# Maximum number of characters on a single line.
+max-line-length = 160
+
+[tool.pylint.basic]
+# Allow shorter and longer variable names than the default.
+argument-rgx = "[a-z_][a-z0-9_]*$"
+attr-rgx = "[a-z_][a-z0-9_]*$"
+variable-rgx = "[a-z_][a-z0-9_]*$"
+
+# Ensure that orjson is analysed as a C extension by pylint.
+extension-pkg-whitelist = "orjson"
+
+[tool.pylint.messages_control]
+disable = [
+    # Disable too many and too few checks.
+    "too-many-ancestors",
+    "too-many-arguments",
+    "too-many-boolean-expressions",
+    "too-many-branches",
+    "too-many-function-args",
+    "too-many-instance-attributes",
+    "too-many-lines",
+    "too-many-locals",
+    "too-many-nested-blocks",
+    "too-many-public-methods",
+    "too-many-return-statements",
+    "too-many-statements",
+    "too-few-public-methods",
+
+    # Similar lines in files (often the case in tests).
+    "duplicate-code",
+
+    # Many functions (e.g. callbacks) will naturally have unused arguments.
+    "unused-argument",
+
+    # Disable checking that method could be a function in classes (often used for organisation).
+    "no-self-use",
+
+    # Disable failure for TODO items in the codebase (code will always have TODOs).
+    "fixme",
+
+    # Disable docstrings checks as we don't require excessive documentation.
+    "missing-docstring",
+
+    "no-member",
+    "unspecified-encoding",
+]
+
+[tool.mypy]
+mypy_path = "incolumepy"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
+
+[tool.isort]
+multi_line_output = 3
+line_length = 160
+include_trailing_comma = true
+
+[tool.black]
+line_length = 160
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+minversion = 3.3.0
+isolated_build = True
+envlist =
+    black
+    flake8
+    isort
+    mypy
+    pydocstyle
+    pylint
+    py{36,37,38,39,310}
+
+;[tox:.package]
+;basepython = python3
+
+[testenv]
+whitelist_externals = poetry
+skip_install = true
+commands =
+    poetry env use {envpython}
+    poetry install -vv --no-root
+    poetry run pytest {posargs} tests/
+
+[testenv:flake8]
+deps = flake8
+commands = poetry run flake8 --config pyproject.toml incolumepy/ tests/
+
+[testenv:mypy]
+deps =
+    mypy
+    types-toml
+commands = mypy incolumepy/
+
+[testenv:pydocstyle]
+commands = poetry run pydocstyle incolumepy/ tests/
+
+[testenv:isort]
+commands = poetry run isort --check --atomic --py all incolumepy/ tests/
+
+[testenv:pylint]
+commands = poetry run pylint incolumepy/ tests/
+
+[testenv:black]
+commands = poetry run black --check incolumepy/ tests/
+"""
