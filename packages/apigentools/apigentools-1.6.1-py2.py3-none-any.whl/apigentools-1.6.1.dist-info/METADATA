@@ -1,0 +1,57 @@
+Metadata-Version: 2.1
+Name: apigentools
+Version: 1.6.1
+Summary: Tooling for generation of API clients using openapi-generator
+Home-page: https://github.com/DataDog/apigentools
+Author: Datadog
+Author-email: packages@datadoghq.com
+License: BSD 3-clause
+Project-URL: Bug Tracker, https://github.com/DataDog/apigentools/issues
+Project-URL: Documentation, https://apigentools.readthedocs.io/en/latest/
+Project-URL: Source Code, https://github.com/DataDog/apigentools
+Keywords: openapi,api,client,openapi-generator
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: chevron (==0.13.1)
+Requires-Dist: click (==7.1.2)
+Requires-Dist: jsonpath-ng (==1.5.1)
+Requires-Dist: PyYAML (<7.0.0,>=5.4.1)
+Requires-Dist: packaging (==20.3)
+Requires-Dist: pydantic (==1.7)
+Provides-Extra: tests
+Requires-Dist: black (>=20.8b1) ; extra == 'tests'
+Requires-Dist: flexmock (<0.11,>=0.10.4) ; extra == 'tests'
+Requires-Dist: pytest (>=5.2.4) ; extra == 'tests'
+Requires-Dist: pytest-cov ; extra == 'tests'
+Requires-Dist: pytest-black ; extra == 'tests'
+Requires-Dist: pytest-console-scripts ; extra == 'tests'
+
+#  apigentools - Generate API Clients with Ease
+
+[![Build Status](https://dev.azure.com/datadoghq/apigentools/_apis/build/status/Unit%20Tests?branchName=master)](https://dev.azure.com/datadoghq/apigentools/_build/latest?definitionId=11&branchName=master)
+
+## Purpose
+
+The purpose of the apigentools package is providing an easy way to generate API clients from [OpenAPI v3 specification](https://github.com/OAI/OpenAPI-Specification/) for multiple languages using [openapi-generator](https://github.com/OpenAPITools/openapi-generator).
+
+## Key Concepts
+
+* Definition of structure of [Spec Repo](https://apigentools.readthedocs.io/en/latest/spec_repo/) - A repository with all the configuration for apigentools and openapi-generator as well as the actual OpenAPI spec of your API
+* [Reproducible](https://apigentools.readthedocs.io/en/latest/reproducible/) code generation
+* A recommended [workflow](https://apigentools.readthedocs.io/en/latest/workflow/)
+* Ability to [patch openapi-generator templates](https://apigentools.readthedocs.io/en/latest/workflow/#add-template-patches) as well as [add your own templates](https://apigentools.readthedocs.io/en/latest/workflow/#add-downstream-templates)
+
+## Get It
+
+* Documentation: https://apigentools.readthedocs.io
+* Install from PyPI: `pip install apigentools`
+* Default container image with useful tooling: `datadog/apigentools:latest`
+
+
