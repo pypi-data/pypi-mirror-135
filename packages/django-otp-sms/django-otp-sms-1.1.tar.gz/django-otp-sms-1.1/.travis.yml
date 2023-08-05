@@ -1,0 +1,16 @@
+language: python
+python: 3.6
+env:
+    - TOX_ENV=py35-django111
+    - TOX_ENV=py35-django20
+    - TOX_ENV=py35-django21
+    - TOX_ENV=py35-django22
+    - TOX_ENV=py36-django111
+    - TOX_ENV=py36-django20
+    - TOX_ENV=py36-django21
+    - TOX_ENV=py36-django22
+install:
+    - pip install tox
+script:
+    - tox -e $TOX_ENV
+sudo: false
