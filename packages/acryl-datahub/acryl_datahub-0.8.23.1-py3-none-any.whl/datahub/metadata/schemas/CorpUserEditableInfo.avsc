@@ -1,0 +1,61 @@
+{
+  "type": "record",
+  "name": "CorpUserEditableInfo",
+  "namespace": "com.linkedin.pegasus2avro.identity",
+  "doc": "Linkedin corp user information that can be edited from UI",
+  "fields": [
+    {
+      "name": "aboutMe",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "About me section of the user",
+      "default": null
+    },
+    {
+      "name": "teams",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "doc": "Teams that the user belongs to e.g. Metadata",
+      "default": [],
+      "Searchable": {
+        "/*": {
+          "fieldType": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "skills",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "doc": "Skills that the user possesses e.g. Machine Learning",
+      "default": [],
+      "Searchable": {
+        "/*": {
+          "fieldType": "TEXT"
+        }
+      }
+    },
+    {
+      "name": "pictureLink",
+      "type": "string",
+      "doc": "A URL which points to a picture which user wants to set as a profile photo",
+      "default": "https://raw.githubusercontent.com/linkedin/datahub/master/datahub-web-react/src/images/default_avatar.png",
+      "java": {
+        "class": "com.linkedin.pegasus2avro.common.url.Url",
+        "coercerClass": "com.linkedin.pegasus2avro.common.url.UrlCoercer"
+      }
+    }
+  ],
+  "Aspect": {
+    "EntityUrns": [
+      "com.linkedin.pegasus2avro.common.CorpuserUrn"
+    ],
+    "name": "corpUserEditableInfo"
+  }
+}
