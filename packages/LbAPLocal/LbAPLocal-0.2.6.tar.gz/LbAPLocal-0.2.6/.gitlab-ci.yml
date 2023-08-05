@@ -1,0 +1,59 @@
+###############################################################################
+# (c) Copyright 2021 CERN for the benefit of the LHCb Collaboration           #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
+stages:
+  - test
+  - deploy
+
+pre-commit:
+  image: registry.cern.ch/docker.io/library/python:3.9
+  stage: test
+  before_script:
+    - pip install pre-commit
+  script:
+    - pre-commit run --all-files
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+  cache:
+    paths:
+      - ${PRE_COMMIT_HOME}
+
+run_pytest:
+  stage: test
+  image: gitlab-registry.cern.ch/lhcb-docker/os-base/centos7-hepos
+  tags:
+    - cvmfs
+  before_script:
+    - curl -LO https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+    - bash Mambaforge-Linux-x86_64.sh -b -p $PWD/mambaforge3
+    - eval "$($PWD/mambaforge3/bin/python -m conda shell.bash hook)"
+    - mamba env create --name ci-env --file environment.yaml
+    - conda activate ci-env
+  script:
+    - pip install '.[testing]'
+    - pytest -vvv --runslow --cov-report xml
+  artifacts:
+    reports:
+      cobertura: coverage.xml
+
+# Packaging step
+deploy-packages:
+  stage: deploy
+  only:
+    - tags
+  dependencies: []
+  image: gitlab-registry.cern.ch/lhcb-docker/python-deployment:python-3.7
+  script:
+    - python setup.py sdist --dist-dir public/
+    - python setup.py bdist_wheel --dist-dir public/
+    - if [ -z "$TWINE_PASSWORD" ] ; then echo "Set TWINE_PASSWORD in CI variables" ; exit 1 ; fi
+    - twine upload -u __token__ public/*
+  before_script: []
+  after_script: []
