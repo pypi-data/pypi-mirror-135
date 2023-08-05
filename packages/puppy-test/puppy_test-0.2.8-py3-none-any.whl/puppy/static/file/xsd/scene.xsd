@@ -1,0 +1,3451 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           vc:minVersion="1.1"
+           targetNamespace="http://www.w3school.com.cn"
+           xmlns="http://www.w3school.com.cn"
+           elementFormDefault="qualified">
+    <xs:element name="scene" type="scene">
+        <xs:unique name="id不可重复">
+            <xs:selector xpath=".//*"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+    <xs:complexType name="scene">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+            场景
+            中文名：场景
+            类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="db_info" type="db_info_for_label" minOccurs="0"/>
+            <xs:element name="case" type="case" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="author_work_number">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                   作者工号
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="author_name">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                   作者姓名
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="case">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                案例
+                中文名：案例
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="common" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    案例的编号
+                    中文名：编号
+                    类型：属性
+                    格式：
+                        --不能为空
+                        --只能是数字
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:pattern value="[0-9]*"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="name" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    案例的名称
+                    中文名：名称
+                    类型：属性
+                    格式：
+                    --不能为空
+                    --只能包含字母数字中文
+                    --只能包含中文/英文逗号、中文句号、中文冒号、中文分号、中文/英文括号、中文/英文感叹号、中文分号、加号、减号及下划线
+                    --长度不能超过100个字符
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\w_，。；：（）！、,()!+-]{1,100}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="db_info" type="db_info"/>
+        <xs:attribute name="author_work_number"/>
+        <xs:attribute name="author_name"/>
+    </xs:complexType>
+    <xs:complexType name="interface">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                接口
+                中文名：接口
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="pre_processor" type="pre_processor" minOccurs="0"/>
+            <xs:element name="post_processor" type="postProcessorType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="name" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    被调用接口的名称
+                    中文名：名称
+                    类型：属性
+                    格式：
+                    --不能为空
+                    --来自"interface"文件夹下接口定义XML的文件名
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="db_info" type="db_info"/>
+        <xs:attribute name="desc" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    被调用接口的作用描述
+                    中文名：描述
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="session" default="inherit">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    使用的session
+                    中文名：描述
+                    类型：属性
+                    说明：默认基础上一个接口的，此属性仅对http接口有效
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction>
+                    <xs:enumeration value="inherit"/>
+                    <xs:enumeration value="new"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="sequenceId"/>
+    </xs:complexType>
+    <xs:complexType name="selenium">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                UI函数调用
+                中文名：网页UI函数调用
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="param" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        用来设置UI操作函数的实参
+                        中文名：设置实参
+                        类型：标签
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" use="required">
+                                <xs:annotation>
+                                    <xs:documentation><![CDATA[
+                                实参的名称
+                                中文名：名称
+                                类型：属性
+                            ]]></xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:minLength value="1"/>
+                                        <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_]*"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="set" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        用来将UI操作函数返回的结果设置到局部变量池
+                        中文名：设置变量
+                        类型：标签
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="variable_name" use="required"/>
+                            <xs:attribute name="desc"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="module" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    将调用函数的模块
+                    中文名：模块名称
+                    类型：属性
+                    格式：
+                    --不能为空
+                    --必须是来自项目根目录下"seleniums"文件夹下的文件名，无需包含后缀"py"
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="func" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    将调用的函数的名称
+                    中文名：函数名称
+                    类型：属性
+                    格式：
+                    --不能为空
+                    --具体module内的函数名称
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="desc" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    被调用ui操作的描述
+                    中文名：描述
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="driver">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    自动化UI执行驱动，需要和对应的浏览器对应
+                    中文名：selenium的驱动
+                    类型：属性
+                    其他：
+                    --为了能在服务器上执行脚本，建议不用设置此属性
+                    --自行指定的驱动必须是全路径
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="block_cookie">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    阻止cookie，默认为不阻止
+                    中文名：阻止cookie
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="browser">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    使用的浏览器，默认Chrome
+                    中文名：浏览器
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Chrome">
+                        <xs:annotation>
+                            <xs:documentation><![CDATA[
+                                                中文名：谷歌浏览器
+                                                类型：属性值
+                                            ]]></xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Firefox">
+                        <xs:annotation>
+                            <xs:documentation><![CDATA[
+                                                中文名：火狐浏览器
+                                                类型：属性值
+                                            ]]></xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Edge">
+                        <xs:annotation>
+                            <xs:documentation><![CDATA[
+                                                中文名：微软Edge浏览器
+                                                类型：属性值
+                                            ]]></xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="none">
+                        <xs:annotation>
+                            <xs:documentation><![CDATA[
+                                                中文名：微软IE浏览器
+                                                类型：属性值
+                                            ]]></xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="pre_processor">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                前置处理器，用来执行接口调用前数据构造、预期条件准备、接口各项数据的替换，插入，删除等工作
+                中文名：前置处理器
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:group ref="pre"/>
+        <xs:attribute name="db_info" type="db_info"/>
+    </xs:complexType>
+    <xs:complexType name="postProcessorType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                后置处理器，用来执行接口调用后的数据清理、数据获取、断言等工作
+                中文名：后置处理器
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:group ref="post"/>
+        <xs:attribute name="db_info" type="db_info"/>
+    </xs:complexType>
+    <xs:complexType name="ifPostType">
+        <xs:group ref="post"/>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="ifPostType_inner">
+        <xs:sequence>
+            <xs:group ref="post" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="ifPreType">
+        <xs:group ref="pre"/>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="ifPreType_inner">
+        <xs:sequence>
+            <xs:group ref="pre" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="if">
+        <xs:sequence>
+            <xs:group ref="common" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="if_inner">
+        <xs:sequence>
+            <xs:group ref="common" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required" type="descOfIfLabel"/>
+    </xs:complexType>
+    <xs:complexType name="while">
+        <xs:group ref="cycle"/>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required"/>
+        <xs:attribute name="count"/>
+    </xs:complexType>
+    <xs:complexType name="for">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                对列表或字典进行遍历
+                中文名：循环遍历
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:group ref="cycle"/>
+        <xs:attribute name="key" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    单项名称
+                    中文名：单项名称
+                    类型：属性
+                    格式：
+                        --如果遍历的是列表，仅需提供1个名称
+                        --如果遍历的是字典，需提供2个名称，用英文逗号隔开
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="items" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    待遍历的数据来源，可以是列表或字典
+                    中文名：数据来源
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="desc" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="id">
+        <xs:annotation>
+            <xs:documentation>
+                案例的id，只能是数字。
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="不能为空">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="descOfIfLabel">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                    分支标签的描述
+                    中文名：描述
+                    类型：属性
+                ]]></xs:documentation>
+        </xs:annotation>
+    </xs:complexType>
+    <xs:complexType name="break">
+        <xs:annotation>
+            <xs:documentation>
+                终止当前循环
+                中文名：终止
+                类型：属性
+            </xs:documentation>
+        </xs:annotation>
+    </xs:complexType>
+    <xs:complexType name="continue">
+        <xs:annotation>
+            <xs:documentation>
+                终止当次循环
+                中文名：继续
+                类型：属性
+            </xs:documentation>
+        </xs:annotation>
+    </xs:complexType>
+    <xs:complexType name="set">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                设置变量到局部变量池,此标签一般用作案例执行前的某些公共参数的赋值
+                中文名：设置变量
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" use="required" type="variable_name"/>
+                <xs:attribute name="value">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                        变量值
+                        中文名：变量值
+                        类型：属性
+                        格式：
+                            --不可为空
+                            --字符串或${}表达式
+                     ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="var_type" type="var_type"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="var_type">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                变量的类型
+                中文名：变量的类型
+                类型：属性
+                举例：
+                    --value为纯${}表达式时，不设置此属性，变量的类型为表达式实际计算结果的类型
+                    --value不含${}表达式或混合体时，不设置此属性，变量的类型为str
+                    --无论何种情况，只要设置了此属性，变量将尝试转型，若转型失败将抛出异常
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="int">
+                <xs:annotation>
+                    <xs:documentation>整型</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="float">
+                <xs:annotation>
+                    <xs:documentation>浮点数/小数</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="bool">
+                <xs:annotation>
+                    <xs:documentation>布尔值</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="str">
+                <xs:annotation>
+                    <xs:documentation>字符串</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="auto">
+                <xs:annotation>
+                    <xs:appinfo>自动推断</xs:appinfo>
+                    <xs:documentation>自动推测为整形、浮点数、布尔值、字符串</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="db_info">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                    用来指明该标签下的数据库连接配置信息
+                    中文名：数据库连接信息
+                    类型：属性
+                    格式：/mysql|oracle/用户名/密码/地址[:端口]/服务名或数据库名
+                ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="/(mysql|oracle)/([^/\s]*)/([^/\s]*)/([^/\s:]*):?([0-9]*)?/([^/\s]*)"/>
+            <xs:pattern value=".*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="variable_name">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="db_info_for_label">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                    用来说明该场景中的数据库连接配置信息
+                    中文名：数据库连接信息
+                    类型：标签
+                    格式：/mysql|oracle/用户名/密码/地址[:端口]/服务名或数据库名
+                ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="/(mysql|oracle)/([^/\s]*)/([^/\s]*)/([^/\s:]*):?([0-9]*)?/([^/\s]*)"/>
+            <xs:pattern value=".*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="flow">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                            指明被调用的流程，被调用的流程定义在项目根目录的"flow"文件夹下
+                            中文名：流程
+                            类型：标签
+                        ]]></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="set" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                        中文名：设置变量
+                        类型：标签
+                        说明：
+                            --用来将流程返回的结果设置到局部变量池
+                            --流程返回多个结果时，按顺序赋值给对应的set标签
+                    ]]></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="name" use="required" type="variable_name"/>
+                    <xs:attribute name="desc"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    中文名：名称
+                    类型：属性
+                    说明：被调用流程的名称
+                    格式：
+                    --不能为空
+                    --来自"flow"文件夹下流程定义XML的文件名
+                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+    <xs:simpleType name="key">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                指明提取数据来源中的哪一部分的数据，不指定时默认为$whole
+                中文名：提取键
+                类型：属性
+                格式：点缀提取键、数字切片、正则提取键、$whole、$rows、$columns
+                举例：
+                    --提取json数据“{"a":{"b":1}}”中的1，使用点缀提取键：a.b
+                    --提取json数据“{"a":[1,2,3]}”中的2，使用点缀提取键：a[1]
+                    --提取数据库查询结果第1行1列，使用数字切片：0,0
+                    --提取数据库操作行数或查询结果行数，使用$rows
+                    --提取字符串“puppy”中的第3个字母p，使用正则提取键：$regex[2]:p
+                    --提取数据来源中的所有数据，使用$whole
+    ]]></xs:documentation>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value=".+"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="$whole"/>
+                    <xs:enumeration value="$rows"/>
+                    <xs:enumeration value="$columns"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+
+    </xs:simpleType>
+    <xs:simpleType name="sql">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                    sql语句
+                    中文名：sql语句
+                    类型：属性
+                    其他：
+                        --当type属性为sql时，须在此说明要执行的sql语句
+                        --可使用${}表达式
+                        --仅能执行增删改查语句
+                        --非查询语句受全局配置max_number_non_select_sql影响，当非查询语句操作行数大于此配置值时，该sql语句将执行失败并回滚操作。
+                        --max_number_non_select_sql默认为10
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="value">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                    变量值
+                    中文名：变量值
+                    类型：属性
+                    其他：
+                        --不能为空
+                        --当type属性未指定或type属性值为none时，变量的值将为此值
+                        --当type属性不为none时，此值为默认值
+                        --可使用${}表达式或字符串
+                    ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="sqlTag">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                sql语句
+                                中文名：sql语句
+                                类型：标签
+                                其他：
+                                   --不能为空
+                                   --仅能执行增删改查语句
+                                   --非查询语句受全局配置max_number_non_select_sql影响，当非查询语句操作行数大于此配置值时，该sql语句将执行失败并回滚操作。
+                                   --max_number_non_select_sql默认为10
+                            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                                用来说明设置到局部变量池的变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                                --当指定此值时，也应该同时指定key属性，用来说明提取查询结果的那部分值
+                            ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                    <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="sql" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                                    sql语句
+                                    中文名：sql语句
+                                    类型：属性
+                                    --不能为空
+                                    --可使用${}表达式
+                                 ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="key">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                                    提取数据库中的具体哪一部分数据，当指定此值时，也应该同时指定name属性，用来将提取的值设置到局部变量池
+                                    中文名：提取键
+                                    类型：属性
+                                    格式：数字切片、$whole、$rows、$columns
+                                    举例：
+                                        --提取数据库查询结果第1行1列，使用数字切片：0,0
+                                        --提取数据库操作行数或查询结果行数，使用$rows
+                                        --提取查询结果的所有数据，使用$whole
+                                 ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="value" type="value"/>
+        <xs:attribute name="var_type">
+            <xs:simpleType>
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                只要设置了此属性，变量将尝试转型，若转型失败将抛出异常
+                中文名：变量类型
+                类型：属性
+            ]]></xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="int">
+                        <xs:annotation>
+                            <xs:documentation>整型</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="float">
+                        <xs:annotation>
+                            <xs:documentation>浮点数/小数</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="bool">
+                        <xs:annotation>
+                            <xs:documentation>布尔值</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="str">
+                        <xs:annotation>
+                            <xs:documentation>字符串</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="auto">
+                        <xs:annotation>
+                            <xs:appinfo>自动推断</xs:appinfo>
+                            <xs:documentation>自动推测为整形、浮点数、布尔值、字符串</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="db_info" type="db_info"/>
+        <xs:attribute name="desc"/>
+    </xs:complexType>
+    <xs:complexType name="post_while">
+        <xs:group ref="post_cycle"/>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required"/>
+        <xs:attribute name="count"/>
+    </xs:complexType>
+    <xs:complexType name="pre_while">
+        <xs:group ref="pre_cycle"/>
+        <xs:attribute name="ex" use="required" type="ex"/>
+        <xs:attribute name="desc" use="required"/>
+        <xs:attribute name="count"/>
+    </xs:complexType>
+    <xs:complexType name="post_for">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                对列表或字典进行遍历
+                中文名：循环遍历
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:group ref="post_cycle"/>
+        <xs:attribute name="key" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    单项名称
+                    中文名：单项名称
+                    类型：属性
+                    其他：
+                        --如果遍历的是列表，仅需提供1个名称
+                        --如果遍历的是字典，需提供2个名称，用英文逗号隔开
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="items" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    待遍历的数据来源，可以是列表或字典
+                    中文名：数据来源
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="desc" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="pre_for">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                对列表或字典进行遍历
+                中文名：循环遍历
+                类型：标签
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:group ref="pre_cycle"/>
+        <xs:attribute name="key" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    单项名称
+                    中文名：单项名称
+                    类型：属性
+                    其他：
+                        --如果遍历的是列表，仅需提供1个名称
+                        --如果遍历的是字典，需提供2个名称，用英文逗号隔开
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="items" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                    待遍历的数据来源，可以是列表或字典
+                    中文名：数据来源
+                    类型：属性
+                ]]></xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="desc" use="required"/>
+    </xs:complexType>
+    <xs:group name="pre">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="print">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                                主动打印一次请求报文
+                                中文名：打印
+                                类型：标签
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    用来说明数据来源，指明变量的值从何处提取
+                                    中文名：数据来源
+                                    类型：属性
+                                    说明：
+                                    --当此项为none或不存在此项时，value属性必须有值
+                                    --当此项不为none时，无需指定value属性
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求体
+                                                中文名：请求体
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求头
+                                                中文名：请求头
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sleep" type="sleep"/>
+                <xs:element name="set">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            设置变量到局部变量池
+                            中文名：设置变量
+                            类型：标签
+                            使用例子：
+                                --给局部变量池设置一个a，其值为数字3
+                                  <set name="a" value="${3}"/>
+                                --给局部变量池设置一个b，其值来自请求体{"data":"2"}中的data
+                                  <set name="b" type="req_data" key="data"/>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                用来说明设置到局部变量池的变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                            <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    用来说明数据来源，指明变量的值从何处提取
+                                    中文名：数据来源
+                                    类型：属性
+                                    说明：
+                                    --当此项为none或不存在此项时，value属性必须有值
+                                    --当此项不为none时，无需指定value属性
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求体
+                                                中文名：请求体
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求头
+                                                中文名：请求头
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="var_type" type="var_type"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="print_var" type="print_var"/>
+                <xs:element name="sql" type="sqlTag"/>
+                <xs:element name="expression">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           执行表达式
+                           中文名：表达式
+                           类型：标签
+                           举例：
+                                <expression>${1}</expression>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="body">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求体的数据
+                            中文名：请求体
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="type">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换接口请求体的类型
+                            中文名：请求体
+                            类型：标签
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="string"/>
+                                <xs:enumeration value="gb18030"/>
+                                <xs:enumeration value="xml"/>
+                                <xs:enumeration value="key_value"/>
+                                <xs:enumeration value="json"/>
+                                <xs:enumeration value="sql"/>
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            name
+                                            中文名：名称
+                                            类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="$whole"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="path">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口路径
+                            中文名：请求体
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="param">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求参数的数据
+                            中文名：请求参数
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="header">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求头的数据
+                            中文名：请求头
+                            类型：标签
+                            例子：
+                                --向请求头{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求头{"a":1,"b":1}，删除请求头中的a
+                                <body name="a" act="delete"/>
+                                --替换请求头{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="server">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口服务器的数据
+                            中文名：服务器
+                            类型：标签
+                            例子：
+                                --更改服务器172.32.1.68为172.32.2.68
+                                <server name="$whole">172.32.2.68</server>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="file">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="port">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="method">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="if" type="ifPreType">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                分支结构，当ex属性所说明的表达式计算值为真时，执行其子标签的内容
+                中文名：分支结构
+                类型：标签
+            ]]></xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="while" type="pre_while"/>
+                <xs:element name="for" type="pre_for"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="pre_cycle">
+        <xs:sequence>
+            <xs:group ref="pre_inner" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="pre_inner">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="print">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            打印请求报文
+                                中文名：打印
+                                类型：标签
+                                说明：
+                                   --主动打印一次请求报文
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    用来说明数据来源，指明变量的值从何处提取
+                                    中文名：数据来源
+                                    类型：属性
+                                    说明：
+                                    --当此项为none或不存在此项时，value属性必须有值
+                                    --当此项不为none时，无需指定value属性
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求体
+                                                中文名：请求体
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求头
+                                                中文名：请求头
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sleep" type="sleep"/>
+                <xs:element name="set">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            设置变量到局部变量池
+                            中文名：设置变量
+                            类型：标签
+                            使用例子：
+                                --给局部变量池设置一个a，其值为数字3
+                                  <set name="a" value="${3}"/>
+                                --给局部变量池设置一个b，其值来自请求体{"data":"2"}中的data
+                                  <set name="b" type="req_data" key="data"/>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                用来说明设置到局部变量池的变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                            <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    用来说明数据来源，指明变量的值从何处提取
+                                    中文名：数据来源
+                                    类型：属性
+                                    说明：
+                                    --当此项为none或不存在此项时，value属性必须有值
+                                    --当此项不为none时，无需指定value属性
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求体
+                                                中文名：请求体
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于请求头
+                                                中文名：请求头
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，key属性若未指定值，将默认为$whole；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="var_type" type="var_type"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="print_var" type="print_var"/>
+                <xs:element name="sql" type="sqlTag"/>
+                <xs:element name="expression">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           执行表达式
+                           中文名：表达式
+                           类型：标签
+                           举例：
+                                <expression>${1}</expression>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="body">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求体的数据
+                            中文名：请求体
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="type">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换接口请求体的类型
+                            中文名：请求体
+                            类型：标签
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="string"/>
+                                <xs:enumeration value="gb18030"/>
+                                <xs:enumeration value="xml"/>
+                                <xs:enumeration value="key_value"/>
+                                <xs:enumeration value="json"/>
+                                <xs:enumeration value="sql"/>
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            name
+                                            中文名：名称
+                                            类型：属性
+                                            可选值：$whole
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="$whole"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="path">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口路径
+                            中文名：请求体
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="param">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求参数的数据
+                            中文名：请求参数
+                            类型：标签
+                            例子：
+                                --向请求体{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求体{"a":1,"b":1}，删除请求体中的a
+                                <body name="a" act="delete"/>
+                                --替换请求体{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="header">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口请求头的数据
+                            中文名：请求头
+                            类型：标签
+                            例子：
+                                --向请求头{"a":1}插入b，其值为1
+                                <body name="b" act="insert">1</body>
+                                --删除请求头{"a":1,"b":1}，删除请求头中的a
+                                <body name="a" act="delete"/>
+                                --替换请求头{"a":1}中a的值1为2
+                                <body name="a">2</body>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="server">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            替换、插入、删除接口服务器的数据
+                            中文名：服务器
+                            类型：标签
+                            例子：
+                                --更改服务器172.32.1.68为172.32.2.68
+                                <server name="$whole">172.32.2.68</server>
+                            说明：
+                                --替换无需指定act，插入和删除需指定act
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required" type="name"/>
+                                <xs:attribute name="act" type="act"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="file">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="port">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="method">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" type="不能为空" use="required"/>
+                                <xs:attribute name="act">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="delete"/>
+                                            <xs:enumeration value="replace"/>
+                                            <xs:enumeration value="insert"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="if" type="ifPreType_inner"/>
+                <xs:element name="while" type="pre_while"/>
+                <xs:element name="for" type="pre_for"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="post">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="print">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                                    打印响应报文
+                                中文名：打印
+                                类型：标签
+                                说明：
+                                   --一般用于解密后打印报文明文内容
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            用来说明数据来源，指明变量的值从何处提取
+                                            中文名：数据来源
+                                            类型：属性
+                                            说明：
+                                            --当此项为none或不存在此项时，value属性必须有值
+                                            --当此项不为none时，无需指定value属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求体
+                                                        中文名：请求体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求头
+                                                        中文名：请求头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应体
+                                                        中文名：响应体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sleep" type="sleep"/>
+                <xs:element name="set">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            设置变量到局部变量池
+                            中文名：设置变量
+                            类型：标签
+                            使用例子：
+                                --给局部变量池设置一个a，其值为数字3
+                                  <set name="a" value="${3}"/>
+                                --给局部变量池设置一个b，其值来自请求体{"data":"2"}中的data
+                                  <set name="b" type="req_data" key="data"/>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                用来说明设置到局部变量池的变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                            <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            用来说明数据来源，指明变量的值从何处提取
+                                            中文名：数据来源
+                                            类型：属性
+                                            说明：
+                                            --当此项为none或不存在此项时，value属性必须有值
+                                            --当此项不为none时，无需指定value属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求体
+                                                        中文名：请求体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求头
+                                                        中文名：请求头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应体
+                                                        中文名：响应体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="var_type" type="var_type"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        可选值：json、table、number、xml、html
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="rep_res">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="print_var" type="print_var"/>
+                <xs:element name="sql" type="sqlTag"/>
+                <xs:element name="expression">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           执行表达式
+                           中文名：表达式
+                           类型：标签
+                           举例：
+                                <expression>${1}</expression>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string"/>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="expect">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           期望某个条件达成，如果不成立则抛出断言错误
+                           中文名：期望
+                           类型：标签
+                           举例：
+                           --期望响应报文中的code等于0000
+                           <expect desc="期望响应体中的code等于[0000]" type="res_data" act="equal" key="code">0000</expect>
+                           --期望数据库表mydata中的0行0列数据等于2
+                           <expect desc="期望数据库表mydata中的0行0列数据等于[2]" type="sql"
+                                sql="select * from mydata where id=1"
+                                act="equal" key="0,0">2</expect>
+                           说明：
+                           --标签值可使用${}表达式
+                           --期望type数据来源中key指定的实际值等于、匹配、被包含于期望值
+                           --key属性未指定时，默认为$whole，代表数据来源中的整体
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="desc" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                   期望的描述
+                                中文名：描述
+                                类型：属性
+                                举例：
+                                --期望响应体中的code等于[0000]
+                                --期望数据表mydata正确
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="type" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                           期望的实际值数据来源
+                                        中文名：数据来源
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应数据
+                                                        中文名：响应数据
+                                                        类型：属性值
+                                                        说明：
+                                                        --也称响应体、响应数据、响应报文
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+
+                                            </xs:enumeration>
+                                            <xs:enumeration value="expression">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         自定义表达式
+                                                        中文名：自定义表达式
+                                                        类型：属性值
+                                                        说明：
+                                                        --纯表达式或混合体
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         数据库
+                                                        中文名：数据库
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="status">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应状态
+                                                        中文名：响应状态
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="key" type="key" default="$whole"/>
+                                <xs:attribute name="value">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                           说明要断言的表达式
+                                        中文名：动作
+                                        类型：属性
+                                        说明：
+                                            1、仅当type为expression时，此属性才有效
+                                            2、设置此属性后，key可以不设置，默认为$whole
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                                <xs:attribute name="act" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                           期望的判断动作
+                                        中文名：动作
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="equal">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         判实际值等于期望值
+                                                        中文名：等于
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="match">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         判实际值与期望的正则表达式匹配
+                                                        中文名：匹配
+                                                        类型：属性值
+                                                        说明：此时期望值将被认为是一个正则表达式
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="include">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判实际值包含期望值
+                                                        中文名：包含
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="not include">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判断实际值不包含期望值
+                                                        中文名：包含
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="in">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判实际值存在于期望值中
+                                                        中文名：包含
+                                                        类型：属性值
+                                                        说明：期望值是实际值的一部分
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="not in">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判实际值不存在于期望值中
+                                                        中文名：不包含
+                                                        类型：属性值
+                                                        说明：期望值是实际值的一部分
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="db_info" type="db_info"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="if" type="ifPostType"/>
+                <xs:element name="while" type="post_while"/>
+                <xs:element name="for" type="post_for"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="post_inner">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="print">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                                    打印响应报文
+                                中文名：打印
+                                类型：标签
+                                说明：
+                                   --一般用于解密后打印报文明文内容
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            用来说明数据来源，指明变量的值从何处提取
+                                            中文名：数据来源
+                                            类型：属性
+                                            说明：
+                                            --当此项为none或不存在此项时，value属性必须有值
+                                            --当此项不为none时，无需指定value属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求体
+                                                        中文名：请求体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求头
+                                                        中文名：请求头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应体
+                                                        中文名：响应体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sleep" type="sleep"/>
+                <xs:element name="set">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                            设置变量到局部变量池
+                            中文名：设置变量
+                            类型：标签
+                            使用例子：
+                                --给局部变量池设置一个a，其值为数字3
+                                  <set name="a" value="${3}"/>
+                                --给局部变量池设置一个b，其值来自请求体{"data":"2"}中的data
+                                  <set name="b" type="req_data" key="data"/>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="name" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                用来说明设置到局部变量池的变量的名称
+                                中文名：名称
+                                类型：属性
+                                格式：
+                                --不能为空
+                                --只能包含字母、数字、下划线且不能以数字开头
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                            <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_,]*"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="value" type="value"/>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            用来说明数据来源，指明变量的值从何处提取
+                                            中文名：数据来源
+                                            类型：属性
+                                            说明：
+                                            --当此项为none或不存在此项时，value属性必须有值
+                                            --当此项不为none时，无需指定value属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                数据来源于数据库
+                                                中文名：数据库
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，sql属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求体
+                                                        中文名：请求体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="req_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于请求头
+                                                        中文名：请求头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="none">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                无数据来源
+                                                中文名：无数据来源
+                                                类型：属性值
+                                                说明：
+                                                    --当为此值时，value属性必须有值；
+                                            ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据来源于响应体
+                                                        中文名：响应体
+                                                        类型：属性值
+                                                        说明：
+                                                            --当为此值时，key属性若未指定值，将默认为$whole；
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="var_type" type="var_type"/>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="desc">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                    描述
+                                    中文名：描述
+                                    类型：属性
+                            ]]></xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="rep_res">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:restriction>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="print_var" type="print_var"/>
+                <xs:element name="sql" type="sqlTag"/>
+                <xs:element name="expression">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           执行表达式
+                           中文名：表达式
+                           类型：标签
+                           举例：
+                                <expression>${1}</expression>
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="expect">
+                    <xs:annotation>
+                        <xs:documentation><![CDATA[
+                           期望某个条件达成，如果不成立则抛出断言错误
+                           中文名：期望
+                           类型：标签
+                           举例：
+                           --期望响应报文中的code等于0000
+                           <expect desc="期望响应体中的code等于[0000]" type="res_data" act="equal" key="code">0000</expect>
+                           --期望数据库表mydata中的0行0列数据等于2
+                           <expect desc="期望数据库表mydata中的0行0列数据等于[2]" type="sql"
+                                sql="select * from mydata where id=1"
+                                act="equal" key="0,0">2</expect>
+                           说明：
+                           --标签值可使用${}表达式
+                           --期望type数据来源中key指定的实际值等于、匹配、被包含于期望值
+                           --key属性未指定时，默认为$whole，代表数据来源中的整体
+                        ]]></xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:restriction base="xs:string">
+                                <xs:attribute name="desc" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                   期望的描述
+                                中文名：描述
+                                类型：属性
+                                举例：
+                                --期望响应体中的code等于[0000]
+                                --期望数据表mydata正确
+                                ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:minLength value="1"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="type" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                           期望的实际值数据来源
+                                        中文名：数据来源
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="res_data">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应数据
+                                                        中文名：响应数据
+                                                        类型：属性值
+                                                        说明：
+                                                        --也称响应体、响应数据、响应报文
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+
+                                            </xs:enumeration>
+                                            <xs:enumeration value="res_header">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应头
+                                                        中文名：响应头
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+
+                                            </xs:enumeration>
+                                            <xs:enumeration value="expression">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         自定义表达式
+                                                        中文名：自定义表达式
+                                                        类型：属性值
+                                                        说明：
+                                                        --纯表达式或混合体
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="sql">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         数据库
+                                                        中文名：数据库
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="status">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         响应状态
+                                                        中文名：响应状态
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="key" type="key"/>
+                                <xs:attribute name="act" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                           期望的判断动作
+                                        中文名：动作
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="equal">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         判期望值等于实际值
+                                                        中文名：等于
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="match">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                         判期望值所表示的正则表达式与实际值相匹配
+                                                        中文名：匹配
+                                                        类型：属性值
+                                                        说明：此时期望值将被认为是一个正则表达式
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="contain">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判期望值所说明的项包含实际值
+                                                        中文名：包含
+                                                        类型：属性值
+                                                        说明：期望值可由多项组成，每一项用|分割开
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="in">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判期望值说明的字符存在于实际值
+                                                        中文名：包含
+                                                        类型：属性值
+                                                        说明：期望值是实际值的一部分
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="not in">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        判期望值说明的字符不存在于实际值
+                                                        中文名：不包含
+                                                        类型：属性值
+                                                        说明：期望值是实际值的一部分
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="re_type">
+                                    <xs:annotation>
+                                        <xs:documentation><![CDATA[
+                                            手动说明数据来源中的数据类型，默认情况下框架会自动推断，如果处理不正确，则需要手动填写
+                                        中文名：数据类型
+                                        类型：属性
+                                        ]]></xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:enumeration value="json">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        json数据
+                                                        中文名：json数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="table">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数据库查询结果
+                                                        中文名：数据库查询结果
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="number">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        数字
+                                                        中文名：数字
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="xml">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        xml数据
+                                                        中文名：xml数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                            <xs:enumeration value="html">
+                                                <xs:annotation>
+                                                    <xs:documentation><![CDATA[
+                                                        html数据
+                                                        中文名：html数据
+                                                        类型：属性值
+                                                    ]]></xs:documentation>
+                                                </xs:annotation>
+                                            </xs:enumeration>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="sql" type="sql"/>
+                                <xs:attribute name="db_info" type="db_info"/>
+                            </xs:restriction>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="if" type="ifPostType_inner"/>
+                <xs:element name="while" type="post_while"/>
+                <xs:element name="for" type="post_for"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="post_cycle">
+        <xs:sequence>
+            <xs:group ref="post_inner" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="common">
+        <xs:choice>
+            <xs:element name="flow" type="flow"/>
+            <xs:element name="set" type="set"/>
+            <xs:element name="interface" type="interface"/>
+            <xs:element name="selenium" type="selenium"/>
+            <xs:element name="if" type="if"/>
+            <xs:element name="while" type="while"/>
+            <xs:element name="for" type="for"/>
+            <xs:element name="sql" type="sqlTag"/>
+            <xs:element name="sleep" type="sleep"/>
+        </xs:choice>
+    </xs:group>
+    <xs:group name="common_inner">
+        <xs:choice>
+            <xs:element name="flow" type="flow"/>
+            <xs:element name="set" type="set"/>
+            <xs:element name="interface" type="interface"/>
+            <xs:element name="selenium" type="selenium"/>
+            <xs:element name="if" type="if_inner"/>
+            <xs:element name="while" type="while"/>
+            <xs:element name="for" type="for"/>
+            <xs:element name="sql" type="sqlTag"/>
+            <xs:element name="sleep" type="sleep"/>
+        </xs:choice>
+    </xs:group>
+    <xs:group name="cycle">
+        <xs:sequence>
+            <xs:group ref="common_inner" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="break" type="break"/>
+                <xs:element name="continue" type="continue"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:simpleType name="ex">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                        指示该标签的子标签是否执行，当表达式计算结果为真时，执行子标签，反正则不执行
+                        中文名：表达式
+                        类型：属性
+                        格式：
+                        --不能为空
+                        --必须是一个合法的python表达式
+                        --无需被${}包围
+                    ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="print_var">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                打印局部变量池指定变量的值
+                                中文名：打印
+                                类型：标签
+                                说明：
+                                   --name需被${}包围
+                        ]]></xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                                    待打印的变量名称
+                                    中文名：名称
+                                    类型：属性
+                                    格式：
+                                    --不能为空
+                                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="sleep">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                睡眠指定秒
+                                中文名：睡眠
+                                类型：标签
+                            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="time" use="required">
+            <xs:annotation>
+                <xs:documentation><![CDATA[
+                                    睡眠的秒数
+                                    中文名：时间
+                                    类型：属性
+                                    格式：
+                                    --不能为空
+                                    --可使用${}表达式
+                                    --必须是可以转为数字的值
+                                ]]></xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="1"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="act">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                                待处理的动作
+                                                中文名：动作
+                                                类型：属性
+                                                说明：
+                                                    --不指定此属性时，默认值为replace
+                                                 ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="delete">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                                                       删除动作
+                                                       中文名：删除
+                                                       类型：属性值
+                                                       说明：删除
+                                                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="replace">
+
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                                                       替换动作
+                                                       中文名：替换
+                                                       类型：属性值
+                                                       说明：替换
+                                                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="insert">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+                                                       插入动作
+                                                       中文名：插入
+                                                       类型：属性值
+                                                       说明：插入
+                                                    ]]></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="name">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+                                                待处理的具体数据
+                                                中文名：名称
+                                                类型：属性
+                                                可填值：点缀名称、正则名称、$whole
+                                                例子：
+                                                    --处理{"a":1}中的a：a
+                                                    --处理“puppy”中的第3个p：$regex[2]:p
+                                                格式：
+                                                --不能为空
+                                            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
