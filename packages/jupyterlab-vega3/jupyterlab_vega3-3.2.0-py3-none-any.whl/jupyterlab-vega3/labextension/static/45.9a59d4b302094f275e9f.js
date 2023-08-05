@@ -1,0 +1,1 @@
+(self.webpackChunk_jupyterlab_vega3_extension=self.webpackChunk_jupyterlab_vega3_extension||[]).push([[45],{1045:()=>{}}]);
