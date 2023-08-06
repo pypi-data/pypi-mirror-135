@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>snippetsTest Instructions</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+      /*--------*
+ * Colors *
+ *--------*/
+
+:root {
+    --core-bg: #eef4ff;
+    --core-border: #79b;
+    --extra-bg: #ffffe8;
+    --extra-border: #990;
+}
+
+/*-------------------*
+ * High-level styles *
+ *-------------------*/
+
+body {
+    font-family: "Verdana", sans-serif;
+    color: #222;
+    padding: 2pt 4pt 20pt 4pt;
+    background: white;
+    margin: 0pt;
+}
+
+body.instructions {
+    border-left: 12pt solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(
+        to bottom,
+        #adf,
+        #7af 5%,
+        #24a,
+        #017 95%,
+        #004
+    );
+}
+
+body.feedback {
+    border-left: 12pt solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(
+        to bottom,
+        #ff9,
+        #ffc 5%,
+        #fd9,
+        #f8a 90%,
+        #fbd
+    );
+}
+
+.segment {
+    padding: 10pt 10pt 0pt 10pt;
+    margin: 4pt 0pt 8pt 0pt;
+    background:#fff;
+    min-width: max-content;
+}
+
+.segment-liner {
+    max-width: 50rem;
+    text-align: justify;
+    padding-bottom: 8pt;
+    border-bottom: 3pt solid;
+    border-image-slice: 1;
+    border-image-source: repeating-linear-gradient(
+        to right,
+        #000,
+        #000 8px,
+        #fff 8px,
+        #fff 12px
+    );
+}
+
+.last-segment .segment-liner {
+    border-bottom: none;
+}
+
+h2 {
+    padding: 10px 0;
+    margin: 0;
+}
+
+.segment h2, .segment h3 {
+    padding: 0;
+    margin: 0;
+}
+
+p:first-child {
+    margin-top: 2pt;
+}
+
+p:last-child {
+    margin-bottom: 2pt;
+}
+
+h2, h3, h4, h5, h6 {
+    border: none;
+    background: transparent;
+}
+
+/*-------*
+ * Links *
+ *-------*/
+
+a:link {
+    color: #06f;
+}
+
+a:visited {
+    color: #02a;
+}
+
+/*----------*
+ * Warnings *
+ *----------*/
+
+.warning_box {
+    border: 2px solid #833;
+    border-left: 20px solid #833;
+    padding: 0 1em;
+    background: #fdd;
+    font-family: sans-serif;
+}
+
+.warning_box h3 { color: #833; }
+
+
+/*-------------------*
+ * Details/summaries *
+ *-------------------*/
+
+/* Allow headers to be used as summaries without leaving the expand arrow
+ * awkwardly dangling above */
+summary > h1, summary > h2, summary > h3, summary > h4, summary > h5, summary > h6 {
+    display: inline-block;
+}
+
+
+/*---------------*
+ * Hide and seek *
+ *---------------*/
+
+.hide {
+    display: none;
+}
+tr.show {
+    display: table-row;
+}
+div.show, ul.show {
+    display: block;
+}
+
+
+/*--------*
+ * Images *
+ *--------*/
+
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0pt auto;
+    display: block;
+}
+
+.small_size  {
+    max-width: 20vw;
+    max-height: 20vh;
+}
+
+.medium_size {
+    max-width: 40vw;
+    max-height: 40vh;
+}
+
+.floating_figure {
+    float: right;
+    border: 1pt solid black;
+    padding: 6pt;
+    margin: 6pt;
+    width: min-content;
+}
+
+.caption {
+    text-align: center;
+    margin: 6pt auto;
+    display: block;
+}
+
+.test_image {
+    background: white;
+}
+
+
+/*---------------*
+ * Rendered Code *
+ *---------------*/
+
+.codeline_plain {
+    background: none;
+}
+
+.codeline_focus {
+    background: #fff888;
+}
+
+.codeline_closed {
+    border-top: none;
+}
+.codeline_open {
+    border-top: 1px solid #428;
+}
+.codeline {
+    display: inline-block;
+    width: 100%;
+}
+.info_link {
+    border-radius: 3px;
+    background: #27e;
+    color: white;
+    font-weight: 900;
+    font-family: sans-serif;
+    text-decoration: none;
+}
+td .info_link {
+    color: #27e;
+    background: #def;
+    border: 1px solid;
+}
+.linerefs, .linerefs a:link {
+    color: #428;
+}
+.linerefs a:visited {
+    color: #206;
+}
+.linerefs {
+    list-style: none;
+    border-top: 1px dashed #428;
+    border-bottom: 1px solid #428;
+    font-family: monospace;
+    padding-left: 5em;
+    background: #e8e0ff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0 0 1px 0;
+}
+.linerefs li {
+    font-family: sans-serif;
+}
+.lineref {
+    display: inline-block;
+    padding: 0 2px;
+}
+ul.autoreport_notes, ul.autoreport_key {
+    list-style: none;
+    font-size: 0.9em;
+}
+ul.autoreport_key {
+    margin: 0;
+}
+ul.autoreport_notes {
+    border-top: 1px dashed;
+    margin-top: 7px;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
+.codeline_closed.codeline_plain .linenum, .codeline_none.codeline_plain .linenum {
+    background: #e8e8e8;
+}
+.codeline_open.codeline_plain .linenum {
+    background: #e8e0ff;
+}
+.codeline_focus .linenum {
+    background: none;
+}
+.linenum {
+    color: #444;
+    display: inline-block;
+    width: 5ch;
+    text-align: right;
+    padding: 1px 0;
+}
+
+h1 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.4em;
+}
+h2 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.5em;
+}
+h3 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.6em;
+}
+
+code {
+    font-weight: bold;
+}
+pre, code, .highlight {
+    font-family: "Roboto", "Courier", monospace;
+}
+.highlight {
+    margin-top: 10px;
+    width: 88ch;
+    padding-left: 0;
+    padding-right: 0;
+}
+.highlight pre {
+    padding: 0;
+    margin: 0;
+}
+.highlight p {
+    font-family: sans-serif;
+}
+
+.eighty_top, .eighty {
+    text-align: right;
+    font-family: sans-serif;
+}
+.eighty_top {
+    margin-top: -1em;
+}
+.highlight.no80 {
+    width: 100%;
+}
+.short_repr {
+    display: inline;
+}
+
+/*----------------*
+ * Status symbols *
+ *----------------*/
+  
+.status_symbol {
+    font-size: larger;
+    font-style: normal;
+}
+
+
+/*-----------------*
+ * Header material *
+ *-----------------*/
+
+.partner, .email {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+
+/*------------------*
+ * Print formatting *
+ *------------------*/
+
+@media print {
+    pre {
+        overflow-x: scroll;
+    }
+    body {
+        width: 1024px;
+    }
+    .pagebreak { page-break-after: always; }
+}
+
+
+/*-------------------*
+ * Rubric formatting *
+ *-------------------*/
+
+.rubric {
+    font-size: 16pt;
+}
+
+.rubric_table {
+    padding: 3pt;
+    max-width: 55em;
+}
+
+.rubric_row {
+    border: 2pt solid #aa8;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    border-color: #999;
+    background-color: #f4f4f4;
+    padding: 3pt;
+    margin: 3pt;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.rubric_row .rubric_row {
+    display: list-item;
+    list-style-type: decimal;
+    margin-left: 16pt;
+}
+
+.rubric_row > .rubric_table {
+    grid-column: 1 / span 2;
+    margin-left: 8pt;
+}
+
+
+/*-------------*
+ * Rubric tags *
+ *-------------*/
+
+.rubric_row.tag-category-foundational, .tag-category-foundational .rubric_row {
+    border-color: #aba;
+    background-color: #efe;
+}
+
+.rubric_row.tag-category-core, .tag-category-core .rubric_row {
+    border-color: var(--core-border);
+    background-color: var(--core-bg);
+}
+
+.rubric_row.tag-category-extra, .tag-category-extra .rubric_row {
+    border-color: var(--extra-border);
+    background-color: var(--extra-bg);
+}
+
+/* Default border & background is gray */
+.rubric_row.tag-category-feedback_only,
+.tag-category-feedback_only .rubric_row {
+}
+
+
+/*--------------*
+ * Help buttons *
+ *--------------*/
+
+details.help_button {
+    display: inline-block;
+}
+
+details.help_button > .help {
+    padding: 3pt;
+    border-radius: 3pt;
+    background-color: #fff;
+    border: 1pt solid black;
+}
+
+details[open].help_button {
+    z-index: 100;
+}
+
+details.help_button > summary {
+    display: inline;
+    list-style: none;
+    border-radius: 2pt;
+    border: 1pt solid black;
+    padding: 0pt 2pt 0pt 2pt;
+    background-color: #fff;
+}
+
+details.help_button > summary::after {
+    content: "?";
+}
+
+details[open].help_button > summary::after {
+    content: "–";
+}
+
+details.help_button > summary::-webkit-details-marker {
+    display: none;
+}
+
+
+/*---------------------*
+ * Rubric row elements *
+ *---------------------*/
+
+/* Styles for elements of each row */
+.topic {
+    display: inline-block;
+    padding: 3pt;
+    border-radius: 3pt;
+    background-color: #fff;
+    margin: 3pt;
+    padding-right: 18pt; /* pad for details */
+    position: relative; /* reference for details */
+}
+
+.topic.no_details {
+    padding-right: 4pt;
+}
+
+.rubric_row .assessment {
+    display: inline-block;
+    margin-left: 6pt;
+}
+
+/* Styling of status makers in rubric rows based on row status: */
+.goal_status {
+    padding: 0pt 2pt 3pt 2pt;
+    border-radius: 2pt;
+    border: 1pt solid #999;
+    font-weight: bold;
+    margin-right: 3pt;
+    width: 11pt;
+    height: 11pt;
+    display: inline-block;
+    text-align: center;
+}
+
+.goal_status.status_unknown {
+    background-color: #eee;
+    border-color: #888;
+    color: #888;
+}
+
+.goal_status.status_not_applicable {
+    background-color: #ccc;
+    border-color: #555;
+    color: #555;
+}
+
+.goal_status.status_failed {
+    background-color: #f89;
+    border-color: #802;
+    color: #802;
+}
+
+.goal_status.status_partial {
+    background-color: #e899ff;
+    border-color: #629;
+    color: #629;
+}
+
+.goal_status.status_accomplished {
+    background-color: #9af;
+    border-color: #027;
+    color: #027;
+}
+
+
+/*------------------------------*
+ * Results and snippets styling *
+ *------------------------------*/
+
+.printed_output {
+    border-radius: 3pt;
+    margin: 2pt;
+    padding: 3pt;
+    background-color: #fff;
+}
+
+.snippet pre {
+    background: white;
+    padding: 4pt;
+    border: 2pt solid black;
+    overflow-x: auto;
+    width: 80ch;
+    line-height: 1.2em;
+    box-shadow: 0pt 0pt 1pt 1pt #00000044;
+}
+
+.snippet pre, .snippet pre code {
+    font-weight: normal;
+}
+
+.snippet pre code {
+    background: none;
+}
+
+.magic {
+    color: #666666;
+}
+
+.printed {
+    color: #000000;
+}
+
+.printed .input {
+    color: #0000ff;
+}
+
+.snippet_title {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.snippet .prompt {
+    color: #888;
+}
+
+/*----------*
+ * Contexts *
+ *----------*/
+
+.context_details > summary {
+    white-space: nowrap;
+}
+
+.context_details.level_0 {
+    margin: 4pt;
+}
+.context_details.level_1 {
+    margin-left: 16pt;
+}
+.context_details.level_2 {
+    margin-left: 28pt;
+}
+.context_details.level_3 {
+    margin-left: 40pt;
+}
+.context_details.level_4 {
+    margin-left: 52pt;
+}
+.context_details.level_5 {
+    margin-left: 64pt;
+}
+.context_details.level_6 {
+    margin-left: 76pt;
+}
+.context_details.level_7 {
+    margin-left: 88pt;
+}
+.context_details.level_8 {
+    margin-left: 100pt;
+}
+
+.context {
+    display:inline;
+}
+
+.context_depends {
+    display:inline;
+}
+
+.expl_in_context {
+    border-radius: 3pt;
+    padding: 3pt;
+    background-color: #fff;
+}
+
+.context_summary {
+    max-width: 55em;
+    border: 2pt solid #aaa;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    background-color: #f4f4f4;
+    padding: 3pt;
+    margin: 3pt;
+}
+
+.context_summary > .context_info > div {
+    border: 2pt solid #aaa;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    margin-bottom: 6pt;
+    padding: 3pt;
+}
+
+
+/*------*
+ * Tabs *
+ *------*/
+
+.tabs {
+    position: relative; /* Anchor for inner positions... */
+    padding: 10pt;
+}
+
+.tabs > .tabbed {
+    padding: 10pt;
+}
+
+.tabs > .tabs-top {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    margin-left: 0pt;
+    padding-left: 8pt;
+    padding-bottom: 0pt;
+    margin-bottom: 0pt;
+}
+
+
+.tabs > .tabs-top > .tab {
+    background-color: #eee;
+    border: 1pt solid #ccc;
+    padding: 4pt;
+    margin-bottom: 0pt;
+    border-radius: 6pt 6pt 0pt 0pt;
+}
+
+.tabs > .tabs-top > .tab.selected {
+    background-color: #ddd;
+    border-color: #aaa;
+}
+
+.tabs > .tabs-bot {
+    margin-top: 0pt;
+    background-color: #eee;
+    border: 1pt solid #ccc;
+}
+
+.tabs > .tabs-bot > .tab-content {
+    display: none;
+    margin-top: 0pt;
+    overflow-x: auto;
+}
+
+.tabs > .tabs-bot > .tab-content > *:first-child {
+    margin-top: 0pt;
+}
+
+.tabs > .tabs-bot > .tab-content.selected {
+    display: block;
+}
+
+.tab h1, .tab h2, .tab h3, .tab h4, .tab h5, .tab h6 {
+    margin: 0pt;
+}
+
+
+/*----------------------------*
+ * High-level rubric elements *
+ *----------------------------*/
+
+.evaluation {
+    margin-top: 6pt;
+    padding: 4pt;
+    background-color: white;
+    border-radius: 6pt 6pt 0pt 0pt;
+}
+
+.summary {
+    padding: 4pt;
+    background-color: white;
+    border-radius: 0pt 0pt 6pt 6pt;
+    margin-bottom: 4pt;
+}
+
+.context-values {
+    border-spacing: 6pt;
+}
+
+.context-values th {
+    text-align: right;
+}
+
+.context-values td {
+    text-align: left;
+}
+
+
+/*----------------------------*
+ * Screen-reader-only content *
+ *----------------------------*/
+
+/* See: https://webaim.org/techniques/css/invisiblecontent/ */
+.sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
+
+
+/*-------------*
+ * Sticky bins *
+ *-------------*/
+
+
+/* Rules for sticky floating bins */
+.sticky_context {
+    box-sizing: border-box;
+    transition: height 0.5s ease-out;
+}
+
+.sticky_floating {
+    position: fixed;
+    z-index: 100;
+    box-sizing: border-box;
+    margin: 0pt;
+    padding: 0pt;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.sticky_floating .segment {
+    width: 100%;
+}
+
+.sticky_floating .segment-liner {
+    border: none;
+}
+
+.sticky_inplace {
+    position: relative;
+}
+
+.sticky_minimized > * {
+    display: none;
+}
+
+.sticky_minimized > .bin_label {
+    position: relative;
+    display: block;
+    padding: 6pt;
+    background:#ddddff;
+    border: 1px solid #89b;
+}
+
+.sticky_maximized {
+    padding: 8pt;
+}
+
+.sticky_maximized > .bin_label {
+    position: fixed;
+    z-index: 110;
+    box-sizing: border-box;
+    border: 1px solid #458;
+    border-radius: 0pt;
+    background:#bbbbff;
+    padding: 6pt;
+    margin: 0pt;
+}
+
+.sticky_floating, .sticky_floating > .bin_label {
+    border-radius: 4pt 4pt 0pt 0pt;
+}
+
+
+/*----------------------------------------*
+ * Diff styling, including difflib tables *
+ *----------------------------------------*/
+
+.diff {
+    background: #eee;
+    border: 1px solid #ccc;
+    color: black;
+    font-style: normal;
+}
+
+.diff td {
+    background: #f8f8f8;
+    font-family: monospace;
+    padding: 0em 0.2em;
+    border-color: #ccc;
+}
+
+.diff th {
+    padding: 0.25em;
+}
+
+/* Output diff checking */
+.diff_sub {
+    color: #d70;
+    background: #fed;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: line-through; */
+}
+.diff_add {
+    color: #428;
+    background: #edf;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: overline; */
+}
+.diff_chg {
+    color: #833;
+    background: #fdd;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: underline; */
+}
+
+
+/*------------------------------*
+ * Rubric & snippet link styles *
+ *------------------------------*/
+
+.rubric_link {
+    padding: 1pt 3pt 1pt 3pt;
+    margin: 1pt 0pt 1pt 0pt;
+    border-radius: 3pt;
+    border: 1pt solid #999;
+    display: inline-block;
+}
+
+.rubric_link .category_indicator {
+    padding: 1pt 2pt 0pt 2pt;
+    border-radius: 2pt;
+    margin-right: 3pt;
+    border: 1pt solid #999;
+    display: inline-block;
+    color: black;
+}
+
+.rubric_link.category-core {
+    border-color: var(--core-border);
+    background-color: var(--core-bg);
+}
+
+.rubric_link.category-core .category_indicator {
+    border-color: var(--core-border);
+    color: var(--core-border);
+}
+
+.rubric_link.category-extra {
+    border-color: var(--extra-border);
+    background-color: var(--extra-bg);
+}
+
+.rubric_link.category-extra .category_indicator {
+    border-color: var(--extra-border);
+    color: var(--extra-border);
+}
+
+/*-----------------*
+ * Pygments styles *
+ *-----------------*/
+
+.highlight .hll { background-color: #ffffcc }
+code.highlight, pre.highlight, .highlight pre  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+    </style>
+
+    <script type="text/javascript">
+      /* jshint esversion: 6 */
+
+/*--------------------*
+ * Code line focusing *
+ *--------------------*/
+
+var CODEFOCUS = null;
+
+function transition(id, classA, classB) {
+    let node = document.getElementById(id);
+    if (node) {
+        node.className = node.className.replace(classA, classB);
+    }
+}
+
+function toggle(id, classA, classB, toggle_id, on_symbol, off_symbol) {
+    let node = document.getElementById(id);
+    let toggle_node = document.getElementById(toggle_id);
+    if (on_symbol == undefined) { on_symbol = "&nbsp;&ndash;&nbsp;"; }
+    if (off_symbol == undefined) { off_symbol = "&nbsp;+&nbsp;"; }
+    if (node) {
+        if (node.className.includes(classA)) {
+            node.className = node.className.replace(classA, classB);
+            if (toggle_node) {
+                toggle_node.innerHTML = off_symbol;
+            }
+            return classB;
+        } else if (node.className.includes(classB)) {
+            node.className = node.className.replace(classB, classA);
+            if (toggle_node) {
+                toggle_node.innerHTML = on_symbol;
+            }
+            return classA;
+        }
+    }
+    return null;
+}
+
+function unfocusCodeLine() {
+    if (CODEFOCUS) {
+        transition(CODEFOCUS, "codeline_focus", "codeline_plain");
+    }
+    CODEFOCUS = null;
+}
+
+function focusCodeLine(lineid) {
+    unfocusCodeLine();
+    let line = document.getElementById(lineid);
+    let bin = sticky_bin_ancestor(line);
+    if (bin) {
+        ensure_bin_is_visible(bin);
+    }
+    transition(lineid, "codeline_plain", "codeline_focus");
+    CODEFOCUS = lineid;
+}
+
+function toggleCodeLine(id, toggle_id, on_symbol, off_symbol) {
+    let status = toggle(
+        id,
+        "codeline_closed",
+        "codeline_open",
+        toggle_id,
+        on_symbol,
+        off_symbol
+    );
+    toggle(id + "_refs", "show", "hide");
+    // focusCodeLine(id);
+}
+
+function openCodeLine(codeid, lineid, toggle_id, on_symbol) {
+    transition(codeid, "hide", "show");
+    if (on_symbol == undefined) { on_symbol = "&nbsp;&ndash;&nbsp;"; }
+    
+    let line = document.getElementById(lineid);
+    let toggle_elem = document.getElementById(toggle_id);
+    if (
+        !line.className.includes("codeline_none")
+     && (
+            line.className.includes("codeline_closed")
+         || line.className.includes("codeline_open")
+        )
+    ) {
+        line.className = line.className.replace(
+            "codeline_closed",
+            "codeline_open"
+        );
+        if (toggle_elem) {
+            toggle_elem.innerHTML = on_symbol;
+        }
+        transition(lineid + "_refs", "hide", "show");
+    }
+    focusCodeLine(lineid);
+}
+
+function toggleSection(id, toggle_id, on_symbol, off_symbol) {
+    toggle(id, "show", "hide", toggle_id, on_symbol, off_symbol);
+}
+
+function toggleRow(id, toggle_id, on_symbol, off_symbol) {
+    // Either might be missing, but if either toggles, so should the
+    // symbol (it won't toggle twice since it detects the show/hide
+    // destination state)
+    toggle("row_" + id, "show", "hide", toggle_id, on_symbol, off_symbol);
+    toggle("ul_" + id, "show", "hide", toggle_id, on_symbol, off_symbol);
+}
+
+function openRow(sectionid, id, toggle_id, on_symbol) {
+    transition(sectionid, "hide", "show");
+    transition("row_" + id, "hide", "show");
+    transition("ul_" + id, "hide", "show");
+
+    if (on_symbol == undefined) { on_symbol = "&nbsp;&ndash;&nbsp;"; }
+    let the_toggle = document.getElementById(toggle_id);
+    if (the_toggle) {
+        the_toggle.innerHTML = on_symbol;
+    }
+}    
+
+function zoom(id) {
+    toggle(id, "img_small", "img_large");
+}
+
+function toggleClass(classs, classA, classB) {
+    let list = document.getElementsByClassName(classs);
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].className.includes(classA)) {
+            list[i].className = list[i].className.replace(classA, classB);
+        } else if (list[i].className.includes(classB)) {
+            list[i].className = list[i].className.replace(classB, classA);
+        }
+    }
+    return null;
+}
+
+
+/*
+ * Event handler for code lines which focuses them.
+ */
+function focusThisCodeLine() {
+    focusCodeLine(event.currentTarget.id);
+    return false; // prevent further event processing
+}
+
+
+/*
+ * Event handler for linerefs which focuses the destination line
+ */
+function focusDestinationLine() {
+    let me = event.currentTarget;
+    let line_id = me.getAttribute("data-lineid");
+    focusCodeLine(line_id);
+    return true; // allow link to also trigger anchor mechanism
+}
+
+
+// Add click handlers to each code line and each lineref link
+window.addEventListener("load", function () {
+    let codelines = document.querySelectorAll("span.codeline");
+    for (let line of codelines) {
+        line.addEventListener("click", focusThisCodeLine);
+    }
+
+    let linerefs = document.querySelectorAll("a.lineref");
+    for (let ref of linerefs) {
+        ref.addEventListener("click", focusDestinationLine);
+    }
+});
+
+/*------*
+ * Tabs *
+ *------*/
+
+function toggleTab() {
+    // Click event handler for anchors in a tabs setup to hide all other
+    // tabs except the one that corresponds to the one we clicked on.
+    let thistab = event.currentTarget;
+    let tabstop = thistab.parentElement;
+    let tabbed = tabstop.parentElement;
+    let tabsbot = tabbed.querySelector(".tabs-bot");
+    let index = Array.prototype.indexOf.call(tabstop.children, thistab);
+    let thiscontent = tabsbot.children[index];
+    if (thistab.classList.contains("selected")) {
+        thiscontent.classList.remove("selected");
+        thistab.classList.remove("selected");
+        thistab.removeAttribute("aria-current");
+    } else {
+        thiscontent.classList.add("selected");
+        thistab.classList.add("selected");
+        thistab.setAttribute("aria-current", "true");
+        thistab.setAttribute("aria-expanded", "true");
+        thiscontent.removeAttribute("aria-hidden");
+    }
+
+    // If we opened it:
+    if (thistab.classList.contains("selected")) {
+        // de-select all other tabs
+        for (let tab of tabstop.children) {
+            if (tab != thistab) {
+                tab.classList.remove("selected");
+                tab.removeAttribute("aria-current");
+                tab.removeAttribute("aria-expanded");
+            }
+        }
+        // hide all other tab content
+        for (let content of tabsbot.children) {
+            if (content != thiscontent) {
+                content.classList.remove("selected");
+                content.setAttribute("aria-hidden", "true");
+            }
+        }
+    }
+}
+
+
+
+// Add click handlers to every tab
+window.addEventListener("load", function () {
+    let tab_buttons = document.querySelectorAll("div.tabs li.tab");
+    for (let button of tab_buttons) {
+        button.addEventListener("click", toggleTab);
+    }
+});
+
+/*----------------------*
+ * Feedback interaction *
+ *----------------------*/
+
+window.addEventListener("load", function () {
+    let hide_accomplished = document.getElementById(
+        "hide_accomplished_goals"
+    );
+    if (hide_accomplished != null) {
+        hide_accomplished.addEventListener(
+            "change",
+            function () {
+                if (hide_accomplished.checked) {
+                    for (
+                        let row
+                     of document.querySelectorAll(
+                         "div.rubric_row.status_accomplished:not(.tag_category)"
+                        )
+                    ) {
+                        row.style.display = "none";
+                    }
+                } else {
+                    for (
+                        let row
+                     of document.querySelectorAll(
+                         "div.rubric_row.status_accomplished:not(.tag_category)"
+                        )
+                    ) {
+                        row.style.display = "block";
+                    }
+                }
+            }
+        );
+    }
+});
+
+
+/*-------------*
+ * Sticky bins *
+ *-------------*/
+
+// Global set of currently-floating bins (so that we can manage them as
+// multiple tabs)
+var FLOATING_BINS = new Set();
+
+// Defaults for observation are to observe relative to viewport with a 0%
+// threshold, which is what we want.
+let observer = new IntersectionObserver(function (entries) {
+    for (let entry of entries) {
+        let binContent = entry.target.querySelector(".sticky_bin");
+        if (entry.isIntersecting) {
+            // This bin's context is in view, so the bin content should snap
+            // into the context.
+            stop_floating(binContent); // before CSS class changes
+        } else {
+            // This bin's context is now just out of view, so the bin content
+            // should snap into its floating state
+            start_floating(binContent); // before CSS class changes
+            binContent.classList.remove("sticky_inplace");
+            binContent.classList.add("sticky_floating");
+        }
+    }
+});
+
+/*
+ * Detach the given bin (content) from its context and start floating it.
+ */
+function start_floating(bin) {
+    // Measure current bin content height and set the height of its
+    // parent so that while it floats the parent doesn't shrink
+    let context = bin.parentElement;
+    let current_content_height = bin.getBoundingClientRect().height;
+    context.style.height = current_content_height + "px";
+
+    // Are any other bins maximized now?
+    let other_maximized = false;
+    for (let bin of FLOATING_BINS) {
+        if (bin.classList.contains("sticky_maximized")) {
+            other_maximized = true;
+            break;
+        }
+    }
+
+    // Add to our floating bins set
+    FLOATING_BINS.add(bin);
+
+    // Remember maximized state
+    if (bin.wasMaximized && !other_maximized) {
+        bin.classList.add("sticky_maximized");
+    } else {
+        bin.classList.add("sticky_minimized");
+    }
+
+    // Set floating/inplace class status
+    bin.classList.add("sticky_floating");
+    bin.classList.remove("sticky_inplace");
+
+    // Rearrange all floating bins
+    rearrange_floating_bins();
+
+    // Set the scrollTop if we've got a saved value for that
+    if (bin.scrollTopMemory) {
+        bin.scrollTop = bin.scrollTopMemory;
+    }
+}
+
+/*
+ * Stop floating the given bin (content). Purges CSS properties so that
+ * they can revert to 
+ */
+function stop_floating(bin) {
+    // First, measure the current scroll position of the page overall
+    let scroll_now = document.body.parentElement.scrollTop;
+
+    // revert to natural height
+    let context = bin.parentElement;
+    context.style.height = "";
+
+    // Remember scroll top value and open/closed state
+    bin.scrollTopMemory = bin.scrollTop;
+    bin.scrollTop = 0;
+    bin.wasMaximized = bin.classList.contains("sticky_maximized");
+
+    // remove from floating bins set
+    FLOATING_BINS.delete(bin);
+
+    // undo fixed styles
+    bin.style.removeProperty("position");
+    bin.style.removeProperty("top");
+    bin.style.removeProperty("left");
+    bin.style.removeProperty("right");
+    bin.style.removeProperty("bottom");
+    bin.style.removeProperty("width");
+    bin.style.removeProperty("height");
+
+    let label = bin.querySelector(".bin_label");
+    label.style.removeProperty("position");
+    label.style.removeProperty("top");
+    label.style.removeProperty("left");
+    label.style.removeProperty("right");
+    label.style.removeProperty("bottom");
+    label.style.removeProperty("width");
+    label.style.removeProperty("height");
+    label.style.removeProperty("transform");
+
+    // Set floating/inplace class status
+    bin.classList.remove("sticky_floating");
+    bin.classList.add("sticky_inplace");
+
+    bin.classList.remove("sticky_maximized");
+    bin.classList.remove("sticky_minimized");
+
+    // Rearrange all floating bins
+    rearrange_floating_bins();
+
+
+    // Finally, re-set the scroll_now value, but only after we let other
+    // events flush and finish
+    // TODO: This breaks click-on-scrollbar-to-jump when jumping in a way
+    // that un-floats a bin... for now, we'll just live with that.
+    window.setTimeout(
+        function () { document.body.parentElement.scrollTop = scroll_now; },
+        0
+    );
+}
+
+/*
+ * Rearranges the currently-floating bins so that they don't overlap each
+ * other. Note that because we're using a no-DOM-changes technique, we
+ * cannot accommodate an arbitrary number of floating bins, so it's up to
+ * you the user of this code to make sure that there aren't enough bins
+ * to make things too crowded. Basically, each floating bin gets 1/N of
+ * the either vertical or horizontal space for its title, and when
+ * expanded, bins take up 50% of the other axis.
+ */
+function rearrange_floating_bins() {
+    let n_bins = FLOATING_BINS.size;
+    let each_pct = Math.round(100 / n_bins);
+
+    // Figure out if any bins are maximized
+    let any_maximized = false;
+    for (let bin of FLOATING_BINS) {
+        if (bin.classList.contains("sticky_maximized")) {
+            any_maximized = true;
+        }
+    }
+
+    // Set positioning of each bin
+    let in_order = Array.from(FLOATING_BINS);
+    in_order.sort((a, b) => a.bin_number - b.bin_number);
+    let pct_sofar = 0;
+    for (let bin of in_order) {
+        // Reference to the bin label
+        let label = bin.querySelector(".bin_label");
+
+        // clear out previous properties so we don't have contradictions
+        bin.style.removeProperty("position");
+        bin.style.removeProperty("top");
+        bin.style.removeProperty("bottom");
+        bin.style.removeProperty("left");
+        bin.style.removeProperty("right");
+        bin.style.removeProperty("width");
+        bin.style.removeProperty("height");
+
+        label.style.removeProperty("position");
+        label.style.removeProperty("top");
+        label.style.removeProperty("bottom");
+        label.style.removeProperty("left");
+        label.style.removeProperty("right");
+        label.style.removeProperty("width");
+        label.style.removeProperty("height");
+
+        if (bin.classList.contains("sticky_maximized")) {
+            // if maximized, take up bottom 50% of screen
+            bin.style.width = "100%";
+            bin.style.height = "50%";
+            bin.style.bottom = "0pt";
+            bin.style.left = "0pt";
+            // also grab label and pull it out
+            label.style.position = "fixed";
+            label.style.bottom = "50%";
+            label.style.left = pct_sofar + "%";
+            label.style.width = each_pct + "%";
+        } else {
+            // if minimized, appear along top of maximized area OR
+            // along bottom of screen (if nothing is maximized)
+            bin.style.width = each_pct + "%";
+            bin.style.left = pct_sofar + "%";
+            if (any_maximized) {
+                bin.style.bottom = "50%";
+            } else {
+                bin.style.bottom = "0pt";
+            }
+        }
+        
+
+        // Update pct_sofar
+        pct_sofar += each_pct;
+    }
+}
+
+// Toggles a bin between minimized and maximized states
+function show_or_hide_my_parent() {
+    toggle_bin_state(this.parentElement);
+}
+
+// Toggles a floating sticky bin's state. If a second parameter is
+// supplied and it's true or false, true forces maximization and false
+// forces minimization. Does nothing if the bin is not currently
+// floating.
+function toggle_bin_state(bin, maximize) {
+    if (!bin.classList.contains("sticky_floating")) {
+        return;
+    }
+
+    if (maximize == undefined) {
+        maximize = true;
+        if (bin.classList.contains("sticky_maximized")) {
+            maximize = false;
+        }
+    }
+
+    // first minimize ALL floating bins
+    for (let other_bin of FLOATING_BINS) {
+        // Remember scroll position as we minimize
+        if (other_bin.classList.contains("sticky_maximized")) {
+            other_bin.scrollTopMemory = other_bin.scrollTop;
+        }
+        other_bin.classList.remove("sticky_maximized");
+        other_bin.classList.add("sticky_minimized");
+    }
+
+    // Now maximize this bin if we're maximizing
+    if (maximize) {
+        bin.classList.add("sticky_maximized");
+        bin.classList.remove("sticky_minimized");
+    }
+
+    // rearrange all floating bins based on the new state
+    rearrange_floating_bins();
+
+    if (maximize && bin.scrollTopMemory) {
+        bin.scrollTop = bin.scrollTopMemory;
+    }
+}
+
+
+// Ensures that a specific sticky bin is currently visible, either by
+// maximizing it if it's floating and not already maximized, or by doing
+// nothing if it's not floating, or if it's floating and already
+// maximized.
+function ensure_bin_is_visible(bin) {
+    // if we're already floating
+    if (bin.classList.contains("sticky_floating")) {
+        // ...but we're not maximized
+        if (!bin.classList.contains("sticky_maximized")) {
+            // maximize us
+            toggle_bin_state(bin, true); // maximize it
+        }
+        // else we're already visible (floating & maximized)
+    }
+    // else we're already visible (not floating)
+}
+
+// Returns an ancestor element of the given element that is a sticky bin,
+// or null if there is no such ancestor.
+function sticky_bin_ancestor(element) {
+    if (!element.parentNode || !element.parentNode.classList) {
+        return null;
+    } else if (element.parentNode.classList.contains("sticky_bin")) {
+        return element.parentNode;
+    } else {
+        return sticky_bin_ancestor(element.parentNode);
+    }
+}
+
+var TOTAL_FLOATABLE_BINS;
+
+// Set up for sticky bins:
+window.addEventListener("load", function () {
+    let bin_index = 0;
+    for (let context of document.querySelectorAll(".sticky_context")) {
+        // Observe each sticky bin context
+        observer.observe(context);
+
+        // Number each bin in source order
+        context.querySelector(".sticky_bin").bin_number = bin_index;
+        bin_index += 1;
+
+        // Add minimize/maximize handlers to bin labels
+        let bin_label = context.querySelector(".bin_label");
+        bin_label.addEventListener("click", show_or_hide_my_parent);
+        bin_label.setAttribute(
+            "aria-label",
+            (
+                "Activate to make this section more prominent, or again to"
+              + " hide it (unless scrolled into view already)."
+            )
+        );
+    }
+
+    // Find all links that link to anchors and ensure that when we click
+    // them before we jump, if they link to an anchor that's in a sticky
+    // bin, we maximize that sticky bin if it's floating
+    for (let link of document.querySelectorAll("a:link")) {
+        // only look at anchor links
+        let bare_url = (
+            window.location.protocol
+          + "//"
+          + window.location.host
+          + window.location.pathname
+        );
+        let link_href = link.href;
+        let link_hash = link.hash;
+        if (link_href.startsWith(bare_url) && link_hash.length > 0) {
+            let destination = document.getElementById(link_hash.substring(1));
+            if (!destination) {
+                console.warn("Broken # link:", link);
+                continue; // broken link I guess
+            }
+
+            let bin = sticky_bin_ancestor(destination); // let is critical here!
+            if (bin != null) {
+                // If the destination's in a sticky bin, add a click handler
+                // to the link to open that bin
+                /* jshint -W083 */
+                link.addEventListener("click", function () {
+                    toggle_bin_state(bin, true);
+                    return true; // continue with normal event operation
+                });
+                /* jshint +W083 */
+            }
+        }
+    }
+
+    TOTAL_FLOATABLE_BINS = bin_index;
+});
+
+
+/*-----------------*
+ * Link decoration *
+ *-----------------*/
+
+/* Decorate links to rubric items and snippets */
+window.addEventListener("load", function () {
+    // Find all links that link to rubric items or snippets and add some
+    // decorations to them based on what they link to. For
+    // evaluated goals, we add a goal status marker, while for
+    // unevaluated goals, we add a marker indicating their core/extra
+    // category. For snippet links, we just give them a title.
+    for (let link of document.querySelectorAll("a:link")) {
+        // only look at anchor links
+        let bare_url = (
+            window.location.protocol
+          + "//"
+          + window.location.host
+          + window.location.pathname
+        );
+        let link_href = link.href;
+        let link_hash = link.hash;
+        if (link_href.startsWith(bare_url) && link_hash.length > 0) {
+            let to_id = link_hash.substring(1);
+            let destination = document.getElementById(to_id);
+            if (!destination) {
+                console.warn("Broken # link:", link);
+                continue; // broken link I guess
+            }
+
+            // only process links to goals
+            if (to_id.startsWith("goal:")) {
+                // Add a class
+                link.classList.add("rubric_link");
+
+                // Figure out category based on parent row's class
+                let row = destination.parentNode;
+                let category = "unknown";
+                for (let cls of row.classList) {
+                    if (cls.startsWith("tag-category-")) {
+                        category = cls.substring(13);
+                    }
+                }
+                // Add a category class to the link
+                link.classList.add("category-" + category);
+
+                // Get the status div for the goal
+                let status_div = destination.querySelector(".goal_status");
+                // Add either a category indicator or a status indicator
+                if (status_div.classList.contains("status_unknown")) {
+                    // not yet evaluated, so we'll indicate category
+                    let catind = document.createElement("span");
+                    catind.classList.add("category_indicator");
+                    catind.innerText = category[0].toLocaleUpperCase();
+                    // Insert our category indicator
+                    link.insertBefore(catind, link.firstChild);
+                } else {
+                    // Insert a clone of the status div
+                    link.insertBefore(
+                        status_div.cloneNode(true),
+                        link.firstChild
+                    );
+                }
+
+                // Set the title of the link to indicate the topic of the
+                // goal that it links to
+                let topic_node = destination.querySelector(".goal-topic");
+                let goal_topic = "Goal: " + topic_node.innerText;
+                link.setAttribute("title", goal_topic);
+            }
+
+            // Add titles to snippet links
+            if (to_id.startsWith("snippet:")) {
+                let sid = to_id.substring(8);
+                link.setAttribute("title", "Snippet: " + sid);
+            }
+        }
+    }
+});
+
+    </script>
+
+  </head>
+  <body class="instructions">
+
+      
+<div class="segment">
+  <div class="segment-liner">
+    <h1 id="snippetsTest" class="task_header">
+      Instructions for snippetsTest
+    </h1>
+    (produced at 10:03 a.m. on 2021-08-23)
+  </div>
+</div>
+<div id="snippetsTest_body" class="task_body with_rubric">
+
+  <!-- Instructions -->
+  <section class="instructions segment">
+    <div class="segment-liner">
+      <html><head></head><body><h2>Snippets Test Task</h2>
+<p>Instructions for the snippets test task.</p>
+<p>This is <a href="https://python-markdown.github.io/reference/">markdown</a>.</p>
+<p>We can link to a rubric item and/or a snippet:</p>
+<ul>
+<li><a href="#goal:core.check:def-processData:call-sorted">You have to call sorted in the definition of processData</a></li>
+<li><a href="#goal:core.test:processData">Your <code>processData</code> function has to return the correct results.</a></li>
+<li><a href="#goal:extra.test:import">Your file <code>process.py</code> must work correctly when run with inputs.</a></li>
+<li><a href="#snippet:examples">Examples of the outputs for the <code>processData</code> function.</a></li>
+</ul>
+<p>TODO: Highlight rubric items &amp; examples when linking to them; add shiny
+to rubric links via JS!</p>
+<p>Now</p>
+<p>\ </p>
+<p>I'll</p>
+<p>\ </p>
+<p>make</p>
+<p>\ </p>
+<p>these</p>
+<p>\ </p>
+<p>longer</p>
+<p>\ </p>
+<p>so</p>
+<p>\ </p>
+<p>the</p>
+<p>\ </p>
+<p>rubric</p>
+<p>\ </p>
+<p>get</p>
+<p>\ </p>
+<p>pushed</p>
+<p>\ </p>
+<p>down...</p></body></html>
+    </div>
+  </section>
+
+  <!-- Snippets -->
+  <div class="sticky_context" id="snippetsTest_snippets_context">
+    <section
+     class='sticky_bin segment'
+     id="snippetsTest_snippets"
+     tabindex="0"
+     aria-label="Examples"
+     aria-live="polite"
+    >
+      <h2 class="bin_label" tabindex="0">Examples</h2>
+      <div class="segment-liner">
+          
+            <section class="snippet" id="snippet:vars"><div class="snippet_title"><p><code>EXAMPLE</code> and <code>DATA</code> variables</p></div>
+<p>A simple example of what the input data might look like, and the slightly more complex <code>DATA</code> variable provided in the starter code.</p>
+<pre><span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">EXAMPLE</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Two&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]</span>
+</code>
+<span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">DATA</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}]</span>
+</code>
+</pre>
+</section>
+          
+            <section class="snippet" id="snippet:examples"><div class="snippet_title"><p>Example results</p></div>
+<p>Some examples of what <code>processData</code> should return for various inputs, using the <code>EXAMPLE</code> and <code>DATA</code> variables shown above.</p>
+<pre><span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">processData</span><span class="p">([{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Two&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span> <span class="mi">1</span><span class="p">)</span>
+</code>
+<span class="prompt">Out [ ]:</span> <code class="highlight"><span></span><span class="p">[</span><span class="s1">&#39;One&#39;</span><span class="p">]</span>
+</code>
+<span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">processData</span><span class="p">([{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Two&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span> <span class="mi">2</span><span class="p">)</span>
+</code>
+<span class="prompt">Out [ ]:</span> <code class="highlight"><span></span><span class="p">[</span><span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;Two&#39;</span><span class="p">]</span>
+</code>
+<span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">processData</span><span class="p">([{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Two&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span> <span class="mi">3</span><span class="p">)</span>
+</code>
+<span class="prompt">Out [ ]:</span> <code class="highlight"><span></span><span class="p">[</span><span class="s1">&#39;One&#39;</span><span class="p">,</span> <span class="s1">&#39;Two&#39;</span><span class="p">]</span>
+</code>
+<span class="prompt">In [ ]:</span> <code class="highlight"><span></span><span class="n">processData</span><span class="p">(</span>
+ <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}],</span>
+ <span class="mi">3</span>
+<span class="p">)</span>
+</code>
+<span class="prompt">Out [ ]:</span> <code class="highlight"><span></span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">]</span>
+</code>
+</pre>
+</section>
+          
+            <section class="snippet" id="snippet:run"><div class="snippet_title"><p>Full output example</p></div>
+<p>An example of what the output should look like when your code is run. Note that the blue text shows what inputs were provided in this example.</p>
+<pre><span class="prompt">In [ ]:</span> <code class="magic">%run process.py</code>
+<span class="printed">A or B? <span class="input">A</span>
+D
+A or B? <span class="input">B</span>
+D, B, A
+</span></pre>
+</section>
+          
+      </div>
+    </section>
+  </div>
+
+  <!-- Rubric -->
+  <div class="sticky_context" id="snippetsTest_rubric_context">
+    <section
+     class='sticky_bin segment last-segment'
+     id="snippetsTest_rubric"
+     tabindex="0"
+     aria-label="The rubric"
+     aria-live="polite"
+    >
+      <h2 class="bin_label" tabindex="0">Rubric</h2>
+      <div class="segment-liner">
+        <div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-type_group tag-goal_type-procedure"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Procedure Requirements</span>
+
+</div><div class="assessment"><div class="explanation">What code you use to solve the problem.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-core tag-goal_type-procedure"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Core goals</span>
+
+</div><div class="assessment"><div class="explanation">Complete all core goals for core credit. Get partial credit for completing at least half, and more partial credit for completing at least 90%.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-core tag-goal_type-procedure"><div id="goal:core.check:def-processData" class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Define <code>processData</code></span>
+
+</div><div class="assessment"><div class="explanation">Use <code>def</code> to define <code>processData</code></div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-core tag-goal_type-procedure"><div id="goal:core.check:def-processData:call-sorted" class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Call <code>sorted</code></span>
+
+</div><div class="assessment"><div class="explanation">Within the definition of <code>processData</code>, call <code>sorted</code> in at least once place.</div></div></div>
+</div></div>
+</div></div>
+</div></div>
+<div class="rubric_row status_unknown tag-category-type_group tag-goal_type-product"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Product Requirements</span>
+
+</div><div class="assessment"><div class="explanation">Your code's result values.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-core tag-goal_type-product"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Core goals</span>
+
+</div><div class="assessment"><div class="explanation">Complete all core goals for core credit. Get partial credit for completing at least half, and more partial credit for completing at least 90%.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-core tag-goal_type-product"><div id="goal:core.test:processData" class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'><code>processData</code> returns the correct result</span>
+
+</div><div class="assessment"><div class="explanation">The result returned when your <code>processData</code> function is run must match the solution result.</div></div></div>
+</div></div>
+</div></div>
+<div class="rubric_row status_unknown tag-category-type_group tag-goal_type-behavior"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Behavior Requirements</span>
+
+</div><div class="assessment"><div class="explanation">What your code does from the user's perspective.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-extra tag-goal_type-behavior"><div class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Extra goals</span>
+
+</div><div class="assessment"><div class="explanation">Complete all extra goals in addition to the core goals for a perfect score.</div></div><div class="rubric_table">
+<div class="rubric_row status_unknown tag-category-extra tag-goal_type-behavior"><div id="goal:extra.test:import" class="topic no_details" tabindex="0">
+<div class="goal_status status_unknown"> </div>
+<span class='sr-only'>unknown</span>
+<span class='goal-topic'>Running <code>process.py</code> exhibits the correct behavior</span>
+
+</div><div class="assessment"><div class="explanation">When we run <code>process.py</code> as a whole file, the pattern of printed output based on inputs must match the solution's behavior.</div></div></div>
+</div></div>
+</div></div>
+</div>
+      </div>
+    </section>
+  </div>
+  
+</div>
+
+  </body>
+</html>

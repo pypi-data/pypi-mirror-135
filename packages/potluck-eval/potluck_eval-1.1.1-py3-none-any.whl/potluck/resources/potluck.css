@@ -1,0 +1,1125 @@
+/*--------*
+ * Colors *
+ *--------*/
+
+:root {
+    --core-bg: #eef4ff;
+    --core-border: #79b;
+    --extra-bg: #ffffe8;
+    --extra-border: #990;
+    --warning-bg: #fda;
+    --warning-border: #c84;
+    --warning-title: #831;
+}
+
+/*-------------------*
+ * High-level styles *
+ *-------------------*/
+
+body {
+    font-family: "Verdana", sans-serif;
+    color: #222;
+    padding: 2pt 4pt 20pt 4pt;
+    margin: 0pt;
+}
+
+body.instructions {
+    background: white;
+    border-left: 12pt solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(
+        to bottom,
+        #adf,
+        #7af 5%,
+        #24a,
+        #017 95%,
+        #004
+    );
+}
+
+body.feedback {
+    background: white;
+    border-left: 12pt solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(
+        to bottom,
+        #ff9,
+        #ffc 5%,
+        #fd9,
+        #f8a 90%,
+        #fbd
+    );
+}
+
+.segment {
+    padding: 10pt 10pt 0pt 10pt;
+    margin: 4pt 0pt 8pt 0pt;
+    background:#fff;
+    min-width: max-content;
+}
+
+.segment-liner {
+    max-width: 50rem;
+    text-align: justify;
+    padding-bottom: 8pt;
+    border-bottom: 3pt solid;
+    border-image-slice: 1;
+    border-image-source: repeating-linear-gradient(
+        to right,
+        #000,
+        #000 8px,
+        #fff 8px,
+        #fff 12px
+    );
+}
+
+.last-segment .segment-liner {
+    border-bottom: none;
+}
+
+h2 {
+    padding: 10px 0;
+    margin: 0;
+    margin-top: 1em;
+}
+
+.segment h2, .segment h3 {
+    padding: 0;
+    margin: 0;
+    margin-top: 1em;
+}
+
+p:first-child {
+    margin-top: 2pt;
+}
+
+p:last-child {
+    margin-bottom: 2pt;
+}
+
+h2, h3, h4, h5, h6 {
+    border: none;
+    background: transparent;
+    text-align: left;
+}
+
+li {
+    margin-bottom: 6pt;
+}
+
+/*-------*
+ * Links *
+ *-------*/
+
+a:link, a:visited {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:link {
+    color: #26b;
+}
+
+a:visited {
+    color: #597;
+}
+
+/*----------*
+ * Warnings *
+ *----------*/
+
+.warning {
+    background-color: var(--warning-bg);
+    border: 2pt solid var(--warning-border);
+    border-radius: 4pt;
+    border-width: 2pt 0pt 0pt 2pt;
+    padding: 6pt 4pt;
+    font-family: sans-serif;
+    overflow-y: auto;
+}
+
+.warnings {
+    border: 2pt solid var(--warning-title);
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    background-color: #fdc;
+    padding: 8pt;
+}
+
+.warnings h4 {
+    margin: 6pt 0pt;
+    color: var(--warning-title);
+}
+
+
+/*-------------------*
+ * Details/summaries *
+ *-------------------*/
+
+/* Allow headers to be used as summaries without leaving the expand arrow
+ * awkwardly dangling above */
+summary > h1, summary > h2, summary > h3, summary > h4, summary > h5, summary > h6 {
+    display: inline-block;
+}
+
+
+/*---------------*
+ * Hide and seek *
+ *---------------*/
+
+.hide {
+    display: none;
+}
+tr.show {
+    display: table-row;
+}
+div.show, ul.show {
+    display: block;
+}
+
+
+/*--------*
+ * Images *
+ *--------*/
+
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0pt auto;
+    display: block;
+}
+
+.small_size  {
+    max-width: 20vw;
+    max-height: 20vh;
+}
+
+.medium_size {
+    max-width: 40vw;
+    max-height: 40vh;
+}
+
+.floating_figure {
+    float: right;
+    border: 1pt solid black;
+    padding: 6pt;
+    margin: 6pt;
+    width: min-content;
+}
+
+.caption {
+    text-align: center;
+    margin: 6pt auto;
+    display: block;
+}
+
+.test_image {
+    background: white;
+}
+
+
+/*---------------*
+ * Rendered Code *
+ *---------------*/
+
+.codeline_plain {
+    background: none;
+}
+
+.codeline_focus {
+    background: #fff888;
+}
+
+.codeline_closed {
+    border-top: none;
+}
+.codeline_open {
+    border-top: 1px solid #428;
+}
+.codeline {
+    display: inline-block;
+    width: 100%;
+}
+.info_link {
+    border-radius: 3px;
+    background: #27e;
+    color: white;
+    font-weight: 900;
+    font-family: sans-serif;
+    text-decoration: none;
+}
+td .info_link {
+    color: #27e;
+    background: #def;
+    border: 1px solid;
+}
+.linerefs, .linerefs a:link {
+    color: #428;
+}
+.linerefs a:visited {
+    color: #206;
+}
+.linerefs {
+    list-style: none;
+    border-top: 1px dashed #428;
+    border-bottom: 1px solid #428;
+    font-family: monospace;
+    padding-left: 5em;
+    background: #e8e0ff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0 0 1px 0;
+}
+.linerefs li {
+    font-family: sans-serif;
+}
+.lineref {
+    display: inline-block;
+    padding: 0 2px;
+}
+ul.autoreport_notes, ul.autoreport_key {
+    list-style: none;
+    font-size: 0.9em;
+}
+ul.autoreport_key {
+    margin: 0;
+}
+ul.autoreport_notes {
+    border-top: 1px dashed;
+    margin-top: 7px;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
+.codeline_closed.codeline_plain .linenum, .codeline_none.codeline_plain .linenum {
+    background: #e8e8e8;
+}
+.codeline_open.codeline_plain .linenum {
+    background: #e8e0ff;
+}
+.codeline_focus .linenum {
+    background: none;
+}
+.linenum {
+    color: #444;
+    display: inline-block;
+    width: 5ch;
+    text-align: right;
+    padding: 1px 0;
+}
+
+h1 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.4em;
+}
+h2 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.5em;
+}
+h3 .button_left {
+    margin-right: 1em;
+    font-weight: normal;
+    font-size: 0.6em;
+}
+
+code {
+    font-weight: bold;
+}
+pre, code, .highlight, .eighty {
+    font-family: "Roboto", "Courier", monospace;
+}
+.highlight {
+    margin-top: 10px;
+    width: 88ch;
+    padding-left: 0;
+    padding-right: 0;
+}
+.highlight pre, .pane {
+    width: 80ch;
+    overflow-x: scroll;
+    padding: 3pt 2pt;
+    border: 1pt solid #c4c4c4;
+    border-radius: 1pt;
+    margin: 0;
+}
+
+.task_code .highlight pre {
+    width: 86ch; /* room for 5ch of line number + 1 space after that */
+}
+
+.highlight p {
+    font-family: sans-serif;
+}
+
+.eighty_top, .eighty {
+    text-align: right;
+    width: 86ch; /* accounts for line numbers */
+}
+.eighty_top {
+    margin-top: -1em;
+}
+.highlight.no80 {
+    width: 100%;
+}
+.short_repr {
+    display: inline;
+}
+
+/*----------------*
+ * Status symbols *
+ *----------------*/
+  
+.status_symbol {
+    font-size: larger;
+    font-style: normal;
+}
+
+
+/*-----------------*
+ * Header material *
+ *-----------------*/
+
+.partner, .email {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+.preliminaries p:first-child {
+    font-weight: bold;
+}
+
+
+/*------------------*
+ * Print formatting *
+ *------------------*/
+
+@media print {
+    pre {
+        overflow-x: scroll;
+    }
+    body {
+        width: 1024px;
+    }
+    .pagebreak { page-break-after: always; }
+}
+
+
+/*-------------------*
+ * Rubric formatting *
+ *-------------------*/
+
+.rubric {
+    font-size: 16pt;
+}
+
+.rubric_table {
+    padding: 3pt;
+    max-width: 55em;
+}
+
+.rubric_row {
+    border: 2pt solid #999;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    background-color: #f4f4f4;
+    padding: 3pt;
+    margin: 3pt;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.rubric_row .rubric_row {
+    display: list-item;
+    list-style-type: decimal;
+    margin-left: 16pt;
+}
+
+.rubric_row > .rubric_table {
+    grid-column: 1 / span 2;
+    margin-left: 8pt;
+}
+
+
+/*-------------*
+ * Rubric tags *
+ *-------------*/
+
+.rubric_row.tag-category-foundational, .tag-category-foundational .rubric_row {
+    border-color: #aba;
+    background-color: #efe;
+}
+
+.rubric_row.tag-category-core, .tag-category-core .rubric_row {
+    border-color: var(--core-border);
+    background-color: var(--core-bg);
+}
+
+.rubric_row.tag-category-extra, .tag-category-extra .rubric_row {
+    border-color: var(--extra-border);
+    background-color: var(--extra-bg);
+}
+
+/* Default border & background is gray */
+.rubric_row.tag-category-feedback_only,
+.tag-category-feedback_only .rubric_row {
+}
+
+
+/*--------------*
+ * Help buttons *
+ *--------------*/
+
+details.help_button {
+    display: inline-block;
+}
+
+details.help_button > .help {
+    padding: 3pt;
+    border-radius: 3pt;
+    background-color: #fff;
+    border: 1pt solid black;
+}
+
+details[open].help_button {
+    z-index: 100;
+}
+
+details.help_button > summary {
+    display: inline;
+    list-style: none;
+    border-radius: 2pt;
+    border: 1pt solid black;
+    padding: 0pt 2pt 0pt 2pt;
+    background-color: #fff;
+}
+
+details.help_button > summary::after {
+    content: "?";
+}
+
+details[open].help_button > summary::after {
+    content: "–";
+}
+
+details.help_button > summary::-webkit-details-marker {
+    display: none;
+}
+
+
+/*---------------------*
+ * Rubric row elements *
+ *---------------------*/
+
+/* Styles for elements of each row */
+.topic {
+    display: inline-block;
+    padding: 3pt;
+    border-radius: 3pt;
+    background-color: #fff;
+    margin: 3pt;
+    padding-right: 18pt; /* pad for details */
+    position: relative; /* reference for details */
+}
+
+.topic.no_details {
+    padding-right: 4pt;
+}
+
+.rubric_row .assessment {
+    display: inline-block;
+    margin-left: 6pt;
+}
+
+/* Styling of status makers in rubric rows based on row status: */
+.goal_status {
+    padding: 0pt 2pt 3pt 2pt;
+    border-radius: 2pt;
+    border: 1pt solid #999;
+    font-weight: bold;
+    margin-right: 3pt;
+    width: 11pt;
+    height: 11pt;
+    display: inline-block;
+    text-align: center;
+}
+
+.goal_status.status_unknown {
+    background-color: #eee;
+    border-color: #888;
+    color: #888;
+}
+
+.goal_status.status_not_applicable {
+    background-color: #ccc;
+    border-color: #555;
+    color: #555;
+}
+
+.goal_status.status_failed {
+    background-color: #f89;
+    border-color: #802;
+    color: #802;
+}
+
+.goal_status.status_partial {
+    background-color: #e899ff;
+    border-color: #629;
+    color: #629;
+}
+
+.goal_status.status_accomplished {
+    background-color: #9af;
+    border-color: #027;
+    color: #027;
+}
+
+
+/*------------------------------*
+ * Results and snippets styling *
+ *------------------------------*/
+
+.printed_output {
+    border-radius: 3pt;
+    margin: 2pt;
+    padding: 3pt;
+    background-color: #fff;
+}
+
+.snippet + .snippet {
+    margin-bottom: 1.2em;
+}
+
+.snippet > pre {
+    background: white;
+    padding: 4pt;
+    border: 2pt solid black;
+    overflow-x: auto;
+    width: 89ch; /* 80 + 2 slack + 1 gutter + 6 prompt */
+    line-height: 1.2em;
+    box-shadow: 0pt 0pt 1pt 1pt #00000044;
+    display: grid;
+    /* space for our prompt, then our inputs/outputs */
+    grid-template-columns: 6ch 82ch;
+    /* gutter between prompts & inputs/outputs */
+    column-gap: 1ch;
+    row-gap: 0.6em; /* 1/2 of a blank line */
+}
+
+.snippet > pre .prompt {
+    grid-column: 1 / 1;
+    justify-self: end;
+}
+
+.snippet > pre .snippet-input,
+.snippet > pre .snippet-printed,
+.snippet > pre .snippet-output,
+.snippet > pre .snippet-stderr
+.snippet > pre .snippet-filename,
+.snippet > pre .snippet-file-contents {
+    grid-column: 2 / 2;
+    justify-self: stretch;
+    padding: 3pt 2pt;
+    overflow-x: scroll;
+    line-height: 1.2em;
+    max-height: 24.3em;
+    overflow-y: auto;
+}
+
+.snippet-printed {
+    border: 2pt dashed #c4c4c4;
+}
+
+.snippet img.example {
+    grid-column: 2 / 2;
+    justify-self: start;
+    border: 2pt dashed #c4c4c4;
+    margin: 0pt;
+}
+
+.snippet audio {
+    max-width: 40ch;
+    height: 2.4em; /* hack because of Firefox weird height issue */
+}
+
+.snippet > pre .snippet-input {
+    background: #f5f5f5;
+    border: 1pt solid #c4c4c4;
+    border-radius: 1pt;
+}
+
+.snippet > pre .snippet-stderr {
+    background: #f8d4d4;
+    border: 1pt solid #d4a4a4;
+    border-radius: 1pt;
+}
+
+.snippet > pre .snippet-filename {
+    color: #036; /* Bit of a teal tinge */
+}
+
+.snippet > pre .snippet-file-contents {
+    background: #f0f0ff;
+    border: 1pt solid #cce;
+    border-radius: 1pt;
+}
+
+.snippet pre, .snippet pre code {
+    font-weight: normal;
+}
+
+.snippet pre code {
+    background: none;
+}
+
+.magic {
+    color: #666666;
+}
+
+.printed {
+    color: #000000;
+}
+
+.input {
+    color: #0000ff;
+}
+
+.snippet_title {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.snippet .prompt {
+    color: #888;
+}
+
+/*----------*
+ * Contexts *
+ *----------*/
+
+.context_details > summary {
+    white-space: nowrap;
+}
+
+.context_details.level_0 {
+    margin: 4pt;
+}
+.context_details.level_1 {
+    margin-left: 16pt;
+}
+.context_details.level_2 {
+    margin-left: 28pt;
+}
+.context_details.level_3 {
+    margin-left: 40pt;
+}
+.context_details.level_4 {
+    margin-left: 52pt;
+}
+.context_details.level_5 {
+    margin-left: 64pt;
+}
+.context_details.level_6 {
+    margin-left: 76pt;
+}
+.context_details.level_7 {
+    margin-left: 88pt;
+}
+.context_details.level_8 {
+    margin-left: 100pt;
+}
+
+.context {
+    display:inline;
+}
+
+.context_depends {
+    display:inline;
+}
+
+.expl_in_context {
+    border-radius: 3pt;
+    padding: 3pt;
+    background-color: #fff;
+}
+
+.context_summary {
+    max-width: 55em;
+    border: 2pt solid #aaa;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    background-color: #f4f4f4;
+    padding: 3pt;
+    margin: 3pt;
+}
+
+.context_summary > .context_info > div {
+    border: 2pt solid #aaa;
+    border-width: 2pt 0pt 0pt 2pt;
+    border-radius: 3pt;
+    margin-bottom: 6pt;
+    padding: 3pt;
+}
+
+
+/*------*
+ * Tabs *
+ *------*/
+
+.tabs {
+    position: relative; /* Anchor for inner positions... */
+    padding: 10pt;
+}
+
+.tabs > .tabbed {
+    padding: 10pt;
+}
+
+.tabs > .tabs-top {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    margin-left: 0pt;
+    padding-left: 8pt;
+    padding-bottom: 0pt;
+    margin-bottom: 0pt;
+}
+
+
+.tabs > .tabs-top > .tab {
+    background-color: #eee;
+    border: 1pt solid #ccc;
+    padding: 4pt;
+    margin-bottom: 0pt;
+    border-radius: 6pt 6pt 0pt 0pt;
+}
+
+.tabs > .tabs-top > .tab.selected {
+    background-color: #ddd;
+    border-color: #aaa;
+}
+
+.tabs > .tabs-bot {
+    margin-top: 0pt;
+    background-color: #eee;
+    border: 1pt solid #ccc;
+}
+
+.tabs > .tabs-bot > .tab-content {
+    display: none;
+    margin-top: 0pt;
+    overflow-x: auto;
+}
+
+.tabs > .tabs-bot > .tab-content > *:first-child {
+    margin-top: 0pt;
+}
+
+.tabs > .tabs-bot > .tab-content.selected {
+    display: block;
+}
+
+.tab h1, .tab h2, .tab h3, .tab h4, .tab h5, .tab h6 {
+    margin: 0pt;
+}
+
+
+/*----------------------------*
+ * High-level rubric elements *
+ *----------------------------*/
+
+.evaluation {
+    margin-top: 6pt;
+    padding: 4pt;
+    background-color: white;
+    border-radius: 6pt 6pt 0pt 0pt;
+}
+
+.summary {
+    padding: 4pt;
+    background-color: white;
+    border-radius: 0pt 0pt 6pt 6pt;
+    margin-bottom: 4pt;
+}
+
+.context-values {
+    border-spacing: 6pt;
+}
+
+.context-values th {
+    text-align: right;
+}
+
+.context-values td {
+    text-align: left;
+}
+
+
+/*----------------------------*
+ * Screen-reader-only content *
+ *----------------------------*/
+
+/* See: https://webaim.org/techniques/css/invisiblecontent/ */
+.sr-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+}
+
+
+/*-------------*
+ * Sticky bins *
+ *-------------*/
+
+
+/* Rules for sticky floating bins */
+.sticky_context {
+    box-sizing: border-box;
+    transition: height 0.5s ease-out;
+}
+
+.sticky_floating {
+    position: fixed;
+    z-index: 100;
+    box-sizing: border-box;
+    margin: 0pt;
+    padding: 0pt;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.sticky_floating .segment {
+    width: 100%;
+}
+
+.sticky_floating .segment-liner {
+    border: none;
+}
+
+.sticky_inplace {
+    position: relative;
+}
+
+.sticky_minimized > * {
+    display: none;
+}
+
+.sticky_minimized > .bin_label {
+    position: relative;
+    display: block;
+    padding: 6pt;
+    background:#ddddff;
+    border: 1px solid #89b;
+}
+
+.sticky_maximized {
+    padding: 8pt;
+}
+
+.sticky_maximized > .bin_label {
+    position: fixed;
+    z-index: 110;
+    box-sizing: border-box;
+    border: 1px solid #458;
+    border-radius: 0pt;
+    background:#bbbbff;
+    padding: 6pt;
+    margin: 0pt;
+}
+
+.sticky_floating, .sticky_floating > .bin_label {
+    border-radius: 4pt 4pt 0pt 0pt;
+}
+
+.sticky_floating > .bin_label {
+    margin-top: 0pt;
+}
+
+
+/*----------------------------------------*
+ * Diff styling, including difflib tables *
+ *----------------------------------------*/
+
+.diff {
+    background: #eee;
+    border: 1px solid #ccc;
+    color: black;
+    font-style: normal;
+}
+
+.diff td {
+    background: #f8f8f8;
+    font-family: monospace;
+    padding: 0em 0.2em;
+    border-color: #ccc;
+}
+
+.diff th {
+    padding: 0.25em;
+}
+
+/* Output diff checking */
+.diff_sub {
+    color: #d70;
+    background: #fed;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: line-through; */
+}
+.diff_add {
+    color: #428;
+    background: #edf;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: overline; */
+}
+.diff_chg {
+    color: #833;
+    background: #fdd;
+    border: 1px solid;
+    margin: 0px -1px;
+    padding: -1px 0px;
+    font-weight: bold;
+    font-family: monospace;
+    /* text-decoration: underline; */
+}
+
+
+/*------------------------------*
+ * Rubric & snippet link styles *
+ *------------------------------*/
+
+.rubric_link {
+    /*padding: 1pt 3pt 1pt 3pt;
+    margin: 1pt 0pt 1pt 0pt;*/
+    /*border-radius: 3pt;
+    border: 1pt solid #999;*/
+    display: inline;
+}
+
+.rubric_link .category_indicator {
+    padding: 1pt 2pt 0pt 2pt;
+    border-radius: 2pt;
+    margin-right: 3pt;
+    border: 1pt solid #999;
+    display: inline-block;
+    color: black;
+}
+
+.rubric_link.category-core {
+    /*border-color: var(--core-border);*/
+    background-color: var(--core-bg);
+}
+
+.rubric_link.category-core .category_indicator {
+    /*border-color: var(--core-border);*/
+    color: var(--core-border);
+}
+
+.rubric_link.category-extra {
+    /*border-color: var(--extra-border);*/
+    background-color: var(--extra-bg);
+}
+
+.rubric_link.category-extra .category_indicator {
+    /*border-color: var(--extra-border);*/
+    color: var(--extra-border);
+}
+
+.rubric_link.unstyled {
+    border: none;
+    padding: none;
+    display: inline;
+    margin: none;
+    color: black;
+    font-weight: normal;
+    background-color: transparent;
+}
+
+.rubric_link.unstyled .category_indicator {
+   display: none;
+}
+
+.rubric_link.unstyled .goal_status {
+   display: none;
+}
+
+/*-----------------*
+ * Pygments styles *
+ *-----------------*/
+
+.highlight .hll { background-color: #ffffcc }
+code.highlight, pre.highlight, .highlight pre  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */

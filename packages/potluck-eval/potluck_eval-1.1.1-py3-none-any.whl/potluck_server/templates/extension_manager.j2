@@ -1,0 +1,39 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+{% extends "base.j2" %}
+
+{% block body_attrs %}
+class="extension_manager fullwidth"
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <a
+   href="{{url_for("route_dash", course=course, semester=semester)}}"
+   title="Click here to go back to the dashboard"
+   tabindex="0"
+  >Back to the dashboard</a>
+
+<h2>
+  Extensions for {{ target_user }}
+</h2>
+
+Note: enter extensions in hours as an integer.
+
+<ul class="psets">
+  {% for ps in task_info["psets"] %}
+    {% set initial = ps["status"]["initial_extension"] %}
+    {% set revision = ps["status"]["revision_extension"] %}
+    {% if initial != 0 or revision != 0 %}
+      {% set ext_class = "has-extension" %}
+    {% else %}
+      {% set ext_class = "no-extension" %}
+    {% endif %}
+    <li class="pset {{ ext_class }}" id="{{ps["id"]}}">
+      {% include 'pset_extensions_form.j2' %}
+    </li>
+  {% endfor %}
+</ul>
+
+</div> <!-- end of container -->
+
+{% endblock %}
