@@ -1,0 +1,95 @@
+{% extends 'opcalendar/base.html' %}
+{% load bootstrap %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% load evelinks %}
+{% block page_title %}{% trans "Create Operation" %}{% endblock page_title %}
+
+{% block content %}
+<div class="allianceauth-opcalendar">
+    <div class="clearfix">
+    	<a class="btn btn-info right mr-2" href="{% url 'opcalendar:calendar' %}?{{ next_month }} "> Next Month <i class="fas fa-forward"></i></a>
+        <a class="btn btn-info right mr-2" href="{% url 'opcalendar:calendar' %}?{{ prev_month }}"><i class="fas fa-backward"></i> Previous Month </a>
+            {% if perms.opcalendar.create_event %}
+        	<a class="btn btn-info right mr-2" href="{% url 'opcalendar:event_new' %}"><i class="fas fa-calendar-plus"></i> New Event </a>
+        {% endif %}
+        {% if perms.opcalendar.add_ingame_calendar_owner %}
+            <a class="btn btn-success right mr-2" href="{% url 'opcalendar:add_ingame_calendar' %}"><i class="fas fa-sync"></i>
+            {% translate "Add Ingame Calendar Feed" %}
+            </a>
+        {% endif %}
+        <h5>Legend & Filters:</h5>
+        <div class="legend">
+            <div>
+                <span class="event show-all">Show all</span>
+                <span class="event ingame-event">Ingame</span>
+                {% for event in visibility %}
+                     <style>.{{ event.get_visibility_class }}:before {border-color: transparent {{ event.color }} transparent transparent;border-style: solid;}</style>
+                     <span class="event {{ event.get_visibility_class }}">{{ event.name }}</span>
+                {% endfor %}
+        	</div>
+        	<div>
+        		{% if moonmining_active %}
+                    <span class="event event-moonmining">Moon Mining</span>
+                {% endif %}
+                {% if structuretimers_active %}
+                    <span class="event event-structuretimer">Timers</span>
+                {% endif %}
+                {% for event in category %}
+        			<span class="event {{ event.get_category_class }}">{{ event.name }}</span>
+        		{% endfor %}
+        	</div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="allianceauth-opcalendar">
+        {{ calendar }}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_javascript %}
+    {% include 'bundles/jquery-datetimepicker-js.html' %}
+    <script>
+        let selectedEvents = []
+
+        $('.legend').on('click', 'span', function(){
+            const classes = $(this).attr('class')
+            const selectors = '.' + classes.split(' ').join('.').replace('.active', '')
+
+            // clear all selections on show-all
+            if(selectors.includes('show-all')){
+                selectedEvents = []
+                $('.legend .event').removeClass('active')
+                $(this).addClass('active')
+            }
+
+            // remove current selection if it's already present in the selectedEvents array
+            else if(selectedEvents.includes(selectors)){
+                selectedEvents = selectedEvents.filter(event => event !== selectors)
+                $(this).removeClass('active')
+            }
+
+            // add the current selection to the selectedEvents array
+            else{
+                selectedEvents.push(selectors)
+                $(this).addClass('active')
+            }
+
+            applyCalendarFilters(selectedEvents)
+
+        })
+
+        function applyCalendarFilters(selectedEvents){
+            $('.calendar .event').hide()
+
+            if(selectedEvents.length){
+                selectedEvents.forEach(selectors => $('.calendar ' + selectors).show())
+            }
+            else{
+                $('.calendar .event').show()
+            }
+        }
+    </script>
+{% endblock %}
