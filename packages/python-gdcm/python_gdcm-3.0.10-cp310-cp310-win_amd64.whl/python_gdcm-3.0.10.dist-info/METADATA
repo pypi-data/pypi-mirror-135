@@ -1,0 +1,88 @@
+Metadata-Version: 2.1
+Name: python-gdcm
+Version: 3.0.10
+Summary: Grassroots DICOM runtime libraries
+Home-page: https://github.com/tfmoraes/python-gdcm/
+Author: Thiago Franco de Moraes
+Author-email: totonixsame@gmail.com
+License: BSD
+Platform: Windows
+Platform: Linux
+Platform: Solaris
+Platform: Mac OS-X
+Platform: Unix
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Scientific/Engineering
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# Python-GDCM
+
+**Unoficial** [GDCM](http://gdcm.sourceforge.net/wiki/index.php/Main_Page) packages for Python.
+
+Grassroots DiCoM is a C++ library for DICOM medical files. It is automatically wrapped to python/C#/Java (using swig). It supports RAW,JPEG (lossy/lossless),J2K,JPEG-LS, RLE and deflated. It also comes with DICOM Part 3,6 & 7 of the standard as XML files.
+
+## Installation
+
+### Using PIP
+
+```
+pip install python-gdcm
+```
+
+### From source
+
+- Install building dependencies
+    - Compiler for you platform (GCC, Clang, MSVC)
+    - Cmake (https://cmake.org/) 
+    - Swig (http://www.swig.org/)
+- Build and install python-gdcm
+    - If cmake isn't in `$PATH` export the env variable `CMAKE_EXE` to its path
+        ```
+        $ export CMAKE_EXE=/CMAKE/PATH
+        ```
+    - If swig isn't in `$PATH` export the env variable `SWIG_EXE` to its path
+        ```
+        $ export SWIG_EXE=/SWIG/PATH
+        ```
+    - Build and install
+        ```                                                                
+        $ python setup.py install
+        ```
+
+## Usage
+
+### Reading a DICOM image file
+
+```python
+import gdcm
+reader = gdcm.ImageReader()
+reader.SetFileName("dicom_image_file.dcm")
+ret = reader.Read()
+if not ret:
+    print("It was not possible to read your DICOM file")
+```
+
+### Other Examples
+
+See here https://github.com/malaterre/GDCM/tree/master/Examples/Python
+
+
