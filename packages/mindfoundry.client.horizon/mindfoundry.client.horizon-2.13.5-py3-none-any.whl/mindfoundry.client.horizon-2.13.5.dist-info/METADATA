@@ -1,0 +1,102 @@
+Metadata-Version: 2.1
+Name: mindfoundry.client.horizon
+Version: 2.13.5
+Summary: Mind Foundry Horizon Client
+Home-page: https://mindfoundry.ai/horizon
+Author: Mind Foundry Ltd
+Author-email: support@mindfoundry.ai
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: requests
+Requires-Dist: attrs
+Requires-Dist: httpx (<0.19,>=0.16.1)
+Requires-Dist: python-dateutil
+Provides-Extra: all
+Requires-Dist: numpy ; extra == 'all'
+Requires-Dist: pandas ; extra == 'all'
+Requires-Dist: requests ; extra == 'all'
+Requires-Dist: attrs ; extra == 'all'
+Requires-Dist: httpx (<0.19,>=0.16.1) ; extra == 'all'
+Requires-Dist: python-dateutil ; extra == 'all'
+Requires-Dist: black (==20.8b1) ; extra == 'all'
+Requires-Dist: check-manifest (==0.46) ; extra == 'all'
+Requires-Dist: coverage (==5.5) ; extra == 'all'
+Requires-Dist: isort (==5.8.0) ; extra == 'all'
+Requires-Dist: mypy (==0.812) ; extra == 'all'
+Requires-Dist: pre-commit (==2.11.1) ; extra == 'all'
+Requires-Dist: pylint (==2.7.2) ; extra == 'all'
+Requires-Dist: pytest (==6.2.4) ; extra == 'all'
+Requires-Dist: pytest-httpx (==0.12.0) ; extra == 'all'
+Requires-Dist: pytest-timeout (==1.4.2) ; extra == 'all'
+Requires-Dist: pytest-tldr (==0.2.4) ; extra == 'all'
+Requires-Dist: pytest-asyncio (==0.14.0) ; extra == 'all'
+Requires-Dist: bandit (==1.7.0) ; extra == 'all'
+Provides-Extra: dev
+Requires-Dist: black (==20.8b1) ; extra == 'dev'
+Requires-Dist: check-manifest (==0.46) ; extra == 'dev'
+Requires-Dist: coverage (==5.5) ; extra == 'dev'
+Requires-Dist: isort (==5.8.0) ; extra == 'dev'
+Requires-Dist: mypy (==0.812) ; extra == 'dev'
+Requires-Dist: pre-commit (==2.11.1) ; extra == 'dev'
+Requires-Dist: pylint (==2.7.2) ; extra == 'dev'
+Requires-Dist: pytest (==6.2.4) ; extra == 'dev'
+Requires-Dist: pytest-httpx (==0.12.0) ; extra == 'dev'
+Requires-Dist: pytest-timeout (==1.4.2) ; extra == 'dev'
+Requires-Dist: pytest-tldr (==0.2.4) ; extra == 'dev'
+Requires-Dist: pytest-asyncio (==0.14.0) ; extra == 'dev'
+Requires-Dist: bandit (==1.7.0) ; extra == 'dev'
+
+# Mind Foundry Horizon Client
+
+This package contains a python client that can be used to interact with an instance of Mind Foundry Horizon. The client exposes a familiar interface that allows you to tackle forecasting problems with ease.
+
+```python
+from mindfoundry.client.horizon import Connection
+from mindfoundry.client.horizon.models import HorizonForecaster
+
+# Generate an API key in the Horizon dashboard
+connection = Connection(
+    base_url="your Horizon instance",
+    api_key="your api key",
+)
+
+# Create a new forecasting model. See the complete documentation
+# for a more in-depth explanation of each argument.
+model = HorizonForecaster(
+    connection=connection,
+    name="My Forecaster",
+    targets=["target1", "target2", ...],
+    horizons=[1, 2, 3],
+    refinement=False,
+)
+
+# Train a model on some training data (a pandas dataframe)
+model.fit(training_data)
+
+# Make a prediction on new data
+prediction = model.predict(new_data)
+print(prediction.as_df().head())
+
+# Save the model for later use
+model.save("/path/to/model/file")
+
+# Re-load the model
+model = HorizonForecaster.load("/path/to/model/file", connection=connection)
+
+# The model can be updated with new data in the same format
+model.update(new_data_2)
+new_prediction = model.predict()
+```
+
+
