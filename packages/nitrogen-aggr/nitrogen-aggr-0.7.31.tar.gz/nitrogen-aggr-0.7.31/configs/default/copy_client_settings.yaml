@@ -1,0 +1,26 @@
+debug: false
+
+#    """
+#    copy the client setting table  from the app setting table
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  EpiAnalyst_Client_Settings_temp:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+    # Note: Load tables have to be same as Extract tables.
+Load:
+  EpiAnalyst_Client_Settings_temp:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/EpiAnalyst_Client_Settings_temp'
+      mode: overwrite

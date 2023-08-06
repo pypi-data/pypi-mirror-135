@@ -1,0 +1,119 @@
+debug: false
+
+#    """
+#    Logic:
+#    This yaml calculate the log of monthly stats
+#    For a set of measure we record the most current value of the month
+#    if the last_recorded timestamp year/month (in monthly_stats) is the same as the current_date() year/month
+#    we append new records (from the audit table: nitrogen_yearly_dashboard) with an UPDATE operation
+#    else we append  new records with an insert operation
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = True
+
+Extract:
+  aggr_nitrogen_yearly_dashboard:
+    type: parquet
+    location: "{aggr_location}/nitrogen_yearly_dashboard/"
+
+  aggr_monthly_stats:
+    type: parquet
+    location: "{aggr_location}/monthly_stats/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+         SELECT
+            max(j.id) as cad_job_id
+          FROM job j
+          WHERE status = 'OPEN' and client_name ='{client}'
+    cache: true
+
+  new_values:
+    sql: >-
+      with
+      last_recorded_1 as (
+        select case when  year(current_date()) = year(max(record_timestamp)) and
+                          month(current_date()) =  month(max(record_timestamp))
+                    then 'UPDATE'
+                    else 'INSERT'
+                end  as operation,
+                max(record_timestamp) as last_record_timestamp
+        from aggr_monthly_stats
+      ),
+      last_recorded as (
+        select * , row_number() over(order by last_record_timestamp desc ) as r
+        from last_recorded_1
+       ),
+      hist as (
+      SELECT
+        x.operation,
+        ( select cad_job_id from cad_job )  as job_id,
+        t1.record_timestamp,
+        concat(
+        cast(year(t1.record_timestamp) as string) ,
+        SUBSTRING( CONCAT('000',CAST(month(t1.record_timestamp) AS string))  ,-2,2) ) as history_month,
+        t1.year,
+        stack(8,
+                    'avg_hcc_captured', avg_hcc_captured,
+                    'avg_hcc_opp', avg_hcc_opp,
+                    'avg_raf', avg_raf,
+                    'avg_raf_demo', avg_raf_demo,
+                    'avg_raf_projected', avg_raf_projected,
+                    'eligible_count', cast(eligible_count as double),
+                    'no_dos_count', cast(no_dos_count as double),
+                    'recapture_rate', cast(recapture_rate as double)
+                    )  as ( measure, value)
+      FROM aggr_nitrogen_yearly_dashboard t1
+       inner join last_recorded x on t1.record_timestamp >  last_record_timestamp and r=1
+      )
+      select *
+      from hist x
+      where value is not null
+
+  monthly_stats:
+    sql: >-
+      With
+       last_per_month as (
+          SELECT * ,
+          row_number() over(partition by measure, year, history_month order by record_timestamp desc) as r
+          from new_values
+        )
+      select
+         hash(
+            history_month,
+            year,
+            measure,
+            value  ) as hash_value,
+        operation,
+        job_id,
+        record_timestamp,
+        history_month,
+        year,
+        measure,
+        value
+      from last_per_month
+      where r=1
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  monthly_stats:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/monthly_stats'
+      mode: append
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_monthly_dashboard
+      mode: overwrite

@@ -1,0 +1,56 @@
+debug: true
+
+#    """
+#    DE-1021 correct snapshot partition
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+
+  input_raf:
+    type: csv
+    location: "{project_root_path}/{client}/input/VMD MA_RAF_JY edit.csv"
+
+Transform:
+  raf:
+    sql: >-
+         select
+          Member_Id,
+          date(concat( right(Period_Start,4), '-', left(Period_Start, (instr(Period_Start, '/') - 1) ), '-01'))  as Period_Start,
+          case when int(left(Period_End, (instr(Period_End, '/') - 1) ))  + 1 = 13
+          THEN date(concat( right(Period_End,4), '-12-31'))
+          else date_sub( date(concat( right(Period_End,4), '-', string(int(left(Period_End, (instr(Period_End, '/') - 1) )) + 1), '-01')) , 1 )
+          end  as Period_End,
+          CASE WHEN trim(RAF_Type_Code) ='NULL' THEN 'CN'
+                ELSE ifnull(trim(RAF_Type_Code), 'CN')
+                END as  RAF_Type_Code,
+          CASE WHEN trim(Disabled_Indicator) ='NULL' THEN  null
+          else trim(Disabled_Indicator)
+                END as Disabled_Indicator,
+          CASE WHEN trim(RAF_Type_Code) IN ('CP','CF') THEN 'Y'
+               when TRIM(Medicaid_Indicator) = 'NULL' THEN null
+               else trim(Medicaid_Indicator)
+               end as Medicaid_Indicator,
+          CASE WHEN trim(Hospice) ='NULL' THEN  null
+              else trim(Hospice)
+                    END as Hospice,
+          CASE WHEN trim(ESRD) ='NULL' THEN  null
+              else trim(ESRD)
+                    END as ESRD
+          from input_raf
+    cache: false
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  raf:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/input/raf'
+      mode: overwrite

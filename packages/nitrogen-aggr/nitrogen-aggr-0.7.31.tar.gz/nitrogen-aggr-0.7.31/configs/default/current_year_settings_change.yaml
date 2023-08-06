@@ -1,0 +1,55 @@
+debug: false
+
+#    """
+#    change temporarely the current year from the app setting table
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  EpiAnalyst_Client_Settings_temp:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings_temp/"
+
+Transform:
+  EpiAnalyst_Client_Settings:
+    sql: >-
+        select
+          dbid ,
+            name ,
+            (current_year + 1 ) as current_year ,
+            recapture_time_frame ,
+            delete_disconnected_providers ,
+            epiencounter_dataload ,
+            cpt_suspecting ,
+            lab_suspecting ,
+            phm_suspecting ,
+            ml_suspecting ,
+            dual_raf_boost ,
+            current_eligibility_operator ,
+            current_eligibility_eligible_month_count ,
+            current_eligibility_max_eligible_month ,
+            prior_eligibility_operator ,
+            prior_eligibility_eligible_month_count ,
+            prior_eligibility_max_eligible_month ,
+            current_hra_hcc_list_tier_0 ,
+            current_hra_hcc_list_tier_1 ,
+            current_hra_hcc_list_tier_2 ,
+            current_date() as load_date,
+            year(current_date()) as load_year ,
+            load_month
+        from EpiAnalyst_Client_Settings_temp x
+
+    # Note: Load tables have to be same as Extract tables.
+Load:
+  EpiAnalyst_Client_Settings:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/EpiAnalyst_Client_Settings'
+      mode: overwrite

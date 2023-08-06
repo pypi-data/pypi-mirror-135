@@ -1,0 +1,81 @@
+# ETL Job
+name: flexi-etl-example
+step:  flex-etl-step
+debug: true
+
+## Files to Load / Create View
+variables:
+  - master_location = "{data_parent_location}/master"
+  - ssd_location = "{data_parent_location}/ssd"
+  - report_location = "{data_parent_location}/report"
+  - cad_job_id =  "{cad_job_id}" # if None use run_pipeline.sh values.
+  - debug = True
+# Spark settings
+# repartition: 10
+
+Extract:
+  member_index_by_medicaid:
+    type: parquet
+    location: "{master_location}/member_index_by_medicaid"
+  ssd_pcp:
+    type: parquet
+    location: "{ssd_location}/pcp"
+  csv_df:
+    type: csv
+    location: "{ssd_location}/report/example.csv"
+  postgres_df:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    database: xxx
+    table_name: yyy
+
+Transform:
+  pcp_join_member_index:
+    sql: >-
+      select
+        *,
+        '{cad_job_id}' as job_id,
+        current_timestamp() as created_at
+      FROM ssd_pcp LEFT JOIN
+        (
+        SELECT
+          first(epi_member_id) as epi_member_id,
+          medicaid_id,
+          medicaid_par
+        FROM member_index_by_medicaid
+       GROUP BY medicaid_id, medicaid_par
+      ) as medicaid_index_unq
+      ON medicaid_index_unq.medicaid_par = CONCAT('m', RIGHT(IFNULL(ssd_pcp.member_medicaid_id, 'xxxxxxxxxxx'), 2)) AND medicaid_index_unq.medicaid_id = ssd_pcp.member_medicaid_id
+    cache: true # should be true if dataframe is used for more than 1 time.
+
+  pcp_master_with_epi_member_id:
+    sql: "select * from pcp_join_member_index where epi_member_id IS NOT Null"
+    cache: false
+
+  pcp_master_without_epi_member_id:
+    sql: "select * from pcp_join_member_index where epi_member_id IS Null"
+    cache: false
+
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+    pcp_master_with_epi_member_id:
+      load_1:
+        type: parquet
+        location: '{master_location}/pcp_pby_epi_member_id_par'
+        partitions:
+          - epi_member_id_par
+          - job_id
+
+    pcp_master_without_epi_member_id:
+      load_1:
+        type: csv
+        location: '{report_location}/{cad_job_id}/pcp_without_epi_member_id'
+        partitions: 1
+
+      load_2:
+        type: postgres
+        conn_config_name: cadmium_postgres_db
+        database: xxx
+        table_name: yyy
+        mode: append

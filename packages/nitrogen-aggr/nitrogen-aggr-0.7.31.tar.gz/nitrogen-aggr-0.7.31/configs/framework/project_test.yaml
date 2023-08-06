@@ -1,0 +1,21 @@
+general:
+#test directory
+
+
+# aws test directory where the test input, arguments and
+# outputs are stored
+aws_test_directory:
+  bucket: "epidatalake-test"
+  base_key: "sandbox/margarita.matos/"
+
+# configurations specific to unit_test_data_factory
+test_data_factory:
+  fraction: 0.1
+  limit: 100
+
+# configurations specific to the test_etl_job
+# (tests/test_etl_job)
+test_etl_job:
+  # jobs [module_path, class_name, method_name]
+  jobs:
+    - ["jobs.etl_job_base", "EtlJobBase", "transform_data", "202007091146"]

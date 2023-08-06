@@ -1,0 +1,30 @@
+debug: false
+
+#    """
+#    This is temporal to copy non-incremental sync tables to PG. To retire completely the sync pipeline.
+#  ea.load_suspect_sources
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+
+  Load_EA_Suspect_Sources:
+    type: parquet
+    location: "{project_root_path}/{client}/Load_EA_Suspect_Sources/"
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+
+  Load_EA_Suspect_Sources:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_suspect_sources
+      mode: overwrite

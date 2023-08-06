@@ -1,0 +1,41 @@
+debug: true
+
+#    """
+#    DE-1021 correct snapshot partition
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+
+  EA_Member_Details_Snapshot_PARTITION:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_Member_Details_Snapshot_PARTITION/"
+
+Transform:
+
+  EA_Member_Details_Snapshot_2:
+    sql: >-
+     SELECT distinct
+        *,
+          timestamp('{cad_job_id}') as load_timestamp,
+          replace(string('{cad_job_id}'), '-','') as snapshot_date
+     FROM EA_Member_Details_Snapshot_PARTITION
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  EA_Member_Details_Snapshot_2:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/EA_Member_Details_Snapshot'
+      partitions:
+        - snapshot_date
+      mode: overwrite
+
+
