@@ -1,0 +1,59 @@
+Metadata-Version: 2.1
+Name: django-economy-sectors
+Version: 0.1.2
+Summary: A Django app that helps managing economy sectors' information in multiple levels, in a standardized way across different standards.
+Home-page: https://github.com/CardoAI/django-economy-sectors
+Author: Kristi Kotini
+Author-email: hello@cardoai.com
+License: MIT (X11)
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Requires-Python: >=3.9
+License-File: LICENSE
+
+======================
+Django Economy Sectors
+======================
+
+This library allows the utilization of Economy Sectors, from different standards,
+as well as conversion between them.
+
+Supported standards:
+
+* NACE
+* ATECO
+* GICS
+* ISIC (rev4)
+* NAICS (2022)
+* SIC
+* SAE
+
+Quick start
+-----------
+1. Add "geographical_module" to your INSTALLED_APPS setting like this::
+
+    INSTALLED_APPS = [
+        ...
+        'economy_sectors',
+    ]
+
+2. Run ``python manage.py migrate`` to create the models.
+
+3. Run ``python manage.py load_standards_data`` to populate the database with the initial records.
+
+4. Run ``python manage.py load_standards_relations`` to populate the database with the relationship between standards.
+
+
