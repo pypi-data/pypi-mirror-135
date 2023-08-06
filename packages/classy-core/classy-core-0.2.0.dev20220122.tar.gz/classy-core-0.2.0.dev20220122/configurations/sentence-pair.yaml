@@ -1,0 +1,34 @@
+task: sentence-pair
+project_name: classy
+exp_name: null
+exp_folder: ./experiments/${exp_name}
+
+transformer_model: "bert-large-cased"
+
+callbacks_monitor: 'val_micro-f1-score'
+callbacks_mode: 'max'
+
+hydra:
+  # customize working dir
+  run:
+    dir: ./experiments/${exp_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  # customize logging
+  verbose: [ classy ]
+  job_logging:
+    formatters:
+      simple:
+        format: '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+    root:
+      level: WARN
+
+# defaults
+defaults:
+  - callbacks: empty
+  - data: sentence-pair
+  - device: cuda
+  - evaluation: sentence-pair
+  - model: sentence-pair
+  - prediction: sentence-pair
+  - training: default
+  - logging: default
+  - _self_
