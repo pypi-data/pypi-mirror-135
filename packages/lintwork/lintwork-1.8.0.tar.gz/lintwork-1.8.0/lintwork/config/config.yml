@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: worker
+metadata:
+  name: lintwork
+spec:
+  cpp:
+    checkpatch:
+      - --no-summary
+      - --no-tree
+      - --terse
+    cpplint:
+  java:
+    aosplint:
+      - --disable
+      - LintError
+      - --nolines
+      - --quiet
+    checkstyle:
+      - -jar
+      - /home/craftslab/opt/checkstyle/lib/checkstyle.jar
+      - -c=/home/craftslab/opt/checkstyle/etc/google_checks.xml
+    stringscheck:
+  make:
+    checkmake:
+      - --format=:{{.LineNumber}}::{{.Violation}}\n
+  python:
+    flake8:
+  sast:
+    rapidscan:
+  sca:
+    licenseclassifier:
+    scancode:
+  shell:
+    shellcheck:
+      - --format=gcc
