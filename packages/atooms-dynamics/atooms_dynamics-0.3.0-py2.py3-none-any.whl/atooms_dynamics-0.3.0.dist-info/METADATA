@@ -1,0 +1,102 @@
+Metadata-Version: 2.1
+Name: atooms-dynamics
+Version: 0.3.0
+Summary: UNKNOWN
+Home-page: https://framagit.org/atooms/dynamics
+Author: Daniele Coslovich
+Author-email: daniele.coslovich@umontpellier.fr
+License: GPLv3
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Physics
+Description-Content-Type: text/markdown
+Requires-Dist: atooms-models (>=1.0.6)
+Requires-Dist: atooms (>=3.5.0)
+Requires-Dist: numpy
+
+# Dynamics
+
+[![pypi](https://img.shields.io/pypi/v/atooms-dynamics.svg)](https://pypi.python.org/pypi/atooms-dynamics/)
+[![version](https://img.shields.io/pypi/pyversions/atooms-dynamics.svg)](https://pypi.python.org/pypi/atooms-dynamics/)
+[![license](https://img.shields.io/pypi/l/atooms-pp.svg)](https://en.wikipedia.org/wiki/GNU_General_Public_License)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fframagit.org%2Fatooms%2Fdynamics/HEAD?labpath=docs%2Findex.ipynb)
+[![pipeline](https://framagit.org/atooms/dynamics/badges/master/pipeline.svg)](https://framagit.org/atooms/dynamics/badges/master/pipeline.svg)
+[![coverage report](https://framagit.org/atooms/dynamics/badges/master/coverage.svg)](https://framagit.org/atooms/dynamics/-/commits/master)
+
+Netwonian and stochastic dynamics backends for atooms.
+
+## Quick start
+
+Run a molecular dynamics simulation of a Lennard-Jones system from an existing xyz file
+```python
+from atooms.trajectory import Trajectory
+from atooms.simulation import Simulation
+from atooms.dynamics.netwonian import VelocityVerlet
+
+# Start from the last frame of input.xyz
+trajectory = Trajectory('input.xyz')
+system = trajectory[-1]
+system.interaction = Interaction('lennard_jones')
+backend = VelocityVerlet(system, timestep=0.002)
+sim = Simulation(backend, steps=200)
+sim.run()
+```
+
+Do the same via the API, storing configurations in `output.xyz`,
+```python
+from atooms.dynamics.api import md
+
+md('input.xyz', 'output.xyz',
+   method='velocity-verlet', model='lennard_jones',
+   dt=0.002, nsteps=200, config_number=20)
+```
+
+or from the command line
+```sh
+md.py --method velocity-verlet -n 200 --dt 0.002 --config-number 20 input.xyz output.xyz
+```
+
+## Features
+
+Integration algorithms (*work in progress*)
+
+- Netwonian dynamics
+  - velocity-Verlet
+  - Nose-Poincaré
+- Stochastic dynamics
+  - overdamped Langevin dynamics
+
+## Documentation
+
+Check out the [tutorial](https://atooms.frama.io/dynamics/tutorial) for more examples and the [public API](https://atooms.frama.io/postprocessing/api/dynamics) for full details.
+
+Org-mode and jupyter notebooks are available under `docs/`. You can run the tutorial interactively on [Binder]( https://mybinder.org/v2/git/https%3A%2F%2Fframagit.org%2Fatooms%2Fdynamics/HEAD?labpath=docs%2Findex.ipynb).
+
+## Installation
+
+From pypi
+```
+pip install atooms-dynamics
+```
+
+You can clone the code repository and install from source
+```
+git clone https://framagit.org/atooms/dynamics.git
+cd dynamics
+make install
+```
+
+## Contributing
+
+Contributions to the project are welcome. If you wish to contribute, check out [these guidelines](https://framagit.org/atooms/atooms/-/blob/master/CONTRIBUTING.md).
+
+## Authors
+
+Daniele Coslovich: https://www.units.it/daniele.coslovich/
+
+
