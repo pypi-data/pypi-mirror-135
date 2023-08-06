@@ -1,0 +1,20 @@
+JSON Logger for MicroServices. Prints logs to the stdout of the service and can be shipped to ES by leveraging a centralized tool like Fluentd
+Usage Examples
+`json_std_logger` is the log object that the library exports and it exposes methods for all log levels which is shown in the examples. 
+Note that passing multiple arguments to the logger will print them in messages and passing named parameters to the logger will add them as extra parameters in the final log record.
+
+```
+from json_logger_stdout import JSONStdFormatter, json_std_logger
+
+json_std_logger.error('error log')
+json_std_logger.info('info log')
+json_std_logger.debug('debug log')
+
+import logging
+json_std_logger.setLevel(logging.DEBUG)
+json_std_logger.debug('debug log')
+
+json_std_logger.setFormatter('%(timestamp)s %(level)s %(name) %(filename)s %(lineno)s %(module)s %(message)s')
+json_std_logger.setFormatter(None, JSONStdFormatter('%(timestamp)s %(level)s %(name) %(filename)s %(lineno)s %(module)s %(message)s'))
+json_std_logger.debug({'a': 'relates'}, {'ljlkjl': 3823}, extra='extraInfo')
+```
