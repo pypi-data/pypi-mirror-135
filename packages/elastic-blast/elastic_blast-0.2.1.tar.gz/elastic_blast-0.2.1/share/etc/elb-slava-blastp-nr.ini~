@@ -1,0 +1,23 @@
+# ElasticBLAST configuration file template to run Slava Brover's blastp against nr (PD-3375)
+# "Running BLASTP of the 11091 sequences vs. NR has taken 1 hour." 03/04/20
+
+[cloud-provider]
+gcp-project = ncbi-sandbox-blast
+gcp-region = us-east4
+gcp-zone = us-east4-b
+
+[cluster]
+labels = branch=develop
+#machine-type = n1-standard-96
+num-nodes = 4
+pd-size = 3000G
+use-preemptible = 1
+
+[blast]
+program = blastp
+db = nr
+queries = gs://elastic-blast-samples/queries/protein/COALA70.fa.gz
+batch-len = 20000
+
+[timeouts]
+#init-pv = 15
