@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>abcgan package &mdash; Atmospheric Background Characterization Generative Adversarial Network (ABCGAN) 0.2 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="abcgan" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Atmospheric Background Characterization Generative Adversarial Network (ABCGAN)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">abcgan</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">abcgan package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.constants">abcgan.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.interface">abcgan.interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.mask">abcgan.mask module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.mean_estimation">abcgan.mean_estimation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.model">abcgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.persist">abcgan.persist module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan.transforms">abcgan.transforms module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-abcgan">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">abcgan package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.constants">abcgan.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.interface">abcgan.interface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.mask">abcgan.mask module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.mean_estimation">abcgan.mean_estimation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.model">abcgan.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.persist">abcgan.persist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan.transforms">abcgan.transforms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-abcgan">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Atmospheric Background Characterization Generative Adversarial Network (ABCGAN)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">abcgan</a> &raquo;</li>
+      <li>abcgan package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/abcgan.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="abcgan-package">
+<h1>abcgan package<a class="headerlink" href="#abcgan-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-abcgan.constants">
+<span id="abcgan-constants-module"></span><h2>abcgan.constants module<a class="headerlink" href="#module-abcgan.constants" title="Permalink to this headline"></a></h2>
+<p>File for global constants used in the program.</p>
+</section>
+<section id="module-abcgan.interface">
+<span id="abcgan-interface-module"></span><h2>abcgan.interface module<a class="headerlink" href="#module-abcgan.interface" title="Permalink to this headline"></a></h2>
+<p>Code for top level interface.</p>
+<p>This code is added to the main package level in __init__.py</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.anomaly_estimation_1d">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">anomaly_estimation_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fakes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.anomaly_estimation_1d" title="Permalink to this definition"></a></dt>
+<dd><p>compute an unbounded anomaly score for a new data sample using logsumexp computation method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fakes</strong> (<em>torch.Tensor</em>) – n_samples x n_alt x n_features background variables</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – 1 x n_alt x n_features broadcast n_samples times to match fakes data shape</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>anomalies</strong> – 1 x n_alt x n_feat output of anomaly scores (unbounded).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1 xnp.ndarray, np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.anomaly_estimation_nd">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">anomaly_estimation_nd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fakes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.anomaly_estimation_nd" title="Permalink to this definition"></a></dt>
+<dd><p>compute an unbounded anomaly score for a new data sample using logsumexp computation method (N-dimensional)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fakes</strong> (<em>torch.Tensor</em>) – n_samples x n_alt x n_features background variables</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – 1 x n_alt x n_features broadcast n_samples times to match fakes data shape</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>anomalies</strong> – 1 x n_alt x n_feat output of anomaly scores (unbounded).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1 xnp.ndarray, np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.anomaly_score">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">anomaly_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.anomaly_score" title="Permalink to this definition"></a></dt>
+<dd><p>returns unbounded anomaly score for a given set of driver parameters and data. more positive numbers are more confident.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – 1 x n_drivers input driving parameters (not z-scaled). one sample at a time</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – 1 x n_alt_in x n_meas</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>anomalies</strong> – 1 x n_alt x n_feat output of anomaly scores (unbounded).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1 xnp.ndarray, np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.discriminate">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">discriminate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.discriminate" title="Permalink to this definition"></a></dt>
+<dd><p>Score how well the measurements match with historical observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – list of names of driving parameters</p></li>
+<li><p><strong>measurements</strong> (<em>np.ndarray</em>) – n_samples x n_alt_in x n_meas input list of altitude measurements,
+n_alt_in should be less than max_alt.</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>scores</strong> – n_samples x n_alt output normalcy scores in the range [0, 1.0].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.estimate_drivers">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">estimate_drivers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dr_gan'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.estimate_drivers" title="Permalink to this definition"></a></dt>
+<dd><p>Predict drivers 2 hours into the future driver GAN model. Used for real-time
+background predictions using drivers from 2 hours ago.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>predicted_drivers</strong> – estimation of driver features two hours from the drivers inputted</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.gen_stats">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">gen_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.gen_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Statistical distribution of 10,000 upper altitude data points conditioned on driver parameters and lower altitude measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – n_samples x n_alt_in x n_meas</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – 2xn_avg*n_samples x n_alt x n_feat output anomaly scores (unbounded). The first element is the fake output.
+The second array entry contains the scaled background variables with repeats</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.generate">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_alt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate synthetic data consistent with the historical distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – list of names of driving parameters</p></li>
+<li><p><strong>measurements</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – n_samples x n_alt_in x n_meas input list of altitude measurements,
+n_alt_in should be less than n_alt. These represent fixed
+measurements for the lowest altitudes to condition on.
+Usually left as default (None)</p></li>
+<li><p><strong>n_alt</strong> (<em>int</em><em>, </em><em>optional</em>) – number of altitude measurements to draw, defaults to max_alt</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – n_samples x n_alt x n_meas output measurements at each requested
+altitude. If measurements is not None then the measurements for
+the first n_alt_in will be copied over from the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.stack_bvs">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">stack_bvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bv_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.stack_bvs" title="Permalink to this definition"></a></dt>
+<dd><p>Stacks drivers in appropriate format.</p>
+<p>This function is provided for convenience.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bv_dict</strong> (<em>dict</em>) – Dictionary mapping names of background variables
+to numpy arrays with values for those bvs. Each
+array should have shape n_sapmles x n_altitudes.
+Can also use <cite>h5py.Group</cite>.</p></li>
+<li><p><strong>bv_type</strong> (<em>str</em>) – string specifying weather to stack radar or
+lidar data</p></li>
+<li><p><strong>abcgan.bv_names</strong> (<em>Valid names for drivers can be found at</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If the input shape of the bv dict values is not corrects</p></li>
+<li><p><strong>KeyError:</strong> – If one of the required bvs is missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.interface.stack_drivers">
+<span class="sig-prename descclassname"><span class="pre">abcgan.interface.</span></span><span class="sig-name descname"><span class="pre">stack_drivers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.interface.stack_drivers" title="Permalink to this definition"></a></dt>
+<dd><p>Stacks drivers in appropriate format.</p>
+<p>This function is provided for convenience.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver_dict</strong> (<em>dict</em>) – Dictionary mapping names of drivers to the numpy arrays
+with values for those drivers. Each array has a single
+dimension of the same length n_samples.
+Can also use an <cite>h5py.Group</cite>.</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – names of the drivers to load</p></li>
+<li><p><strong>abcgan.driver_names</strong> (<em>Valid names for drivers can be found at</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If the driver values have the wrong type or shape.</p></li>
+<li><p><strong>KeyError:</strong> – If one of the required drivers is missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-abcgan.mask">
+<span id="abcgan-mask-module"></span><h2>abcgan.mask module<a class="headerlink" href="#module-abcgan.mask" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.mask.mask_altitude">
+<span class="sig-prename descclassname"><span class="pre">abcgan.mask.</span></span><span class="sig-name descname"><span class="pre">mask_altitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bv_feat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.mask.mask_altitude" title="Permalink to this definition"></a></dt>
+<dd><p>Creates an altitude mask for nans in bvs.</p>
+<p>Also replaces nans with numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bv_feat</strong> (<em>torch.Tensor</em>) – background variables</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>bv_feat</strong> (<em>torch.Tensor</em>) – bv_feat with nans replaced, done in place but returned for clarity</p></li>
+<li><p><strong>alt_mask</strong> (<em>torch.Tensor</em>) – Mask that is true for valid altitudes</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError:</strong> – If valid values are not contiguous.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.mask.prev_driver_mask">
+<span class="sig-prename descclassname"><span class="pre">abcgan.mask.</span></span><span class="sig-name descname"><span class="pre">prev_driver_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unix_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.mask.prev_driver_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a driver mask of samples that have a previous sample
+and a mapping vector to the previous sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unix_time</strong> (<em>np.array</em>) – time stamp of driver samples</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>prev_dr_map</strong> (<em>np.array</em>) – vector mapping each sample to its delayed sample</p></li>
+<li><p><strong>dr_mask</strong> (<em>torch.Tensor</em>) – Mask of valid driver samples that have a delayed sample</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-abcgan.mean_estimation">
+<span id="abcgan-mean-estimation-module"></span><h2>abcgan.mean_estimation module<a class="headerlink" href="#module-abcgan.mean_estimation" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="abcgan.mean_estimation.Transformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">abcgan.mean_estimation.</span></span><span class="sig-name descname"><span class="pre">Transformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_dr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_bv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_alt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nhead</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_encoder_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_feedforward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'relu'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.mean_estimation.Transformer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Transformer Class with only the encoder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d_model</strong> (<em>int</em>) – the number of expected features in the encoder/decoder inputs</p></li>
+<li><p><strong>d_stack</strong> (<em>int</em>) – the number of features to stack to output</p></li>
+<li><p><strong>nhead</strong> (<em>int</em>) – the number of heads in the multiheadattention models</p></li>
+<li><p><strong>num_encoder_layers</strong> (<em>int</em>) – the number of sub-encoder-layers in the encoder</p></li>
+<li><p><strong>dim_feedforward</strong> (<em>int</em>) – the dimension of the feedforward network model</p></li>
+<li><p><strong>dropout</strong> (<em>int</em>) – the dropout value</p></li>
+<li><p><strong>activation</strong> (<em>str</em>) – the activation function of encoder/decoder intermediate layer</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.mean_estimation.Transformer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_key_padding_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.mean_estimation.Transformer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Take in and process masked source/target sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver_src</strong> (<em>torch.Tensor</em>) – (n_batch, d_dr) the sequence to the encoder (required) .</p></li>
+<li><p><strong>bv_src</strong> (<em>torch.Tensor</em>) – (n_batch, n_alt, d_bv) the sequence to the decoder (required).</p></li>
+<li><p><strong>src_key_padding_mask</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – the ByteTensor mask for src keys per batch (optional).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.mean_estimation.Transformer.generate_square_subsequent_mask">
+<span class="sig-name descname"><span class="pre">generate_square_subsequent_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#abcgan.mean_estimation.Transformer.generate_square_subsequent_mask" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a square mask for the sequence. The masked positions are
+filled with float(‘-inf’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sz</strong> (<em>int</em>) – Unmasked positions are filled with float(0.0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="abcgan.mean_estimation.Transformer.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#abcgan.mean_estimation.Transformer.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-abcgan.model">
+<span id="abcgan-model-module"></span><h2>abcgan.model module<a class="headerlink" href="#module-abcgan.model" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="abcgan.model.Critic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">abcgan.model.</span></span><span class="sig-name descname"><span class="pre">Critic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Critic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Critic Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transformer</strong> (<em>torch.nn.Module</em>) – transformer for the critic</p></li>
+<li><p><strong>n_layers</strong> (<em>int</em>) – number of layers in MLP</p></li>
+<li><p><strong>img_dim</strong> (<em>int</em>) – the dimension of the images, fitted for the dataset used, a scalar</p></li>
+<li><p><strong>hidden_dim</strong> (<em>int</em>) – the inner dimension, a scalar</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.model.Critic.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bv_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_key_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Critic.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Function for completing a forward pass of the critic: Given an image
+tensor, returns a 1-dimension tensor representing a fake/real
+prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bv_features</strong> (<em>torch.Tensor</em>) – a flattened image tensor with dimension
+(n_batch, max_alt, n_bv_feat)</p></li>
+<li><p><strong>driver_src</strong> (<em>torch.Tensor</em>) – tensor of driver features from data loader (n_batch, n_dr_feat)</p></li>
+<li><p><strong>real</strong> (<em>torch.Tensor</em>) – tensor of bv features from data loader (n_batch, n_alt, n_bv_feat)</p></li>
+<li><p><strong>src_key_mask</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – mask for bv features from data loader (n_batch, n_alt)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="abcgan.model.Critic.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#abcgan.model.Critic.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Critic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">abcgan.model.</span></span><span class="sig-name descname"><span class="pre">Driver_Critic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Driver_Critic" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Critic Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_layers</strong> (<em>int</em>) – number of layers in MLP</p></li>
+<li><p><strong>img_dim</strong> (<em>int</em>) – the dimension of the images, fitted for the dataset used, a scalar</p></li>
+<li><p><strong>hidden_dim</strong> (<em>int</em>) – the inner dimension, a scalar</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Critic.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dr_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr_prev</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Driver_Critic.forward" title="Permalink to this definition"></a></dt>
+<dd><p>forward pass of the critic for driver augmentation: Given an image
+tensor, returns a 1-dimension tensor representing a fake/real
+prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dr_src</strong> (<em>torch.Tensor</em>) – tensor of driver features (n_batch, n_dr_feat)</p></li>
+<li><p><strong>dr_prev</strong> (<em>torch.Tensor</em>) – tensor of past driver features  (n_batch, n_dr_feat)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Critic.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#abcgan.model.Driver_Critic.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Generator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">abcgan.model.</span></span><span class="sig-name descname"><span class="pre">Driver_Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Driver_Generator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Generator Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_layers</strong> (<em>int</em>) – number of MLP layers</p></li>
+<li><p><strong>latent_dim</strong> (<em>int</em>) – the dimension of the input latent vector</p></li>
+<li><p><strong>img_dim</strong> (<em>int</em>) – the dimension of the images, fitted for the dataset used, a scalar</p></li>
+<li><p><strong>hidden_dim</strong> (<em>int</em>) – the inner dimension, a scalar</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Generator.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dr_prev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Driver_Generator.forward" title="Permalink to this definition"></a></dt>
+<dd><p>forward pass of the generator for driver augmentation:
+Given driver sample from the past and noise tensor,
+returns generated driver sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dr_prev</strong> (<em>torch.Tensor</em>) – tensor of past driver features from data loader (n_batch, n_dr_feat)</p></li>
+<li><p><strong>noise</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – a noise tensor with dimensions (n_batch, latent_dim)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="abcgan.model.Driver_Generator.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#abcgan.model.Driver_Generator.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="abcgan.model.Generator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">abcgan.model.</span></span><span class="sig-name descname"><span class="pre">Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Generator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Generator Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transformer</strong> (<em>torch.nn.Module</em>) – transformer for the generator</p></li>
+<li><p><strong>n_layers</strong> (<em>int</em>) – number of MLP layers</p></li>
+<li><p><strong>latent_dim</strong> (<em>int</em>) – the dimension of the input latent vector</p></li>
+<li><p><strong>img_dim</strong> (<em>int</em>) – the dimension of the images, fitted for the dataset used, a scalar</p></li>
+<li><p><strong>hidden_dim</strong> (<em>int</em>) – the inner dimension, a scalar</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="abcgan.model.Generator.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_key_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.model.Generator.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Function for completing a forward pass of the generator:
+Given a noise tensor,
+returns generated images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver_src</strong> (<em>torch.Tensor</em>) – tensor of driver features from data loader (n_batch, n_dr_feat)</p></li>
+<li><p><strong>bv_src</strong> (<em>torch.Tensor</em>) – tensor of bv featrues from data loader (n_batch, n_alt, n_bv_feat)</p></li>
+<li><p><strong>src_key_mask</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – mask for bv features from data loader (n_alt, n_batch)</p></li>
+<li><p><strong>noise</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – a noise tensor with dimensions (n_batch, latent_dim)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="abcgan.model.Generator.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#abcgan.model.Generator.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-abcgan.persist">
+<span id="abcgan-persist-module"></span><h2>abcgan.persist module<a class="headerlink" href="#module-abcgan.persist" title="Permalink to this headline"></a></h2>
+<p>This module supports persistence of the generator and discriminator.</p>
+<p>It saves two files a parameters file and a configuration file.</p>
+<p>It also supports persisting of multiple modules.</p>
+<p>To be persistable in this way the module must have a property
+containing a json serializable input dictionary as
+mdl.input_args</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.persist.fullname">
+<span class="sig-prename descclassname"><span class="pre">abcgan.persist.</span></span><span class="sig-name descname"><span class="pre">fullname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.persist.fullname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.persist.persist">
+<span class="sig-prename descclassname"><span class="pre">abcgan.persist.</span></span><span class="sig-name descname"><span class="pre">persist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">critic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wgan_gp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/valentic/sandbox/atmosense/test/lib/python3.9/site-packages/abcgan/models'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.persist.persist" title="Permalink to this definition"></a></dt>
+<dd><p>Persists abcgan generator and critic modules.</p>
+<p>Persists both input arguments and parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>generator</strong> – torch.nn.Module
+module for the generator</p></li>
+<li><p><strong>critic</strong> – torch.nn.Module
+module for the critic</p></li>
+<li><p><strong>name</strong> – str, optional
+name of the saved configuration</p></li>
+<li><p><strong>dir_path</strong> – str, optional
+default is the models directory. None assumes
+file is in local directory.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The generator, critic and any transformers passed in as
+arguments to these must be registered in persist.py and must
+have a parameter ‘input_args’ that specifies their input
+arguments as a dictionary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.persist.recreate">
+<span class="sig-prename descclassname"><span class="pre">abcgan.persist.</span></span><span class="sig-name descname"><span class="pre">recreate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wgan_gp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/valentic/sandbox/atmosense/test/lib/python3.9/site-packages/abcgan/models'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.persist.recreate" title="Permalink to this definition"></a></dt>
+<dd><p>Load a pre-trained generator and discriminator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – name of the configuration to load, as saved by
+persist. default: ‘wgan_gp’</p></li>
+<li><p><strong>dir_path</strong> (<em>str</em><em>, </em><em>optional</em>) – default is the models directory. None assumes
+file is in local directory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>generator</strong> (<em>torch.nn.module</em>) – the loaded generator</p></li>
+<li><p><strong>critic</strong> (<em>torch.nn.module</em>) – the loaded critic</p></li>
+<li><p><em>Modules must have previosuly been saved. All modules are</em></p></li>
+<li><p><em>loaded on the cpu, they can subsequently be moved.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-abcgan.transforms">
+<span id="abcgan-transforms-module"></span><h2>abcgan.transforms module<a class="headerlink" href="#module-abcgan.transforms" title="Permalink to this headline"></a></h2>
+<p>Transforms to and from z-scaled variables.</p>
+<p>Uses numpy only (no pytorch)</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.compute_valid">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">compute_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bvs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_thresholds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[-</span> <span class="pre">1.00000000e+00,</span> <span class="pre">2.88214929e+14],</span> <span class="pre">[1.00000000e+00,</span> <span class="pre">1.89264686e+12],</span> <span class="pre">[-</span> <span class="pre">1.00000000e+00,</span> <span class="pre">5.00000000e+05],</span> <span class="pre">[-</span> <span class="pre">1.00000000e+00,</span> <span class="pre">4.39506857e+09],</span> <span class="pre">[-</span> <span class="pre">1.00000000e+00,</span> <span class="pre">1.00247000e+05],</span> <span class="pre">[-</span> <span class="pre">1.00000000e+00,</span> <span class="pre">8.45428636e+06],</span> <span class="pre">[-</span> <span class="pre">2.00000000e+03,</span> <span class="pre">2.00000000e+03],</span> <span class="pre">[1.00000000e-06,</span> <span class="pre">2.00000000e+03],</span> <span class="pre">[-</span> <span class="pre">2.00000000e+03,</span> <span class="pre">2.00000000e+03],</span> <span class="pre">[1.00000000e-06,</span> <span class="pre">2.00000000e+03],</span> <span class="pre">[-</span> <span class="pre">2.00000000e+03,</span> <span class="pre">2.00000000e+03],</span> <span class="pre">[1.00000000e-06,</span> <span class="pre">2.00000000e+03]])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.compute_valid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.decode">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode variables, or just add extra dimension</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – array of feature values.</p></li>
+<li><p><strong>driver_names</strong> (<em>list: str</em>) – list driver names in data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>enc</strong> – array of encoded variables</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.encode">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode variables, or just add extra dimension</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – array of variable values.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of the variable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>enc</strong> – array of encoded variables (with an extra dimension in all cases)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.get_bv">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">get_bv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bv_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.get_bv" title="Permalink to this definition"></a></dt>
+<dd><p>Invert featurization to recover bvs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bv_feat</strong> (<em>np.ndarray</em>) – n_samples x n_bv_feat</p></li>
+<li><p><strong>bv_type</strong> (<em>str</em>) – radar or lidar bvs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>scaled_feat</strong> – n_samples x n_bv</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.get_driver">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">get_driver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.get_driver" title="Permalink to this definition"></a></dt>
+<dd><p>Invert featurization to recover driving parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver_feat</strong> (<em>np.ndarray</em>) – n_samples x n_driver_feat</p></li>
+<li><p><strong>driver_names</strong> (<em>list: str</em>) – list driver names in driver_feat</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>original driver</strong> – n_samples x n_driver</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.scale_bv">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">scale_bv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bvs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.scale_bv" title="Permalink to this definition"></a></dt>
+<dd><p>Return a scaled version of the drivers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bvs</strong> (<em>np.ndarray</em>) – n_samples x n_bv</p></li>
+<li><p><strong>bv_type</strong> (<em>str</em>) – string specifying weather to scale</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>bv_feat</strong> – n_samples x n_bv_feat</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.transforms.scale_driver">
+<span class="sig-prename descclassname"><span class="pre">abcgan.transforms.</span></span><span class="sig-name descname"><span class="pre">scale_driver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.transforms.scale_driver" title="Permalink to this definition"></a></dt>
+<dd><p>Return a scaled version of the drivers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_driver</p></li>
+<li><p><strong>driver_names</strong> (<em>list: str</em>) – list of driver names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>driver_feat</strong> – n_samples x n_driver_feat</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-abcgan">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-abcgan" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.anomaly_score">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">anomaly_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.anomaly_score" title="Permalink to this definition"></a></dt>
+<dd><p>returns unbounded anomaly score for a given set of driver parameters and data. more positive numbers are more confident.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – 1 x n_drivers input driving parameters (not z-scaled). one sample at a time</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – 1 x n_alt_in x n_meas</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>anomalies</strong> – 1 x n_alt x n_feat output of anomaly scores (unbounded).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>1 xnp.ndarray, np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.discriminate">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">discriminate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.discriminate" title="Permalink to this definition"></a></dt>
+<dd><p>Score how well the measurements match with historical observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – list of names of driving parameters</p></li>
+<li><p><strong>measurements</strong> (<em>np.ndarray</em>) – n_samples x n_alt_in x n_meas input list of altitude measurements,
+n_alt_in should be less than max_alt.</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>scores</strong> – n_samples x n_alt output normalcy scores in the range [0, 1.0].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.estimate_drivers">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">estimate_drivers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dr_gan'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.estimate_drivers" title="Permalink to this definition"></a></dt>
+<dd><p>Predict drivers 2 hours into the future driver GAN model. Used for real-time
+background predictions using drivers from 2 hours ago.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>predicted_drivers</strong> – estimation of driver features two hours from the drivers inputted</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.gen_stats">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">gen_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.gen_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Statistical distribution of 10,000 upper altitude data points conditioned on driver parameters and lower altitude measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – n_samples x n_alt_in x n_meas</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – 2xn_avg*n_samples x n_alt x n_feat output anomaly scores (unbounded). The first element is the fake output.
+The second array entry contains the scaled background variables with repeats</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.generate">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drivers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measurements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_alt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mm_gan_radar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate synthetic data consistent with the historical distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>drivers</strong> (<em>np.ndarray</em>) – n_samples x n_drivers input list of driving parameters (not z-scaled).</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – list of names of driving parameters</p></li>
+<li><p><strong>measurements</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – n_samples x n_alt_in x n_meas input list of altitude measurements,
+n_alt_in should be less than n_alt. These represent fixed
+measurements for the lowest altitudes to condition on.
+Usually left as default (None)</p></li>
+<li><p><strong>n_alt</strong> (<em>int</em><em>, </em><em>optional</em>) – number of altitude measurements to draw, defaults to max_alt</p></li>
+<li><p><strong>model</strong> (<em>str</em><em>, </em><em>optional</em>) – name of model to use</p></li>
+<li><p><strong>bv_type</strong> (<em>str. optional</em>) – name of the type of background variables to use (lidar or radar)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – n_samples x n_alt x n_meas output measurements at each requested
+altitude. If measurements is not None then the measurements for
+the first n_alt_in will be copied over from the input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.stack_bvs">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">stack_bvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bv_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radar'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.stack_bvs" title="Permalink to this definition"></a></dt>
+<dd><p>Stacks drivers in appropriate format.</p>
+<p>This function is provided for convenience.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bv_dict</strong> (<em>dict</em>) – Dictionary mapping names of background variables
+to numpy arrays with values for those bvs. Each
+array should have shape n_sapmles x n_altitudes.
+Can also use <cite>h5py.Group</cite>.</p></li>
+<li><p><strong>bv_type</strong> (<em>str</em>) – string specifying weather to stack radar or
+lidar data</p></li>
+<li><p><strong>abcgan.bv_names</strong> (<em>Valid names for drivers can be found at</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If the input shape of the bv dict values is not corrects</p></li>
+<li><p><strong>KeyError:</strong> – If one of the required bvs is missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abcgan.stack_drivers">
+<span class="sig-prename descclassname"><span class="pre">abcgan.</span></span><span class="sig-name descname"><span class="pre">stack_drivers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Ap',</span> <span class="pre">'F10.7',</span> <span class="pre">'F10.7avg',</span> <span class="pre">'MLT',</span> <span class="pre">'SLT',</span> <span class="pre">'SZA',</span> <span class="pre">'ap',</span> <span class="pre">'MEI',</span> <span class="pre">'RMM1',</span> <span class="pre">'RMM2',</span> <span class="pre">'TCI',</span> <span class="pre">'moon_phase',</span> <span class="pre">'moon_x',</span> <span class="pre">'moon_y',</span> <span class="pre">'moon_z']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abcgan.stack_drivers" title="Permalink to this definition"></a></dt>
+<dd><p>Stacks drivers in appropriate format.</p>
+<p>This function is provided for convenience.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driver_dict</strong> (<em>dict</em>) – Dictionary mapping names of drivers to the numpy arrays
+with values for those drivers. Each array has a single
+dimension of the same length n_samples.
+Can also use an <cite>h5py.Group</cite>.</p></li>
+<li><p><strong>driver_names</strong> (<em>list</em>) – names of the drivers to load</p></li>
+<li><p><strong>abcgan.driver_names</strong> (<em>Valid names for drivers can be found at</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If the driver values have the wrong type or shape.</p></li>
+<li><p><strong>KeyError:</strong> – If one of the required drivers is missing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="abcgan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Sam Austin, David Stoker, Andrew Silberfarb.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
