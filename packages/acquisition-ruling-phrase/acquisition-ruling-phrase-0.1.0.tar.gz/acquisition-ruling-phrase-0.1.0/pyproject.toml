@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "acquisition-ruling-phrase"
+version = "0.1.0"
+license = "Proprietary"
+description = "Pattern matching common phrases in Supreme Court decisions indicating the start of content with doctrinal value."
+authors = ["Marcelino G. Veloso III <mars@veloso.one>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+acquisition-sanitizer = "^0.2.0"
+beautifulsoup4 = "^4.10"
+html5lib = "^1.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-instafail = "^0.4.2"
+pytest-sugar = "^0.9.4"
+pytest-icdiff = "^0.5"
+pytest-cov = "^2.12.1"
+mypy = "^0.930"
+black = "^21.12b0"
+isort = "^5.10.1"
+pre-commit = "^2.16.0"
+ipykernel = "^6.7.0"
+tqdm = "^4.62"
+
+[tool.pytest]
+minversion = "6.0"
+addopts = "-ra -q --cov=acquisition_ruling_phrase tests/"
+testpaths = ["tests"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 79
+include_trailing_comma = 'True'
+
+[tool.black]
+line-length = 79
+include = '.pyi?$'
+exclude = '''
+/(
+    .git
+    | .hg
+    | .mypy_cache
+    | .tox
+    | .venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
+
+
+[build-system]
+requires = ["poetry-core>=1.1.12"]
+build-backend = "poetry.core.masonry.api"
