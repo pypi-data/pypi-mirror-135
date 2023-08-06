@@ -1,0 +1,188 @@
+Metadata-Version: 2.1
+Name: ECAUGT
+Version: 1.0.4
+Summary: ECA Client
+Home-page: UNKNOWN
+Author: Yixin Chen & Haiyang Bian
+Author-email: chenyx19@mails.tsinghua.edu.cn
+Maintainer: Minsheng Hao
+Maintainer-email: hmsh653@gmail.com
+License: UNKNOWN
+Description: # ECAUGT
+        
+        ECAUGT is a package designed for customized *in data* cell sorting under the human Ensemble Cell Atalas (hECA). It contains the APIs to search and download data from the hECA's database.
+        
+        You are welcomed to use our web version at http://eca.xglab.tech/#/cellSorting
+        
+        You can also find more information at https://github.com/XuegongLab/ECAUGT and http://eca.xglab.tech/ecaugt/index.html
+        
+        ## About hECA
+        
+        hECA provides a platform for assembling massive scattered single-data into a unified Giant Table (uGT). We keeps exploring information framework and future ways of building and utilizing cell atlas. Here we provide entries for customized in data cell sorting, access to unified Hierarchical Annotation Framework (uHAF) and multifaceted portraits of genes, cell types and organs.
+        
+        hECA and ECAUGT are designed and developed by [XGlab](http://bioinfo.au.tsinghua.edu.cn/member/xuegonglab/ ) in Tsinghua University.
+        
+        Visit hECA's homepage at http://eca.xglab.tech/
+        
+        Read our pre-print paper at https://www.biorxiv.org/content/10.1101/2021.07.21.453289v1
+        
+        ## Install
+        
+        ```
+        pip install ECAUGT
+        ```
+        
+        ## Tutorial
+        
+        ### 1. Configuration
+        
+        #### 1.1 Load packages
+        
+        
+        ```python
+        import sys
+        import pandas as pd
+        import ECAUGT
+        import time
+        import multiprocessing
+        import numpy as np
+        ```
+        
+        #### 1.2 Connect to server
+        
+        
+        ```python
+        # set parameters
+        endpoint = "https://HCAd-Datasets.cn-beijing.ots.aliyuncs.com"
+        access_id = "LTAI5t7t216W9amUD1crMVos" #enter your id and keys
+        access_key = "ZJPlUbpLCij5qUPjbsU8GnQHm97IxJ"
+        instance_name = "HCAd-Datasets"
+        table_name = 'HCA_d'
+        ```
+        
+        
+        ```python
+        # setup client
+        ECAUGT.Setup_Client(endpoint, access_id, access_key, instance_name, table_name)
+        ```
+        
+        #### 1.3 Build index
+        
+        We should check if the index has been built.
+        
+        
+        ```python
+        ECAUGT.build_index()
+        ```
+        
+        
+        ### 2. Search cell with metadata condition
+        
+        Conditions are presented in a structured string which is a combination of several logical expressions.
+        
+        Each logical expression should be in the following forms:
+        
+            field_name1 == value1,                          here '==' means equal
+            
+            field_name2 <> value2,                          here '<>' means unequal
+        
+        Three symbols are used for logical operation between expressions:
+        
+            logical_expression1 && logical_expression2,     here '&&' means AND operation
+            
+            logical_expression1 || logical_expression2,     here '||' means OR operation
+            
+            ! logical_expression1,                         here '!' means not NOT operation
+        
+        Brackets are allowed and the priorities of the logical operations are as common. The metadata condition string is also robust to the space character.
+        
+        
+        ```python
+        # get primary keys
+        rows_to_get = ECAUGT.query_cells("organ == Lung && cell_type == T cell  ")
+        ```
+        
+        
+        The variable rows_to_get is a list containing their primary keys.
+        
+        ### 3. Download data
+        
+        We first download three columns of the queried cells and return them in the DataFrame form. (The first column in the result is the primary keys)
+        
+        For illustration, we only download the first 20 cells.
+        
+        
+        ```python
+        rows_to_get_2 = rows_to_get[0:20]
+        ```
+        
+        ####  3.1 Download interested columns
+        
+        
+        ```python
+        # download data in pandas::DataFrame from
+        ECAUGT.get_columnsbycell_para(rows_to_get = rows_to_get_2, cols_to_get=['cl_name','uHAF_name','cell_type'], col_filter=None, do_transfer = True, thread_num = multiprocessing.cpu_count()-1)
+        ```
+        
+        Then we show how the result will look like when we don't do transform.
+        
+        
+        ```python
+        # download data in list from
+        ECAUGT.get_columnsbycell_para(rows_to_get = rows_to_get_2, cols_to_get=['cl_name','uHAF_name','cell_type'], col_filter=None, do_transfer = False, thread_num = multiprocessing.cpu_count()-1)
+        ```
+        
+        ####  3.2 Download all columns
+        
+        We also compare the time consumption between parallel and unparallel cell download processes for the first 20 cells, and find the parallel process only takes about 1/3 time.
+        
+        
+        ```python
+        # the parallel version
+        start_time = time.time()
+        result = ECAUGT.get_columnsbycell_para(rows_to_get = rows_to_get_2, cols_to_get=None, col_filter=None, do_transfer = False, thread_num = multiprocessing.cpu_count()-1)
+        time.time()-start_time
+        ```
+        
+        
+        ```python
+        # the unparallel version
+        start_time = time.time()
+        result = ECAUGT.get_columnsbycell(rows_to_get = rows_to_get_2, cols_to_get=None,col_filter=None,do_transfer = False)
+        time.time()-start_time
+        ```
+        
+        ### 4. Search cell with both metadata condition and gene condition
+        
+        
+        Now we show hot to add gene conditions when downloading cells. Here we download some genes of the queried cells and select the cells whose expression level on PTPRC is larger than 0.1 and experssion level on CD3D is no less than 0.1
+        
+        
+        ```python
+        # add col_filter on gene
+        gene_condition = ECAUGT.seq2filter("PTPRC > 0.1 && CD3D>=0.1")
+        ```
+        
+        #### 4.1 Download some of the columns
+        
+        
+        ```python
+        df_result = ECAUGT.get_columnsbycell_para(rows_to_get = rows_to_get, cols_to_get=['CD3D','PTPRC','donor_id','uHAF_name'], col_filter=gene_condition, do_transfer = True, thread_num = multiprocessing.cpu_count()-1)
+        ```
+        
+        We can find that 7403 cells among the 14870 queried cells has expression levels that satisfy PTPRC > 0.1 && CD3D>=0.1. Then we can download some columns of these cells with the parameter ***cols_to get*** and the genes involved in the condition must be included in the 
+        
+        #### 4.2 Download all columns of these cells
+        
+        We can get all expression levels and metadatas of these cells by setting the parameter ***cols_to_get*** as None
+        
+        
+        ```python
+        df_result = ECAUGT.get_columnsbycell_para(rows_to_get = rows_to_get, cols_to_get=None, col_filter=gene_condition, do_transfer = True, thread_num = multiprocessing.cpu_count()-1)
+        ```
+        
+        
+Keywords: Client,ECA
+Platform: UNKNOWN
+Requires-Python: >=3
+Description-Content-Type: text/markdown
