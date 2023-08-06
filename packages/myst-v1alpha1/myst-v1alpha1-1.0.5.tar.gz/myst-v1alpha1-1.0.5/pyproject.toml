@@ -1,0 +1,28 @@
+# Configuration rules for Black python autoformatter.
+
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
+
+[tool.black]
+line-length = 120
+target-version = ['py27', 'py36', 'py37', 'py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.check-manifest]
+ignore = [".coveragerc", ".pre-commit-config.yaml", "bitbucket-pipelines.yml", "pyproject.toml", "docs", "docs/*", "tox.ini", "__pycache__", "*.pyc"]
