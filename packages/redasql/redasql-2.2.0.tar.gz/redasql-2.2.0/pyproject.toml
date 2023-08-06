@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "redasql"
+version = "2.2.0"  # using poetry-dynamic-versioning
+description = ""
+authors = ["denzow <denzow@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/denzow/redasql"
+repository = "https://github.com/denzow/redasql"
+keywords = ["redash", "sql"]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.26.0"
+prompt-toolkit = "^3.0.20"
+tabulate = "^0.8.9"
+pyperclip = "^1.8.2"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+redasql = 'redasql.command:main'
+
+[build-system]
+requires = ["poetry>=1.0.2", "poetry-dynamic-versioning"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = false
+style = "pep440"
+
