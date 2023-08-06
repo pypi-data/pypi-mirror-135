@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/formicidae-tracker/hermes";
+
+package fort.hermes;
+
+import "FrameReadout.proto";
+
+message Version {
+	uint32 vmajor    = 1; // do not use major it conflict with some macros
+	uint32 vminor    = 2; // do not use minor it conflict with some macros
+};
+
+
+
+
+message Header {
+	enum Type {
+		Network = 0;
+		File    = 1;
+	}
+
+	Version version  = 1;
+	Type    type     = 2;
+	string  previous = 3;
+	int32   width    = 4;
+	int32   height   = 5;
+
+	repeated string extensionTypes = 6;
+}
+
+message Footer {
+	string next = 1;
+}
+
+message FileLine {
+	FrameReadout readout = 1;
+	Footer       footer  = 2;
+}
