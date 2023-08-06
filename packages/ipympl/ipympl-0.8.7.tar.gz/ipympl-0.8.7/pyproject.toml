@@ -1,0 +1,27 @@
+[build-system]
+requires = ["jupyter_packaging~=0.7.0", "jupyterlab>=3.0.0,==3.*", "setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "examples",
+]
+norecursedirs = [
+    "node_modules",
+    ".ipynb_checkpoints",
+]
+addopts = "--nbval-lax --current-env"
+
+[tool.isort]
+profile = "black"
+src_paths = "ipympl"
+multi_line_output = 3
+
+[tool.pydocstyle]
+match_dir = "ipympl"
+convention = "numpy"
+add_select = ["D402","D415","D417"]
+
+[tool.black]
+skip-string-normalization = true
