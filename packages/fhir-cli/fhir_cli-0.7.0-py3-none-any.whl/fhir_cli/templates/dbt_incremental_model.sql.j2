@@ -1,0 +1,21 @@
+{% raw %}
+{{
+    config(
+        materialized='incremental',
+        indexes=[
+              {'columns': ['id'], 'type': 'hash'},
+              {'columns': ['id'], 'unique': True},
+        ],
+{% endraw %}
+        schema='{{ target_schema }}'
+{% raw %}
+    )
+}}
+{% endraw %}
+    {{ stmt }}
+{% raw %}
+{% if is_incremental() %}
+    -- this filter will only be applied on an incremental run
+    WHERE id NOT IN (SELECT id FROM {{ this }})
+{% endif %}
+{% endraw %}
