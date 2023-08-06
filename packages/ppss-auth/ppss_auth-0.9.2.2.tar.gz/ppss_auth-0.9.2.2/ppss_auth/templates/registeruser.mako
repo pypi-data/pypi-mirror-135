@@ -1,0 +1,26 @@
+<%inherit file="${context['midtpl']}" />
+<div class="row">
+    <div class="${bc['xs']}12">
+        <form action="${request.route_url('ppss:user:register')}" method="POST" class="loginform ppssauthform">
+            <input type="hidden" value="${get_csrf_token()}" name="csrf_token">
+            <input class="form-control" type="text" name="username" placeholder="${_('username')}" class="form-control" required="">
+            <br/>
+            <input class="form-control" type="password" name="password" placeholder="${_('password')}" class="form-control" required="">
+            <br/>
+            <input type="password" name="confirmnewpassword" placeholder="${_('confirm new password')}" required="">
+            <br/>
+            <div class="text-center">
+                <input class="btn btn-success" type="submit" name="submit" value="${_('Register')}"/>
+            </div>
+
+
+            </br>
+            <p class="text-danger">
+                ${msg}
+                % if link[0]:
+                    <a href="${link[1]}">${link[0]}</a>
+                % endif
+            </p>
+        </form>
+    </div>
+</div>

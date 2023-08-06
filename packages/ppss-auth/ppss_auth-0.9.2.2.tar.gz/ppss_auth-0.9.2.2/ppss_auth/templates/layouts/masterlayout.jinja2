@@ -1,0 +1,35 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login page</title>
+  {%- block bootstrapcss %}
+		{% include "../shared/bootstrapcss.html" %}
+  {%- endblock %}
+  {% block ppssauth_css %}
+     <link type="text/css" rel="stylesheet" href="{{ request.static_url('ppss_auth:ppss_auth_static/ppssauth.css') }}"/>
+  {% endblock %}
+
+  {% block ppssauth_headerjs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
+    <script
+          src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"
+    ></script>
+  {% endblock %}
+
+</head>
+<body class="ppss_auth">
+  {% block ppssauth_container %}
+  {% endblock ppssauth_container %}
+
+
+{% block ppssauth_footerjs %}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock %}
+
+</body>
+
+</html>

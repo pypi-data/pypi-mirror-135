@@ -1,0 +1,28 @@
+{% extends midtpl %}
+
+{% block ppssauth_content %}
+<div class="container">
+    <div class="row text-center">
+        <div class="{{bc['xs']}}12 col-md-4 offset-md-4">
+          <form action="{{request.route_url('ppss:user:changepassword')}}" method="POST" class="ppssauthform">
+              <input type="hidden" value="{{get_csrf_token()}}" name="csrf_token">
+              <h2>{{_("Change password for user {username}").format(username=request.loggeduser.username) }}</h2>
+              <div class="ppssfield my-3">
+                <input type="password" name="oldpassword" placeholder="{{_('current password')}}">
+              </div>
+              <div class="ppssfield my-3">
+                <input type="password" name="newpassword" placeholder="{{_('new password')}}">
+              </div>
+              <div class="ppssfield my-3">
+                <input type="password" name="confirmnewpassword" placeholder="{{_('confirm new password')}}">
+              </div>
+              <div class="text-center my-3">
+                <input type="submit" name="submit" value="{{_('update')}}"/>
+              </div>
+
+              <p>{{msg}}</p>
+          </form>
+        </div>
+    </div>
+</div>
+{% endblock ppssauth_content %}
