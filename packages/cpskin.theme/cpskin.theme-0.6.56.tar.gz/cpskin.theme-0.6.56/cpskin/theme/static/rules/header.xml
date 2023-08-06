@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+  <replace css:content-children="#portaltab-index_html a">
+      <span class="icon-home" />
+  </replace>
+  <before css:content="#portal-top">
+    <xsl:copy-of select="//*[@id='messagesviewlet']" />
+  </before>
+
+  <after css:content="#portal-top">
+    <xsl:copy-of select="//div[contains(@class, 'slider-top')]" />
+  </after>
+  <drop css:content="#accueil .slider-top" />
+  
+
+  <!-- Header / banner specific to minisite mode -->
+  <rules if="$isinminisitemode">
+
+      <replace css:content-children="#portal-header">
+          <div id="top-languages">
+            <xsl:copy-of select="//*[@id='portal-languageselector']" />
+          </div>
+
+          <div id="top-actions" class="top-actions-minisites">
+            <div id="top-actions-inner" class="minisites">
+            </div>
+          </div>
+      </replace>
+
+      <replace css:content-children="#minisite-search">
+          <xsl:copy-of select="//*[@id='portal-searchbox']"/>
+      </replace>
+
+
+      <drop css:content="#viewlet-above-content #viewlet-minisite" />
+      <drop css:content="#portal-breadcrumbs" />
+
+  </rules>
+
+
+  <!-- Standard Header / banner -->
+  <rules if-not="$isinminisitemode">
+
+      <replace css:content-children="#portal-header">
+          <div id="top-languages">
+            <xsl:copy-of select="//*[@id='portal-languageselector']" />
+          </div>
+          <div id="top-actions">
+            <div id="top-actions-inner">
+              <div id="top-actions-actions">
+                <xsl:copy-of select="./*[@id='top-menu-actions']" />
+                <xsl:copy-of select="./*[@id='portal-personaltools-wrapper']" />
+                <xsl:copy-of select="//*[@id='portal-siteactions']" />
+                <xsl:apply-templates select="./*[@id='social-viewlet']" />
+              </div>
+              <div class="visualClear"></div>
+            </div>
+          </div>
+          <div id="top-search-logo">
+            <div id="top-search-logo-inner">
+              <xsl:copy-of select="./*[@id='portal-logo']"/>
+              <xsl:copy-of select="./*[@id='portal-searchbox']"/>
+            </div>
+          </div>
+          <div id="top-navigation">
+            <div id="top-navigation-inner">
+              <xsl:apply-templates select="./*[not(@id) or (@id!='portal-personaltools-wrapper'
+                                                            and @id!='portal-logo'
+                                                            and @id!='portal-searchbox'
+                                                            and @id!='social-viewlet'
+                                                            and @id!='portal-languageselector')]"/>
+            </div>
+          </div>
+      </replace>
+
+      <drop css:content="#portal-siteactions" />
+      <drop css:content="#minisite-search" />
+      <drop css:content="#top-menu-actions" />
+      <drop css:content="#messagesviewlet" />
+
+  </rules>
+</rules>

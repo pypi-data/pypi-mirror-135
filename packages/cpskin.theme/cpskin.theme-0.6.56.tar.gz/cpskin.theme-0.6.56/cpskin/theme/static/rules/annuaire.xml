@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+  <rules css:if-content="body.portaltype-organization">
+
+    <replace css:content-children="#before-activity">
+      <div id="contact-schedule">
+        <xsl:copy-of select="//div[@id='organization']/div[@class='contact-details']" />
+        <xsl:copy-of select="//div[@id='organization']/fieldset[@class='Schedule']" />
+      </div>
+      <xsl:copy-of select="./*[not(@class) or (@class!='contact-details'
+                                               and @class!='Schedule')]"/>
+    </replace>
+
+    <drop content="//div[@id='organization']/div[@class='contact-details']" />
+    <drop content="//div[@id='organization']/fieldset[@class='Schedule']" />
+
+    <rules css:if-content="#leaflet-content-viewlet">
+
+      <before css:content="#leaflet-content-viewlet">
+        <xsl:copy-of select="//div[@id='organization-photos']" />
+      </before>
+
+      <drop content="//div[@id='organization-photos']" />
+
+    </rules>
+
+  </rules>
+
+</rules>
