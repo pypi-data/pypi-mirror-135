@@ -1,0 +1,151 @@
+PA&C Pipeline
+=============
+
+Pipeline to both determine telescope polarization parameters and compute instrument demodulation matrices
+
+Check out the `online documentation <https://eigenbrot.github.io/PAC_Module_Docs>`_ for more detailed information.
+
+Requirements
+------------
+
+The pipeline has been tested with python 3.8
+
+1. numpy
+2. scipy
+3. astropy
+4. sunpy
+5. lmfit
+6. dkist-header-validator
+
+Installation/Upgrade
+--------------------
+
+You can install/upgrade the pipeline directly from the BitBucket repo with:
+
+    pip install git+ssh://git@bitbucket.org:dkistdc/pac-pipeline.git
+
+If instead you want to clone and install separately the commands are:
+
+.. code-block:: bash
+
+    git clone git@bitbucket.org:dkistdc/pac-pipeline.git
+    cd pac-pipeline
+    pip install .
+
+All of the dependencies should be automatically installed by pip
+
+Usage
+#####
+The PA&C Pipeline has two modes:
+
+Fit Calibration Unit Parameters
+-------------------------------
+
+In this mode a Set of Calibration Curves (SoCC) is used to fit parameters for the PolCal Calibration Unit.
+The Telescope Model is inferred from a database of past values and the telescope geometry at the time of observations.
+This mode is called with the `pac_cu_pars` binary. In its simplest form:
+
+.. code-block:: bash
+
+    pac_cu_pars SOCC_DIR OUTPUT
+
+The SOCC will be read from SOCC_DIR and a file containing the best-fit CU parameters will be saved to OUTPUT.
+
+Try `pac_cu_pars -h` for information on other options.
+
+Compute instrument demodulation matrices
+----------------------------------------
+
+In this mode, the results of `pac_cu_pars` are used to  determine the demodulation matrices for a specific instrument and setup.
+The same SoCC used to git the CU parameters is also required and the Telescope Model is inferred from a database of past values
+and the telescope geometry at the time of observations. This mode is called with the `pac_demod` binary. In its simplest form:
+
+.. code-block:: bash
+
+    pac_demod SOCC_DIR CUPARFILE OUTPUT
+
+Best fit CU parameters will be read from CUPARFILE, the SOCC will be read from SOCC_DIR, and a file containing the demodulation matrices will be saved to OUTPUT.
+
+Try `pac_demod -h` for information on other options.
+
+Compute Telescope Model parameters
+----------------------------------
+
+In this mode, a set of multiple SoCCs is used to determine the mirror parameters for mirrors 3 - 6.
+The more SoCCs used in the fit the more accurate the results are thought to be,
+but each additional SoCC adds significantly more free parameters and fitting time.
+For any hope of accuracy the different SoCCs MUST be taken over a wide range of telescope geometries.
+Usage is:
+
+.. code-block:: bash
+
+    pac_tele TOP_LEVEL_DIR OUTPUT
+
+TOP_LEVEL_DIR should contain a set of SoCCs, each in its own subdirectory.
+The resulting Telescope Model will be written to OUTPUT.
+See `pac_tele -h` for information on additional parameters, in particular
+`-u` to update the telescope database and `-N` to control the number of SoCCs used in the fit.
+
+Computing M12 mirror parameters
+-------------------------------
+
+The `x12` parameter is computed from I/Q cross talk during any science data reduction. To compute `t12` a full stokes map of a region of the sun containing
+strong polarization is needed. Given such a map, `t12` can be computed simply via
+
+.. code-block:: bash
+
+    pac_t12 MAPFILE OUTPUT
+
+Try `pac_t12 -h` for more options.
+
+Note about spatial variations
+-----------------------------
+
+If the input data have individual frames of shape (x, y) then the final output will have shape (x, y, 4, N), where N is the number of modulator states.
+Thus, by controlling how the input data are binned it is possible to compute spatially-varying parameter values.
+
+We do not expect the Telescope Model to vary appreciably over the field
+of view, so in this case it makes sense for x=y=1 (i.e., average the entire frame),
+but it will likely be the case the x and y are (much) larger than 1 in the demodulation case.
+The extreme example is to not bin the input data at all and compute demodulation matrices
+for each pixel on the detector, although this would take a very long time.
+
+Generating fake data
+--------------------
+
+To get a quick set of PolCal data that can be used in instrument pipelines use the `pac_fake_data` script. For example:
+
+.. code-block:: bash
+
+    pac_fake_data -I visp -C efficient_CS polcal_output
+
+`pac_fake_data` has many options that can be seen with the ``-h`` option.
+
+For more advanced fake data generation (e.g., to make multiple PolCal runs for a GroupCal), enter this repo's top-level directory and enter a python shell:
+
+.. code-block:: python
+
+    >>> import gen_fake_data
+    >>> gen_fake_data.SoCC_multi_day(output_dir, DHS=False)
+
+`SoCC_multi_day` has a lot of options that you can check out. In particular, use `nummod` and `numdays`
+control the number of modulator states and number of PolCal sequences.
+By default this function produces a mix of fixed-polarizer and fixed-retarder CS's,
+but this can be changed with `only_pol` or `only_ret`.
+
+Generating fake map for M12 parameter fitting
+---------------------------------------------
+
+To generate a stokes map file that can be used with `pac_t12` enter this repo's top-level directory and enter a python shell:
+
+.. code-block:: python
+
+    >>> import gen_fake_data
+    >>> gen_fake_data.make_M12_data(output_dir, simdir=VISP_SIM_DIR)
+
+ You will need the fake ViSP data provided by A. de Wijn in VISP_SIM_DIR.
+
+Licensed
+--------
+
+This project is Copyright (c) Arthur Eigenbrot and licensed under the terms of the BSD 3-Clause license. See the licenses folder for more information.
