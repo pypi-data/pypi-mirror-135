@@ -1,0 +1,191 @@
+# The actual configuration is in Vault.
+
+cadmium_postgres_db:
+  hostname: epitest-encrypted-cluster.cluster-cd6nk8avjbps.us-east-1.rds.amazonaws.com
+  port: 5432
+  database_name: Cadmium
+  user: master
+  password: XXXXX
+  table_name: ca.jobs
+
+epia_medicare_postgres:
+  hostname: epitest-encrypted.cd6nk8avjbps.us-east-1.rds.amazonaws.com
+  port: 5432
+  database_name: EpiAnalytics-Triple-S
+  user: master
+  password: xxxxxx
+  schema: ea
+
+
+
+risk_adjustment:
+  # Model Year for Configuration
+  !!str "2018-2019":
+    # Risk Adjustment Model Type: [cdps, cdpsrx, mrx]
+    risk_adj_model: !!str "cdpsrx"
+    # CDPS Version: [6.3, 6.4]
+    cdps_version: !!str "6.4"
+    # Carve Out: [acute, rx_co, mh_co, mhrx_co]
+    carve_out: !!str "rx_co"
+    # Timeframe: [pro, con]
+    timeframe: !!str "pro"
+    child_age_cutoff: !!int 21
+    # Date of Service Period Start & End Dates; fmt: YYYYMMDD
+    fy_start_date: !!str "20180701"
+    fy_end_date: !!str "20190630"
+    age_ref_date: !!str "20190101"
+  !!str "2019-2020":
+    # Risk Adjustment Model Type: [cdps, cdpsrx, mrx]
+    risk_adj_model: !!str "cdpsrx"
+    # CDPS Version: [6.3, 6.4]
+    cdps_version: !!str "6.4"
+    # Carve Out: [acute, rx_co, mh_co, mhrx_co]
+    carve_out: !!str "rx_co"
+    # Timeframe: [pro, con]
+    timeframe: !!str "pro"
+    child_age_cutoff: !!int 21
+    # Date of Service Period Start & End Dates; fmt: YYYYMMDD
+    fy_start_date: !!str "20190701"
+    fy_end_date: !!str "20200630"
+    age_ref_date: !!str "20200101"
+
+fiscal_month_end: !!int 6
+parent_demo_client: thp
+icd_version: !!int 10
+
+
+#Locations
+cms_location: 's3a://epidatalake/landing/cms/npiregistry'
+npi_parquet_location: 's3a://epidatalake/landing/cms/npiregistry/parquet/npi_registry'
+
+# Wellnes
+# Most recent Annual Welness Visit date of service in the year
+#- An AWV is determined by a specific set of codes; if a claim has at least one of these codes, this indicates the member received the AWV
+#  AWV codes, Preventative Medicine, and Advanced Care Planning are found in [837_cpt].[sl_paid_cpt_code]
+#  Wellness Diagnosis Codes are found in any diagnosis field: [ 837_dx ].[principal_dx_code] or [837_dx].[diag_codes_01] through [837_dx].[diag_codes_12]
+awv_codes_sql_array: array('99212', '99213', '99214', '99215', 'G0438', 'G0402')
+preventative_medicine_sql_array: array('99381','99382','99383','99384','99385','99386','99387','99391','99392','99393','99394','99395','99396','99397')
+advanced_care_planning_sql_array: array('99497','99498')
+wellness_dx_codes_sql_array: array('Z00.00','Z00.01')
+cdps_mrx_codes_weights:
+  - 'CARVH'
+  - 'CARM'
+  - 'CARL'
+  - 'CAREL'
+  - 'PSYH'
+  - 'PSYM'
+  - 'PSYML'
+  - 'PSYL'
+  - 'SKCM'
+  - 'SKCL'
+  - 'SKCVL'
+  - 'CNSH'
+  - 'CNSM'
+  - 'CNSL'
+  - 'PULVH'
+  - 'PULH'
+  - 'PULM'
+  - 'PULL'
+  - 'GIH'
+  - 'GIM'
+  - 'GIL'
+  - 'DIA1H'
+  - 'DIA1M'
+  - 'DIA2M'
+  - 'DIA2L'
+  - 'SKNH'
+  - 'SKNL'
+  - 'SKNVL'
+  - 'RENEH'
+  - 'RENVH'
+  - 'RENM'
+  - 'RENL'
+  - 'SUBL'
+  - 'SUBVL'
+  - 'CANVH'
+  - 'CANH'
+  - 'CANM'
+  - 'CANL'
+  - 'DDM'
+  - 'DDL'
+  - 'GENEL'
+  - 'METH'
+  - 'METM'
+  - 'METVL'
+  - 'PRGCMP'
+  - 'PRGINC'
+  - 'EYEL'
+  - 'EYEVL'
+  - 'CERL'
+  - 'AIDSH'
+  - 'INFH'
+  - 'HIVM'
+  - 'INFM'
+  - 'INFL'
+  - 'HEMEH'
+  - 'HEMVH'
+  - 'HEMM'
+  - 'HEML'
+  - 'BABY1'
+  - 'BABY2'
+  - 'BABY3'
+  - 'BABY4'
+  - 'BABY5'
+  - 'BABY6'
+  - 'BABY7'
+  - 'BABY8'
+  - 'CCARVH'
+  - 'CCARM'
+  - 'CCNSH'
+  - 'CPULVH'
+  - 'CPULH'
+  - 'CGIH'
+  - 'CMETH'
+  - 'CHIVM'
+  - 'CINFM'
+  - 'CHEMEH'
+  - 'MRX1'
+  - 'MRX2'
+  - 'MRX3'
+  - 'MRX4'
+  - 'MRX5'
+  - 'MRX6'
+  - 'MRX7'
+  - 'MRX8'
+  - 'MRX9'
+  - 'MRX10'
+  - 'MRX11'
+  - 'MRX12'
+  - 'MRX13'
+  - 'MRX14'
+  - 'MRX15'
+
+
+## Find Member Parameters
+
+file_name_master_member_index_ssn: member_index_by_ssn
+file_name_master_member_index_medicaid: member_index_by_medicaid
+master_fields_for_master_index:
+    - epi_member_id
+    - first_name
+    - middle_name
+    - last_name
+    - gender
+    - ssn
+    - medicaid_id
+    - dob
+    - contact_tel_1
+    - address_zip
+    - concat('s', right(IFNULL(ssn, 'xxxxxxxxxxx'), 2)) as ssn_par
+    - concat('m', right(IFNULL(medicaid_id, 'xxxxxxxxxxx'), 2)) as medicaid_par
+    - job_id
+# sql code expression to assign unique epi_memebr_id
+new_epi_member_assignment_code: >-
+                                  concat('E',
+                                  date_format(dob, 'yyyyMM'),
+                                  gender,
+                                  left(last_name,1),
+                                  left(first_name, 1),
+                                  right(hash(medicaid_id,ssn),6)
+                                  )
+## END Find Member Parameters

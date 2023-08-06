@@ -1,0 +1,100 @@
+debug: false
+
+#    """
+#    one_time_fix_master_memberids.yaml
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+
+  master_memberids:
+    type: parquet
+    location: "{project_root_path}/{client}/Master_MemberIDS/"
+
+  new_members:
+    type: parquet
+    location: "{project_root_path}/{client}/New_Members/"
+
+Transform:
+
+  tmp_master_memberids:
+    sql: >-
+      with ShouldFix as (
+      select first_name, last_name, dob, gender, count(distinct member_id) as cc
+      FROM Master_MemberIDS m
+      group by first_name, last_name, dob, gender
+      having count(distinct member_id) > 1
+      )  ,
+      IdsToFix as (
+        select distinct  m.member_id, concat( m.first_name, m.last_name, string(m.dob) , m.gender) as keya,
+               case when q.member_id is null then 0 else 1 end as isNewMemberId
+        from   Master_MemberIDS m
+        inner join shouldFix n on  M.FIRST_NAME =N.FIRST_NAME AND M.LAST_NAME = N.LAST_NAME AND M.DOB= N.DOB AND M.GENDER= N.GENDER
+        left join new_members q on q.member_id = m.member_id
+      ),
+      MemberWeight as (
+        select  m.member_id, count(*) as NumOfRows, min(n.keya) as keya, max(isNewMemberId) as isNewMemberId
+        from   Master_MemberIDS m
+        inner join IdsToFix n on m.member_id = n.member_id
+        group by m.member_id
+      ),
+      ChooseMember as (
+          select  m.member_id as keep_member_id, m.keya,
+          row_number() over(partition by m.keya order by isNewMemberId, m.NumOfRows desc, m.member_id) as r
+          from  MemberWeight m
+      ),
+      MembersToMerge as (
+       select keep_member_id , x.member_id as replace_member_id
+       from ChooseMember y
+       inner join MemberWeight x  on x.keya = y.keya
+       where y.r=1
+      ),
+      merged as (
+      select
+         coalesce(y.keep_member_id, x.member_id) as member_id,
+         x.mbi,
+         x.hicno,
+         x.external_member_id,
+         x.update_date,
+         x.update_source,
+         x.last_name,
+         x.first_name,
+         x.dob,
+         x.gender
+      from   Master_MemberIDS x
+      left join MembersToMerge y on x.member_id = y.replace_member_id
+      )
+      select
+        x.member_id,
+        x.mbi,
+        x.hicno,
+        x.external_member_id,
+        min(x.update_date) as update_date,
+        x.update_source,
+        x.first_name,
+        x.last_name,
+        x.dob,
+        x.gender
+      from merged x
+        group by   member_id, mbi, hicno, external_member_id, update_source, first_name, last_name, dob, gender
+
+    # Note: Load tables have to be same as Extract tables.
+Load:
+  tmp_master_memberids:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/tmp_Master_MemberIDS'
+      mode: overwrite
+
+  master_memberids:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/old_Master_MemberIDS'
+      mode: overwrite

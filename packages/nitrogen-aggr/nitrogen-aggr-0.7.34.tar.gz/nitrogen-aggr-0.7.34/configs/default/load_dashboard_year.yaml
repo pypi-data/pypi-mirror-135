@@ -1,0 +1,270 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- This process generate the data for yearly_dashboard_full table . This table includes 3 rows ,
+#        one per each year in our window of time (current_year, current_year -1 and current_year -2 )
+#        2. This table include the yearly stats needed by the app and needed by Nitrogen audit
+#        2. The  yearly_dashboard_history get append with the data in yearly_dashboard_full without looking at any changes.
+#        3. To PG we always send the yearly_dashboard_full but only the fields that the app needs.
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+  eamd:
+    type: parquet
+    location: "{project_root_path}/{client}/EAMD/"
+
+  eam:
+    type: parquet
+    location: "{project_root_path}/{client}/EAM/"
+
+  rafi_in_claims:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_In_Claims/"
+
+  rafxdxdatasample:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFxDxDataSample/"
+
+  rafx_response:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFx_Response/"
+
+  member_hcc_nums:
+    type: parquet
+    location: "{aggr_location}/member_hcc_nums/"
+
+  member_hccs_full:
+    type: parquet
+    location: "{aggr_location}/member_hccs_full/"
+
+  master_memberids:
+    type: parquet
+    location: "{project_root_path}/{client}/Master_MemberIDS/"
+
+  input_members:
+    type: parquet
+    location: "{project_root_path}/{client}/input/members/"
+
+  memberids:
+    type: parquet
+    location: "{project_root_path}/{client}/MemberIDS/"
+
+  wrk_previous_master_memberids:
+    type: parquet
+    location: "{project_root_path}/{client}/wrk_previous_Master_MemberIDS/"
+
+  new_members:
+    type: parquet
+    location: "{project_root_path}/{client}/New_Members/"
+
+  mmrmembers:
+    type: parquet
+    location: "{project_root_path}/{client}/mmrMembers/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#      SUM(CASE WHEN coalesce( medicaid, '') = '' THEN 0 ELSE 1 end   ) as dual,
+#      ROUND(AVG(coalesce(dual_opp_score, 0.000)),3) as dual_opp,
+  nitrogen_yearly_dashboard:
+    sql: >-
+      With
+          eamd_stats as (
+          Select
+          c.year,
+          max(c.year_name) as year_name,
+          ROUND( sum( CASE WHEN gender = 'M' then 1.0 ELSE 0.0 END) / COUNT(*) * 100, 1)   as male_percent,
+          ROUND( sum( CASE WHEN gender = 'F' then 1.0 ELSE 0.0 END) / COUNT(*) * 100, 1)   as female_percent,
+          count(*)    as eligible_count,
+          ROUND( avg(hcc_captured) ,3)  as avg_hcc_captured,
+          ROUND(avg(raf_captured) ,3)  as avg_raf,
+          SUM( case when coalesce(hcc_captured, 0) = 0 then 1 else 0 end)  as hcc_zero_count,
+          SUM(CASE WHEN coalesce(dos_count, 0) = 0 then 1 else 0 end)  as no_dos_count,
+          ROUND(AVG(hcc_suspects_all ),3)  as avg_hcc_opp,
+          ROUND(AVG(raf_projected ),3) as avg_raf_projected,
+          ROUND(AVG(hcc_suspects_clinical),3) as avg_sus_opp,
+          ROUND(AVG(raf_demographic),3) as avg_raf_demo,
+          SUM(CASE WHEN coalesce(wellness_visit , false ) = false and coalesce(dos_count, 0) >= 1  THEN 1 ELSE 0 end   ) as no_wellness_visit_count,
+          SUM(CASE WHEN coalesce(dos_count,0) > 0 AND coalesce(hcc_suspects_all,0) > 0 THEN 1 ELSE 0 end   ) as one_dos_and_hcc_sus_count,
+          SUM(CASE WHEN coalesce(hcc.hcc_num_all ,0)   >= 3 THEN 1 ELSE 0 end   ) as gtr_than_three_sus_count,
+          SUM(CASE WHEN coalesce(pcp_dos_count, 0) = 0 then 1 else 0 end)  as no_pcp_dos_count,
+          SUM(CASE WHEN coalesce(raf_demographic, 0) = 0 then 1 else 0 end)  as no_demo_count,
+          SUM(CASE WHEN length(coalesce(first_name ,'') )  <=1  THEN 1 ELSE 0 end   ) as first_name_lesseq_than_1_count
+          FROM EAMD c
+          inner join EAM m on c.member_id = m.member_id
+          LEFT JOIN member_hcc_nums hcc on hcc.member_id = c.member_id and hcc.year = c.year and upper(hcc.hcc_type)= 'SUSPECT'
+          WHERE c.is_eligible
+          group by c.year
+          --order by c.year
+          ),
+        Lambda_stats as (
+          select
+          SUM(CASE WHEN lower(status) = 'captured' then 1 else 0 end)     AS total_captured_dxs_sent_to_lambda_rafx,
+          SUM(CASE WHEN lower(status) = 'suspect' then 1 else 0 end)     AS total_suspect_dxs_sent_to_lambda_rafx,
+          CAST(PaymentYear AS INTEGER) -1   AS Year
+          from RAFxDxDataSample
+          group by PaymentYear
+          ),
+        hcc_stats as (
+          select year, count(*) as total_hccs
+          from member_hccs_full
+          group by year
+          ),
+        recap_stats as (
+          select p.year,
+          Cast(Sum(case when is_recap then 1 else 0 end) * 100.0 / Count(*) AS Decimal) as recapture_rate
+          FROM   member_hccs_full p
+          inner join eamd q on p.member_id = q.member_id and p.year = q.year
+          WHERE  q.is_eligible and (p.is_recap  OR p.is_recap_opp )
+          group by p.year
+          ),
+        dx_stats as (
+          select    count(*) AS total_input_dxs,
+          year(Dos_From)  AS Year
+          FROM RAFi_In_Claims
+          WHERE Icd_Code is not null
+          group by year(Dos_From)
+          ),
+        dashboard_by_year  as (
+          select
+          a.*,
+          e.recapture_rate,
+          (select count(*) from  RAFx_Response where status_code != 200 ) as rafx_call_errors,
+          b.total_captured_dxs_sent_to_lambda_rafx,
+          b.total_suspect_dxs_sent_to_lambda_rafx,
+          c.total_hccs,
+          d.total_input_dxs,
+          current_timestamp() as  Record_timestamp
+          from eamd_stats a
+          left join lambda_stats b on a.year= b.year
+          left join hcc_stats c on a.year=c.year
+          left join dx_stats d on a.year=d.year
+          left join recap_stats e on a.year=e.year
+          )
+      SELECT
+        ( select cad_job_id from cad_job )  as job_id,
+      *
+      FROM dashboard_by_year
+
+  master_member_dashboard:
+    sql: >-
+      with ShouldFix as (
+            select first_name, last_name, dob, gender, count(distinct member_id) as cc
+            FROM Master_MemberIDS m
+            group by first_name, last_name, dob, gender
+            having count(distinct member_id) > 1
+        ),
+        IdsToFix as (
+            select distinct  m.member_id
+            from   Master_MemberIDS m
+            inner join shouldFix n on  M.FIRST_NAME =N.FIRST_NAME AND M.LAST_NAME = N.LAST_NAME AND M.DOB= N.DOB AND M.GENDER= N.GENDER
+        ),
+        Name_variations as (
+            select distinct member_id, concat(first_name, last_name, string(dob) , gender) as keya
+            from master_memberids
+        ),
+        Member_with_NameVariations as (
+            select  member_id, count(distinct keya)
+            from name_variations a
+            group by member_id
+            having count(distinct keya)> 1
+        ),
+        measures as (
+            select count(*) as NumberOf, 'Master - Number Of Distinct member_ids'  as item
+                from (select distinct member_id from master_memberids
+                ) x
+            UNION
+            select count(*) as NumberOf, 'Master - Number Of  combinations (FN,LN,DOB,G) with more than one member_id'  as item
+                from ShouldFix x
+            UNION
+                select count(*) as NumberOf, 'Input_Members - Number Of Rows'  as item
+                from input_members  x
+            UNION
+                select count(*) as NumberOf, 'Input_Members - Number Of Distinct external member_ids'  as item
+                from ( select distinct member_id from input_members  ) x
+            UNION
+                select count(*) as NumberOf, 'Master - Number Of Member_ids with only mmr rows'  as item
+                from (
+                select member_id, min (update_source)
+                from master_memberids
+                group by member_id
+                having min (update_source)='mmr'
+                ) x
+            UNION
+                select count(*) as NumberOf, 'Master - Number of Members with name variations'  as item
+                from Member_with_NameVariations x
+            UNION
+                select count(*) as NumberOf, 'mmrMembers - Number Of distinct MBI HICN LN FN DOB G'  as item
+                from (select distinct  mbi, hicn, last_name, first_name, dob, gender  from mmrMembers
+                ) x
+            UNION
+                select count(*) as NumberOf, 'Master - new member_ids'  as item
+                from (select distinct member_id from master_memberids
+                except
+                select distinct member_id from wrk_previous_master_memberids
+                ) x
+            UNION
+                select count(*) as NumberOf, 'Master - deleted member_ids'  as item
+                from (select distinct member_id from wrk_previous_master_memberids
+                except
+                select distinct member_id from master_memberids
+                ) x
+            UNION
+                select count(*) as NumberOf, 'Number Of New Member_ids for previously existing FN,LN,DOB,G'  as item
+                from (SELECT M.MEMBER_ID AS OLD_MEMBER_ID, N.MEMBER_ID as NEW_MEMBER_ID
+                FROM wrk_previous_Master_MemberIDS m
+                INNER JOIN Master_MemberIDS N ON
+                M.FIRST_NAME =N.FIRST_NAME AND M.LAST_NAME = N.LAST_NAME AND M.DOB= N.DOB AND M.GENDER= N.GENDER
+                inner join new_members q on q.member_id = N.MEMBER_ID
+                WHERE M.MEMBER_ID <> N.MEMBER_ID
+                GROUP BY M.MEMBER_ID, N.MEMBER_ID
+                ) x
+            order by item
+          )
+          select
+          ( select cad_job_id from cad_job )  as job_id,
+          *,
+          current_timestamp() as  Record_timestamp
+          from measures
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  nitrogen_yearly_dashboard:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/nitrogen_yearly_dashboard'
+      mode: append
+
+  master_member_dashboard:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/master_member_dashboard'
+      mode: append

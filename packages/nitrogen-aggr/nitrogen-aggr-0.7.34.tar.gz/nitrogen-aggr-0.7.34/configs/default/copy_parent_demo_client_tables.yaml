@@ -1,0 +1,555 @@
+debug: false
+
+#    """
+#    This copy all the sync s3 files from parent demo client .
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  #  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - parent_demo_client = {config.project_config.parent_demo_client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+
+  member_dx_codes_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/member_dx_codes_incremental/"
+
+  member_details_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/member_details_incremental/"
+
+  timestamps_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/timestamps_incremental/"
+
+  provider_member_relationships_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/provider_member_relationships_incremental/"
+
+  members_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/members_incremental/"
+
+  member_hccs_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/member_hccs_incremental/"
+
+  providers_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/providers_incremental/"
+
+  provider_details_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/provider_details_incremental/"
+
+  provider_npi_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/provider_npi_incremental/"
+
+  member_index_incremental:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/sync/member_index_incremental/"
+
+  Load_EA_Suspect_Sources:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/Load_EA_Suspect_Sources/"
+
+  firstnames:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/firstnames/"
+
+  lastnames:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/lastnames/"
+
+  cities:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/cities/"
+
+  streets:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/streets/"
+
+  states:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/states/"
+
+  memberids:
+    type: parquet
+    location: "{project_root_path}/{parent_demo_client}/MemberIDS/"
+
+Transform:
+  #anonymized members
+  anonymized_members:
+    sql: >-
+       With
+          members as (
+            select distinct member_id, Last_name, first_name,  address_1 from (
+            select member_id, Last_name, first_name, address_line_1 as address_1
+            from member_index_incremental
+            union
+            select member_id, Last_name, first_name, address_line_1 as address_1
+            from members_incremental
+            ) x
+          ),
+          m_rank as
+          ( select member_id,
+          row_number() over (order by Last_Name) as o_last,
+          row_number() over (order by First_Name) as o_first,
+          row_number() over (order by Address_1) as o_street
+          from members ),
+        m_rank_index as
+          ( select member_id,
+          case when (o_last % 5000) > 0 then  (o_last % 5000) else 5000 end  as l_index,
+          case when (o_first % 5000) > 0 then   (o_first % 5000)  else 5000 end as f_index,
+          case when (o_street % 5000) > 0  then (o_street % 5000) else 5000 end as st_index,
+          case when (o_last % 475) > 0 then  (o_last % 475) else 475 end as c_index,
+          case when (o_street % 67) > 0 then  (o_street % 67) else 67 end  as s_index
+          from m_rank
+        ),
+        rank_firstnames as (select * ,  row_number() over (order by first_name) as r_first from firstnames ),
+        rank_lastnames as (select * ,  row_number() over (order by last_name) as r_last from lastnames ),
+        rank_cities as (select * ,  row_number() over (order by cityName) as r_city from cities ),
+        rank_streets as (select * ,  row_number() over (order by street) as r_street from streets ),
+        rank_states as (select * ,  row_number() over (order by state) as r_state from states )
+       select
+        m.member_id,
+        max(f.first_name) as first_name,
+        max(l.last_name) as last_name,
+        max(st.street)  as address_line_1,
+        ''  as address_line_2,
+        max(c.CityName)   as City,
+        max(s.State)  as State
+        From members m
+        inner join memberids q on m.member_id = q.member_id
+        inner join  m_rank_index x on m.member_id = x.member_id
+        inner join rank_firstnames f on x.f_index = f.r_first
+        inner join rank_lastnames l on x.l_index = l.r_last
+        inner join rank_streets st on x.st_index = st.r_street
+        inner join rank_cities c on x.c_index = c.r_city
+        inner join rank_states s on x.s_index = s.r_state
+        group by m.member_id
+    cache: true
+
+  #members_incremental_anon
+  members_incremental_anon:
+    sql: >-
+      SELECT
+          a.hash_value,
+          a.operation,
+          a.job_id,
+          a.load_year,
+          a.load_month,
+          a.member_id,
+          a.hicn,
+          a.mbi,
+          a.external_member_id,
+          concat(
+                  ifnull(trim(b.last_name),''),
+                  (case when ifnull(trim(b.first_name),'') = ''
+                  THEN ''
+                  else   concat( ', ', trim(b.first_name) )
+                  end )
+                  ) as full_name,
+          b.first_name,
+          b.last_name,
+          a.gender,
+          a.date_of_birth,
+          a.age,
+          a.health_plan_member_id,
+          a.health_plan_name,
+          b.address_line_1,
+          b.address_line_2,
+          b.city,
+          a.zip,
+          b.state,
+          a.phone,
+          a.program,
+          a.pcp_id,
+          a.chart_delivered_count,
+          a.flex1,
+          a.flex2,
+          a.flex3,
+          a.flex4,
+          a.flex5,
+          a.flex6,
+          a.flex7,
+          a.flex8,
+          a.flex9,
+          a.flex10
+        FROM  members_incremental a
+        inner join anonymized_members b on a.member_id = b.member_id
+
+  #member_index_incremental_anon
+  member_index_incremental_anon:
+    sql: >-
+      SELECT
+          a.hash_value,
+          a.operation,
+          a.job_id,
+          a.member_id,
+          a.hicn,
+          a.mbi,
+          a.external_member_id,
+          concat(
+                  ifnull(trim(b.last_name),''),
+                  (case when ifnull(trim(b.first_name),'') = ''
+                  THEN ''
+                  else   concat( ', ', trim(b.first_name) )
+                  end )
+                  ) as full_name,
+          b.first_name,
+          b.last_name,
+          a.date_of_birth,
+          a.age,
+          a.gender,
+          b.address_line_1,
+          b.address_line_2,
+          b.city,
+          b.state,
+          a.zip,
+          a.phone,
+          a.program,
+          a.health_plan_member_id,
+          a.health_plan_name,
+          a.chart_delivered_count,
+          a.flex1,
+          a.flex2,
+          a.flex3,
+          a.flex4,
+          a.flex5,
+          a.flex6,
+          a.flex7,
+          a.flex8,
+          a.flex9,
+          a.flex10,
+          a.pcp_provider_id,
+          a.pcp_name,
+          a.pcp_npi,
+          a.pcp_tax_id,
+          a.pcp_flex1,
+          a.pcp_flex2,
+          a.pcp_flex3,
+          a.pcp_flex4,
+          a.pcp_flex5,
+          a.pcp_flex6,
+          a.pcp_flex7,
+          a.pcp_flex8,
+          a.pcp_flex9,
+          a.pcp_flex10,
+          a.provider_info,
+          a.last_encounter,
+          a.pcp_last_encounter,
+          a.spec_last_encounter,
+          a.current_dos_count,
+          a.current_pcp_dos_count,
+          a.prior_dos_count,
+          a.prior_pcp_dos_count,
+          a.prior2_dos_count,
+          a.prior2_pcp_dos_count,
+          a.encountered_ids,
+          a.current_mmr_esrd,
+          a.prior_mmr_esrd,
+          a.prior2_mmr_esrd,
+          a.current_mmr_hospice,
+          a.prior_mmr_hospice,
+          a.prior2_mmr_hospice,
+          a.current_mmr_risk_code_type,
+          a.prior_mmr_risk_code_type,
+          a.prior2_mmr_risk_code_type,
+          a.current_mmr_risk_code_description,
+          a.prior_mmr_risk_code_description,
+          a.prior2_mmr_risk_code_description,
+          a.current_is_eligible,
+          a.prior_is_eligible,
+          a.prior2_is_eligible,
+          a.eligibility_date,
+          a.eligibility_end_date,
+          a.current_eligibility_status,
+          a.prior_eligibility_status,
+          a.prior2_eligibility_status,
+          a.current_num_months_eligible,
+          a.prior_num_months_eligible,
+          a.prior2_num_months_eligible,
+          a.current_recap_count,
+          a.prior_recap_count,
+          a.prior2_recap_count,
+          a.current_recap_opp_count,
+          a.prior_recap_opp_count,
+          a.prior2_recap_opp_count,
+          a.current_wellness_visit,
+          a.prior_wellness_visit,
+          a.prior2_wellness_visit,
+          a.current_raf_captured,
+          a.prior_raf_captured,
+          a.prior2_raf_captured,
+          a.current_raf_demo,
+          a.prior_raf_demo,
+          a.prior2_raf_demo,
+          a.current_opportunity,
+          a.prior_opportunity,
+          a.prior2_opportunity,
+          a.current_raf_projected,
+          a.prior_raf_projected,
+          a.prior2_raf_projected,
+          a.current_hcc_cap,
+          a.prior_hcc_cap,
+          a.prior2_hcc_cap,
+          a.current_hcc_sus,
+          a.prior_hcc_sus,
+          a.prior2_hcc_sus,
+          a.current_hcc_captured,
+          a.prior_hcc_captured,
+          a.prior2_hcc_captured,
+          a.current_hcc_captured_source_claim,
+          a.prior_hcc_captured_source_claim,
+          a.prior2_hcc_captured_source_claim,
+          a.current_hcc_captured_source_hra,
+          a.prior_hcc_captured_source_hra,
+          a.prior2_hcc_captured_source_hra,
+          a.current_hcc_captured_source_hra_crr,
+          a.prior_hcc_captured_source_hra_crr,
+          a.prior2_hcc_captured_source_hra_crr,
+          a.current_hcc_captured_source_mor,
+          a.prior_hcc_captured_source_mor,
+          a.prior2_hcc_captured_source_mor,
+          a.current_hcc_captured_source_crr,
+          a.prior_hcc_captured_source_crr,
+          a.prior2_hcc_captured_source_crr,
+          a.current_hcc_captured_source_other,
+          a.prior_hcc_captured_source_other,
+          a.prior2_hcc_captured_source_other,
+          a.current_hcc_captured_new_chronic,
+          a.prior_hcc_captured_new_chronic,
+          a.prior2_hcc_captured_new_chronic,
+          a.current_hcc_captured_yoy_recapture,
+          a.prior_hcc_captured_yoy_recapture,
+          a.prior2_hcc_captured_yoy_recapture,
+          a.current_hcc_captured_mor_new_chronic,
+          a.prior_hcc_captured_mor_new_chronic,
+          a.prior2_hcc_captured_mor_new_chronic,
+          a.current_hcc_captured_mor_yoy_recapture,
+          a.prior_hcc_captured_mor_yoy_recapture,
+          a.prior2_hcc_captured_mor_yoy_recapture,
+          a.current_hcc_captured_acute,
+          a.prior_hcc_captured_acute,
+          a.prior2_hcc_captured_acute,
+          a.current_hcc_captured_other,
+          a.prior_hcc_captured_other,
+          a.prior2_hcc_captured_other,
+          a.current_hcc_suspects_all,
+          a.prior_hcc_suspects_all,
+          a.prior2_hcc_suspects_all,
+          a.current_hcc_suspects_yoy,
+          a.prior_hcc_suspects_yoy,
+          a.prior2_hcc_suspects_yoy,
+          a.current_hcc_suspects_mor_yoy,
+          a.prior_hcc_suspects_mor_yoy,
+          a.prior2_hcc_suspects_mor_yoy,
+          a.current_hcc_suspects_u,
+          a.prior_hcc_suspects_u,
+          a.prior2_hcc_suspects_u,
+          a.current_hcc_suspects_asr,
+          a.prior_hcc_suspects_asr,
+          a.prior2_hcc_suspects_asr,
+          a.current_hcc_suspects_n,
+          a.prior_hcc_suspects_n,
+          a.prior2_hcc_suspects_n,
+          a.current_hcc_suspects_cpt,
+          a.prior_hcc_suspects_cpt,
+          a.prior2_hcc_suspects_cpt,
+          a.current_hcc_suspects_ml,
+          a.prior_hcc_suspects_ml,
+          a.prior2_hcc_suspects_ml,
+          a.current_hcc_suspects_other,
+          a.prior_hcc_suspects_other,
+          a.prior2_hcc_suspects_other,
+          a.current_hcc_suspects_clinical,
+          a.prior_hcc_suspects_clinical,
+          a.prior2_hcc_suspects_clinical,
+          a.current_hcc_captured_num_all,
+          a.prior_hcc_captured_num_all,
+          a.prior2_hcc_captured_num_all,
+          a.current_hcc_captured_num_source_claim,
+          a.prior_hcc_captured_num_source_claim,
+          a.prior2_hcc_captured_num_source_claim,
+          a.current_hcc_captured_num_source_hra,
+          a.prior_hcc_captured_num_source_hra,
+          a.prior2_hcc_captured_num_source_hra,
+          a.current_hcc_captured_num_source_hra_crr,
+          a.prior_hcc_captured_num_source_hra_crr,
+          a.prior2_hcc_captured_num_source_hra_crr,
+          a.current_hcc_captured_num_source_mor,
+          a.prior_hcc_captured_num_source_mor,
+          a.prior2_hcc_captured_num_source_mor,
+          a.current_hcc_captured_num_source_crr,
+          a.prior_hcc_captured_num_source_crr,
+          a.prior2_hcc_captured_num_source_crr,
+          a.current_hcc_captured_num_source_other,
+          a.prior_hcc_captured_num_source_other,
+          a.prior2_hcc_captured_num_source_other,
+          a.current_hcc_captured_num_new_chronic,
+          a.prior_hcc_captured_num_new_chronic,
+          a.prior2_hcc_captured_num_new_chronic,
+          a.current_hcc_captured_num_yoy_recapture,
+          a.prior_hcc_captured_num_yoy_recapture,
+          a.prior2_hcc_captured_num_yoy_recapture,
+          a.current_hcc_captured_num_mor_new_chronic,
+          a.prior_hcc_captured_num_mor_new_chronic,
+          a.prior2_hcc_captured_num_mor_new_chronic,
+          a.current_hcc_captured_num_mor_yoy_recapture,
+          a.prior_hcc_captured_num_mor_yoy_recapture,
+          a.prior2_hcc_captured_num_mor_yoy_recapture,
+          a.current_hcc_captured_num_acute,
+          a.prior_hcc_captured_num_acute,
+          a.prior2_hcc_captured_num_acute,
+          a.current_hcc_captured_num_other,
+          a.prior_hcc_captured_num_other,
+          a.prior2_hcc_captured_num_other,
+          a.current_hcc_suspects_num_all,
+          a.prior_hcc_suspects_num_all,
+          a.prior2_hcc_suspects_num_all,
+          a.current_hcc_suspects_num_yoy,
+          a.prior_hcc_suspects_num_yoy,
+          a.prior2_hcc_suspects_num_yoy,
+          a.current_hcc_suspects_num_mor_yoy,
+          a.prior_hcc_suspects_num_mor_yoy,
+          a.prior2_hcc_suspects_num_mor_yoy,
+          a.current_hcc_suspects_num_u,
+          a.prior_hcc_suspects_num_u,
+          a.prior2_hcc_suspects_num_u,
+          a.current_hcc_suspects_num_asr,
+          a.prior_hcc_suspects_num_asr,
+          a.prior2_hcc_suspects_num_asr,
+          a.current_hcc_suspects_num_n,
+          a.prior_hcc_suspects_num_n,
+          a.prior2_hcc_suspects_num_n,
+          a.current_hcc_suspects_num_cpt,
+          a.prior_hcc_suspects_num_cpt,
+          a.prior2_hcc_suspects_num_cpt,
+          a.current_hcc_suspects_num_ml,
+          a.prior_hcc_suspects_num_ml,
+          a.prior2_hcc_suspects_num_ml,
+          a.current_hcc_suspects_num_other,
+          a.prior_hcc_suspects_num_other,
+          a.prior2_hcc_suspects_num_other,
+          a.current_hcc_suspects_num_clinical,
+          a.prior_hcc_suspects_num_clinical,
+          a.prior2_hcc_suspects_num_clinical,
+          a.current_raf_profitability,
+          a.prior_raf_profitability,
+          a.prior2_raf_profitability,
+          a.current_dual,
+          a.current_dual_opp,
+          a.prior_dual,
+          a.prior_dual_opp,
+          a.prior2_dual,
+          a.prior2_dual_opp,
+          a.current_dual_opp_score,
+          a.prior_dual_opp_score,
+          a.prior2_dual_opp_score,
+          a.current_raf_captured_cf,
+          a.prior_raf_captured_cf,
+          a.prior2_raf_captured_cf,
+          a.current_raf_dual_boost,
+          a.prior_raf_dual_boost,
+          a.prior2_raf_dual_boost,
+          a.current_cf_profitability,
+          a.prior_cf_profitability,
+          a.prior2_cf_profitability,
+          a.current_parta_ramra_pa,
+          a.prior_parta_ramra_pa,
+          a.prior2_parta_ramra_pa,
+          a.current_partb_ramra_pa,
+          a.prior_partb_ramra_pa,
+          a.prior2_partb_ramra_pa,
+          a.current_hra_completed,
+          a.prior_hra_completed,
+          a.prior2_hra_completed
+          FROM  member_index_incremental a
+          inner join anonymized_members b on a.member_id = b.member_id
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+
+  member_dx_codes_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_dxcodes
+      mode: overwrite
+
+  member_details_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_details
+      mode: overwrite
+
+  timestamps_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_timestamps
+      mode: overwrite
+
+  provider_member_relationships_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_member_relationships
+      mode: overwrite
+
+  members_incremental_anon:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_members
+      mode: overwrite
+
+  member_hccs_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_hccs
+      mode: overwrite
+
+  providers_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_providers
+      mode: overwrite
+
+  provider_details_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_details
+      mode: overwrite
+
+  provider_npi_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_npi
+      mode: overwrite
+
+  member_index_incremental_anon:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_index
+      mode: overwrite
+
+  Load_EA_Suspect_Sources:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_suspect_sources
+      mode: overwrite
