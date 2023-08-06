@@ -1,0 +1,28 @@
+user:
+  name: jenkins/baseos-jenkins.rhev-ci-vms.eng.rdu2.redhat.com
+
+collect_metrics:
+  beaker_jobs:
+    name: beaker_job_total
+    description: Total number of jobs (per status)
+    data_container: jobs
+    dimensions:
+      - status
+  beaker_instances:
+    name: beaker_instances_total
+    description: Total number of instances (per arch, distro, status)
+    data_container: instances
+    dimensions:
+      - status
+      - arch
+      - distro
+      - possible_families
+  beaker_recipes:
+    name: beaker_recipes_total
+    description: Total number of recipes (per arch, distro, family, status)
+    data_container: recipes
+    dimensions:
+      - status
+      - arch
+      - distro
+      - family

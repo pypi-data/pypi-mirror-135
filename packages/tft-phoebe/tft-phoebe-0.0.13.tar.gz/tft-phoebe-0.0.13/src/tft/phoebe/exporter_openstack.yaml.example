@@ -1,0 +1,33 @@
+client:
+  os_auth_url: https://my-openstack
+  os_identity_api_version: 3
+  os_user_domain_name: company
+  os_project_domain_name: company
+  os_project_name: my-project
+  os_username: my-username
+  os_password: my-password
+
+metrics:
+  - name: openstack_memory_bytes
+    help: Openstack RAM usage
+    labels:
+      - type: 'used'
+        os-property: 'totalRAMUsed'
+
+      - type: 'total'
+        os-property: 'maxTotalRAMSize'
+
+        # Use "scale: N" to scale the raw value, acquired from OpenStack CLI, by a factor of N. For
+        # example, "totalRAMUsed" field, as provided by OpenStack, is measured in megabytes - since
+        # we wish to export the value in *bytes*, we need to set "scale: 1048576" (MB => kB => B).
+        # Scale is a float number, so we can for example use "scale: 1.4".
+        scale: 1048576
+
+networks: "provider_net_cci_\d+"
+
+# When counting instance states, emit metrics for these labels even when no instance has such labels.
+expected-states:
+  - active
+  - build
+  - error
+  - foo

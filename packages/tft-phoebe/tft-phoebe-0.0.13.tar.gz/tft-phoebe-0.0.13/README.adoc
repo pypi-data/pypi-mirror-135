@@ -1,0 +1,20 @@
+= Phoebe
+
+Phoebe is a data gathering proxy for https://prometheus.io/[Prometheus] toolkit. Its goal is to gather metrics from systems that don't provide their own native Prometheus export, and make them available for digestion by Prometheus.
+
+
+== How to run an exporter
+
+[source,shell]
+....
+$ pip install tft-phoebe
+$ phoebe-openstack --config=<your config file> --export=<filepath or - for stdout>
+....
+
+Or, after checking out the sources:
+
+[source,shell]
+....
+$ poetry install
+$ poetry run phoebe-openstack --config=<your config file> --export=<filepath or - for stdout>
+....

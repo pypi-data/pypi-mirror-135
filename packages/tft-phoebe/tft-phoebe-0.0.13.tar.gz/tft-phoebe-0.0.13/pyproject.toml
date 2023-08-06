@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "tft-phoebe"
+version = "0.0.13"
+description = "Data gathering proxy for Prometheus toolkit"
+license = "BSD-3-Clause"
+authors = [
+    "Jakub Haruda <jharuda@redhat.com>",
+    "Milos Prchlik <mprchlik@redhat.com>",
+    "Miroslav Vadkerti <mvadkert@redhat.com>",
+]
+readme = "README.adoc"
+homepage = "https://pypi.org/project/tft-phoebe"
+repository = "https://gitlab.com/testing-farm/phoebe"
+# documentation = ""
+
+packages = [
+    { include = "tft", from = "src" }
+]
+
+classifiers = [
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: POSIX :: Linux',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Topic :: Utilities'
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+beautifulsoup4 = "^4.8.1"
+lxml = "^4.4.2"
+prometheus-client = "^0.7.1"
+requests = "*"
+"ruamel.yaml" = "^0.17.20"
+stackprinter = "^0.2.3"
+
+[tool.poetry.dev-dependencies]
+flake8 = "*"
+flake8-use-fstring = "*"
+mypy = "*"
+mypy-extensions = "*"
+pytest = "*"
+tox = "*"
+
+[tool.poetry.scripts]
+phoebe-arbitrary = "tft.phoebe.exporter_arbitrary:main"
+phoebe-jenkins = "tft.phoebe.exporter_jenkins:main"
+phoebe-openstack = "tft.phoebe.exporter_openstack:main"
+phoebe-aws = "tft.phoebe.exporter_aws:main"
+
+[build-system]
+requires = [
+    "poetry>=1.0.0"
+]
+build-backend = "poetry.masonry.api"
