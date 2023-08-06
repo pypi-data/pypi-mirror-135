@@ -1,0 +1,85 @@
+Metadata-Version: 2.1
+Name: XProperties
+Version: 1.0.4
+Summary: Cross-Language .properties file parser
+Home-page: https://github.com/Duelit/XProperties
+Author: Duelit
+Author-email: jyoon07dev@gmail.com
+Maintainer: Duelit
+Maintainer-email: jyoon07dev@gmail.com
+License: UNKNOWN
+Keywords: xproperties
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# XProperties
+## Install
+`pip install XProperties`
+
+## Examples
+### Example 1
+```properties
+# example1.properties
+username=Duelit
+password=password
+```
+```python
+# example1.py
+import XProperties
+
+
+prop = XProperties.Properties()
+prop.load("example1.properties")
+
+# get property
+print(prop.get_property("username"))
+print(prop["username"])
+
+# set property
+prop.set_property("password", "password1")
+prop["password"] = "password1"
+
+# delete property
+prop["delete"] = "delete me"
+prop.delete_property("delete")
+prop["delete"] = "delete me"
+del prop["delete"]
+
+# iterator
+print(prop.list())
+print([i for i in prop])
+print(len(prop))
+
+prop.save()
+```
+### Example 2
+```python
+# example2.py
+import XProperties
+
+
+prop = XProperties.Properties()
+
+prop["username"] = "Duelit"
+prop["password"] = "password"
+
+prop.save("example2.properties")
+```
+
+## License
+**[MIT License](https://github.com/Duelit/XProperties/blob/master/LICENSE)**
+
+
