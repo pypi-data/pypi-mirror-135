@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: lbry-rocksdb
+Version: 0.8.2
+Summary: Python bindings for RocksDB
+Home-page: https://github.com/lbryio/lbry-rocksdb
+Author: Jack Robison
+Author-email: jackrobison@lbry.com
+License: BSD License
+Keywords: rocksdb,static,build
+Platform: UNKNOWN
+Requires-Python: >=3.7.0
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: setuptools (>=25)
+Provides-Extra: doc
+Requires-Dist: sphinx-rtd-theme ; extra == 'doc'
+Requires-Dist: sphinx ; extra == 'doc'
+
+## lbry-rocksdb
+
+### Note
+The `python-rocksdb` and `pyrocksdb` packages haven't been updated in a long time - this repo is a fork of python-rocksdb with many of the PRs to it merged, and with [bunch of updates and improvements](https://github.com/iFA88/python-rocksdb) from @iFA88 and @mosquito.
+
+
+### Install from pip
+    pip install lbry-rocksdb
+
+
+### Install for development / from source
+    sudo apt install build-essential binutils
+    git clone https://github.com/lbryio/lbry-rocksdb.git
+    cd lbry-rocksdb
+    git submodule update --init --recursive
+    git pull --recurse-submodules
+    make clean && make
+    pip install -e .
+    python -m unittest discover . -v
+
+
+### Quick Usage Guide
+    >>> import rocksdb
+    >>> db = rocksdb.DB("test.db", rocksdb.Options(create_if_missing=True))
+    >>> db.put(b'a', b'data')
+    >>> print db.get(b'a')
+    b'data'
+
+
