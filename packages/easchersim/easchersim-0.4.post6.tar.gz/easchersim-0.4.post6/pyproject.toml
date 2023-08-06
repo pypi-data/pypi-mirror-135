@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=46",
+            "setuptools_scm[toml]>=3.4",
+            "wheel"
+           ]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = 'src/easchersim/_version.py'
+version_scheme = 'post-release'
+local_scheme = 'no-local-version'
+parentdir_prefix_version = 'easchersim-'
+
+[tool.black]
+line-length = 88
+skip-string-normalization = false
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+)
+'''
+
+[tool.autopep8]
+max_line_length = 88
+ignore = "E501,W6"  # or ["E501", "W6"]
+
+[tool.isort]
+profile = "black"
