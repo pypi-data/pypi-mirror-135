@@ -1,0 +1,45 @@
+Metadata-Version: 2.1
+Name: deepconsensus
+Version: 0.2.0
+Summary: DeepConsensus
+Home-page: https://github.com/google/deepconsensus
+Author: Google LLC
+License: UNKNOWN
+Keywords: bioinformatics
+Platform: UNKNOWN
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: absl-py (>=0.13.0)
+Requires-Dist: ml-collections (>=0.1.0)
+Requires-Dist: numpy (>=1.19)
+Requires-Dist: pandas (>=1.1)
+Requires-Dist: pysam
+Requires-Dist: tf-models-official (<=2.7.0,>=2.4.0)
+Provides-Extra: cpu
+Requires-Dist: intel-tensorflow (<=2.7.0,>=2.4.0) ; extra == 'cpu'
+Provides-Extra: gpu
+Requires-Dist: tensorflow-gpu (<=2.7.0,>=2.4.0) ; extra == 'gpu'
+
+# Important: Pip install is different for CPU versus GPU
+
+If you're on a GPU machine:
+
+```bash
+pip install deepconsensus[gpu]==0.2.0
+# To make sure the `deepconsensus` CLI works, set the PATH:
+export PATH="/home/${USER}/.local/bin:${PATH}"
+```
+
+If you're on a CPU machine:
+
+```bash
+pip install deepconsensus[cpu]==0.2.0
+# To make sure the `deepconsensus` CLI works, set the PATH:
+export PATH="/home/${USER}/.local/bin:${PATH}"
+```
+
+## Documentation, quick start, citation
+
+All other documentation is on GitHub: [https://github.com/google/deepconsensus](https://github.com/google/deepconsensus).
+
+
