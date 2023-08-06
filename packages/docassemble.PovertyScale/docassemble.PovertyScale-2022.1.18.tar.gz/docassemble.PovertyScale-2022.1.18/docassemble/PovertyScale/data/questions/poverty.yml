@@ -1,0 +1,57 @@
+---
+comment: |
+  Federal Poverty Level
+  See: https://aspe.hhs.gov/poverty-guidelines
+---
+modules:
+  - .poverty
+---  
+comment: |
+  Multiplier specific to MA courts, for affidavit of indigency.
+  Deprecated.
+  You can override in your own interview.
+code: |  
+  # For backwards compatibility
+  poverty_multiplier = 1.25 # threshold multiplier. e.g. 2 for 200%
+---
+code: |
+  # The below properties are deprecated but kept for compatibility with
+  # earlier iterations of the PovertyScale package
+  poverty_level_update = get_poverty_scale_data().get("poverty_level_update_year")
+  poverty_base = int(get_poverty_scale_data().get("poverty_base"))
+  poverty_increment = int(get_poverty_scale_data().get("poverty_increment"))
+  
+  # Below are possible but people should use poverty_scale_income_qualifies() instead
+  # poverty_base_hi = int(get_poverty_scale_data().get("poverty_base_hi"))
+  # poverty_increment_hi = int(get_poverty_scale_data().get("poverty_increment_hi"))
+  # poverty_base_ak = int(get_poverty_scale_data().get("poverty_base_ak"))
+  # poverty_increment_ak = int(get_poverty_scale_data().get("poverty_increment_ak"))
+---
+comment: |
+  A table you can insert into your interview that shows the household
+  size and corresponding income limit up to a household of size 10.
+  
+  E.g., ${ poverty_scale_table }
+table: poverty_scale_table
+rows: |
+  [DAObject(household_size=n, limit=(poverty_base) + (n*poverty_multiplier*poverty_increment)) for n in range(1,11)]
+columns:
+  - ${ ma_poverty_household_size_template }: |
+      row_item.household_size
+  - ${ ma_poverty_income_limit_template }: |
+      currency(row_item.limit)
+---
+template: ma_poverty_household_size_template
+content: |
+  Household Size
+---
+template: ma_poverty_income_limit_template
+content: |
+  Maximum Annual Income
+		
+		
+		
+    
+    
+    
+    
