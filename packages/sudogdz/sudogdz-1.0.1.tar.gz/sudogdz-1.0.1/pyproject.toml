@@ -1,0 +1,44 @@
+[tool.bumpver]
+current_version = "1.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+
+[tool.bumpver.file_patterns]
+"sudogdz.py" = [
+    '__version__ = "{version}"',
+]
+"README.md" = [
+    '<img src="https://img.shields.io/badge/version-{version}-orange">'
+]
+
+[build-system]
+requires = [
+    "flit_core >=3.2,<4",
+]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "sudogdz"
+authors = [{name = "aye20054925"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Education",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: MIT License",
+]
+requires-python = ">=3.6"
+dependencies = [
+    "requests",
+    "beautifulsoup4",
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/aye20054925/sudogdz"
