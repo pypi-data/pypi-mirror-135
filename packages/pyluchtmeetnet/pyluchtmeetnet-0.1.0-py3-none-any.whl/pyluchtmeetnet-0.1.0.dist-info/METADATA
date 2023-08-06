@@ -1,0 +1,63 @@
+Metadata-Version: 2.1
+Name: pyluchtmeetnet
+Version: 0.1.0
+Summary: A module for getting air quality data from Luchtmeetnet OpenAPI
+Home-page: https://github.com/metbril/pyluchtmeetnet
+Author: Robert van Bregt
+Author-email: robertvanbregt@gmail.com
+License: UNKNOWN
+Project-URL: Bug Reports, https://github.com/metbril/pyluchtmeetnet/issues
+Project-URL: Funding, https://ko-fi.com/metbril
+Project-URL: Source, https://github.com/metbril/pyluchtmeetnet/
+Keywords: air quality,health,api
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.6, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+
+# pyluchtmeetnet
+
+A python package to use the [Luchtmeetnet 2020 OpenAPI][luchtmeetnet-api].
+
+## Installation
+
+```shell
+$ pip3 install pyluchtmeetnet
+```
+
+## Code example
+
+```python
+from pymluchtmeetnet import Luchtmeetnet
+
+latitude = 51.7
+longitude = 4.5
+
+# Get nearest station
+station = Luchtmeetnet().get_nearest_station(latitude, longitude)
+print(station)
+
+# Get latest LKI from station
+lki = Luchtmeetnet().get_latest_station_lki(station["number"])
+print(lki)
+
+# Get latest measurements from station
+measurements = Luchtmeetnet().get_latest_station_measurements(station["number"])
+print(measurements)
+```
+
+[luchtmeetnet-api]: https://api-docs.luchtmeetnet.nl/
+
+
