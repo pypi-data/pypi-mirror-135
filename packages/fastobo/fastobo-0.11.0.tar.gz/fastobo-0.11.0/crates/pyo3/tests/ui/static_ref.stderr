@@ -1,0 +1,25 @@
+error[E0495]: cannot infer an appropriate lifetime for lifetime parameter `'py` due to conflicting requirements
+ --> tests/ui/static_ref.rs:4:1
+  |
+4 | #[pyfunction]
+  | ^^^^^^^^^^^^^
+  |
+note: first, the lifetime cannot outlive the anonymous lifetime #1 defined on the body at 4:1...
+ --> tests/ui/static_ref.rs:4:1
+  |
+4 | #[pyfunction]
+  | ^^^^^^^^^^^^^
+note: ...so that the types are compatible
+ --> tests/ui/static_ref.rs:4:1
+  |
+4 | #[pyfunction]
+  | ^^^^^^^^^^^^^
+  = note: expected `pyo3::Python<'_>`
+             found `pyo3::Python<'_>`
+  = note: but, the lifetime must be valid for the static lifetime...
+note: ...so that reference does not outlive borrowed content
+ --> tests/ui/static_ref.rs:4:1
+  |
+4 | #[pyfunction]
+  | ^^^^^^^^^^^^^
+  = note: this error originates in the attribute macro `pyfunction` (in Nightly builds, run with -Z macro-backtrace for more info)
