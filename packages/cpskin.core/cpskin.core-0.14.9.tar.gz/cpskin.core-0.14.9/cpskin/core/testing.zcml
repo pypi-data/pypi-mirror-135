@@ -1,0 +1,26 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <include file="configure.zcml" />
+  <include package="jarn.jsi18n" />
+  <include package="plone.app.contenttypes" />
+  <include package="plone.app.event" />
+  <include package="collective.contact.core" />
+  <include package="collective.taxonomy" />
+  <include package="collective.navigationtoggle" />
+  <include package="collective.documentgenerator" />
+  <include package="cpskin.workflow" />
+  <include package="cpskin.menu" />
+  <include package="sc.social.like" />
+  <include package="imio.gdpr" />
+
+
+  <genericsetup:registerProfile
+      name="testing"
+      title="cpskin.core: testing"
+      directory="profiles/testing"
+      description="Installs CPSkin core test profile"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>

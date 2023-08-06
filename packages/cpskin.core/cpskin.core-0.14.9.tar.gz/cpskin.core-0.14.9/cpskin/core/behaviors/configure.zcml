@@ -1,0 +1,97 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:grok="http://namespaces.zope.org/grok"
+    i18n_domain="cpkin.core">
+
+  <include package="plone.behavior" file="meta.zcml" />
+
+  <grok:grok package=".metadata" />
+
+  <plone:behavior
+    title="Standard Tags"
+    description="Adds standard keywords."
+    provides=".metadata.IStandardTags"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="Hidden Tags"
+    description="Adds hidden keywords."
+    provides=".metadata.IHiddenTags"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="I Search Tags"
+    description="Adds I search keywords."
+    provides=".metadata.IISearchTags"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="I Am Tags"
+    description="Adds I am keywords."
+    provides=".metadata.IIAmTags"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="Related contacts"
+    description="Adds related Contacts from collective.contact suite."
+    provides=".metadata.IRelatedContacts"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="Additional searchable text"
+    description="Add an addtional searchable text"
+    provides=".metadata.IAdditionalSearchableText"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    />
+
+  <plone:behavior
+    title="Cpskin index view settings"
+    description="Adds some configuration for cpskin index view."
+    provides=".indexview.ICpskinIndexViewSettings"
+    for="plone.app.contenttypes.interfaces.ICollection"
+    />
+
+  <plone:behavior
+    title="Cpskin directory view settings"
+    description="Adds some configuration for cpskin directory view."
+    provides=".directory.ICpskinDirectoryViewSettings"
+    for="collective.contact.core.content.directory.IDirectory"
+    />
+
+  <plone:behavior
+    title="Banner image"
+    description="Adds a banner image field used as banner"
+    provides=".eventview.ICpskinEventViewSettings"
+    factory=".eventview.CpskinEventViewSettings"
+    for="plone.app.contenttypes.interfaces.IEvent"
+    marker=".eventview.ICpskinEventViewSettings"
+    />
+
+  <plone:behavior
+    title="Contact details for directory"
+    description="Contact details (phone numbers, address, email, ...)."
+    provides=".directorycontact.IDirectoryContactDetails"
+    />
+
+  <plone:behavior
+    title="Images for organizations"
+    description="Images to display on faceted view."
+    provides=".organization.IOrganizationImages"
+    for="collective.contact.core.content.organization.IOrganization"
+    />
+
+  <plone:behavior
+    title="Booking fields"
+    description="Add additional booking fields"
+    provides=".booking.IBooking"
+    for="plone.dexterity.interfaces.IDexterityContent"
+  />
+
+</configure>

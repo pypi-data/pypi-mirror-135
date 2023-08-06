@@ -1,0 +1,53 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="cpskin">
+
+  <include package="plone.app.portlets"  />
+
+  <includeOverrides file="overrides.zcml" />
+
+  <plone:portletRenderer
+      portlet="plone.app.portlets.portlets.navigation.INavigationPortlet"
+      class=".navigation.CPSkinRenderer"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <plone:portletRenderer
+      portlet="collective.sendinblue.browser.portlet.ISendinbluePortlet"
+      class=".sendinblue.GDPRRenderer"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <plone:portlet
+      name="cpskin.portlets.Firefox"
+      interface=".firefox.IFirefoxPortlet"
+      assignment=".firefox.Assignment"
+      renderer=".firefox.Renderer"
+      addview=".firefox.AddForm"
+      />
+
+  <plone:portlet
+      name="cpskin.portlets.Photo"
+      interface=".photo.IPhotoPortlet"
+      assignment=".photo.Assignment"
+      renderer=".photo.Renderer"
+      addview=".photo.AddForm"
+      />
+
+  <browser:page
+      name="portlet_firefox"
+      for="*"
+      template="firefox.pt"
+      permission="zope.Public"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+  <browser:resource
+      name="cpskin.portlets.firefox.png"
+      file="firefox.png"
+      layer="..interfaces.ICPSkinCoreLayer"
+      />
+
+</configure>
