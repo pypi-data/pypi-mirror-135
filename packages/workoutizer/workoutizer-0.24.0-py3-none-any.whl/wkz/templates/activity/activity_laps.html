@@ -1,0 +1,69 @@
+{% load filters %}
+
+{% if laps %}
+    <div class="col-sm-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Laps</h4>
+            </div>
+            <div class="card-body">
+            <table class="table table-hover table-borderless">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th data-toggle="tooltip" data-placement="top" title="hh:mm:ss">Time</th>
+                        <th data-toggle="tooltip" data-placement="top" title="m">Distance</th>
+                        <th data-toggle="tooltip" data-placement="top" title="min/km">Pace</th>
+                        <th>Trigger</th>
+                        <th>Label</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for lap in laps %}
+                    <tr class="lap_row">
+                    {% if lap.trigger == "manual" %}
+                    <tr class="lap_row lap_manual">
+                    {% else %}
+                    <tr class="lap_row lap_auto">
+                    {% endif %}
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ lap.elapsed_time|h_m_s }}</td>
+                        <td>{{ lap.distance|to_int }}</td>
+                        <td>{{ lap.speed|speed_to_pace }}</td>
+                        <td>{{ lap.trigger }}</td>
+                        {% if lap.label %}
+                            <td>{{ lap.label }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function addToolTip(lap_type) {
+        if (lap_type == "manual") {
+            var tableRows = document.getElementsByClassName('lap_row lap_manual');
+        } else if (lap_type == "auto") {
+            var tableRows = document.getElementsByClassName('lap_row lap_auto');
+        }
+        for (let i=0; i < tableRows.length; i +=1) {
+            tableRows[i].addEventListener('mouseover', function(e) {
+                    render_lap_marker(lap_type, i);
+                }
+            );
+            tableRows[i].addEventListener('mouseout', function(e) {
+                    hide_lap_marker(lap_type, i);
+                }
+            );
+        }
+    }
+
+    addToolTip("manual")
+    addToolTip("auto")
+    </script>
+{% endif %}

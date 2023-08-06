@@ -1,0 +1,240 @@
+{% load static %}
+{% load filters %}
+
+<head>
+    <!-- leaflet-ui -->
+    <script src="https://unpkg.com/leaflet@1.3.2/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ui@0.2.0/dist/leaflet-ui.js"></script>
+    <script src="{% static 'js/map_icons.js' %}"></script>
+</head>
+
+<div class="card">
+    <div class="card-body">
+        <div id="leaflet_map"></div>
+    </div>
+</div>
+
+<script>
+    {% include "map/map_settings.html" %}
+
+    {% for line, _ in traces %}
+        coordinates = {{ line.coordinates }};
+        beg = {{ line.coordinates }}[0];
+        end = {{ line.coordinates }}[coordinates.length - 1];
+
+        L.marker([beg[1], beg[0]], {icon: greenIcon}).addTo(map);
+        L.marker([end[1], end[0]], {icon: redIcon}).addTo(map);
+    {% endfor %}
+
+
+    let trace_color = "red";
+    let Style = {
+        "color": trace_color,
+        "weight": "{{ settings.trace_width }}",
+        "opacity": "{{ settings.trace_opacity }}",
+    };
+    var traceGroup = L.layerGroup();
+
+    var fastest_sections = {{ fastest_sections | get_best_sections_list | safe }};
+    var fastestSectionGroup = L.layerGroup();
+    for (let i = 0; i < fastest_sections.length; i++) {
+        const section_start = fastest_sections[i][0] / "{{ settings.every_nth_value }}";
+        const section_end = fastest_sections[i][1] / "{{ settings.every_nth_value }}";
+
+        var section = coordinates.slice(section_start, section_end);
+        // add section to trace group
+        sec = L.geoJSON({
+            "type": "LineString",
+            "coordinates": section,
+        }, Style);
+        sec.addTo(fastestSectionGroup);
+    }
+    fastestSectionGroup.addTo(map);
+
+    var climb_sections = {{ climb_sections | get_best_sections_list | safe }};
+    var climbSectionGroup = L.layerGroup();
+    for (let i = 0; i < climb_sections.length; i++) {
+        const section_start = climb_sections[i][0] / "{{ settings.every_nth_value }}";
+        const section_end = climb_sections[i][1] / "{{ settings.every_nth_value }}";
+
+        var section = coordinates.slice(section_start, section_end);
+        // add section to trace group
+        sec = L.geoJSON({
+            "type": "LineString",
+            "coordinates": section,
+        }, Style);
+        sec.addTo(climbSectionGroup);
+    }
+    climbSectionGroup.addTo(map);
+
+    // add overall trace as last element to trace group
+    trace = L.geoJSON({
+            "type": "LineString",
+            "coordinates": coordinates,
+        }, Style).addTo(traceGroup)
+
+    traceGroup.addTo(map);
+
+    map.fitBounds(trace.getBounds());
+
+    // create lap markers
+    var LapMarker = {
+    manual: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.manual }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    time: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.time }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    distance: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.distance }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    position_start: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.position_start }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    position_lap: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.position_lap }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    position_waypoint: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.position_waypoint }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    position_marked: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.position_marked }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    session_end: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.session_end }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    fitness_equipment: {
+        radius: 4,
+        fillColor: "white",
+        color: "{{ style.colors.lap_colors.fitness_equipment }}",
+        weight: 2.0,
+        fillOpacity: 1.0,},
+    };
+
+    var manualLapGroup = L.layerGroup();
+    var autoLapGroup = L.layerGroup();
+
+    // add lap markers to map as tooltip
+    {% for lap in laps %}
+        {% if lap.end_lat and lap.end_long or lap.start_lat and lap.start_long %}
+            // only display lap if it has coordinates
+            {% if lap.end_lat and lap.end_long %}
+                var lat = {{lap.end_lat}};
+                var lon = {{lap.end_long}};
+            {% elif lap.start_lat and lap.start_long %}
+                var lat = {{lap.start_lat}};
+                var lon = {{lap.start_long}};
+            {% endif %}
+            var label = "{{ lap.label }}";
+            if (label === "None") {
+                var text = "Lap {{ forloop.counter }}";
+            } else {
+                var text = "Lap {{ forloop.counter }}: " + label;
+            }
+            var trigger = "{{ lap.trigger }}";
+            var marker = L.circleMarker([lat, lon], LapMarker["{{ lap.trigger }}"]).bindTooltip(text);
+            if (trigger == "manual") {
+                marker.addTo(manualLapGroup);
+            } else {
+                marker.addTo(autoLapGroup)
+            }
+            manualLapGroup.addTo(map);
+        {% endif %}
+    {% endfor %}
+
+    // create position markers
+    var PositionMarker = {
+        radius: 10,
+        fillColor: "white",
+        color: "black",
+        weight: 1.0,
+        fillOpacity: 1.0
+    };
+
+    icon = L.divIcon({
+        className: 'custom-div-icon',
+        html: "<i class='fa fa-{{ activity.sport.icon }}' style='color: {{ activity.sport.color }};'>",
+        iconSize: [30, 42],
+        iconAnchor: [7, 6]
+    });
+
+    // function to be called by plot_time_series.py when hovering over time series plots to render position in track
+    var icon_marker = null;
+    var circle_marker = null;
+    function render_position(index) {
+        if (icon_marker != null) {
+            icon_marker.removeFrom(map);
+            circle_marker.removeFrom(map);
+        }
+        circle_marker = L.circleMarker([coordinates[index][1], coordinates[index][0]], PositionMarker).addTo(map);
+        icon_marker = L.marker([coordinates[index][1], coordinates[index][0]], {icon: icon}).addTo(map);
+    }
+
+    let manualMarkers = manualLapGroup.getLayers();
+    let autoMarkers = autoLapGroup.getLayers();
+    // function to be called from activity_laps.html when hovering over rows of laps
+    function render_lap_marker(lap_type, index) {
+        if (lap_type == "manual") {
+            manualMarkers[index].openTooltip();
+        } else if (lap_type == "auto") {
+            autoMarkers[index].openTooltip();
+        }
+    }
+    function hide_lap_marker(lap_type, index) {
+        if (lap_type == "manual") {
+            manualMarkers[index].closeTooltip();
+        } else if (lap_type == "auto") {
+            autoMarkers[index].closeTooltip();
+        }
+    }
+
+    let fastest_layers = fastestSectionGroup.getLayers();
+    // function to be called by velocity_sections_table.html when hovering over rows of fastest sections
+    function render_fastest_sections(index) {
+        let selected_section = fastest_layers[index];
+        selected_section.setStyle({"color": "yellow"});
+        selected_section.bringToFront();
+    }
+    function hide_fastest_sections(index) {
+        let selected_section = fastest_layers[index];
+        selected_section.setStyle({"color": trace_color});
+        selected_section.bringToBack();
+    }
+
+    let climb_layers = climbSectionGroup.getLayers();
+    // function to be called by best_sections_table.html when hovering over rows of fastest sections
+    function render_climb_sections(index) {
+        let selected_section = climb_layers[index];
+        selected_section.setStyle({"color": "blue"});
+        selected_section.bringToFront();
+    }
+    function hide_climb_sections(index) {
+        let selected_section = climb_layers[index];
+        selected_section.setStyle({"color": trace_color});
+        selected_section.bringToBack();
+    }
+</script>

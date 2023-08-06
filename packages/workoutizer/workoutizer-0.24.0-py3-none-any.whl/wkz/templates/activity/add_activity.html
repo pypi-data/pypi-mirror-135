@@ -1,0 +1,19 @@
+{% extends 'lib/base.html' %}
+{% load static %}
+{% block body %}
+<div class="row">
+    <div class="col-md-10 mr-auto ml-auto">
+        <div class="card">
+            <div class="card-body">
+                <form action="{% url 'add-activity' %}" method="post" accept-charset="utf-8"
+                    enctype="multipart/form-data" class="form-horizontal">
+                    {% include "activity/activity_form_fields.html" %}
+                    <button id="submit-button" class="btn btn-success" type="submit" name="action">
+                        <i class="fas fa-check"></i>&nbsp;&nbsp;Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
