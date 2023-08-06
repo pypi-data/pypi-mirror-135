@@ -1,0 +1,72 @@
+# lektor-citation
+
+An APA-styled citation plugin for the lektor static content management system (https://getlektor.com).
+
+## Preparations
+
+Install the plugin by
+```
+lektor plugin add lektor-citation
+```
+
+or by copying this repository into the _packages_-folder of your lektor-project.
+
+Create an _citation.ini_ in its _configs_-folder:
+```
+[Bibtex]
+file = Literature.bib
+```
+
+And put a _Literature.bib_ BibTex-file into the project's _assets_-folder respectively.
+
+## Jinja_env
+
+To get a formated output of your whole BibTex library you can either
+1. Use method citation\_short\_output in the template of your literature page. It creates an unordered list of entries.
+```
+  <ul id="literatur">
+  {% for entry in citation_entries() %}
+  {{ citation_short_output(entry)|decode|safe }}
+  {% endfor %}
+
+</ul>
+```
+2. Use method citation\_full\_output instead. This creates a more complete html-output for every entry.
+```
+  {% for entry in citation_entries() %}
+  {{ citation_full_output(entry)|decode|safe }}
+  {% endfor %}
+```
+produces
+```
+<h2>{title}</h2><h3>{authors} ({pubYear})</h3>
+<p>{note}</p>
+<dl class="literature">
+<dt class="edition"></dt>
+<dd>{edition}</dd>
+<dt class="editors"></dt>
+<dd>{editors}</dd>
+<dt class="pages"></dt>
+<dd>{pages}</dd>
+<dt class="issbn"></dt>
+<dd>{issbn}</dd>
+<dt class="publisher"></dt>
+<dd>{publisher}</dd>
+</dl>
+```
+3. You may also use the citation\_entry method in combination with [pybtex*s __Entry__-class](https://docs.pybtex.org/api/parsing.html#pybtex.database.Entry). For example:
+
+```
+<ul>
+  {% for entry in citation_entries() %}
+<li>{{ citation_entry(entry).fields['title'] |decode }}</li>
+  {% endfor %}
+  </ul>
+```
+This creates an unordered list of all the titles of your bibtex file.
+Of course you can also use citation\_entry without a loop and put any id of your bibtex entries into it as parameter.
+
+## Limitations
+It would be awesome if one could use s.th. like a _cite(id)_-function in the entire project to automatically convert it to proper links to the literature list.
+Like e.g. ```<a href="/myproject/literature/#Stahl2015" class="litref">Stahl (2015)</a>```
+But as the only templates can make use of the functions this won't be possible for the markdown content of the page. Or maybe I just don't know how to implement this :shrug:
