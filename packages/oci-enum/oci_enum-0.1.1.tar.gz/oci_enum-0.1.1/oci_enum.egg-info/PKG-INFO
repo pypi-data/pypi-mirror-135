@@ -1,0 +1,53 @@
+Metadata-Version: 2.1
+Name: oci-enum
+Version: 0.1.1
+Summary: CLI Tool by Orca Security to enumerate services in Oracle Cloud Infrastructure
+Home-page: https://github.com/orcasecurity/orca-toolbox/tree/main/oci_enum
+Author: Lidor Ben Shitrit, Tohar Braun
+Author-email: lidor@orca.security, tohar@orca.security
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Security
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+
+## Orca Oracle Enumeration Tool ##
+![oci-enum](https://github.com/orcasecurity/orca-toolbox/raw/main/oci_enum/oci-enum.jpg)
+
+
+## Disclaimer ##
+
+This tool is for testing and educational purposes only.
+Any other usage for this code is not allowed. Use at your own risk.
+The author bears NO responsibility for misuse of this tool.
+By using this you accept the fact that any damage caused by the use of this tool is your responsibility.
+
+## Intro ##
+OCI Enum is designed to help enumerate various services in Oracle Cloud Infrastructure.
+It can use two modes of authentication - with user credentials, similarly to [OCI's official tool](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cliconcepts.htm) and using a compute instance's identity.
+To obtain an instance's identity file, log on to the instance, and use `wget` (or another method of your choice) to download the json file from `http://169.254.169.254/opc/v1/identity`.
+
+
+## Setup ##
+
+### From PyPi ###
+1. Run `pip install oci-enum`
+2. Run `oci-enum`
+
+### From git
+1. Clone this repository
+2. Change directory to oci_enum
+3. Run `python setup.py install`
+4. Run `oci-enum`
+
+## To do ##
+1. Add support for additional services
+2. Add "Brute Force" mode to enumerate all available (read) permissions
+
+
