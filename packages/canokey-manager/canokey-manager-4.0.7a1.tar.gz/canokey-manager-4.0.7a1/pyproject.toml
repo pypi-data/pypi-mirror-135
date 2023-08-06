@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "canokey-manager"
+version = "4.0.7a1"
+description = "Tool for managing your CanoKey configuration."
+authors = ["Dain Nilsson <dain@yubico.com>", "Yuxiang Zhang <yuxiang.zhang@tuna.tsinghua.edu.cn>"]
+license = "BSD"
+homepage = "https://github.com/canokeys/yubikey-manager"
+repository = "https://github.com/canokeys/yubikey-manager"
+keywords = ["canokey", "piv", "fido"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: End Users/Desktop",
+  "Topic :: Security :: Cryptography",
+  "Topic :: Utilities"
+]
+include = [
+  "COPYING",
+  "NEWS",
+  "README.adoc",
+  "man/",
+  "tests/",
+]
+packages = [
+  { include = "canokit" },
+  { include = "ckman" },
+]
+
+[[tool.poetry.source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+dataclasses = {version = "^0.8", python = "<3.7"}
+cryptography = "^2.1 || ^3.0"
+pyOpenSSL = {version = ">=0.15.1", optional = true}
+pyscard = "^1.9 || ^2.0"
+fido2 = ">=0.9, <1.0"
+click = "^6.0 || ^7.0 || ^8.0"
+pywin32 = {version = ">=223", platform = "win32"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0"
+pyOpenSSL = "^17.0"
+makefun = "^1.9.5"
+
+[tool.poetry.scripts]
+ckman = "ckman.cli.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
