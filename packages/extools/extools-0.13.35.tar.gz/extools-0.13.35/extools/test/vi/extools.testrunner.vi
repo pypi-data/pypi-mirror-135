@@ -1,0 +1,63 @@
+[MODULE]
+id=EXTESTER
+name=EXTESTER - extools Test Runner
+desc=Test executor for the extools package.
+company=2665093 Ontario Inc.
+version=0.13.35
+website=https://2665093.ca
+
+[SCRIPT]
+FILENAME=ExToolsTester.2665093.py
+>>> SCRIPT >>>
+###############################################################################
+#  ExToolsTester is a test runner for the extools package.
+#
+#  author: Chris Binckly (2665093 Ontario Inc.)
+#  email: cbinckly@gmail.com
+#  Copyright 2665093 Ontario Inc. 2019
+#
+#  This script has been tested using the sage sample data.  If this code is
+#  deployed in a live production environment it is the responsibility of the
+#  End User to ensure that it is operating as required.
+#
+#  This software has a non-exclusive license and cannot be sublicensed, reused,
+#  transferred or modified without written consent from 2665093 Ontario Inc.
+#
+###############################################################################
+from accpac import *
+from extools import success
+from extools.view import ExView, ExViewError
+from extools.message import ExMessages
+from extools.ui.bare import bareui
+
+exm = ExMessages("extoolstester", ExMessages.DEBUG)
+FILENAME_CONTAINS = "extest"
+ENTRY_FUNCTION = "main"
+
+def main(*args, **kwargs):
+    with bareui():
+        exm.info("Starting.")
+
+        test_scripts = []
+        try:
+            exv = ExView("VI0015")
+            while(exv.fetch()):
+                filename = exv.get("FILENAME")
+                if FILENAME_CONTAINS in filename.lower():
+                    test_scripts.append(filename)
+                    exm.debug("Found test script {}".format(filename))
+        except ExViewError as e:
+            exm.error("Failed to enumerate tests: {}".format(e))
+            return
+        finally:
+            exv.close()
+            
+        for script in test_scripts:
+            s = Script()
+            s.name = script
+            if not success(s.getLatest()):
+                exm.error("Failed to get the script {}.".format(script))
+                continue
+            exm.info("Running {}.{}".format(script, ENTRY_FUNCTION))
+            s.run(ENTRY_FUNCTION)
+<<< SCRIPT <<<

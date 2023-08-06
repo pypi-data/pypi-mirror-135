@@ -1,0 +1,63 @@
+[MODULE]
+id=PPWORKFL
+name=Workflow actions from poplars.dev
+desc=Adds custom workflow actions including String Matching
+company=Poplar Development
+version=0.13.35
+website=https://poplars.dev
+
+[SCRIPT]
+FILENAME=PPWORKFL.Workflow.EvaluateString
+>>> SCRIPT >>>
+## P1 Field Value
+## P2 Operator
+## P3 Match String
+##############################################################################
+# 2665093.Workflow.EvaluateSimpleStringMatches
+#
+# This workflow action performs simple string comparisons.  It supports the 
+# following operators for case senstive matches:
+#   - startswith
+#   - endswith
+#   - contains
+#
+# All operators have an equivalent case insensitive version:
+#   - istartswith
+#   - iendswith
+#   - icontains
+#
+# The function returns 0 (success - match found) or 
+# 1 (failed - match not found)
+##############################################################################
+from accpac import *
+
+def workflow(e):
+    v = e.wi.getView()
+    if v == None:
+        return 1
+
+    a = e.resolve(e.p1)
+    b = e.resolve(e.p3)
+    op = e.resolve(e.p2)
+
+    if op.startswith("i"):
+        a = a.lower()
+        b = b.lower()
+        operator = op[1:]
+    else:
+        operator = op
+
+    if operator == "startswith":
+        if a.startswith(b):
+            return 0
+    elif operator == "endswith":
+        if a.endswith(b):
+            return 0
+    elif operator == "contains":
+        if b in a:
+            return 0
+    else:
+        showMessageBox("Unknown string match operator {}".format(op))
+
+    return 1
+<<< SCRIPT <<<
