@@ -1,0 +1,42 @@
+# snackabra-pylib
+
+Requires Python >= 3.8
+
+Python utility libraries for snackabra
+
+If you're simply using it, you should just need:
+
+```
+pip install snackabra
+```
+
+The rest of this README is for package maintainers.
+
+# Package development
+
+You'll need:
+
+```
+$ python3 -m pip install --upgrade pip
+$ python3.8 -m venv venv
+$ source venv/bint/activate
+$ pip install build
+$ pip install twine
+$ python -m build
+$ python -m twine upload --repository testpypi dist/*
+```
+
+Results will be in 'dist'.
+
+To test deploy to testpypi (you'll need an account and a token, and
+use "__token__" as user). 
+
+```
+python -m twine upload --repository testpypi dist/*
+```
+
+
+# References
+
+* https://packaging.python.org/en/latest/tutorials/packaging-projects/
+* https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
