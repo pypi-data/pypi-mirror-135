@@ -1,0 +1,1 @@
+directory = r"D:\a\_temp\python\realtimekql"
