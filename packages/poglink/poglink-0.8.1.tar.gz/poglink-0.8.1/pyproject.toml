@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm" ]
+build-backend = "setuptools.build_meta"
+
+[tool.isort]
+profile = "black"
+
+[tool.coverage.run]
+omit = [
+    "poglink/__init__.py", 
+    "poglink/main.py",
+    "poglink/cogs/test.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+]
