@@ -1,0 +1,1 @@
+# Cloudspot API wrapper
