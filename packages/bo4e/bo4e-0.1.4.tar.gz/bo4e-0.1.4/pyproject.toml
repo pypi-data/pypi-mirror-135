@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=41.0", "wheel", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 120
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+markers = ["datafiles: load datafiles"]
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+
+[tool.isort]
+line_length = 120
+profile = "black"
