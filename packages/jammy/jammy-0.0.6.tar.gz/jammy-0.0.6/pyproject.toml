@@ -1,0 +1,65 @@
+[tool.poetry]
+name = "jammy"
+version = "0.0.6"
+description = "Personal ToolBox"
+authors = ["Qin <qsh.zh27@gmail.com>"]
+license = "MIT"
+packages = [
+    { include="jammy" },
+    { include="jamtorch" },
+    { include="jamnp" },
+    { include="jamviz" },
+    { include="jamweb" }
+]
+
+readme = "README.md"
+documentation = "https://jammy.readthedocs.io/en/latest/"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.10"
+numpy = "^1.20.3"
+scipy = "^1.6.3"
+loguru = "^0.5.3"
+einops = "^0.3.0"
+hydra-core = "^1.1.0"
+GitPython = "^3.1.17"
+ipdb = "^0.13.8"
+torch = "^1.9.0"
+torchvision = "^0.10.0"
+tornado = "^6.1"
+lmdb = "^1.2.1"
+python-memcached = "^1.59"
+wandb = "^0.10.31"
+matplotlib = "^3.3.0"
+gpustat = "^0.6.0"
+tqdm = "^4.11.0"
+attrs = "^20.3.0"
+h5py = "^3.4.0"
+torchinfo = "^1.5.3"
+msgpack = "^1.0.2"
+msgpack-numpy = "^0.4.7"
+pyarrow = "^6.0.0"
+pyzmq = "^22.3.0"
+line-profiler = "^3.3.1"
+ubelt = "^0.10.2"
+parse = "^1.19.0"
+pytorch-lightning = "^1.5.1"
+pudb = "^2022.1"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.13.0"
+isort = "^5.8.0"
+black = "^21.5b1"
+pylint = "^2.8.3"
+Sphinx = "^4.2.0"
+Pallets-Sphinx-Themes = "^2.0.1"
+sphinx-tabs = "^3.2.0"
+m2r2 = "^0.3.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+jgpus="jammy.cli.gpu_sc:start_sever"
+jgpuc="jammy.cli.gpu_sc:start_client"
