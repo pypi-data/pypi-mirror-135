@@ -1,0 +1,2 @@
+- Laurent Lasudry, Original Author [Affinitic]
+- Leonardo J. Caballero G., Spanish translation
