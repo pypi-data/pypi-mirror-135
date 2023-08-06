@@ -1,0 +1,73 @@
+Metadata-Version: 2.1
+Name: datadriven
+Version: 1.0.0
+Summary: Run a test case multiple times with different data
+Home-page: UNKNOWN
+Author: Geekie
+Author-email: eng@geekie.com.br
+License: Apache-2.0
+Keywords: testing datadriven
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Testing
+Requires-Python: !=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# datadriven
+
+datadriven allows you to run a test case multiple times with different data. It was designed to work
+with `unittest.TestCase` test methods, any test runner (nose, nose2, unittest, unittest2 and
+pytest), in Python 2.7 or 3.7+.
+
+## Usage
+
+```py
+import datadriven
+
+class SomeTestCase(unittest.TestCase):
+
+    @datadriven.datadriven(
+        caseA=datadriven.Args(first="foo"),
+        caseB=datadriven.Args("hello", second="world"),
+    )
+    def test_method(self, first, second=None):
+        ...
+```
+
+This is the equivalent of writing:
+
+```py
+import datadriven
+
+class SomeTestCase(unittest.TestCase):
+
+    def test_method(self, first, second=None):
+        ...
+
+    def test_method_caseA(self):
+        self.test_method("foo")
+
+    def test_method_caseB(self):
+        self.test_method("hello", "world")
+```
+
+The only difference is that when wrapped with `@datadriven`, the test `test_method` won't be really executed.
+
+## License
+
+[Apache-2.0 License](./LICENSE)
+
+
