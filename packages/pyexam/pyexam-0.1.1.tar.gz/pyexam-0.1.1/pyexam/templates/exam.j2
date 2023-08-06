@@ -1,0 +1,34 @@
+\documentclass[12pt{{ ',answers' if solution }}]{exam}
+
+\usepackage{graphicx}
+\usepackage{framed}
+
+\usepackage{sectsty}
+\sectionfont{\centering}
+
+\begin{document}
+
+  {% set version_text = 'V. {}'.format(version) if version > 0 else '' %}
+  \firstpagefooter{ {{ name }} }{ {{ version_text }} }{\thepage\,/\,\numpages}
+  \runningfooter{ {{ name }} }{ {{ version_text }} }{\thepage\,/\,\numpages}
+  \renewcommand{\thesection}{\Roman{section}}
+  \renewcommand{\partlabel}{\questionlabel\arabic{partno}.}
+
+  {{ header }}
+
+  \begin{questions}
+
+  {% if questions %}
+    {% include "render-questions.j2" %}
+  {% else %}
+    {% for section in sections %}
+      \section{ {{ section.name }} }
+      {% with questions=section.questions %}
+        {% include "render-questions.j2" %}
+      {% endwith %}
+    {% endfor %}
+  {% endif %}
+
+
+  \end{questions}
+\end{document}

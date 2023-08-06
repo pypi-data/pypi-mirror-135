@@ -1,0 +1,10 @@
+{% include 'question.j2' %}
+\begin{choices}
+{% for option in options %}
+  {% if option.correct %}
+    \CorrectChoice {{ option.text }}
+  {% else %}
+    \choice {{ option.text }}
+  {% endif %}
+{% endfor %}
+\end{choices}
