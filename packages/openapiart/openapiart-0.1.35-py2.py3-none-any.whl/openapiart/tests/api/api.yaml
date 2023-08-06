@@ -1,0 +1,99 @@
+paths: 
+  /config:
+    post:
+      tags: ['Bundler']
+      operationId: set_config
+      description: >-
+        Sets configuration resources.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../config/config.yaml#/components/schemas/Prefix.Config'
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Success'
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error.404'
+        - '../common/common.yaml#/components/responses/Error500'
+
+    patch:
+      tags: ['Bundler']
+      operationId: update_config
+      description: >-
+        Sets configuration resources.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../config/config.yaml#/components/schemas/Update.Config'
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error500'
+        '200':
+          description: |-
+            success 2xx
+          content:
+            application/json:
+              schema:
+                $ref: '../config/config.yaml#/components/schemas/Prefix.Config'
+  
+    get:
+      tags: ['Bundler']
+      operationId: get_config
+      description: >-
+        Gets the configuration resources.
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error500'
+        '200':
+          description: Config response
+          content:
+            application/json:
+              schema:
+                $ref: '../config/config.yaml#/components/schemas/Prefix.Config'
+
+  /metrics:
+    get:
+      tags: ['Metrics']
+      operationId: get_metrics
+      description: >-
+        Gets metrics.
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error500'
+        '200':
+          description: Unique metrics response
+          content:
+            application/json:
+              schema:
+                $ref: '../config/config.yaml#/components/schemas/Metrics'
+
+  /warnings:
+    get:
+      tags: ['Metrics']
+      operationId: get_warnings
+      description: >-
+        Gets warnings.
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error500'
+        '200':
+          $ref: '../common/common.yaml#/components/responses/Warnings'
+    delete:
+      tags: ['Metrics']
+      operationId: clear_warnings
+      description: >-
+        Clears warnings.
+      responses:
+        x-include:
+        - '../common/common.yaml#/components/responses/Error.400'
+        - '../common/common.yaml#/components/responses/Error500'
+        '200':
+          description: 'OK'
