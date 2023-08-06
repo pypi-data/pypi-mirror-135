@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style type="text/css">
+    @media print {
+		 div{
+			page-break-inside: avoid;
+		}
+	}
+
+	p {
+		font-size: 14px;
+		 line-height: 1.5em;
+		 text-align: justify;
+	}
+	 p.p2 {
+		 line-height: 150%;
+		 font-size:15pt;
+		font-stretch: ultra-expanded;
+		 font-family: Arial, Helvetica, sans-serif;
+		text-align: center;
+	}
+	 p.p3 {
+		 line-height: 100%;
+		 font-size:8pt;
+	}
+	.cover {
+		page: last_page;
+	}
+    /* .header_img img {
+        margin: -74px -60px 0; 
+        width:790px; 
+    } */
+    @page {
+        margin: 110px 60px 60px;
+
+        @top-center {
+            background-image: url("file:///{{header_img}}");
+            background-size: cover; /*contain;*/
+            content: '';
+            width: 790px;
+            
+          }
+        @bottom-left {
+            color: #3C3D3A;
+            content: 'WWW.GENOMAXFITNESS.COM';
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        @bottom-center {
+            background: #333;
+            content: '';
+            height: .05cm;
+            opacity: .5;
+            width: 100%;
+        }
+        @bottom-right {
+            color: #3C3D3A;
+            content: counter(page);
+            font-size: 8pt;
+            font-weight: bold;
+        }
+    }
+	 @page last_page {
+		margin: 0;
+		 border-bottom: none;
+		 
+        /* hide page footer in first and last page */
+        @bottom-left { content: none }
+        @bottom-center { content: none }
+        @bottom-right { content: none }
+	}
+	 
+	 ol.toc {
+		padding: 150;
+		 list-style: none;
+		font-size: 0.7 em;
+		 font-family: sans-serif;
+		width: 90%;
+		 margin-left: 5%;
+		 margin-top: 5%;
+		 line-height: 175%;
+		 padding: 1em 0em 1em 3.5em ;
+		 border: 1px dotted #bbb;
+		counter-reset: list-counter;
+	}
+	 @media print {
+		ol.toc a {
+			display: inline-block;
+			 width: 90%;
+			 position: relative;
+		}
+	}
+	 ol.toc a::after {
+		position: absolute;
+		 right: 0;
+		 content: target-counter(attr(href), page);
+	}
+	 .p2 {
+		line-height: 150%;
+		 font-size:15pt;
+		font-stretch: ultra-expanded;
+		 font-family: Arial, Helvetica, sans-serif;
+		text-align: center;
+	}
+	.ui.custom-warning.message {
+	    color: #664d03;
+	    background-color: #fff3cd;
+	    border-color: #ffecb5;
+	}
+
+	.ui.custom-negative.message {
+	    color: #842029;
+	    background-color: #f8d7da;
+	    border-color: #f5c2c7;
+	}
+
+	.ui.custom-positive.message {
+		color: #155724;
+	    background-color: #d4edda;
+	    border-color: #c3e6cb;
+	}
+
+ 	
+
+table {width: 100%}
+th {
+	font-size: 16px;
+    font-family: JosefinSans-Bold_1n;
+    color: #3C3D3A;
+}
+
+table.custom_table,
+.custom_table th,
+.custom_table td {
+	
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: .6em;
+  font-size: 14px;
+    /* font-family: Avenir-Roman_12; */
+    color: #333;
+}
+
+.table_center {
+	text-align: center;
+}
+
+.cust_warning {
+	background: #FFC200 !important;
+}
+.cust_positive {
+	background: #A9CE4E !important;
+}
+.cust_negative {
+ background: #EF8B8B !important;
+}
+/*div.divider {margin: 0 !important}*/
+
+.bottom_cover_text {
+    color: #fff !important; 
+    font-size: 18px; 
+    text-align: center;
+}
+.blue_header {
+    font-size:34px;
+    font-family:AvenirLTStd-Heavy_1v;
+    color:#147CFF !important;
+    -webkit-text-stroke:1.3px #147CFF;
+    text-stroke:1.3px #147CFF;
+}
+#disclaimer p, #disclaimer li {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.summary-table tr {
+      background-color: #D4E6F1;
+      
+    }
+    .summary-table td,.summary-table th {
+      border: 0px solid #fff;
+      padding: 10px
+    }
+{% block css %}
+{% endblock %}
+</style>
+  </head>
+
+<body>
+    <div class="ui container cover">
+	    <ui class="content" style="display: inline-block;text-align: center;vertical-align:center;">
+	    	<img style="width:792px; display:block; " src="file:///{{cover_img}}" />
+		</ui>
+	</div>
+	
+	<p style="page-break-before: always"></p>
+    
+    <h1 class="ui center aligned header blue_header" id="toc">Table of Contents</h1>
+    <ol class="toc">
+    	{% for item in table2 %}
+    		{% set link = item['trait'].replace(' ', '_') %}
+    	<li><a class="xref" href="#{{link}}">{{item['trait']|title}}</a></li>
+    	{%endfor %}
+    </ol>
+    {% block body %}
+	{% endblock %}
+    
+    <div id="disclaimer" style="color: dimgray;page-break-before: always">
+        {% markdown %}{% include folder+"/static_pages/disclaimer.txt" %}{% endmarkdown %}
+    </div>
+    <!-- <div class="header_img"><img src="file:///{{header_img}}"></div>-->
+    <p style="page-break-before: always"></p>
+    <h1 class="ui center aligned header blue_header">Nutrition Results</h1>
+  <table class="custom_table">
+    <colgroup>
+       <col span="1" style="width: 40%;">
+       <col span="1" style="width: 10%;">
+       <col span="1" style="width: 50%;">
+    </colgroup> 
+    <thead>
+      <tr class="table_center" style="background-color: #D4E6F1;">
+      <th>Food, Nutrients & Intolerances</th>
+      <th>Your results</th>
+      <th>Possible outcomes</th>
+    </tr></thead>
+    <tbody>
+      {% for item in table1 %}
+      {% set outcomes = item['comb']|split_and_order %}
+      {% set link = item['trait'].replace(' ', '_') %}
+      <tbody style="page-break-inside:avoid">
+      <tr>
+        <td rowspan={{outcomes|length}}>
+        	<h3 style="margin:0;font-weight:bold">
+        		<i>{{item['trait']}}</i>
+        	</h3>
+          <span>{{item['summary'].replace('Learn more','')}} <a href="#{{link}}">Learn more</a></span>
+        </td>
+        {% for oc in outcomes %}
+        {% set cleaned_oc = oc|remove_unwanted_chars %}
+        <td class="table_center {% if cleaned_oc.outcome == 'r' %}cust_negative{% elif cleaned_oc.outcome == 'g' %}cust_positive{% else %}cust_warning{%endif%}">
+          {% if oc.endswith('_sss_') %}
+          <i class="{% if cleaned_oc.outcome == 'r' %}red exclamation circle{% elif cleaned_oc.outcome == 'g' %}check circle{% else %}orange exclamation triangle{%endif%} large icon"></i>
+          {%endif%}
+        </td>
+
+        <td>{{cleaned_oc.data}}</td>
+
+        {% if not loop.last %}
+              </tr><tr>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    	</tbody>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="page-break-before: always" ></p>
+
+  {% block recommendations %}
+    {% for item in table2 %}
+    {% set link = item['trait'].replace(' ', '_') %}
+    {% set recommendations = item['recommendation'].split('*') %}
+    {% set oc = item['outcome']|remove_unwanted_chars %}
+    <div class="ui feed">
+      <table class="summary-table">
+        <thead><tr><th colspan="3" class="ui center aligned" style="background: #D4E6F1;border: 0px solid #fff;"><h2 class="ui center aligned header" id="{{link}}">{{item['trait']}}</h2></th></tr></thead>
+        <tbody>
+          <tr><td colspan="3"><p style="line-height:1.2;font-size: 10px;">{{item['description']}}</p></td></tr>
+          <tr>
+            <td rowspan="2">
+              <img class="ui centered small image" style="padding:10px" src="file:///{{img_path}}/graph_{% if oc.outcome == 'r'  %}danger{% elif oc.outcome == 'g' %}positive{% else %}average{%endif%}.png" />
+              <p class="{% if oc.outcome == 'r'  %}red{% elif oc.outcome == 'g' %}green{% else %}yellow{%endif%}"><strong> {{oc.data}}</strong></p>
+            </td>
+            <td style="text-align:center"><strong>Genes tested</strong></td>
+            <td style="text-align:center"><strong>Recommendations</strong></td>
+          </tr>
+          <tr><td class="ui center aligned" style="line-height:1.2;font-size: 10px;">{{item['genes']}}</td>
+            <td style="line-height:1.2;font-size: 10px;"><ul>{% for rec in recommendations %}<li>{{rec}}</li>{% endfor %}</ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+    {% endfor %}
+  {% endblock %}
+  
+
+	<div class="ui middle aligned centered grid cover" style="background: #1076BC; height:1286px;">
+		
+        <div style="padding-top: 100px">
+            <img src="file:///{{back_img}}">
+            <div style="padding-top: 400px;text-align:center;">
+                <p class="bottom_cover_text">Address: </p>
+                <p class="bottom_cover_text">3111 Camino Del Rio North San Diego, CA 92108</p>
+                <p class="bottom_cover_text">info@genomaxxﬁtness.com</p>
+                <p class="bottom_cover_text">genomaxxﬁtness.com</p>
+            </div>
+		</div>
+	</div>
+</body>
+</html>

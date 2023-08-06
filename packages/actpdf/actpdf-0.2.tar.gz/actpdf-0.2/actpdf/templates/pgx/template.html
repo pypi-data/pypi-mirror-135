@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block toc %}
+  <img style="width:700px; display:block;" src="file:///{% if partner == 'xcode' or partner == '' %}{{cover_img}}{% else %}{{partner_cover_img}}{% endif %}">
+  <p style="page-break-before: always"></p>
+
+  <a class="footer" href="#toc">Go To Table of Contents</a>
+  <h3 class="ui center aligned header" id="toc">Table of Contents</h3>
+  <ol class="toc">
+    {% for item in table2 %}
+      {% set link = item['drug'].replace(' ', '_')+item['outcome'] %}
+    <li><a class="xref" href="#{{link}}">{{item['drug']|title}}</a></li>
+    {%endfor %}
+  </ol>
+  <p style="page-break-before: always"></p>
+{% endblock %}
+
+{% block intro %}
+
+{% endblock %}
+
+{% block content %}
+  <h2 class="ui center aligned header">Your Summary Results</h2>
+  <table class="ui celled padded table">
+    <thead>
+      <tr>
+      <th class="five wide center aligned">Trait Name</th>
+      <th class="one wide center aligned">Your Result</th>
+      <th class="six wide center aligned">Outcomes</th>
+    </tr>
+  </thead>
+    <tbody>
+      {% for item in table1 %}
+      <tr>
+        <td class="center aligned"><strong>{{item['gene']}}</strong></td>
+        <td class="center aligned">{{item['dipl']}}</td>
+        <td class="center aligned">{{item['status']}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="page-break-before: always" ></p>
+
+  {% for item in table2 %}
+  {% set link = item['drug'].replace(' ', '_')+item['outcome'] %}
+  <h3 class="ui block blue header message" id="{{link}}">
+    <div class="content">
+      {{item['trait']|title}}      
+      <div class="sub header">{{item['out']}}</div>
+    </div>
+  </h3>
+  <div class="ui feed">
+    <div class="event">
+      <div class="label"></div>
+      <div class="content">
+        <div class="ui message">
+          {{item['desc']}}
+        </div>
+
+        <div class="ui teal message">
+          <strong>Recommendations:</strong><br>
+          {{item['reco']}}
+        </div>
+
+        <div class="ui message">
+          <p><strong>Genes Analyzed: </strong>{{item['genes']}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}

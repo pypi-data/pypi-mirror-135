@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+   <!-- <link href="http://localhost:8010/semantic.min.css" rel="stylesheet">
+  <link href="http://localhost:8010/font-awesome.min.css" rel="stylesheet"> -->
+  {% block maincss %}
+  <style type="text/css">
+    @media print {
+		 div{
+			page-break-inside: avoid;
+		}
+	}
+	 @page {
+		/* margin: 1cm 1cm 1cm 1cm; */
+		padding-bottom: 50px;
+		margin: 50px;
+		 border-bottom: 1px solid pink;
+		 @bottom-center {
+			 content: "Page " counter(page) " of " counter(pages);
+			 font-family: sans-serif;
+			 font-size: 0.8em;
+		}
+		 @bottom-right {
+			 content: element(footer);
+			 position: absolute;
+			 right: 0;
+			 top: 0;
+			 font-family: sans-serif;
+			 font-size: 1em;
+		}
+	}
+	 @page:first {
+		 border-bottom: None;
+		 @bottom-center {
+			 content: normal;
+		}
+	}
+	 p {
+		font-size: 14px;
+		 line-height: 1.5em;
+		 text-align: justify;
+	}
+	 p.p2 {
+		 line-height: 150%;
+		 font-size:15pt;
+		font-stretch: ultra-expanded;
+		 font-family: Arial, Helvetica, sans-serif;
+		text-align: center;
+	}
+	 p.p3 {
+		 line-height: 100%;
+		 font-size:8pt;
+	}
+	 #back_cover {
+		page: last_page;
+	}
+	 @page last_page {
+		margin: 0;
+		 border-bottom: none;
+		 @bottom-right {
+			content: normal;
+		}
+		 @bottom-center {
+			content: normal;
+		}
+	}
+	 .footer {
+		 position: running(footer);
+		padding-right:10px;
+		 display: block;
+		 text-align: center;
+	}
+	 ol.toc {
+		padding: 150;
+		 list-style: none;
+		font-size: 0.7 em;
+		 font-family: sans-serif;
+		width: 90%;
+		 margin-left: 5%;
+		 margin-top: 5%;
+		 line-height: 175%;
+		 padding: 1em 0em 1em 3.5em ;
+		 border: 1px dotted #bbb;
+		counter-reset: list-counter;
+	}
+	 @media print {
+		ol.toc a {
+			display: inline-block;
+			 width: 90%;
+			 position: relative;
+		}
+	}
+	 ol.toc a::after {
+		position: absolute;
+		 right: 0;
+		 content: target-counter(attr(href), page);
+	}
+	 .p2 {
+		line-height: 150%;
+		 font-size:15pt;
+		font-stretch: ultra-expanded;
+		 font-family: Arial, Helvetica, sans-serif;
+		text-align: center;
+	}
+	.ui.table tr td,th { border-left: 0px !important; }
+	thead th {
+	  border-top: .5px solid rgba(34, 36, 38, 0.1);
+	}
+	td {
+	    border-bottom:.5px solid rgba(34,36,38,.15);
+	}
+	.ui.custom-warning.message {
+	    color: #664d03;
+	    background-color: #fff3cd;
+	    border-color: #ffecb5;
+	}
+
+	.ui.custom-negative.message {
+	    color: #842029;
+	    background-color: #f8d7da;
+	    border-color: #f5c2c7;
+	}
+
+	.ui.custom-positive.message {
+		color: #155724;
+	    background-color: #d4edda;
+	    border-color: #c3e6cb;
+	}
+  </style>
+  {% endblock %}
+  {% block css %}
+{% endblock %}
+  <!-- <title>CSV to PDF</title> -->
+
+</head>
+
+<body>
+{% block body %}
+	<!-- <div id="back_cover" class="ui container">
+	    <ui class="content" style="display: inline-block;text-align: center;vertical-align:center;">
+	    	<img style="width:792px; display:block; " src="file:///{{cover_img}}" />
+		</ui>
+	</div> -->
+	{% block toc %}
+	<img style="width:700px; display:block;" src="file:///{% if partner == 'xcode' or partner == '' %}{{cover_img}}{% else %}{{partner_cover_img}}{% endif %}">
+	<p style="page-break-before: always"></p>
+
+  <a class="footer" href="#toc">Go To Table of Contents</a>
+  <h3 class="ui center aligned header" id="toc">Table of Contents</h3>
+  <ol class="toc">
+  	{% for item in table2 %}
+  		{% set link = item['trait'].replace(' ', '_') %}
+  	<li><a class="xref" href="#{{link}}">{{item['trait']|title}}</a></li>
+  	{%endfor %}
+  </ol>
+  <p style="page-break-before: always"></p>
+  {% endblock %}
+  {% block intro %}{% endblock %}    
+  <div class="ui justified container" id="introduction_page">
+  	{% markdown %}{% include folder+"/static_pages/intro.txt" %}{% endmarkdown %}
+	</div>
+    <!-- <p style="page-break-before: always"></p> -->
+
+    <div class="ui justified container" id="how_to_page">
+    	{% markdown %}{% include folder+"/static_pages/how_to.txt" %}{% endmarkdown %}
+	</div>
+    <p style="page-break-before: always"></p>
+
+    {% block content %}{% endblock %}
+
+    <div class="ui yellow message">
+    	{% markdown %}{% include folder+"/static_pages/disclaimer.txt" %}{% endmarkdown %}
+	</div>
+	{% block backcover %}
+	<div id="back_cover" class="ui container">
+	    <ui class="content" style="display: inline-block;text-align: center;vertical-align:center;">
+	    	<img style="width:792px; display:block; " src="file:///{{back_img}}" />
+		</ui>
+	</div>
+	{% endblock %}
+{% endblock %}
+</body>
+</html>

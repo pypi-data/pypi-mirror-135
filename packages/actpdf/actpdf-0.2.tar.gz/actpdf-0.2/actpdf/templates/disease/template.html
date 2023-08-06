@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block maincss %}
+<!-- remove base css -->
+{% endblock %}
+
+{% block body %}
+<table class="ui celled table">
+<tbody>
+    <tr style="vertical-align:top">
+    <td>
+        <strong>PATIENT</strong><br>
+        Name:<br>
+        Date of Birth:<br>
+        Gender:<br>
+        Xcode ID:<br>
+    </td>
+    <td>
+        <strong>SPECIMEN</strong><br>
+        Specimen Type:<br>
+        Collection Date:<br>
+        Recieved Date:<br>
+        Report Date:<br>
+    </td>
+    <td>
+        <strong>Ordered by</strong><br>
+        Physician:<br>
+        Genetic Counselor:<br>
+        Self:<br>
+    </td>
+    </tr>
+    <tr><td colspan="3">Test: Hereditary Hemochromatosis (HFE‑Related)<br>
+    Clinical history and indications:</td></tr>
+</tbody>
+</table>
+
+  <div class="ui negative message">
+    <strong>Result: POSITIVE</strong>
+    <p>  {{data['result']}}</p> 
+
+  </div>
+  <strong>Variant Details:</strong>
+  <table class="ui celled table">
+    <thead>
+    <tr>
+        <th>Gene</th>
+        <th>RSID</th>
+        <th>Change</th>
+        <th>Classification</th>
+        <th>Zygosity</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in data['table'] %}
+    <tr>
+        <td>{{item.gene}}</td>
+        <td>{{item.rsid}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.clinical_significance}}</td>
+        <td>{{item.zygosity}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  
+
+<p>
+  <strong>Disease Summary:</strong> 
+  {{data['disease description']}} 
+</p>
+
+<p><strong>Cause :</strong> {{data['cause']}}</p>
+
+<p><strong>Genes and Mutation tested:</strong> HFE gene is tested. This report test for 68 mutations known to be
+clinically associated with Hemochromatosis type 1; Including tow most common mutations
+p.C282Y (c.845G>A) and p.H63D (c.187C>G).</p>
+
+<p><strong>Gene Description:</strong> {{data['gene description']}}</p>
+<p><strong>Inheritance Pattern: AUTOSOMAL RECESSIVE {{data['inheritance pattern']}}</strong></p>
+<p><strong>Signs and Symptoms:</strong> {{data['symptoms']}}</p>
+<p><strong> Prevention: </strong> {{data['prevention']}}</p>
+<p><strong>Treatment and Management:</strong> {{data['treatment']}}</p>
+
+<p><strong>Interpretation :</strong>
+Pathogenic and likely pathogenic variants are reported; likely benign and benign variants were not
+reported. The pathogenicity potential of the identified variants were assessed by considering the
+predicted consequence, the biochemical properties of the codon change and the degree of
+evolutionary conservation as well as a number of reference population databases and mutation
+databases such as, but not limited, to the 1000 Genomes Project, gnomAD, ClinVar, and HGMD.
+The variants are evaluated by reviewing the relevant literature and databases suchas 1000 Genomes Project, Database of Genomic Variants, ExAC. Reporting was carried out using
+HGNC-approved gene nomenclature and mutation nomenclature following the HGVS guidelines.</p>
+
+<p><strong>Disclaimer:</strong>
+This test should not be regarded as investigational or for research. This test should be interpreted in
+context with other clinical findings.</p>
+ 
+{% endblock %}
+
+

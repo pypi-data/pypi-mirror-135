@@ -1,0 +1,87 @@
+{% extends "base_qua.html" %}
+{% block css %}
+body {
+    background: #E4F6D5 !important;
+    color: #000;
+  }
+   @page {
+    /* margin: 1cm 1cm 1cm 1cm; */
+    background: #E4F6D5 !important;
+    margin: 50px;
+     @bottom-center {
+        content: "Page " counter(page) " of " counter(pages);
+       font-family: sans-serif;
+        font-size: 0.8em;
+      }
+     @bottom-right {
+       content: element(footer);
+       position: absolute;
+       right: 0;
+       top: 0;
+       font-family: sans-serif;
+       font-size: 1em;
+    }
+  }
+   @page :first {
+    background: #fff !important;
+    margin: 50px;
+    
+     border-bottom: None;
+     @bottom-center {
+       content: normal;
+    }
+  }
+  .footer {
+     position: running(footer);
+    /*margin-bottom:70px;
+    padding-right: 20px;
+     display: block;*/
+     text-align: center;
+     color: #000;
+     font-style: italic;
+     font-weight: bold;
+  }
+
+  .s2_1{font-size:18px;font-family:Avenir-Roman_12;color:#5E6063;letter-spacing: 20px;}
+.s3_1{font-size:29px;font-weight: bold;font-style: italic; font-family:Lato-BlackItalic_13;color:#3C3D3A;-webkit-text-stroke:1.1px #3C3D3A;text-stroke:1.1px #3C3D3A;}
+.s4_1{font-size:52px;font-weight: bold;font-family:JosefinSans-Bold_1n;color:#77876A;}
+.s5_1{font-size:18px;font-weight: bold;font-family:Avenir-Roman_12;color:#5E6063;-webkit-text-stroke:0.7px #5E6063;text-stroke:0.7px #5E6063;letter-spacing: 15px;}
+/*h1 {font-size:52px !important;font-weight: bold;}*/
+.big1 {font-size:40px !important;font-weight: bold;margin: 0; color: #3C3D3A}
+.big2 {font-size:28px !important;font-weight: bold;font-style: italic; margin: 10px; color: #77876A !important}
+table {width: 100%}
+th {
+  font-size: 16px;
+    font-family: JosefinSans-Bold_1n;
+    color: #3C3D3A;
+}
+
+table.custom_table,
+.custom_table th,
+.custom_table td {
+  
+  backgroung: #fff;
+}
+{% endblock %}
+
+{% block body %}
+<h2 class="ui center aligned header big1">SUMMARY RESULTS</h2>
+  <h3 class="ui center aligned header big2">Your diet plan</h3>
+  <img class="ui centered big image" style="padding:30px" src="file:///{{img_path}}/pie_chart.svg" />
+
+  <h3 class="ui center aligned header big2">Key takeaways</h3>
+  <table class="custom_table">
+    <tbody>
+      {% for item in table4 %}
+      {% set outcome_index = item['outcome']|get_outcome_color %}
+      {% set avg_index = outcome_index.avg_index %}
+      <tr>
+        <td><strong>{{item['trait']}}</strong></td>
+        <td style="color:{% if outcome_index.index > avg_index %}red{% elif outcome_index.index < avg_index %}green{% else %}orange{%endif%}">{{item['outcome']}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+   <p style="page-break-before: always"></p>
+  <h3 class="ui center aligned header big2">Nutrition Results</h3>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block toc %}
+<div id="back_cover" class="ui container">
+    <ui class="content" style="display: inline-block;text-align: center;vertical-align:center;">
+    	<img style="width:792px; display:block; " src="file:///{{cover_img}}" />
+	</ui>
+</div>
+<p style="page-break-before: always"></p>
+
+<a class="footer" href="#toc">Go To Table of Contents</a>
+<h3 class="ui center aligned header" id="toc">Table of Contents</h3>
+<ol class="toc">
+	{% for key, value in data.items() %}
+	{% set link = key.replace(' ', '_') %}
+    <li><a class="xref" href="#{{link}}">{{key}}</a></li>
+	{%endfor %}
+</ol>
+<p style="page-break-before: always"></p>
+{% endblock %}
+
+{% block content %}
+<!-- total_markers,intro,risks,symptoms,Dos,Donts,score,risk_cat -->
+{% for key, value in data.items() %}
+	{% set link = key.replace(' ', '_') %}
+	{% set oc = value['risk_cat'] %}
+
+  <h3 class="ui block header {% if oc.startswith('Increased') %}custom-negative{% elif oc.startswith('Average') %}custom-positive{% else %}custom-warning{%endif%} message" id="{{link}}">
+    <i class="{% if oc.startswith('Increased') %}red exclamation circle{% elif oc.startswith('Average') %}positive checkmark{% else %}orange exclamation triangle{%endif%} icon"></i>
+    <!-- <i class="green fa fa-check fa-2x"></i> -->
+    <div class="content">
+      {{key|title}}      
+      <div class="sub header">{{value['risk_cat']}} for {{key}}</div>
+    </div>
+  </h3>
+  {% for n in range(3) %}
+  <div class="ui feed">
+    <div class="event">
+      <div class="label"></div>
+      <div class="content">
+
+        {% if n == 0 %}
+        <div class="ui message">
+          <p>{{value['intro']}}</p>
+        </div>
+        {% elif n == 1 %}
+        <div class="ui message">
+          <strong>
+          <p>Gene markers analyzed : {{value['total_markers']}}</p>
+          </strong>
+        </div>
+          {% if value['genes_analyzed'] %}
+            <div class="ui message">
+              <strong>Genes Analyzed</strong><br>
+              {% set genes = value['genes_analyzed']| split_at_comma %}
+              <small>{% for gene in genes[:25] %}{{gene}}, {% endfor %}</small>
+              {% if genes|length > 25 %}
+                <div class="ui mini label"><div class="detail">{{genes|length - 25}}</div> more genes</div> 
+              {% endif %}
+            </div>
+          {% endif %}
+        {% elif n == 2 %}
+        <div class="ui {% if oc.startswith('Increased') %}custom-negative{% elif oc.startswith('Average') %}custom-positive{% else %}custom-warning{%endif%} message">
+          <strong>Recommendations:</strong>
+          <p>If you recognise any symptoms of this condition, consult a qualified physician for diagnosis and treatment of this condition</p>
+          <ul class="ui list">
+            {% for symptom in value['symptoms']|split_at_digit %}
+            <li>{{symptom}}</li>
+            {% endfor %}
+          </ul>
+          <table class="ui fixed small table">
+            <thead>
+              <tr><th><strong>DO’s:</strong></th>
+              <th><strong>Dont’s:</strong></th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td class="positive">
+                  <ul class="ui list">
+                    {% for dos in value['Dos']|split_at_digit %}
+                      <li>{{dos}}</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+                <td class="negative">
+                  <ul class="ui list">
+                    {% for donts in value['Donts']|split_at_digit %}
+                    <li>{{donts}}</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+    {% if not loop.last %}
+    <p style="page-break-before: always" ></p>
+    {% endif %}
+  {% endfor %}
+
+        
+{% markdown %}{% include folder+"/static_pages/glossary.txt" %}{% endmarkdown %}
+{% endblock %}
+
+

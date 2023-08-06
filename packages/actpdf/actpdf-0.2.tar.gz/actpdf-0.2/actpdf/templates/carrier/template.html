@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block css %}
+<style type="text/css">
+    @page:first {
+       margin: 0;
+    }
+    .header_pink {color: #FF69B4 !important;}
+  </style>
+{% endblock %}
+
+{% block toc %}
+  <img style="width:100%;display:block;" src="file:///{% if partner == 'xcode' or partner == '' %}{{cover_img}}{% else %}{{partner_cover_img}}{% endif %}">
+  <p style="page-break-before: always"></p>
+
+  <a class="footer" href="#toc">Go To Table of Contents</a>
+  <h3 class="ui center aligned header" id="toc">Table of Contents</h3>
+  <ol class="toc">
+    <li><a class="xref" href="#introduction_page">Introduction</a></li>
+    <li><a class="xref" href="#how_to_page">How to Read Your Report</a></li>
+    {% for item in table1 %}
+      {% set link = item['trait'].replace(' ', '_') %}
+    <li><a class="xref" href="#{{link}}">{{item['trait']|title}}{% if item['patho'] != 'None' %} <span style="color:#FFA500;font-weight:bold;">Variant present! </span>{% endif %}</a></li>
+    {%endfor %}
+  </ol>
+  <p style="page-break-before: always"></p>
+  {% endblock %}
+
+
+{% block content %}
+{% for item in table1 %}
+{% set link = item['trait'].replace(' ', '_') %}
+<div class="ui grey inverted segment" id="{{link}}">
+  {% if item['patho'] == 'None' %} 
+    <h3 class="ui header olive">{{item['trait']|title}}</h3>
+  {% else %}
+    <h3 class="ui header header_pink">{{item['trait']|title}} <span style="color:#FFA500;">Variant present! </span></h3>
+  {% endif %}
+  
+  <div class="ui segment">
+    <p><strong>Description:</strong> {{item['desc']}}</p>
+    <p><strong>Gene markers analyzed: </strong>{{item['totalvars']}}</p>
+    <p><strong>Gene markers present in your genome data: </strong>{{item['varsindata']}}</p>
+    <p><strong>Potential pathogenic variants found in your genome data: </strong>{{item['patho']}}</p>
+    <p><strong>Genes Analyzed: </strong></p>
+    {{item['genes']}}
+  </div>
+</div>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base_qua.html" %}
+{% block css %}
+body {
+	background: black !important;
+	color: #fff;
+}
+ @page {
+	/* margin: 1cm 1cm 1cm 1cm; */
+	background: black !important;
+	padding: 50px;
+	margin: 0;
+	 @bottom-center {
+		 content: "Page " counter(page) " of " counter(pages);
+		 font-family: sans-serif;
+		 font-size: 0.8em;
+	}
+	 @bottom-right {
+		 content: element(footer);
+		 position: absolute;
+		 right: 0;
+		 top: 0;
+		 font-family: sans-serif;
+		 font-size: 1em;
+	}
+}
+ @page:first {
+	 border-bottom: None;
+	 @bottom-center {
+		 content: normal;
+	}
+}
+
+.footer {
+		 position: running(footer);
+		margin-bottom:70px;
+		padding-right: 20px;
+		 display: block;
+		 text-align: center;
+		 color: #fff;
+		 font-style: italic;
+	}
+
+table.custom_table,
+.custom_table th,
+.custom_table td {
+background: #ccc
+}
+
+table.recommendations,
+.recommendations th,
+.recommendations td {
+  background: #fff;
+}
+
+.s2_1{font-size:18px;font-family:Avenir-Roman_12;color:#CCC;letter-spacing: 20px;}
+.s3_1{font-size:29px;font-weight: bold;font-style: italic; font-family:Lato-BlackItalic_13;color:#CCC;-webkit-text-stroke:1.1px #CCC;text-stroke:1.1px #CCC;}
+.s4_1{font-size:52px;font-weight: bold;font-family:JosefinSans-Bold_1n;color:#F17A30;}
+.s5_1{font-size:18px;font-weight: bold;font-family:Avenir-Roman_12;color:#999;-webkit-text-stroke:0.7px #999;text-stroke:0.7px #999;letter-spacing: 20px;}
+/*h1 {font-size:52px !important;font-weight: bold;}*/
+.big1 {font-size:42px !important;font-weight: bold;margin: 0}
+.big2 {font-size:32px !important;font-weight: bold;font-style: italic;}
+
+.custom_rose th {background: #DBA199}
+.fitness_table th {
+	font-size: 16px;
+    font-family: JosefinSans-Bold_1n;
+    color: #3C3D3A;
+}
+.xref {
+  color: white;
+}  
+{% endblock %}
+
+{% block body %}
+<h2 class="ui center aligned header orange big1">SUMMARY RESULTS</h2>
+  <h3 class="ui center aligned header orange big2">Your Endurance:Power Ratio</h3>
+  <img class="ui centered large image" src="file:///{{img_path}}/pie_chart.svg" />
+
+  <h3 class="ui center aligned header orange big2">Your Excercise Plan</h3>
+  <table class="custom_table custom_rose table_center">
+    <thead>
+      <tr>
+      <th>TRAINING TYPE</th>
+      <th>FREQUENCY</th>
+      <th>TIME</th>
+      <th>INTENSITY</th>
+      <th>TYPE</th>
+    </tr></thead>
+    <tbody>
+      {% for item in table3 %}
+      <tr>
+        <td><strong>{{item['Exercises']}}</strong></td>
+        <td>{{item['Frequency']}}</td>
+        <td>{{item['Duration']}}</td>
+        <td>{{item['Intensity']}}</td>
+        <td>{{item['Type']}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+   <p style="page-break-before: always"></p>
+  <h3 class="ui center aligned header orange big2">Fitness Results</h3>
+{% endblock %}
