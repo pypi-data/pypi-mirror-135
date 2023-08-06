@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: openresty-edge-sdk
+Version: 1.2.30
+Summary: OpenResty Edge Python SDK
+Home-page: https://www.openresty.com
+Author: OpenResty Inc.
+Author-email: support@openresty.com
+License: UNKNOWN
+Keywords: openresty-edge-sdk,edge2client,python,sdk
+Platform: Platform Independent
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: urllib3
+
+# OpenResty Edge SDK
+
+
+### Introduction
+
+Python SDK of [OpenResty Edge](https://openresty.com/en/edge/), which provides users with the ability to write custom tools to use OpenResty Edge.
+
+### Installation
+
+```
+pip install openresty-edge-sdk
+```
+
+### Usage
+```python
+
+from edge2client import Edge2Client
+
+client = Edge2Client('http://127.0.0.1:8080', 'username', 'password')
+client.login()
+app_id = client.new_app(domains = ['orig.foo.com'], label = 'origin site for foo.com')
+
+print(app_id)
+```
+
+
