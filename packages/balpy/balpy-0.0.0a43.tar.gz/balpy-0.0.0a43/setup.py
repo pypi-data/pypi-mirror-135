@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+from setuptools import setup
+
+packages = \
+['balpy', 'balpy.graph']
+
+package_data = \
+{'': ['*'],
+ 'balpy': ['abi/*',
+           'abi/pools/*',
+           'deployments/20210418-authorizer/*',
+           'deployments/20210418-authorizer/abi/*',
+           'deployments/20210418-authorizer/build-info/*',
+           'deployments/20210418-authorizer/output/*',
+           'deployments/20210418-vault/*',
+           'deployments/20210418-vault/abi/*',
+           'deployments/20210418-vault/build-info/*',
+           'deployments/20210418-vault/output/*',
+           'deployments/20210418-weighted-pool/*',
+           'deployments/20210418-weighted-pool/abi/*',
+           'deployments/20210418-weighted-pool/build-info/*',
+           'deployments/20210418-weighted-pool/output/*',
+           'deployments/20210624-stable-pool/*',
+           'deployments/20210624-stable-pool/abi/*',
+           'deployments/20210624-stable-pool/build-info/*',
+           'deployments/20210624-stable-pool/output/*',
+           'deployments/20210624-stable-pool/test/*',
+           'deployments/20210721-liquidity-bootstrapping-pool/*',
+           'deployments/20210721-liquidity-bootstrapping-pool/abi/*',
+           'deployments/20210721-liquidity-bootstrapping-pool/build-info/*',
+           'deployments/20210721-liquidity-bootstrapping-pool/output/*',
+           'deployments/20210721-liquidity-bootstrapping-pool/test/*',
+           'deployments/20210727-meta-stable-pool/*',
+           'deployments/20210727-meta-stable-pool/abi/*',
+           'deployments/20210727-meta-stable-pool/build-info/*',
+           'deployments/20210727-meta-stable-pool/output/*',
+           'deployments/20210727-meta-stable-pool/test/*',
+           'deployments/20210811-ldo-merkle/*',
+           'deployments/20210811-ldo-merkle/abi/*',
+           'deployments/20210811-ldo-merkle/build-info/*',
+           'deployments/20210811-ldo-merkle/output/*',
+           'deployments/20210811-ldo-merkle/test/*',
+           'deployments/20210812-lido-relayer/*',
+           'deployments/20210812-lido-relayer/abi/*',
+           'deployments/20210812-lido-relayer/build-info/*',
+           'deployments/20210812-lido-relayer/output/*',
+           'deployments/20210812-lido-relayer/test/*',
+           'deployments/20210812-wsteth-rate-provider/*',
+           'deployments/20210812-wsteth-rate-provider/abi/*',
+           'deployments/20210812-wsteth-rate-provider/build-info/*',
+           'deployments/20210812-wsteth-rate-provider/output/*',
+           'deployments/20210812-wsteth-rate-provider/test/*',
+           'deployments/20210907-investment-pool/*',
+           'deployments/20210907-investment-pool/abi/*',
+           'deployments/20210907-investment-pool/build-info/*',
+           'deployments/20210907-investment-pool/output/*',
+           'deployments/20210907-investment-pool/test/*',
+           'deployments/testnet-linear-phantom-stable-pools/*',
+           'deployments/testnet-linear-phantom-stable-pools/abi/*',
+           'deployments/testnet-linear-phantom-stable-pools/build-info/*',
+           'deployments/testnet-linear-phantom-stable-pools/bytecode/*',
+           'deployments/testnet-linear-phantom-stable-pools/output/*']}
+
+install_requires = \
+['Cython==0.29.24',
+ 'cytoolz==0.11.2',
+ 'eth-abi==2.1.1',
+ 'gql==2.0.0',
+ 'jstyleson==0.0.2',
+ 'multicall>=0.1,<0.2',
+ 'requests==2.25.1',
+ 'web3==5.19.0']
+
+setup_kwargs = {
+    'name': 'balpy',
+    'version': '0.0.0a43',
+    'description': 'Balancer V2 Python API',
+    'long_description': None,
+    'author': 'Langer',
+    'author_email': 'langer@balancer.fi',
+    'maintainer': None,
+    'maintainer_email': None,
+    'url': None,
+    'packages': packages,
+    'package_data': package_data,
+    'install_requires': install_requires,
+    'python_requires': '>=3.7.2,<4.0',
+}
+
+
+setup(**setup_kwargs)
