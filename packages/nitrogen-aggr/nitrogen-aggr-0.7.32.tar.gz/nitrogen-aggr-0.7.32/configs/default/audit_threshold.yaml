@@ -1,0 +1,176 @@
+debug: false
+
+#    """
+#    Recreate the audit_threshold and audit_threshold_detail for a client
+#    Logic:
+#        1- get the data daily value difference between consecutive runs per each measure/year from the old audit table
+#        2- get the data daily value difference between consecutive runs per each measure/year from the new audit table
+#        3- get the min and max daily value difference per measure/year
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  aggr_nitrogen_yearly_dashboard:
+    type: parquet
+    location: "{aggr_location}/nitrogen_yearly_dashboard/"
+  ea_audit:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_Audit/"
+#  job:
+#    type: postgres
+#    conn_config_name: cadmium_postgres_db
+#    table_name: job
+#    skip_if_local: true
+
+Transform:
+  unpivoted_audit:
+    type: user_function
+    function_name: unpivot_audit
+    cache: true
+
+  #audit threshold from the old audit table
+  audit_threshold_set1:
+    sql: >-
+      SELECT
+          record_timestamp,
+          cast(null as int) as job_id,
+          year,
+          cast(null as string) as year_name,
+          lower(measure) as measure,
+          value,
+          row_number() over(partition by measure,   year  ORDER BY  record_timestamp desc) AS r ,
+          lower (CASE
+              WHEN measure ='Eligible Members' THEN
+              '3KPI'
+              WHEN measure ='Members w/ Zero HCC Score' THEN
+              'Dashboard02'
+              WHEN measure ='Members w/ No PCP Visits' THEN
+              'Dashboard03'
+              WHEN measure ='Members w/ No Provider Visits' THEN
+              'Dashboard04'
+              WHEN measure ='Members w/ Zero Demo Score' THEN
+              'Dashboard05'
+              WHEN measure ='AvgDemo' THEN
+              'Dashboard06'
+              WHEN measure ='Avg HCC Captured' THEN
+              '4KPI'
+              WHEN measure ='Avg Projected RAF Score' THEN
+              'Dashboard08'
+              WHEN measure ='Avg RAF Score' THEN
+              '1KPI'
+              WHEN measure ='Avg HCC Opportunity' THEN
+              'Dashboard10'
+              WHEN measure ='Male Population Ratios' THEN
+              'Dashboard11'
+              WHEN measure ='Female Population Ratios' THEN
+              'Dashboard12'
+              WHEN measure ='Recapture Rates' THEN
+              '2KPI'
+              WHEN measure ='RAFx call Errors' THEN
+              '5KPI'
+              WHEN measure ='Number of members without first name' THEN
+              '6KPI'
+              ELSE 'OTHER_GROUP'
+              END )  AS groupy
+          FROM ea_audit r1
+          where
+          year between 2019 and  year(current_date())
+
+  audit_threshold_set2:
+    sql: >-
+      select record_timestamp,
+        job_id,
+        year,
+        year_name,
+        lower(measure) as measure,
+        value,
+        r,
+        lower(groupy) as groupy
+      from unpivoted_audit t1
+
+  mea:
+    sql: >-
+      with all_vals as (
+          SELECT *
+          FROM audit_threshold_set1
+          WHERE
+            record_timestamp not in (
+                cast ( '2021-07-10 06:11:00.000' as timestamp),
+                cast ( '2021-05-03 16:06:00.000' as timestamp),
+                cast ( '2021-07-13 08:14:00.000' as timestamp),
+                cast('2021-05-01 02:03:00.000' as timestamp)
+            )
+          UNION
+          SELECT *
+          FROM audit_threshold_set2 )
+      select *,
+        row_number() over(
+          PARTITION BY t1.measure, t1.year, cast(t1.record_timestamp as date)
+          ORDER BY t1.record_timestamp desc) AS day_dups
+      from all_vals t1
+      where
+      ( lower(t1.groupy) like '%kpi%' or  lower(t1.groupy) like 'dash%' )
+
+  audit_threshold_detail:
+    sql: >-
+      With
+        Changes_in_Measures as (
+                 select r1.* ,
+                   r2.value as priorValue,
+                   round((r1.value-r2.value) * 100, 3)  as ChangeInValue ,
+                   round((r1.value-r2.value ) * 100 /cast( datediff(  r1.record_timestamp, r2.record_timestamp ) as double)  ,3) as daily_changeInValue,
+                   datediff(  r1.record_timestamp, r2.record_timestamp ) as NumberOfDaysFromPreviousLoad
+                 from mea r1
+                 left join mea r2 on r1.groupy = r2.groupy and r1.measure = r2.measure and r1.year= r2.year and  r2.r= r1.r + 1 and r2.day_dups =1
+                 where r1.day_dups =1
+                   and  datediff(  r1.record_timestamp, r2.record_timestamp ) > 0
+           ),
+        tendency_stats as (
+          SELECT
+                 record_timestamp,
+                 measure,
+                 year,
+                 value,
+                 priorValue,
+                 ChangeInValue,
+                 NumberOfDaysFromPreviousLoad,
+                 daily_changeInValue,
+                 row_number() over( partition by measure, year ORDER BY   daily_changeInValue desc, record_timestamp desc) AS dailyValue_PosDesc,
+                 row_number() over( partition by measure, year ORDER BY   daily_changeInValue , record_timestamp desc  ) AS dailyValue_PosAsc,
+                 dense_rank() over (partition by measure, year order by   daily_changeInValue )  as PosRankInchangeInValue
+          FROM Changes_in_Measures m
+          where ChangeInValue is not null
+            )
+        select * from tendency_stats
+
+  #          order by year desc , measure, PosRankInchangeInValue, record_timestamp
+
+  audit_threshold:
+    sql: >-
+      select year, measure, min(daily_changeInValue) as min_daily_changeInValue , max(daily_changeInValue) as max_daily_changeInValue
+      from audit_threshold_detail
+      group by  year , measure
+
+#      order by  year desc, measure
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  audit_threshold_detail:
+    loads:
+      load_1:
+        type: parquet
+        location: '{aggr_location}/audit_threshold_detail'
+        mode: overwrite
+
+  audit_threshold:
+    loads:
+      load_1:
+        type: parquet
+        location: '{aggr_location}/audit_threshold'
+        mode: overwrite

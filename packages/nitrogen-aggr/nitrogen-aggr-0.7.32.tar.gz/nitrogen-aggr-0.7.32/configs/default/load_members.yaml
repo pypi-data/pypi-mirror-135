@@ -1,0 +1,351 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the members sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for members
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+  members_history:
+    type: parquet
+    location: "{aggr_location}/members_history/"
+
+  eam:
+    type: parquet
+    location: "{project_root_path}/{client}/EAM/"
+
+  RAFi_Flex:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_Flex/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#     WITH allrows as (
+#        SELECT
+#           * , row_number() over(partition by member_id order by  job_id desc ) as r
+#        FROM members_history)
+#     SELECT
+#        member_id,
+#        hash_value,
+#        job_id
+#     FROM allrows
+#     WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         member_id,
+         hash_value,
+         job_id
+      FROM members_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+#tested with SSS with:
+#      limit 10
+#             WHERE a.member_id in (
+#             '580905491A',
+#             '580526287D',
+#             '580641903B',
+#             '583052395A',
+#             '584078579A',
+#             '581108425D',
+#             '121461430A',
+#             'E19480315VEM440056',
+#             '581520906A')
+#       '581313808A',
+  members_full:
+    sql: >-
+      WITH
+      flexs as (
+          select
+            b.reference_id as member_id ,
+            b.flex_1 as flex1,
+            b.flex_2 as flex2,
+            b.flex_3 as flex3,
+            b.flex_4 as flex4,
+            b.flex_5 as flex5,
+            b.flex_6 as flex6,
+            b.flex_7 as flex7,
+            b.flex_8 as flex8,
+            b.flex_9 as flex9,
+            b.flex_10 as flex10,
+            row_number() over(partition by reference_id order by  flex_1  ) as r
+          from rafi_flex b
+          where upper(b.reference_type)='M'
+      ),
+      member_flexs as (
+        select *
+        from flexs 
+        where r=1
+      ),
+      members as (
+            SELECT
+              year(current_date()) as load_year,
+              month(current_date()) as load_month,
+              current_timestamp() as load_timestamp,
+              a.member_id,
+              a.hicn,
+              a.mbi,
+              a.external_member_id,
+              concat(
+              ifnull(trim(a.last_name),''),
+              (case when ifnull(trim(a.first_name),'') = ''
+              THEN ''
+              else   concat( ', ', trim(a.first_name) )
+              end )
+              ) as full_name,
+              trim(a.first_name) as first_name,
+              trim(a.last_name) as last_name,
+              a.gender,
+              a.date_of_birth,
+              floor( months_between(current_date(),a.date_of_birth)/12) as age,
+              a.health_plan_member_id,
+              a.health_plan_name,
+              a.address_1 as address_line_1,
+              a.address_2 as address_line_2,
+              a.city,
+              a.zip,
+              a.state,
+              a.phone,
+              a.program,
+              a.pcp_id,
+              a.chart_delivered_count,
+              b.flex1,
+              b.flex2,
+              b.flex3,
+              b.flex4,
+              b.flex5,
+              b.flex6,
+              b.flex7,
+              b.flex8,
+              b.flex9,
+              b.flex10
+            FROM eam  a
+            LEFT JOIN  member_flexs b on a.member_id = b.member_id
+        )
+      SELECT *,
+        hash(
+            a.member_id,
+            a.hicn,
+            a.mbi,
+            a.external_member_id,
+            a.full_name,
+            a.first_name,
+            a.last_name,
+            a.gender,
+            a.date_of_birth,
+            a.age,
+            a.health_plan_member_id,
+            a.health_plan_name,
+            a.address_line_1,
+            a.address_line_2,
+            a.city,
+            a.zip,
+            a.state,
+            a.phone,
+            a.program,
+            a.pcp_id,
+            a.chart_delivered_count,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10           ) as hash_value,
+         ( select cad_job_id from cad_job )  as job_id
+      FROM members a
+
+  members_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+            a.load_year,
+            a.load_month,
+            a.member_id,
+            a.hicn,
+            a.mbi,
+            a.external_member_id,
+            a.full_name,
+            a.first_name,
+            a.last_name,
+            a.gender,
+            a.date_of_birth,
+            a.age,
+            a.health_plan_member_id,
+            a.health_plan_name,
+            a.address_line_1,
+            a.address_line_2,
+            a.city,
+            a.zip,
+            a.state,
+            a.phone,
+            a.program,
+            a.pcp_id,
+            a.chart_delivered_count,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+          FROM  members_full a
+          LEFT JOIN  previous_load b on a.member_id = b.member_id 
+          WHERE b.member_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job )  as job_id,
+             cast(null as integer) as load_year,
+             cast(null as integer) as load_month,
+             a.member_id,
+            cast(null as string) as hicn,
+            cast(null as string) as mbi,
+            cast(null as string) as external_member_id,
+            cast(null as string) as full_name,
+            cast(null as string) as first_name,
+            cast(null as string) as last_name,
+            cast(null as string) as gender,
+            cast(null as date) as date_of_birth,
+            cast(null as integer) as age,
+            cast(null as string) as health_plan_member_id,
+            cast(null as string) as health_plan_name,
+            cast(null as string) as address_line_1,
+            cast(null as string) as address_line_2,
+            cast(null as string) as city,
+            cast(null as string) as zip,
+            cast(null as string) as state,
+            cast(null as string) as phone,
+            cast(null as string) as program,
+            cast(null as string) as pcp_id,
+            cast(null as integer) as chart_delivered_count,
+            cast(null as string) as flex1,
+            cast(null as string) as flex2,
+            cast(null as string) as flex3,
+            cast(null as string) as flex4,
+            cast(null as string) as flex5,
+            cast(null as string) as flex6,
+            cast(null as string) as flex7,
+            cast(null as string) as flex8,
+            cast(null as string) as flex9,
+            cast(null as string) as flex10
+          FROM  previous_load a
+          LEFT JOIN  members_full  b on a.member_id = b.member_id 
+          WHERE b.member_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+             a.load_year,
+             a.load_month,
+            a.member_id,
+            a.hicn,
+            a.mbi,
+            a.external_member_id,
+            a.full_name,
+            a.first_name,
+            a.last_name,
+            a.gender,
+            a.date_of_birth,
+            a.age,
+            a.health_plan_member_id,
+            a.health_plan_name,
+            a.address_line_1,
+            a.address_line_2,
+            a.city,
+            a.zip,
+            a.state,
+            a.phone,
+            a.program,
+            a.pcp_id,
+            a.chart_delivered_count,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+           FROM   members_full  a
+           INNER JOIN previous_load b on a.member_id = b.member_id 
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  members_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/members_full'
+      mode: overwrite
+
+  members_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/members_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_members
+#      mode: overwrite

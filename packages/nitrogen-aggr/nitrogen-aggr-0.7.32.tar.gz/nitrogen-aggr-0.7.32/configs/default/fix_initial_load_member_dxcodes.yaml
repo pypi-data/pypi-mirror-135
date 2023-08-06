@@ -1,0 +1,138 @@
+debug: true
+
+#    """
+#    Adapted from: EADx.scala , Nitrogen
+
+#    Logic:
+#        1- load the history table for the member_dx_codes sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for member_dx_codes
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  EA_Dx:
+    type: parquet
+    location: "{project_root_path}/SSS_TEST_04_25_2021/EA_Dx/"
+
+Transform:
+  member_dx_codes_full:
+    sql: >-
+      with order_Claims as (
+            SELECT
+            Provider_Id AS provider_id,
+            Member_Id AS member_id,
+            Dx_Code As dxcode,
+            DOS as date_of_service,
+            YEAR(dx.DOS) As date_of_service_year,
+            IFNULL (concat('HCC', substring(concat('000', CAST(hcc_code AS String)), -3, 3)), '') as hcc_code,
+            hcc_type,
+            description,
+            source,
+            suspect_reason,
+            false as  added_by_client,
+            Place_Of_Service as pos,
+            false as is_deleted,
+            procedure_code,
+            dx_status,
+            case when ifnull(is_chronic, 0 ) = 0 then false else true end as is_chronic,
+            code_source,
+            case when ifnull( is_recap,0 ) = 0 then false else true end as is_recap,
+            cast(null as string) as flex1,
+            cast(null as string) as flex2,
+            cast(null as string) as flex3,
+            cast(null as string) as flex4,
+            cast(null as string) as flex5,
+            cast(null as string) as flex6,
+            cast(null as string) as flex7,
+            cast(null as string) as flex8,
+            cast(null as string) as flex9,
+            cast(null as string) as flex10,
+            row_number() over(partition by provider_id, member_id, dx_code, dos, hcc_code order by hcc_type, code_source, left(dx_status, 5), is_recap desc, is_chronic desc   ) as r
+            FROM EA_Dx dx
+            ),
+           UniquePK_Claims as (select * from order_claims where r =1  )
+            select
+            provider_id,
+            member_id,
+            dxcode,
+            date_of_service,
+            date_of_service_year,
+            hcc_code,
+            hcc_type,
+            description,
+            source,
+            suspect_reason,
+            added_by_client,
+            pos,
+            is_deleted,
+            procedure_code,
+            dx_status,
+            is_chronic,
+            code_source,
+            is_recap,
+            flex1,
+            flex2,
+            flex3,
+            flex4,
+            flex5,
+            flex6,
+            flex7,
+            flex8,
+            flex9,
+            flex10,
+            hash(
+                provider_id,
+                member_id,
+                dxcode,
+                date_of_service,
+                date_of_service_year,
+                hcc_code,
+                hcc_type,
+                description,
+                source,
+                suspect_reason,
+                added_by_client,
+                pos,
+                is_deleted,
+                procedure_code,
+                dx_status,
+                is_chronic,
+                code_source,
+                is_recap,
+                flex1,
+                flex2,
+                flex3,
+                flex4,
+                flex5,
+                flex6,
+                flex7,
+                flex8,
+                flex9,
+                flex10
+          ) as hash_value,
+          ( 2 )  as job_id
+          FROM UniquePK_Claims
+    cache: false
+
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  member_dx_codes_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_dx_codes_history'
+      mode: overwrite
+      partitions:
+      - job_id

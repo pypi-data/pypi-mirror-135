@@ -1,0 +1,64 @@
+debug: false
+
+#    """
+#    One time to recreate the first record for aggr/suspect_sources_history
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: true
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+  suspect_sources_full:
+    sql: >-
+      SELECT '0' as member_id,
+             '0' as hcc_code,
+             '0' as hcc_description,
+             0.0 as hcc_coefficient,
+             '0' as hcc_status,
+             2021 as year,
+             '0' as trumped_by ,
+             '0' as suspect_type,
+             '0' as data,
+             '0' as data_description,
+             0.0 as confidence_level,
+             false as hcc_captured ,
+             0 as hash_value,
+               ( select cad_job_id from cad_job )  as job_id
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  suspect_sources_full:
+    suspect_sources:
+      type: parquet
+      location: '{aggr_location}/suspect_sources_history'
+      partitions:
+      - job_id

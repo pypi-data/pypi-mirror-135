@@ -1,0 +1,83 @@
+debug: false
+
+#    """
+#    one_time_to add records for the new current year for :
+#    Ref_ICD_Crosswalk_RAFx
+#    Ref_VersionRAFTypeCode
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  Ref_ICD_Crosswalk_RAFx:
+    type: parquet
+    location: "{project_root_path}/{client}/Ref_ICD_Crosswalk_RAFx/"
+
+  Ref_VersionRAFTypeCode:
+    type: parquet
+    location: "{project_root_path}/{client}/Ref_VersionRAFTypeCode/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+Transform:
+  Ref_ICD_Crosswalk_RAFx_new:
+    sql: >-
+      With new_records as (
+        select
+          string(int(x.year + 1))  as year,
+          ishccmodel,
+          isicd9,
+          dxhccid,
+          diag_code,
+          hcc_v22,
+          isesrdmodel,
+          hcc_v21
+        from ref_icd_crosswalk_rafx x
+        inner join EpiAnalyst_Client_Settings y on x.year = y.current_year + 1
+      )
+      select *
+      from ref_icd_crosswalk_rafx
+      union
+      select *
+      from new_records
+      order by year
+
+  Ref_VersionRAFTypeCode_new:
+    sql: >-
+      With new_records as (
+        select
+          string(int(x.year + 1))  as year,
+          version,
+          raftypecode
+        from Ref_VersionRAFTypeCode x
+        inner join EpiAnalyst_Client_Settings y on x.year = y.current_year + 1
+      )
+      select *
+      from Ref_VersionRAFTypeCode
+      where year > ''
+      union
+      select *
+      from new_records
+      order by year
+
+    # Note: Load tables have to be same as Extract tables.
+Load:
+  Ref_ICD_Crosswalk_RAFx_new:
+    load_1:
+      type: csv
+      location: '{project_root_path}/{client}/Ref_ICD_Crosswalk_RAFx_csv'
+      mode: overwrite
+
+  Ref_VersionRAFTypeCode_new:
+    load_1:
+      type: csv
+      location: '{project_root_path}/{client}/Ref_VersionRAFTypeCode_csv'
+      mode: overwrite
