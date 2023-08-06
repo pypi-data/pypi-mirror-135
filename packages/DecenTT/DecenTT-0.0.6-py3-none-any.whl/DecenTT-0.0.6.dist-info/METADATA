@@ -1,0 +1,223 @@
+Metadata-Version: 2.1
+Name: DecenTT
+Version: 0.0.6
+Summary: Decentralized Telemetry Transport (DecenTT)
+Home-page: https://github.com/saapo-ka-baadshah/DecenTT
+Author: Amey Mahadik
+Author-email: ameyarm@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/saapo-ka-baadshah/DecenTT/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: certifi (==2021.10.8)
+Requires-Dist: charset-normalizer (==2.0.8)
+Requires-Dist: coloredlogs (==15.0.1)
+Requires-Dist: humanfriendly (==10.0)
+Requires-Dist: idna (==3.3)
+Requires-Dist: ipfs-api (==0.2.3)
+Requires-Dist: paho-mqtt (==1.6.1)
+Requires-Dist: python-dotenv (==0.19.2)
+Requires-Dist: requests (==2.26.0)
+Requires-Dist: six (==1.16.0)
+Requires-Dist: tqdm (==4.62.3)
+Requires-Dist: urllib3 (==1.26.7)
+Requires-Dist: wget (==3.2)
+
+# DecenTT : Decentralized Telemetry Transport
+By every single second passing, we are moving into a Decentralized world. As Richard Hendriks from Silicon Valley says, "The way it should have built in the first place". 
+
+But the transition is not very easy, since Centralization solves the Transaction Efficiency issues while introducing Single Point failure problems. Which the Decentralized protocols are proofed up of. 
+
+A very simple solution to this problem is making a hybrid protocol consisting of best of both worlds. 
+
+Wireless Sensor Networks have inspired an era of Ubiquitous IoT Devices. And one of the most crucial aspect of IoT systems is Indirect Communications. 
+
+Hence, here is the DecenTT initiative to combine such centralized and decentralized indirect communication protocol.
+DecenTT is a child of MQTT and IPFS.
+
+---
+
+## Installation: 
+The installers are there within the package, but are under development phase.
+Follow the steps to install the dependencies.
+1. Install IPFS CLI, 
+    - [Windows](https://docs.ipfs.io/install/command-line/#windows)
+    - [macOS](https://docs.ipfs.io/install/command-line/#macos)
+    - [Linux](https://docs.ipfs.io/install/command-line/#linux)
+
+2. Initialize an IPFS Node:
+    `ipfs init`
+
+2. Setup or Use an MQTT Server/Broker: 
+    - For the self hosted version the most popular implementation is [Eclipse Mosquitto](https://mosquitto.org/)
+    - For a cloud based service any provider would work.
+
+3. Install DecenTT Library: `pip install DecenTT`
+
+---
+### Running IPFS Daemon : 
+```Python
+from DecenTT.IPFS import Daemon
+
+_daemon = Daemon(shell=False)
+# _daemon.daemon.communicate()      # To run it in the attached mode
+# _daemon.reload()                  # To reload
+# _daemon.stop()                    # To stop the Daemon
+```
+In order to communicate with the network, an IPFS Daemon should be active.
+
+--- 
+### Adding Bootstrap nodes
+- View Bootstrap nodes: 
+    ```bash
+    ipfs bootstrap list
+    /dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN
+    /dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa
+    /dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb
+    /dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt
+    /ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
+    ```
+    These are the public bootstrap nodes provided from the IPFS community. 
+
+- Removing the Bootstrap nodes: 
+    ```bash
+    ipfs bootstrap rm all
+    ```
+    This removes all the bootstrap nodes. 
+
+- If you wish to add a new bootstrap node you can do as follows:
+    - Using IPFS CLI
+        ```bash
+        ipfs bootstrap add "your bootstrap node address"
+        ```
+    - Using [IPFS HTTP API](https://docs.ipfs.io/reference/http/api/#api-v0-bootstrap-add)
+
+    - Using DecenTT `BStrapper`:
+        ```Python
+        from DecenTT.IPFS.locales.bootstrap import BStrapper
+        
+        b = BStrapper()         # Loads default given Bootstrap Nodes
+        b.load_all()
+        ```
+
+        If you have setup a private IPFS Network then you can specify the Bootstrap nodes in a `.env` file as follows:
+        ```ENV
+        BOOTSTRAP_1=your-bootstrap1-address
+        BOOTSTRAP_2=your-bootstrap2-address
+        ```
+        To load these newly added bootstrap nodes use following snippet:
+        ```Python
+        from DecenTT.IPFS.locales.bootstrap import BStrapper
+        
+        b = BStrapper(path="path-to-your-env-file")         # Loads default given Bootstrap Nodes
+        b.load_all()
+        ```
+        If you want to add the bootstrap node dynamically, use:
+        ```Python
+        b.add(address="your-bootstrap-address")
+
+        # OR
+        b.record(address="your-bootstrap-address")
+        b.load_all()
+        _daemon.reload()
+        ```
+
+---
+
+## Usage:
+Usage is similar to any other PubSub mechanism.
+
+**Switching support**:
+Currently IPFS Supports only **Topic Based Manual Switching**. 
+That means if your topic is flagged with a keyword such as `secure/`, the topic will be published via a more resilient channel.
+Default keyword is **`secure/`**.
+This keyword can be set by the `keyword` argument in the client.
+
+For other switching mechanisms look into [DecenTT/pages](https://github.com/saapo-ka-baadshah/DecenTT/blob/pages/README.md)
+
+### Client
+```Python
+from DecenTT import Client
+
+
+def sample_callback(client, userdata, msg):
+    print(f"{msg} Object received : \t {msg.payload.decode()}")
+
+
+if __name__ == '__main__':
+    d_c = Client(
+        host="your-mqtt-host-address",  # :str MQTT Server/Broker
+        # port =1883,                    # :int MQTT Port
+        # username = None,          # :str MQTT Username
+        # password = None,          # :str MQTT Password
+        # on_connect=None,          # :function MQTT on_connect
+        # on_publish=None,          # :function MQTT on_publish
+        # on_message=None,          # :function MQTT on_message
+        # log_path=".",              # :str MQTT LogPath
+        # keyword="secure/"         # :str Switching Keyword
+    )
+    # These arguments are specifically for MQTT Client, the IPFS client works as a self hosted node on a P2P network. Hence, it doesn't need any parameters to be set
+    
+```
+
+### Publish
+```Python
+from DecenTT import Client
+
+cli = Client(
+    host="your-mqtt-host"
+)
+
+cli.publish(
+    topic="your-topic",             # :str Topic
+    payload="your-payload-string"   # :str Payload
+)
+```
+
+### Subscribe:
+```Python
+from DecenTT import Client
+
+
+def sample_callback(client, userdata, msg):
+    print(f"{msg} Object received : \t {msg.payload.decode()}")
+
+
+client = Client(
+    host="your-mqtt-host"
+)
+
+client.subscribe(topic="ABC", callback=sample_callback)
+client.subscribe(topic="secure/ABC", callback=sample_callback)  # This topic is more `resilient`, Hence, adding 'secure/' as a prefix makes use of a resilient topic
+
+```
+
+## Changelog
+New features in v0.0.2
+- Now you can subscribe to multiple topics, just as paho mqtt,
+    ```Python
+    topic_list=[
+        ("topic1", 0),
+        ("topic2", 1),
+        # (<topic name>, <qos in integer>)
+    ]
+    ```
+
+Minor bug fixes in v0.0.3
+- Standards mismatch bug in the Message Payload class
+
+Minor bug fixes in v0.0.4
+- `**kwargs` bug resolved
+- `DEFAULT_HOST` bug resolved
+
+## Contributors
+- [saap-ka-baashah](https://github.com/saapo-ka-baadshah)
+
+Feel Free to contribute to the [DecenTT](https://github.com/saapo-ka-baadshah/DecenTT) project.
+
+
