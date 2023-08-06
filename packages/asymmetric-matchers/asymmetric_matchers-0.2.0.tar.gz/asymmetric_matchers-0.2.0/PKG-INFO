@@ -1,0 +1,154 @@
+Metadata-Version: 2.1
+Name: asymmetric_matchers
+Version: 0.2.0
+Summary: Asymmetric matchers for testing
+Home-page: https://github.com/duailibe/asymmetric-matchers
+Author: Lucas Duailibe
+Author-email: lucasds@gmail.com
+License: Apache-2.0
+Project-URL: Documentation, https://github.com/duailibe/asymmetric-matchers
+Project-URL: Source Code, https://github.com/duailibe/asymmetric-matchers
+Project-URL: Bug Tracker, https://github.com/duailibe/asymmetric-matchers/issues
+Keywords: testing asymmetric matchers
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Testing
+Requires-Python: !=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# asymmetric-matchers
+
+[![CI](https://github.com/duailibe/asymmetric-matchers/actions/workflows/ci.yaml/badge.svg)](https://github.com/duailibe/asymmetric-matchers/actions/workflows/ci.yaml)
+[![PyPI](https://img.shields.io/pypi/v/asymmetric-matchers)](https://pypi.org/project/asymmetric-matchers)
+[![codecov](https://codecov.io/gh/duailibe/asymmetric-matchers/branch/main/graph/badge.svg?token=imWUVBB86f)](https://codecov.io/gh/duailibe/asymmetric-matchers)
+
+
+A collection of asymmetric matchers in Python for testing or general uses.
+
+## What are asymmetric matchers?
+
+An asymmetric matcher is an object that can be compared equally to a variety of other objects. Practically speaking, it's useful to test if a value satisfies a set of rules, but not an equality comparison.
+
+Popular examples are the asymmetric matchers present in the [Jasmine](https://jasmine.github.io/) and [Jest](https://jestjs.io) (JavaScript testing frameworks.)
+
+## Example
+
+Say we have a function similar that calls an external API:
+
+```python
+def get_user(user_id: str, fields: List[str]) -> User:
+    fields = add_default_fields(fields)
+    return external_api.get_user({user_id: user_id, fields: fields})
+```
+
+And we want to write a test that asserts the `external_api.get_user()` was called with the correct arguments:
+
+```python
+def test_external_get_user_is_called():
+    with mock.patch("external_api.get_user") as ext_mock:
+        get_user("abc4321", ["name", "profile_picture"])
+        ext_mock.assert_called_once_with("abc4321", ["name", "profile_picture"])
+```
+
+It doesn't work because we don't know what are the default fields added and perhaps the context of this specific test is not concerned on the behavior of the `add_default_fields` function. So we write more specific assertions:
+
+```python
+def test_external_get_user_is_called():
+    with mock.patch("external_api.get_user") as ext_mock:
+        get_user("abc4321", ["name", "profile_picture"])
+
+        ext_mock.assert_called_once()
+        args = ext_mock.call_args[0]
+        assert args[0] == "abc4321"
+        assert "name" in args[1]
+        assert "profile_picture" in args[1]
+```
+
+Great! Now we're testing exactly what we want, but it's not as straight-forward to a future reader what exactly we want to test.
+
+That's where an asymmetric tester is useful. We can rewrite this test as:
+
+```python
+from asymmetric_matchers import list_containing
+
+
+def test_external_get_user_is_called():
+    with mock.patch("external_api.get_user") as ext_mock:
+        get_user("abc4321", ["name", "profile_picture"])
+
+        ext_mock.assert_called_once_with(
+            "abc4321", list_containing(["name", "profile_picture"])
+        )
+```
+
+Very nice! Now it's more clear what's our intent with this test to future readers.
+
+It's very useful in situations when we can combine two or more matchers. One example is to test that a dict contains a specific key and its value is a list that contains some elements:
+
+```python
+assert "fields" in some_dict
+assert "name" in some_dict["fields"]
+assert "profile_picture" in some_dict["fields"]
+
+# using asymmetric matchers
+
+assert some_dict == dict_containing(
+    {"fields": list_containing(["name", "profile_picture"])}
+)
+```
+
+## API
+
+- **`anything()`**
+
+  Matcher is equal to any value, except `None`.
+
+  ```python
+  plugin_mock.assert_called_once_with("app_name", anything(), True)
+  ```
+
+  It's similar to [`unittest.mock.ANY`](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.ANY).
+
+- **`string_matching(str_or_pattern)`**
+
+  Matcher is equal to a string that matches the pattern (using `re.search`).
+
+  ```python
+  assert generate_id() == string_matching(r"[a-z]{4}[0-9}3")
+  ```
+
+- **`list_containing(expected)`**
+
+  Matcher is equal to a list that contains all items from `expected`.
+
+  ```python
+  assert fields == list_containing(["name", "profile_pic"])
+  ```
+
+- **`dict_containing(expected)`**
+
+  Matcher is equal to a dict that contains all keys from `expected` and their values match.
+
+  ```python
+  assert request_dict == dict_containing({"user_id": "abc123"})
+  ```
+
+## License
+
+[Apache-2.0 License](./LICENSE)
+
+
