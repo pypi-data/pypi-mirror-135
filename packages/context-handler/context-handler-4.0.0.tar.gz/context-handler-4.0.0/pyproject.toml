@@ -1,0 +1,41 @@
+[project]
+name = "context-handler"
+version = "4.0.0"
+description = ""
+dependencies = [ "typing-extensions<4.0.0,>=3.10.0",]
+requires-python = ">=3.8,<4.0"
+[[project.authors]]
+name = "Gustavo Correa"
+email = "self.gustavocorrea@gmail.com"
+
+[build-system]
+requires = [ "pdm-pep517",]
+build-backend = "pdm.pep517.api"
+
+[project.license]
+text = "MIT"
+
+[project.optional-dependencies]
+fastapi = [ "fastapi<1.0.0,>=0.72.0",]
+sanic = [ "sanic<22.0.0,>=21.9.1",]
+
+[tool.pdm]
+includes = []
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "4.0.0"
+tag_format = "$version"
+annotated_tag = true
+version_files = [ "pyproject.toml:version", "context_handler/__init__.py",]
+
+[tool.pdm.dev-dependencies]
+dev = [ "pytest<7.0.0,>=6.2.5", "pytest-cov<4.0.0,>=3.0.0", "pytest-asyncio<1.0.0,>=0.16.0", "autoflake<2.0,>=1.4", "isort<6.0.0,>=5.9.3", "pylint<3.0.0,>=2.11.1", "bandit<2.0.0,>=1.7.0",]
+publish = [ "twine>=3.7.1",]
+style = [ "blue>=0.7.0",]
+
+[tool.pdm.scripts]
+test = "pytest --verbose -p no:warning --cov=context_handler --cov-report=html --cov-report=xml:.artifacts/coverage.xml --junit-xml=.artifacts/tests.xml --cov-config=.coveragerc ./tests"
+
+[tool.pdm.scripts.format]
+shell = "blue .\\context_handler && isort .\\context_handler && autoflake --remove-all-unused-imports --remove-unused-variables --remove-duplicate-keys --expand-star-imports -ir context_handler"
