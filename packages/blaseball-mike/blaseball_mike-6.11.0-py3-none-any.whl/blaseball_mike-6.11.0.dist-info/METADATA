@@ -1,0 +1,56 @@
+Metadata-Version: 2.1
+Name: blaseball-mike
+Version: 6.11.0
+Summary: Read-only Python wrapper around blaseball game API
+Home-page: https://github.com/jmaliksi/blaseball-mike
+Author: Joe Maliksi
+Author-email: joe.maliksi@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: ~=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: aiohttp
+Requires-Dist: aiohttp-sse-client
+Requires-Dist: python-dateutil
+Requires-Dist: requests
+Requires-Dist: ujson
+Requires-Dist: requests-cache
+
+# blaseball-mike
+Totally not a microphone to the blaseball API
+
+This is a python wrapper over blaseball's public APIs, including player/team/game fetches, as well as deserialization of the event stream.
+
+# Installation
+
+`pip install blaseball-mike`
+
+# Docs
+
+Full API documentation can be found at <https://jmaliksi.github.io/blaseball-mike/>
+
+# Development
+
+## macOS/unix setup:
+
+```
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+## Publishing to pypi
+### Automatic (recommended)
+1. Bump version in `setup.py`. Use [https://semver.org/ semver], ie fixes are a patch, new features are a minor, and breaking changes are a major.
+2. Draft new release
+3. Name new tag with the version in `setup.py`. Add useful description.
+4. Publishing will automatically kick off a github action to publish
+
+### Manual (use in case something goes wrong with auto publish)
+1. Bump version in `setup.py`. Use [https://semver.org/ semver], ie fixes are a patch, new features are a minor, and breaking changes are a major.
+2. Delete `dist/*` and `build/*`
+3. `python3 setup.py sdist bdist_wheel`
+4. `python3 -m twine upload -r pypi dist/*`
+
+
