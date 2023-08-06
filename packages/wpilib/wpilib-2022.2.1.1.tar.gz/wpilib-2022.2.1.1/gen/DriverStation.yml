@@ -1,0 +1,76 @@
+---
+
+extra_includes:
+  - rpy/ControlWord.h
+
+inline_code: |
+  #include <src/rpy/DriverStation.cpp.inl>
+
+classes:
+  DriverStation:
+    shared_ptr: true
+    attributes:
+      kJoystickPorts:
+    enums:
+      Alliance:
+      MatchType:
+    methods:
+      GetInstance:
+        return_value_policy: reference
+      ReportError:
+        overloads:
+          wpi::Twine&:
+            ignore: true
+          bool, int, wpi::Twine&, wpi::Twine&, wpi::Twine&:
+            ignore: true
+      ReportWarning:
+        ignore: true
+      GetStickButton:
+      GetStickButtonPressed:
+      GetStickButtonReleased:
+      GetStickAxis:
+      GetStickPOV:
+      GetStickButtons:
+      GetStickAxisCount:
+      GetStickPOVCount:
+      GetStickButtonCount:
+      GetJoystickIsXbox:
+      GetJoystickType:
+      GetJoystickName:
+      GetJoystickAxisType:
+      IsJoystickConnected:
+      IsEnabled:
+      IsDisabled:
+      IsEStopped:
+      IsAutonomous:
+      IsAutonomousEnabled:
+      IsOperatorControl:
+      IsOperatorControlEnabled:
+      IsTeleop:
+      IsTeleopEnabled:
+      IsTest:
+      IsDSAttached:
+      IsNewControlData:
+      IsFMSAttached:
+      GetGameSpecificMessage:
+      GetEventName:
+      GetMatchType:
+      GetMatchNumber:
+      GetReplayNumber:
+      GetAlliance:
+      GetLocation:
+      WaitForData:
+        overloads:
+          "":
+          units::second_t:
+      GetMatchTime:
+      GetBatteryVoltage:
+      InDisabled:
+      InAutonomous:
+      InOperatorControl:
+      InTeleop:
+      InTest:
+      WakeupWaitForData:
+      GetData:
+      SilenceJoystickConnectionWarning:
+      IsJoystickConnectionWarningSilenced:
