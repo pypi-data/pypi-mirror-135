@@ -1,0 +1,78 @@
+[dependencies]
+ahash = "0.7"
+anyhow = "1.0"
+dirs = "4.0"
+lazy_static = "1.4"
+memchr = "2.4"
+num = "^0.4"
+num_cpus = "1"
+rayon = "1.5"
+regex = "1.5"
+simdutf8 = "0.1"
+
+[dependencies.arrow]
+default-features = false
+package = "arrow2"
+version = "0.9"
+
+[dependencies.csv-core]
+optional = true
+version = "0.1.10"
+
+[dependencies.flate2]
+default-features = false
+optional = true
+version = "1"
+
+[dependencies.lexical]
+default-features = false
+features = ["std", "parse-floats", "parse-integers"]
+optional = true
+version = "6"
+
+[dependencies.memmap]
+optional = true
+package = "memmap2"
+version = "0.5.2"
+
+[dependencies.polars-arrow]
+path = "../polars-arrow"
+version = "0.19.0"
+
+[dependencies.polars-core]
+default-features = false
+features = ["private"]
+path = "../polars-core"
+version = "0.19.0"
+
+[dependencies.polars-utils]
+optional = true
+path = "../polars-utils"
+version = "0.1.0"
+
+[features]
+csv-file = ["csv-core", "memmap", "lexical", "arrow/io_csv_write"]
+decompress = ["flate2/miniz_oxide"]
+decompress-fast = ["flate2/zlib-ng-compat"]
+dtype-date = ["polars-core/dtype-date"]
+dtype-datetime = ["polars-core/dtype-datetime", "polars-core/temporal"]
+dtype-time = ["polars-core/dtype-time", "polars-core/temporal"]
+fmt = ["polars-core/plain_fmt"]
+ipc = ["arrow/io_ipc", "arrow/io_ipc_compression"]
+json = ["arrow/io_json"]
+lazy = []
+parquet = ["polars-core/parquet", "arrow/io_parquet", "arrow/io_parquet_compression", "polars-utils"]
+private = []
+temporal = ["polars-core/dtype-date", "polars-core/dtype-datetime"]
+
+[package]
+authors = ["ritchie46 <ritchie46@gmail.com>"]
+description = "IO related logic for the Polars DataFrame library"
+edition = "2021"
+license = "MIT"
+name = "polars-io"
+repository = "https://github.com/pola-rs/polars"
+version = "0.19.0"
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

@@ -1,0 +1,158 @@
+[dependencies]
+ahash = "0.7"
+anyhow = "1.0"
+lazy_static = "1.4"
+num = "^0.4"
+num_cpus = "1"
+rayon = "1.5"
+thiserror = "^1.0"
+unsafe_unwrap = "^0.1.0"
+
+[dependencies.arrow]
+default-features = false
+features = ["compute_aggregate", "compute_arithmetics", "compute_boolean", "compute_boolean_kleene", "compute_cast", "compute_comparison", "compute_concatenate", "compute_filter", "compute_if_then_else", "compute_take"]
+package = "arrow2"
+version = "0.9"
+
+[dependencies.base64]
+optional = true
+version = "0.13"
+
+[dependencies.comfy-table]
+optional = true
+version = "5.0"
+
+[dependencies.hashbrown]
+features = ["rayon"]
+version = "0.12"
+
+[dependencies.hex]
+optional = true
+version = "0.4"
+
+[dependencies.jsonpath_lib]
+branch = "improve_compiled"
+git = "https://github.com/ritchie46/jsonpath"
+optional = true
+version = "0.3.0"
+
+[dependencies.ndarray]
+default_features = false
+optional = true
+version = "0.15"
+
+[dependencies.polars-arrow]
+features = ["compute"]
+path = "../polars-arrow"
+version = "0.19.0"
+
+[dependencies.polars-time]
+optional = true
+path = "../polars-time"
+version = "0.1.0"
+
+[dependencies.polars-utils]
+optional = true
+path = "../polars-utils"
+version = "0.1.0"
+
+[dependencies.prettytable-rs]
+optional = true
+version = "0.8.0"
+
+[dependencies.rand]
+optional = true
+version = "0.8"
+
+[dependencies.rand_distr]
+optional = true
+version = "0.4"
+
+[dependencies.regex]
+optional = true
+version = "1.5"
+
+[dependencies.serde]
+features = ["derive"]
+optional = true
+version = "1"
+
+[dependencies.serde_json]
+optional = true
+version = "1.0"
+
+[dev-dependencies]
+bincode = "1"
+
+[features]
+abs = []
+asof_join = []
+avx512 = []
+checked_arithmetic = []
+concat_str = []
+cross_join = []
+cum_agg = []
+dataframe_arithmetic = []
+default = ["docs", "temporal", "performant", "private"]
+diagonal_concat = []
+diff = []
+docs = []
+docs-selection = ["ndarray", "is_in", "sort_multiple", "rows", "docs", "strings", "object", "lazy", "temporal", "random", "zip_with", "round_series", "checked_arithmetic", "repeat_by", "is_first", "is_last", "asof_join", "cross_join", "dot_product", "concat_str", "row_hash", "mode", "extract_jsonpath", "cum_agg", "rolling_window", "interpolate", "diff", "moment", "dtype-categorical", "rank", "list", "diagonal_concat", "horizontal_concat", "abs", "dataframe_arithmetic", "string_encoding", "product"]
+dot_product = []
+dtype-categorical = []
+dtype-date = ["temporal"]
+dtype-datetime = ["temporal"]
+dtype-duration = ["temporal"]
+dtype-i16 = []
+dtype-i8 = []
+dtype-time = ["temporal"]
+dtype-u16 = []
+dtype-u8 = []
+dynamic_groupby = ["polars-time", "dtype-datetime", "dtype-date"]
+ewma = ["polars-utils"]
+extract_jsonpath = ["serde_json", "jsonpath_lib"]
+groupby_list = []
+horizontal_concat = []
+interpolate = []
+is_first = []
+is_in = []
+is_last = []
+lazy = ["sort_multiple"]
+list = []
+mode = []
+moment = []
+object = ["serde_json"]
+parquet = ["arrow/io_parquet"]
+pct_change = ["diff"]
+performant = []
+plain_fmt = ["prettytable-rs"]
+pretty_fmt = ["comfy-table"]
+private = []
+product = []
+random = ["rand", "rand_distr"]
+rank = []
+reinterpret = []
+repeat_by = []
+rolling_window = []
+round_series = []
+row_hash = []
+rows = []
+simd = ["arrow/simd"]
+sort_multiple = []
+string_encoding = ["base64", "hex"]
+strings = ["regex", "polars-arrow/strings", "arrow/compute_substring"]
+take_opt_iter = []
+temporal = ["regex", "polars-time"]
+zip_with = []
+
+[package]
+authors = ["ritchie46 <ritchie46@gmail.com>"]
+description = "Core of the Polars DataFrame library"
+edition = "2021"
+license = "MIT"
+name = "polars-core"
+repository = "https://github.com/pola-rs/polars"
+version = "0.19.0"
+[package.metadata.docs.rs]
+features = ["docs-selection"]
+rustdoc-args = ["--cfg", "docsrs"]

@@ -1,0 +1,63 @@
+[dependencies]
+ahash = "0.7"
+bincode = "1.3"
+libc = "0.2"
+ndarray = "0.15"
+numpy = "0.15"
+thiserror = "^1.0"
+
+[dependencies.mimalloc]
+default-features = false
+version = "*"
+
+[dependencies.polars]
+default-features = false
+features = ["dynamic_groupby", "zip_with", "simd", "lazy", "strings", "temporal", "random", "object", "csv-file", "pretty_fmt", "performant", "dtype-full", "rows", "private", "round_series", "is_first", "asof_join", "cross_join", "dot_product", "concat_str", "row_hash", "reinterpret", "decompress-fast", "mode", "extract_jsonpath", "lazy_regex", "cum_agg", "rolling_window", "interpolate", "list", "rank", "diff", "pct_change", "moment", "arange", "true_div", "dtype-categorical", "diagonal_concat", "horizontal_concat", "abs", "ewma", "dot_diagram", "dataframe_arithmetic", "json", "string_encoding", "product", "ndarray"]
+path = "local_dependencies/polars"
+
+[dependencies.polars-core]
+default-features = false
+path = "local_dependencies/polars-core"
+
+[dependencies.pyo3]
+features = ["abi3-py36", "extension-module", "multiple-pymethods"]
+version = "0.15"
+
+[dependencies.serde_json]
+optional = true
+version = "1"
+
+[features]
+default = ["json", "parquet", "ipc", "is_in", "json", "polars/repeat_by"]
+ipc = ["polars/ipc"]
+is_in = ["polars/is_in"]
+json = ["polars/serde", "serde_json"]
+parquet = ["polars/parquet"]
+
+[lib]
+crate-type = ["cdylib"]
+name = "polars"
+
+[package]
+authors = ["ritchie46 <ritchie46@gmail.com>"]
+description = "Blazingly fast DataFrame library"
+documentation = "https://pola-rs.github.io/polars/py-polars/html/reference/index.html"
+edition = "2021"
+homepage = "https://github.com/pola-rs/polars"
+license = "MIT"
+name = "py-polars"
+readme = "README.md"
+repository = "https://github.com/pola-rs/polars"
+version = "0.12.14"
+[patch.crates-io.packed_simd_2]
+branch = "remove_llvm_asm"
+git = "https://github.com/hkratz/packed_simd"
+
+[patch.crates-io.pyo3]
+branch = "polars_pypy_hasattr"
+git = "https://github.com/ghuls/pyo3"
+[profile.release]
+codegen-units = 1
+lto = "fat"
+
+[workspace]
