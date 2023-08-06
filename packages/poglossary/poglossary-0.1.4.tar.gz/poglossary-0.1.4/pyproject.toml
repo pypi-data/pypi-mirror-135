@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "poglossary"
+version = "0.1.4"
+description = "A CLI tool that scans through .po files and searches for mistranslated terms based on user-defined glossary mapping"
+authors = ["Matt.Wang <mattwang44@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.scripts]
+poglossary = 'poglossary.poglossary:app'
+
+[tool.poetry.dependencies]
+python = "^3.9"
+PyYAML = "^6.0"
+polib = "^1.1.1"
+tabulate = {version = "^0.8.9", extras = ["widechars"]}
+typer = {version = "^0.4.0", extras = ["all"]}
+pydantic = "^1.9.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+mypy = "^0.931"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
