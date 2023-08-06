@@ -1,0 +1,1 @@
+This is an implementation of Dixon Resultant using sympy library.
