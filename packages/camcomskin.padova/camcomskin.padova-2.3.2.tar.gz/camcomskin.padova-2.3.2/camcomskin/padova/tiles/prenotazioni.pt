@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="camcomskin.padova">
+  <body>
+    <div class="prenotazioni-tile"
+         tal:attributes="data-tileid tile_id;
+                         class python:view.get_additional_css_classes('prenotazioni-tile')"
+         tal:define="tile_id view/id;
+                     prenotazione view/get_folder;"
+         tal:condition="prenotazione">
+      <h2 class="tileHeader">
+        <a class="prenotazione-title"
+                 tal:attributes="href prenotazione/url; title prenotazione/title"
+                 tal:content="prenotazione/title" />
+      </h2>
+      <div class="prenotazione-detail">
+        <div class="prenotazione-calendar" />
+      </div>
+    </div>
+  </body>
+</html>
