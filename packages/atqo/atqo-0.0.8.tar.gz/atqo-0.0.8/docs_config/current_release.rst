@@ -1,0 +1,11 @@
+- exchange cleanup
+- drop len
+- add locks stores
+- decover
+- extend simplified functions
+- fancify
+- cover and raise
+- minimal lock test
+- init in test
+- update path calculation
+- bump v
