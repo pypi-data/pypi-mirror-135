@@ -1,0 +1,111 @@
+Metadata-Version: 2.1
+Name: blackjack-gui
+Version: 0.2.1
+Summary: A game of Blackjack with graphical user interface.
+Home-page: https://github.com/tukiains/blackjack-gui
+Author: Simo Tukiainen
+Author-email: tukiains@gmail.com
+License: MIT License
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Games/Entertainment
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# blackjack-gui
+![](https://github.com/tukiains/blackjack-gui/workflows/tests/badge.svg)
+[![Downloads](https://pepy.tech/badge/blackjack-gui)](https://pepy.tech/project/blackjack-gui)
+
+Single-player Blackjack including GUI and CLI interfaces. Can be used to simulate games (with simple card counting) 
+and learn basic strategy.
+
+## Installation
+``` 
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip3 install blackjack-gui
+```
+<img src="blackjack_gui/images/bj-shot.png" alt="" width="600"/>
+
+## Usage
+
+### GUI version
+```
+blackjack [OPTION...]
+```
+
+### CLI version
+```
+blackjack --gui=False [OPTION...]
+```
+
+### Options
+
+| Name             | Default | CLI only | Description                                                                                 | 
+|:-----------------|:--------|:---------|:--------------------------------------------------------------------------------------------|
+| `--stack`        | 1000    |          | Initial stack.                                                                              |
+| `--bet`          | 1       |          | Initial bet size.                                                                           |
+| `--n_games`      | 10      | x        | Number of rounds to be played.                                                              |
+| `--ai`           | False   | x        | If True, computer plays instead of you.                                                     |
+| `--count`        | False   | x        | If True, `ai` uses card counting.                                                           |
+| `--loglevel`     | DEBUG   | x        | Adjust amount of logging: DEBUG or INFO.                                                    |
+| `--cards`        |         |          | Determine the first player cards, e.g. `--cards=A,8,K`. Shuffles the shoe after every hand. |
+| `--dealer_cards` |         |          | Determine the first dealer cards. Useful for testing.                                       |
+
+
+## Examples
+Open the GUI version:
+```
+$ blackjack
+```
+
+With the default settings, play 10 rounds of Blackjack without GUI:
+```
+$ blackjack --gui=False
+```
+
+Let the computer play perfect basic game and use card counting technique to bring down the house:
+```
+$ blackjack --n_games=100000 --ai=True --count=True --loglevel=INFO --gui=False
+```
+
+Simulate soft 19 starting hand only:
+```
+$ blackjack --n_games=10000 --ai=True --loglevel=INFO --gui=False --cards=A,8
+```
+
+## Tests
+Install `blackjack-gui` from GitHub and `pytest`:
+```
+$ git clone https://github.com/tukiains/blackjack-gui
+$ cd blackjack-gui/
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip3 install .
+$ pip3 install pytest
+```
+Run unit and integration tests:
+```
+$ pytest-3 tests/unit.py
+$ pytest-3 tests/integration.py
+```
+
+## Basic strategy chart
+<img src="blackjack_gui/images/chart.png" alt="" width="400"/>
+<img src="blackjack_gui/images/chart-symbols.png" alt="" width="258"/>
+
+* Note that 16 vs 10 with 3 or more cards = Stay
+
+## Notes
+* Uses 6 decs and shuffles after 5.
+* Otherwise, rules follow: https://casinohelsinki.fi/en/games/blackjack-eng/.
+* Card images taken from [here](https://code.google.com/archive/p/vector-playing-cards/).
+
+## Licence
+MIT
+
+
