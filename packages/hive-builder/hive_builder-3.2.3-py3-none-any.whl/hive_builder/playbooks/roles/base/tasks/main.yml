@@ -1,0 +1,151 @@
+---
+# common utiility packages.
+- import_tasks: fixed-yum-url.yml
+  when: ansible_distribution != 'Amazon' and hive_yum_url is defined and hive_yum_url != omit
+- import_tasks: growfs.yml
+  when: hive_provider == 'azure' and hive_disk_size is defined
+- name: install nfs utils
+  yum: name=nfs-utils state=present
+  when: groups['nfs_volumes'] | length > 0
+- name: activate nfs service
+  service: name=nfs enabled=yes state=started
+  when: groups['nfs_volumes'] | length > 0 and ansible_distribution == 'Amazon'
+- name: make yum do not update kernel* package
+  lineinfile:
+    path: /etc/yum.conf
+    insertafter: EOF
+    regexp: '^exclude='
+    line: 'exclude=kernel*'
+- name: check kernel version
+  shell: uname -r
+  register: uname_result
+  check_mode: False
+  changed_when: False
+- debug: var=ansible_distribution
+- debug: var=ansible_distribution_release
+- name: update kernel for drbd
+  yum:
+    name: "kernel-{{ '4.14.238-182.422.amzn2' if ansible_distribution == 'Amazon' else
+                    ('4.18.0-348*.el8' if ansible_distribution_release == 'Stream' else
+                     '4.18.0-193*.el8' if ansible_distribution_release == 'Ootpa' else
+                     '4.18.0-305*.el8') }}"
+    disable_excludes: main
+    state: latest
+  when: (ansible_distribution in ['CentOS', 'RedHat'] and (
+         (ansible_distribution_release != 'Stream' and uname_result.stdout is version('4.18.0-305', 'lt')) or
+         (ansible_distribution_release == 'Stream' and uname_result.stdout is version('4.18.0-348', 'lt')))) or
+        (ansible_distribution == 'Amazon' and uname_result.stdout is version('4.14.238-182', 'lt'))
+  notify: require reboot
+  when: hive_mirrored_disk_size is defined
+- name: install packages
+  yum:
+    state: present
+    name:
+      - wget
+      - vim
+      - unzip
+      - telnet
+      - sysstat
+      - strace
+      - tcpdump
+      - lsof
+      - chrony
+      - conntrack-tools
+      - bash-completion
+      - "{{ 'libselinux-python' if ansible_distribution == 'Amazon' else 'python3-libselinux' }}"
+- name: install selinux packages
+  yum:
+    state: present
+    name:
+      # - setroubleshoot
+      - selinux-policy-devel
+  when: hive_safe_selinux != 'disabled'
+- name: set selinux mode
+  selinux:
+    policy: targeted
+    state: "{{ hive_safe_selinux }}"
+  notify: require reboot
+- name: enable services
+  service: "name={{ item }} enabled=yes state=started"
+  with_items:
+    - sysstat
+- name: set hostname
+  hostname:
+    name: "{{ inventory_hostname.split('.')[0] }}"
+- name: check /etc/cloud/ directory
+  stat:
+    path: /etc/cloud
+  register: _etc_cloud_
+- name: preserve hostname setting for ec2
+  lineinfile:
+    line: "preserve_hostname: true"
+    path: /etc/cloud/cloud.cfg
+    state: present
+  when: "_etc_cloud_.stat.exists"
+- name: "set timezone"
+  timezone:
+    name: "{{ hive_timezone }}"
+  when: hive_timezone is defined
+# setting up locale if hive_locale is defined
+- name: install packages for locale
+  yum:
+    name: glibc-common
+    state: latest
+  when: hive_locale is defined
+- name: gather locale info
+  command: localectl
+  check_mode: False
+  changed_when: False
+  register: hive_safe_current_locale
+  when: hive_locale is defined
+- name: "set locale"
+  shell: "localectl set-locale {{ hive_locale }}"
+  when: "hive_locale is defined and not hive_safe_current_locale.stdout.find('System Locale: ' + hive_locale)"
+# setting up sshd parameters
+- name: disable Password Authentication for sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    insertafter: "^#PasswordAuthentication"
+    line: "PasswordAuthentication no"
+- name: disable Challenge Response Authentication for sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ChallengeResponseAuthentication"
+    insertafter: "^#ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+- name: stop sshd Use DNS
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^UseDNS"
+    insertafter: "^#UseDNS"
+    line: "UseDNS no"
+- name: "patch NetworkManager-wait-online.service to waiting for network connectivity specifically"
+  # Avoid Error on network.service:
+  # Bringing up interface eth0:  Error: Connection activation failed: No suitable device found for this connection.
+  copy:
+    src: NetworkManager-wait-online.service.d
+    dest: /usr/lib/systemd/system/
+    mode: 0644
+    directory_mode: 0755
+  # check if HTTP_PROXY environment variable is set or not
+  # we cannnot use
+  #   when: ansible_env.HTTP_PROXY is defined
+  # because it is depends on gather_facts, but if we do "hive setup-hosts -T base" then
+  # skip gather_facts and ansible_env is not set.
+- name: check whether /etc/environment contains HTTP_PROXY
+  command: "grep '^HTTP_PROXY=' /etc/environment"
+  register: check_http_proxy
+  check_mode: no
+  failed_when: no
+  changed_when: no
+- name: ensures /usr/lib/systemd/system/dnf-makecache.service.d dir exists
+  file: path=/usr/lib/systemd/system/dnf-makecache.service.d state=directory
+  when: check_http_proxy.rc == 0
+- name: make dnf-makecache.service use proxy
+  copy:
+    content: |
+      [Service]
+      EnvironmentFile=-/etc/environment
+    dest: /usr/lib/systemd/system/dnf-makecache.service.d/override.conf
+  when: check_http_proxy.rc == 0
