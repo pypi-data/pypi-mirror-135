@@ -1,0 +1,237 @@
+####################
+Localizing flatfiles
+####################
+
+Many documentations are multilingual and constant data will be different for different languages. Hopefully, |project| includes localization of flatfiles.
+
+It handles it similarly as Sphinx handles translating regular documents (``.rst`` files). |project| integrates with Sphinx standard gettext builder (invoked by ``make gettext``), and creates ``constdata.pot`` with extracted values from flatfiles. Extracted strings are translated with the same `Sphinx internationalization <https://www.sphinx-doc.org/en/master/usage/advanced/intl.html>`_ mechanism as the rest of the documentation.
+
+Translatable strings
+********************
+
+Translatable string to be extracted begins with ``_(``, followed by string itself enclosed in single, triple single, double or triple double quotes (``'``, ``'''``, ``"``, ``"""``), and ends with ``)``. Examples::
+
+    _('Automatically generated unique user ID')
+    _("Automatically generated unique user ID")
+    _('''Automatically generated unique user ID''')
+    _("""Automatically generated unique user ID""")
+
+These variants allows you to mark as translatable multiline strings and avoid too much escaping. Examples of valid translatable strings:
+
+::
+
+    _('''Minim nostrud elit aute Lorem aliquip occaecat do eu.
+
+    Duis nulla laborum Lorem fugiat voluptate. Cupidatat sit cupidatat ullamco et exercitation. Lorem sit qui consequat ea id commodo non fugiat amet.
+
+    * Culpa pariatur quis esse elit officia eiusmod sit.
+    * Cillum sit ad tempor cillum proident.''')
+
+::
+
+    _("""Cillum sit ad tempor
+    cillum proident""")
+
+::
+
+    _("""Gettext uses _(" and ") to mark translatable strings.""")
+
+They may appear anywhere in a flatfile. |project| will extract translatable strings from all flatfiles found in :confval:`constdata_root`, not only those used in the docs.
+
+For example, in the file with menu paths, language sensitive are paths themselves and header column name:
+
+.. tabs::
+
+   .. group-tab:: CSV
+
+      .. literalinclude:: ../tests/samples/menu_gettext.csv
+         :caption: menu_gettext.csv
+
+   .. group-tab:: JSON
+
+      .. literalinclude:: ../tests/samples/menu_gettext.json
+         :caption: menu_gettext.json
+
+   .. group-tab:: YAML
+
+      .. literalinclude:: ../tests/samples/menu_gettext.yaml
+         :caption: menu_gettext.yaml
+
+Tutorial
+********
+
+Workflow is identical as if localizing the docs itself.
+
+#. At the project root, create ``_constdata`` folder. External file supported formats are CSV/JSON/YAML. For example, ``menu.csv`` has language sensitive paths and header name:
+
+   .. literalinclude:: ../tests/samples/menu_gettext.csv
+
+#. Invoke standard Sphinx gettext builder. Either by ``make gettext`` or ``sphinx-build -b gettext <source> <output>``.
+
+#. Gettext localization is two-step process. Firstly, it collects all found translatable strings to ``.pot`` files (called message catalog templates). Beside ``.pot``\s created by Sphinx from the documents, a new ``constdata.pot`` file will appear along with them.
+
+   .. code-block::
+      :emphasize-lines: 6
+
+      $ make gettext
+
+      $ cd _build/gettext
+
+      $ ls
+      calling.pot
+      configuration.pot
+      constdata.pot
+      glossary.pot
+      index.pot
+      ...
+
+#. ``constdata.pot``, after a header, contains translatable strings from all flatfiles in ``_constdata`` folder. In your example:
+
+   ::
+
+        #, fuzzy
+        msgid ""
+        msgstr ""
+        "Project-Id-Version: sphinxcontrib-constdata \n"
+        "Report-Msgid-Bugs-To: \n"
+        "POT-Creation-Date: 2021-02-12 11:24+0100\n"
+        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+        "Content-Type: text/plain; charset=UTF-8\n"
+        "Content-Transfer-Encoding: 8bit\n"
+
+        #. In _constdata/menu.csv on header row
+        #: _constdata/menu.csv
+        msgid "Path"
+        msgstr ""
+
+        #. In _constdata/menu.csv on id = FileSaveAs
+        #: _constdata/menu.csv:2
+        msgid "File --> Save As..."
+        msgstr ""
+
+        #. In _constdata/menu.csv on id = FileNew
+        #: _constdata/menu.csv:1
+        msgid "File --> Create and &open new file"
+        msgstr ""
+
+#. As you see, catalog template contains empty ``msgstr`` translations. To actually start a new translation, you have to copy and rename ``constdata.pot`` to ``locales/<language>/LC_MESSAGES/constdata.po``. ``.po`` file is called message catalog and has the same syntax as ``.pot``.
+
+#. Initial copy-rename is easy, but you will have to also update catalog template and catalogs for all languages (rerun extraction, add/delete messages in all catalogs, consult translations). For this reason, we strongly advocate to use tool `sphinx-intl <https://pypi.org/project/sphinx-intl/>`_ that automate this hard work.
+
+   Install the tool::
+
+       $ pip install sphinx-intl
+       $ sphinx-intl
+
+   Start the new translation. If ``.pot``\s are in ``_build/gettex`` and localizing to Czech (cs)::
+
+       $ sphinx-intl update -p _build/gettext -l cs -w 0
+
+   Your project now contains ``constdata.po``.
+
+   .. code-block::
+      :emphasize-lines: 15
+
+      .
+      ├── _build
+      │   └── gettext
+      │       ├── constdata.db
+      │       ├── constdata.pot
+      │       └── index.pot
+      ├── _constdata
+      │   ├── menu_gettext.csv
+      ├── conf.py
+      ├── index.rst
+      └── locales
+          └── cs
+              └── LC_MESSAGES
+                  ├── constdata.mo
+                  ├── constdata.po
+                  ├── index.mo
+                  └── index.po
+
+   (Binary ``.mo`` files are generated from ``.po`` for faster gettext operation and you may safely ignore them source code versioning.)
+
+#. As of this moment, ``constdata.pot`` still has empty translations as in ``constdata.pot``. Supply the translations to ``msgstr``::
+
+        #. In _constdata/menu.csv on header row
+        #: _constdata/menu.csv
+        msgid "Path"
+        msgstr "Cesta"
+
+        #. In _constdata/menu.csv on id = FileSaveAs
+        #: _constdata/menu.csv:2
+        msgid "File --> Save As..."
+        msgstr "Soubor --> Vytvořit a &otevřít nový soubor"
+
+        #. In _constdata/menu.csv on id = FileNew
+        #: _constdata/menu.csv:1
+        msgid "File --> Create and &open new file"
+        msgstr "Soubor --> Uložit jako..."
+
+#. If you update the documentation or constdata files, you need to refresh template and catalogs, and translate new or changed messages. This annoying process can be easily automated with::
+
+    sphinx-build -b gettext source _build/gettext -q && sphinx-intl update -p _build/gettext -l cs -w 0
+
+#. You are done. Build the docs to the new language and all |project| usages will use that localization. E.g.,::
+
+    $ sphinx-build -b html -D language=en . _build/html_cs/
+
+POT creation
+************
+
+.. seealso:: More about PO/POT file format at https://techwriter.documatt.com/2021/gettext-po-format.html.
+
+constdata.dat file
+==================
+
+POT is created under output directory (e.g., ``_build/gettext/``) and its filename is always ``constdata.pot``.
+
+Please note that "make gettext" also displays exact location of the file:
+
+.. code-block::
+   :emphasize-lines: 5
+
+   ...
+   preparing documents... done
+   writing output... [100%] index
+   writing message catalogs... [100%] index
+   writing constdata catalog constdata.pot
+   build succeeded.
+
+Location is record number
+=========================
+
+Location in catalog template (e.g. ``#: _constdata/user-form.csv:2``) is record number in a flatfile, not line number. Line number in JSON and YAML depends on the formatting and differents from record number.
+
+E.g., JSON containing 2 records on 10 "physical" lines.
+
+.. literalinclude:: ../tests/samples/menu_gettext.json
+   :caption: menu_gettext.json
+
+Human location
+==============
+
+Generated POT also contains extracted comments (``#.``) with "human" location.
+
+::
+
+    #. In _constdata/menu.csv on header row
+    #: _constdata/menu.csv
+    msgid "Path"
+    msgstr ""
+
+    #. In _constdata/menu.csv on id = FileSaveAs
+    #: _constdata/menu.csv:2
+    msgid "File --> Save As..."
+    msgstr ""
+
+
+..     #: _constdata/user-form.csv:3
+..     msgctxt "username"
+..     msgid "Username is email entered by the user during signing-up"
+..     msgstr ""
+
+.. .. topic:: What are msgctxt?
+
+..    It is not unusual that many strings like "file", "list", or "print" appear in very different meanings. For example, "list" as a noun in "display list of values" vs. a verb in "list values to a file". Translation of two "list" words may be different. To distinguish between the same spelled strings, a translator may consider their location (CSV file and line) and context (row ID).
