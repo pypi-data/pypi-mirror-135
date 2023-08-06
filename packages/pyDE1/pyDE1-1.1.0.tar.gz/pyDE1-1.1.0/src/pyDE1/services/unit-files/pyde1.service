@@ -1,0 +1,34 @@
+[Unit]
+Description=Main controller processes for pyDE1
+Wants=mosquitto.service
+After=syslog.target mosquitto.service
+
+[Service]
+# This needs to be the same user that "owns" the database
+User=pyde1
+Group=pyde1
+
+Environment="PYDE1_PATH=/home/pyde1/deploy/pyde1-devel/src/pyDE1"
+
+Environment="SEARCH_DIR=/var/lib/pyde1"
+Environment="SUFFIX=.btid"
+ExecStartPre=/usr/local/bin/pyde1-disconnect-btid.sh
+ExecStopPost=/usr/local/bin/pyde1-disconnect-btid.sh
+
+# PYTHONPATH is likely only needed for development
+Environment="PYTHONPATH=/home/pyde1/deploy/pyde1-devel/src"
+
+# Can be used as $PROGRAM_ARG_LIST at the end of ExecStart to specify an alternate
+# Environment="PROGRAM_ARG_LIST=-c /usr/local/etc/pyde1/pyde1.conf"
+
+# If needed, change the path to that of the venv's Python
+# The executable name can't be a variable
+ExecStart=/home/pyde1/venv/pyde1/bin/python3 ${PYDE1_PATH}/run.py
+
+Restart=always
+StandardError=journal
+# Sets the process name to that of the service
+SyslogIdentifier=%N
+
+[Install]
+WantedBy=multi-user.target
