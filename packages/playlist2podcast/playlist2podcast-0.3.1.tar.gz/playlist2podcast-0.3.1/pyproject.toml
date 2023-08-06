@@ -1,0 +1,62 @@
+[tool.mypy]
+python_version=3.7
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
+
+[tool.pytest.ini_options]
+testpaths = [
+"tests",
+]
+
+
+[tool.pycln]
+all = true
+
+[tool.poetry]
+name = "playlist2podcast"
+version = "0.3.1"
+description = "Creates podcast feed from playlist URL"
+readme = "README.md"
+repository = "https://codeberg.org/PyYtTools/Playlist2Podcasts"
+authors = ["marvin8 <marvin8@tuta.io>"]
+license = "AGPL-3.0-or-later"
+
+[tool.poetry.urls]
+"Changelog" = "https://codeberg.org/PyYtTools/Playlist2Podcasts/src/branch/main/CHANGELOG.md"
+
+[tool.poetry.scripts]
+playlist2podcast = "playlist2podcast.command_line:start"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+arrow = "^1.2.1"
+httpx = "^0.21.3"
+feedgen = "^0.9.0"
+youtube_dl = "^2021.12.17"
+Pillow = "^9.0.0"
+rich = "^11.0.0"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.17.0"
+pylint = "^2.12.2"
+flake8 = "^4.0.1"
+black = "^21.12b0"
+flake8-eradicate = "^1.2.0"
+radon = "^5.1.0"
+dlint = "^0.12.0"
+mypy = "^0.931"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
