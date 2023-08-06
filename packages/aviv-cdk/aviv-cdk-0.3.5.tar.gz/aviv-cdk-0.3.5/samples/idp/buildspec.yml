@@ -1,0 +1,27 @@
+version: 0.2
+
+env:
+  variables:
+    PIP_FLAGS: --disable-pip-version-check --quiet --no-warn-conflicts
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+      nodejs: 12
+    commands:
+      - npm install -g aws-cdk
+      - TAG=$(git name-rev --name-only HEAD | cut -d/ -f2)
+  pre_build:
+    commands:
+      # Install Aviv CDK
+      - pip install ${PIP_FLAGS} .
+  build:
+    commands:
+      - cdk -a 'python3 app_idp.py' synth
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: cdk.out/
+  discard-paths: no
