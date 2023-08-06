@@ -1,0 +1,156 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "types" : {
+      "nullable_string" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          }
+        ]
+      },
+      "string_number_boolean_null" : {
+        "oneOf" : [
+          {
+            "type" : "string"
+          },
+          {
+            "type" : "number"
+          },
+          {
+            "type" : "boolean"
+          },
+          {
+            "type" : "null"
+          }
+        ]
+      }
+    },
+    "register_type" : {
+      "type" : "string",
+      "enum" : [
+        "input",
+        "output",
+        "attribute",
+        "setting"
+      ]
+    },
+    "register_data_type" : {
+      "type" : "string",
+      "enum" : [
+        "char",
+        "uchar",
+        "short",
+        "ushort",
+        "int",
+        "uint",
+        "float",
+        "bool",
+        "string",
+        "enum",
+        "color",
+        "button",
+        "switch"
+      ]
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Device uuid v4 identifier. This identifier is unique"
+    },
+    "address" : {
+      "type" : "number",
+      "description" : "Device communication address"
+    },
+    "serial_number" : {
+      "type" : "string",
+      "description" : "Device unique serial number"
+    },
+    "max_packet_length" : {
+      "type" : "number",
+      "description" : "Device maximum supported packet length"
+    },
+    "hardware_manufacturer" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "hardware_model" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "hardware_version" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "firmware_manufacturer" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "firmware_version" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "registers" : {
+      "type" : "array",
+      "description" : "Device registers",
+      "items" : {
+        "type" : "object",
+        "uniqueItems" : true,
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Register uuid v4 identifier. This identifier is unique"
+          },
+          "address" : {
+            "type" : "number",
+            "description" : "Register communication address"
+          },
+          "type" : {
+            "$ref" : "#/definitions/register_type"
+          },
+          "data_type" : {
+            "$ref" : "#/definitions/register_data_type"
+          },
+          "actual_value" : {
+            "$ref" : "#/definitions/types/string_number_boolean_null",
+            "default" : null
+          },
+          "expected_value" : {
+            "$ref" : "#/definitions/types/string_number_boolean_null",
+            "default" : null
+          },
+          "pending" : {
+            "type" : "boolean",
+            "default" : false
+          }
+        },
+        "required" : [
+          "id",
+          "address",
+          "type",
+          "data_type",
+          "actual_value",
+          "expected_value"
+        ]
+      }
+    }
+  },
+  "required" : [
+    "id",
+    "address",
+    "serial_number",
+    "max_packet_length",
+    "hardware_manufacturer",
+    "hardware_model",
+    "hardware_version",
+    "hardware_mac_address",
+    "firmware_manufacturer",
+    "firmware_version",
+    "registers"
+  ]
+}
