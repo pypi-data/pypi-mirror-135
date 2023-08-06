@@ -1,0 +1,8 @@
+#!/bin/bash
+SCRIPT_HOME="$( cd "$( dirname "$0" )" && pwd )" 
+
+name="LPC-Link"
+vidpid="0x0471:0xdf55"
+image="$SCRIPT_HOME/LPCXpressoWIN.enc"
+
+$SCRIPT_HOME/dfu_boot -s $0 -n $name -v $vidpid  -i $image $*

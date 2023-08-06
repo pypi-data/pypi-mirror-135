@@ -1,0 +1,57 @@
+# Define some simple rules for LPCXpresso supported USB Devices
+# Each rules simply makes the device world writable when connected
+# thus avoiding the need to run the debug drivers as root
+
+# Red Probe
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="ad08", MODE="0666"
+# RDB-Link
+SUBSYSTEM=="usb", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0001", MODE="0666"
+# Red Probe+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0003", MODE="0666"
+
+# Redlink
+KERNEL=="hidraw*", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0007", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0008", MODE="0666"
+
+# Redlink (Bridged)
+KERNEL=="hidraw*", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0006", ENV{ID_USB_INTERFACE_NUM}="00", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0006", ENV{ID_USB_INTERFACE_NUM}="03", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0006", ENV{ID_USB_INTERFACE_NUM}="04", MODE="0666"
+SUBSYSTEM=="tty",, ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0006", ENV{ID_USB_INTERFACE_NUM}="01", MODE="0666"
+SUBSYSTEM=="tty",, ATTRS{idVendor}=="21bd", ATTRS{idProduct}=="0006", ENV{ID_USB_INTERFACE_NUM}="02", MODE="0666"
+
+################
+# NXP CMSIS-DAP
+KERNEL=="hidraw*", ATTRS{idVendor}=="0d28", ATTRS{idProduct}=="0204", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0d28", ATTRS{idProduct}=="0019", MODE="0666"
+# NXP LPC-Link2 CMSIS-DAP
+KERNEL=="hidraw*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="0090", MODE="0666"
+# NXP (Japan)
+KERNEL=="hidraw*", ATTRS{idVendor}=="2786", ATTRS{idProduct}=="f00b", MODE="0666"
+# LPC-Link (CMSIS-DAP)
+KERNEL=="hidraw*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="001d", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="0132", MODE="0666"
+# MCU-Link (CMSIS-DAP)
+KERNEL=="hidraw*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="0143", MODE="0666"
+
+################
+# NXP VCOM
+# LPC_Link (VCOM)
+KERNEL=="ttyACM*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="0090", MODE="0666"
+# MCU-Link (VCOM)
+KERNEL=="ttyACM*", ATTRS{idVendor}=="1fc9", ATTRS{idProduct}=="0143", MODE="0666"
+
+################
+# KEIL CMSIS-DAP
+KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f001", MODE="0666"
+KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f002", MODE="0666"
+# ULINK2
+KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="2722", MODE="0666"
+# ULINK-ME
+KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="2723", MODE="0666"
+
+
+# FTDI adapters (i.e. USB serial ports)
+# Generically set to world read/write. If not, ftdi driver aborts when trying to 
+# scan for debug adapters.
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", MODE="0666"

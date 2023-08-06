@@ -1,0 +1,142 @@
+<!-- Outer is HostStrings, with one toHost per unique package -->
+<!ELEMENT HostStrings (toHost*)>
+  <!-- toHost file. May contain more than one tohost top level
+       group. tohost selected by processor and/or application.
+       The includeName attr is the name for the header file
+       to be included by the target application. Default: tohost.h
+       The processor attr may be "any" for any processor, else
+       a processor name. The shared attr is true if the output
+       mechanism is to be shared with another package, such as
+       RTOS. The forApplication attr names an application if
+       for a specific one, else is "any". The updated attr is
+       the date of last update. The updatedBy is the person who
+       last updated.					-->
+  <!ELEMENT toHost (description*|channelGroup*)> <!ATTLIST toHost
+		id		ID	#IMPLIED
+		includeName	CDATA	#IMPLIED
+		processor	CDATA	"any"
+	        shared		(true|false) "false"
+		forApplication	CDATA	"any"
+		updated		CDATA	#IMPLIED
+		updatedBy	CDATA	#IMPLIED>
+    <!-- description is used to add information about this channel
+	 group. 						-->
+    <!ELEMENT description (#PCDATA)>
+    <!-- channelGroups define the processing rules for the encoding
+	 channles. For SWV, this is the register/address index. For
+	 DCC, this is the prepended index. The group may allocate for
+	 one channel or a set of channels. Any string which uses
+	 other than the default must be within the range allocated.
+	 The id attr specifies a name for the group. This is used
+	 for auto-macro naming. The start and end attrs specify
+	 the channel number range inclusive.			-->
+    <!ELEMENT channelGroup (string*,stringEnum*,sendto)> <!ATTLIST channelGroup
+		id		ID	#REQUIRED
+		start		CDATA	#REQUIRED
+		end		CDATA	#IMPLIED>
+      <!-- string defines a host string. The string content is the format
+	   string, explained in a comment at the bottom of this file.
+	   The index attr is the index number packed into the upper 8
+	   bits of the word sent back (not channel number). The packing
+	   attr contains the string explaining how values are packed into
+	   the word (lower 3 bytes) and/or extra channels. The packing format
+	   is a list of value sizes, using b, h, w (byte, half, word). The 
+	   1st values must fit into 24 bits. If "w" is used, only the bottom
+	   24 bits are used if in the 1st word. Only one additional word
+	   may be used max (and packingAdd indicates which register it goes
+	   into. The most common examples are "bbb", "bh", "hb", and "w";
+	   not that order is from lowest byte up to 3rd byte.
+	   When additional data is used, it will be something like "bhw",
+	   which is byte and half in main word, and then a word (full
+	   32-bits) in 2nd word. See details under format comment 
+	   regarding how the strings are built and how the data is 
+	   unpacked. The name attr contains the C/C++ macro
+	   name that the target application will see in the generated
+	   header file; if not provided, it will be generated from the
+	   channel group id and this element's index. The channel attr
+	   optionally overrides the default channel number (start from
+	   channel group). PackingAdd indicates if an extra word
+           should be waited for; if present, it is the channel to wait
+	   for.							-->
+      <!ELEMENT string (#PCDATA)> <!ATTLIST string
+		index		ID	#REQUIRED
+		packing		CDATA	#REQUIRED
+		packingAdd      CDATA 	#IMPLIED
+		name		CDATA	#IMPLIED
+		channel		CDATA	#IMPLIED>
+      <!-- stringEnum is used to define enumeration lists. These allow
+	   returned data to be displayed as a string from a value. Special
+	   consideration is given for out of range values. The name tags
+	   are the name=value sets. Each one is defined with a value or
+	   value range, and then a name following. 		-->
+      <!ELEMENT stringEnum (name*)> <!ATTLIST stringEnum
+		id		ID	#REQUIRED>
+	<!ELEMENT name (#PCDATA)> <!ATTLIST name
+		value		CDATA	#IMPLIED
+		endValue	CDATA	#IMPLIED>
+      <!-- sendTo is used to define what to do with the data as it
+  	   arrives and is converted to a string. More than one output
+	   may be selected. Also, there may be a channelGroup setting
+	   and then some local strings can override to their own
+	   settings. The SH stdout and stderr are sent through the
+	   semihosting channel and go wherever those are directed.
+	   Log attr goes whereever log messages go (such as the 
+	   Eclipse log console). These will be preceded with Hx:
+	   where x is one of 'n', 'w', or 'e', based on attr.
+	   Eclipse may choose to route those specially, such as
+	   popping a dialog if error, and/or sending to a console.
+	   Note that the file attr may be a relative or absolute
+	   path. If relative, it is importnat to know what the
+	   working directory of the stub is. Dll attr is used to 
+	   invoke a DLL and pass the data it a function called
+	   ToHost, which takes 5 arguments: tohost_id, channelgroup_id,
+	   string_index, string_name, formatted string. Each is a
+	   const char*.						-->
+      <!ELEMENT sendTo (#PCDATA)> <!ATTLIST sendTo
+		SH_stdout	(true|false) "false"
+		SH_stderr	(true|false) "false"
+		log		(note|warning|error) "note"
+		file		CDATA	#IMPLIED
+		dll		CDATA	#IMPLIED>
+
+  <!-- FORMAT rules are defined here. The format rules are for the
+       strings. The format rules tell you how the string is interpreted.
+       These are not XML, but a variant of printf() control strings.
+       The basic control format (interspered in the text, just as
+       in printf is:
+		%[inf]ctrl
+       where inf is the information for value extraction and processing,
+       and ctrl is the printf style controls plus a few extensions.
+       inf is defined as: [-] [.15] b|h|w [0|1|2|+1|+2] [=exp]
+       such that - is optional and means sign extend; . is optional and
+       means treat the value as fractional, with the value following
+       being the Q value (and if preceding -, then signed, e.g. ".-15"). 
+       Note that a fractional will be converted to a floating point number, 
+       so a floating point printf ctrl should be used (e.g. f or g). The 
+       next char is the extract size of b=byte, h=half, w=word (or 24-bits). 
+       The next is an optional offset in the word as 0 (LSB), 1, 2, or +1 
+       for next word (packAdd must be set). See packing order for details.
+       The optional expression transforms the value extracted by using
+       an expression. exp may use any of: +, -, *, /, <<, >>, &, |, (, ),
+       and also logicals (<, >, ==, and !=) and uses "a" for the argument 
+       value.
+       An example text string is:
+	Shaft angle is %[-h]d, pressure is %[b=a*128]u
+       This extracts a half word at 0 (default since not specified),
+       sign extends it, and displays as an integer. This also extracts
+       a byte at offset 2 (default since not specified), multiplies by
+       128, and displays as an unsigned int.
+       Another example is;
+	Sensor reading = %[b1]X, status reg=%[w0]04X
+       This reads a byte at offset 1 and displays in hex. Then it
+       extracts a word at 0 (only gets 3 bytes though) and displays
+       in hex (with leading zeros).
+       Ctrl uses all the normal control values of printf, but add:
+	b = binary.
+	{name} = convert value to enumeration string from stringEnum.
+	      Name in {} is enunmeration id (as name or number).
+       An example (where stringEnum 1 defines Left=0,Right=1,Up=2,Down=3)
+	Direction is %[b=a&3]{1}
+       Note that an out of range value is not possible in this case. But,
+       if so, it can be accomodated by the stringEnum definition.  -->
+ 
