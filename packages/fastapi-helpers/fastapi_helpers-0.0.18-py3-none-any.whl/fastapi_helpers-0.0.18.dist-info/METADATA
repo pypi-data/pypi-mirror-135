@@ -1,0 +1,89 @@
+Metadata-Version: 2.1
+Name: fastapi-helpers
+Version: 0.0.18
+Summary: An utils package for fastapi
+Home-page: https://github.com/finalsa/fastapi-utils
+Author: Luis Jimenez
+Author-email: luis@finalsa.com
+License: MIT
+Keywords: fastapi,sqlalchemy,ormar,pydantic
+Platform: UNKNOWN
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: aiosqlite (>=0.17.0)
+Requires-Dist: argon2-cffi (>=21.3.0)
+Requires-Dist: ormar (>=0.10.24)
+Requires-Dist: pydantic (>=1.8.2)
+Requires-Dist: fastapi (>=0.70.0)
+Requires-Dist: typing-extensions (<3.10.0.3,>=3.7)
+Requires-Dist: watchtower (>=2.0.1)
+Requires-Dist: boto3 (>=1.20.3)
+Provides-Extra: crypto
+Requires-Dist: cryptography ; extra == 'crypto'
+Provides-Extra: mysql
+Requires-Dist: aiomysql ; extra == 'mysql'
+Requires-Dist: pymysql ; extra == 'mysql'
+Provides-Extra: orjson
+Requires-Dist: orjson ; extra == 'orjson'
+Provides-Extra: postgresql
+Requires-Dist: asyncpg ; extra == 'postgresql'
+Requires-Dist: psycopg2-binary ; extra == 'postgresql'
+Provides-Extra: sqlite
+Requires-Dist: aiosqlite ; extra == 'sqlite'
+
+# Fastapi Helpers
+
+This pip packages will help you to make your life easier when working with fastapi and ormar.
+
+For installing this package:
+
+```bash
+pip install fastapi-helpers
+```
+
+If you need a default settings for your app, it includes an implemntation BaseSettings of pydantic.
+
+```python
+from fastapi_helpers import DefaultSettings
+from utils import env_path
+from typing import Optional
+
+class Settings(DefaultSettings):
+    app_name = "your-app-name"
+    redis_url: Optional[str] = 'redis://localhost:6379'
+    version: Optional[str] = '1.0.0.0'
+    port: Optional[str] = "8000"
+    env: Optional[str] = "dev" #dev, test, prod
+
+
+settings = Settings(env_path)
+```
+
+If you need a logger, it includes an implemntation a colored console, and in prod envs it will log to aws with the help of watchtower.
+
+```python
+from fastapi_helpers import DefaultLogger
+from .config import settings
+
+logger = DefaultLogger("your-app-name", settings)
+```
+
+If you need to connect to a db super fast, the only thing you need to do is to:
+
+```python
+from fastapi_helpers import DbConfig
+from core.config import settings
+from core.logger import logger
+
+db_config = DbConfig(settings, logger)
+```
+
+The are other tools for making the usage of ormar and fastapi even easier.
+
+
+I would realy like to make this tools bigger, but I´m looking for help for documenting this package.
+
+
+Happy codding!
+
