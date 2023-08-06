@@ -1,0 +1,121 @@
+#details-block.desactive {
+    height: 0px;
+    overflow: hidden;
+}
+#details-block.active {
+    height: auto;
+}
+.date {
+    border: 0px solid #ccc;
+    font-size: inherit;
+    padding: 0;
+    text-align: left;
+    width: auto;
+    box-shadow: 0 0 0px #eee inset;
+}
+.portaltype-event #fieldset-default > .field {
+    background: #f9f9f9 none repeat scroll 0 0;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    float: left;
+    padding: 1em;
+    width: 100%;
+}
+
+.template-event_booking{
+    #content-core{
+        & > div[class*="taxonomy"]{
+            display: none;
+        }
+        & > div:nth-child(2){
+            display: inline-block!important;
+            font-size: 25px;
+            text-transform: uppercase;
+            padding: 1rem 0;
+            font-family: @font-title;
+            margin: 1rem 0px 1rem 0;
+        }
+        img{
+            display: block;
+        }
+        h1{
+            margin-bottom: 0;
+        }
+        #details-button{
+            font-size: 20px;
+            cursor: pointer;
+            padding: 1rem 0;
+            font-weight: bold;
+            &:before{
+                content: "\E877";
+                font-family: fontello;
+                padding-right: 7px;
+            }
+            &:after{
+                content: "...";
+            }
+        }
+        .event-booking{
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.4;
+            h1{
+                order: -2;
+            }
+            .all-dates{
+                order: -1;
+            }
+            .text{
+                margin: 1.5rem 0;
+            }
+            .booking-below{
+                margin: 2rem 0;
+                text-align: center;
+                .ticketing{
+                    padding: 1rem 4rem;
+                    background:#110441;
+                    color:#fff;
+                    font-size: 21px;
+                    margin: 2rem 0 0 0;
+                }
+            }
+            #details-block{
+                display: flex;
+                flex-wrap: wrap;
+                & > div[class*="taxonomy"]{
+                    &:after{
+                        content: "|";
+                        margin: 0 1rem;
+                    }
+                  &:last-child{
+                        content: "";
+                    }
+                }
+                .event_contacts{
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    margin: 1rem 0;
+                    .label{
+                        margin-left: 0;
+                    }
+                }
+            }
+            .documentFirstHeading{
+                font-weight: 500;
+            }
+            .organizer, .all-dates, a{
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 900px){
+    .template-event_booking{
+        #content-core{
+            padding: 0 1rem;
+        }
+    }
+}

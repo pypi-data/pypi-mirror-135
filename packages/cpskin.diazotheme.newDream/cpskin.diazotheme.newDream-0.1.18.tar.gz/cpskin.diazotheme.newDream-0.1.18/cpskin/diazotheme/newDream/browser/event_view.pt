@@ -1,0 +1,208 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone.app.event">
+  <body>
+
+    <metal:main fill-slot="main">
+    <metal:block define-macro="main">
+
+    <tal:def tal:define="data python:view.data; excludes view/excludes">
+    <div tal:replace="structure provider:plone.abovecontenttitle" />
+      <metal:title define-slot="content-title">
+      </metal:title>
+      <div tal:replace="structure provider:plone.belowcontenttitle" />
+
+      <div tal:replace="structure provider:plone.abovecontentbody" />
+        <div id="content-core">
+          <metal:text define-slot="content-core" tal:content="nothing">
+          Page body text
+          </metal:text>
+        </div>
+
+
+      <img tal:attributes="src string:${data/url}/@@images/image/banner-event">
+
+      <tal:condition tal:define='taxonomies python:view.get_taxonomies()'
+                    tal:condition='taxonomies'>
+      <tal:loop tal:repeat="taxonomy taxonomies">
+        <div tal:content='taxonomy/value' tal:attributes="class taxonomy/id"></div>
+      </tal:loop>
+      </tal:condition>
+
+      <metal:comment tal:content="nothing">
+      If you write a custom title always use
+      <h1 class="documentFirstHeading"></h1> for it.
+      </metal:comment>
+      <h1 metal:use-macro="context/kss_generic_macros/macros/generic_title_view">
+        Generic KSS Title. Is rendered with class="documentFirstHeading".
+      </h1>
+
+      <tal:organizer tal:define="organizer view/get_organizer" tal:condition="organizer">
+        <a target="_blank" class="organizer" tal:attributes="href organizer/absolute_url" tal:content="organizer/Title"/>
+      </tal:organizer>
+
+      <div class="all-dates"
+           tal:define="next_occs view/next_occurrences;
+      select_next_occs python: next_occs[:3];
+      all_occs view/num_total_occurrences;
+      has_multiple_occs python:len(next_occs) > 1 or all_occs > 1">
+        <tal:cond condition="python:'date' not in excludes and not has_multiple_occs">
+          <span class="date" tal:define="start_tzname data/timezone;
+          start_utcdelta python:data.start.tzinfo.utcoffset(data.start);
+          start_utcoffset python:(start_utcdelta.days*86400+start_utcdelta.seconds)*100/60/60;">
+            <tal:date replace="structure python:view.formatted_date(context)"/>
+            <span class="timezone" tal:condition="start_tzname">
+              (<tal:tzname replace="start_tzname">timezone name</tal:tzname>
+              / UTC<tal:tzoffset replace="start_utcoffset"/>)
+            </span>
+          </span>
+        </tal:cond>
+
+        <tal:condi condition="python:'occurrences' not in excludes and has_multiple_occs">
+          <div
+            class="dates"
+            tal:repeat="occ select_next_occs"
+            tal:condition="select_next_occs">
+            <tal:def define="this_is_occ python: occ.absolute_url() == context.absolute_url()">
+            <a class="item-date" tal:attributes="href occ/absolute_url" tal:omit-tag="this_is_occ">
+              <div tal:omit-tag="not: this_is_occ">
+                <tal:date replace="structure python:view.formatted_date(occ)"/>
+              </div>
+            </a>
+            </tal:def>
+          </div>
+          <div
+            class="closed-event"
+            i18n:translate="event_is_over"
+            tal:condition="not: select_next_occs">
+            This event is over.
+          </div>
+          <a i18n:translate="" class="all-dates" tal:attributes="href string:${view/event_context/absolute_url}/@@event_listing">
+            All dates
+          </a>
+        </tal:condi>
+      </div>
+
+
+      <tal:location tal:define="location view/get_location" tal:condition="location">
+        <a target="_blank" class="location" tal:attributes="href location/absolute_url" tal:content="location/Title"/>
+      </tal:location>
+
+      <div class="text" tal:condition="data/text" tal:content="structure data/text"></div>
+
+      <div class="booking">
+        <div class="header" i18n:translate="">Booking</div>
+
+        <div class="booking-type" tal:condition="view/has_booking">
+          <span class="label" i18n:translate="">Booking type</span>
+          <div tal:replace="view/get_booking_type" />
+        </div>
+
+        <div class="booking-price"
+             tal:define="booking_price context/booking_price | nothing"
+             tal:condition="booking_price">
+          <span class="label" i18n:translate="">Price</span>
+          <div tal:replace="booking_price" />
+        </div>
+
+        <tal:booking tal:define="booking_url context/booking_url | nothing"
+            tal:condition="booking_url">
+          <a target="_blank" class="ticketing" tal:attributes="href booking_url" i18n:translate="">
+            Ticketing
+          </a>
+        </tal:booking>
+      </div>
+
+      <div class="details">
+        <div class="header toggle-button" id="details-button" i18n:translate="">More details</div>
+        <div id="details-block" class="desactive">
+          <div class="event_contacts" tal:define="contact view/get_contact" tal:condition="contact">
+            <div class="label" i18n:translate="">Contact</div>
+            <a class="event_title" target="_blank" tal:attributes="href contact/absolute_url" tal:content="contact/Title"/>
+              <tal:loop tal:repeat="phone python:view.get_phone_or_cellphone(contact)">
+              <a class="event_tel" tal:condition="phone" href="" tal:attributes="href string:tel:${phone/raw}">
+                <div tal:replace="phone/formated"></div>
+              </a>
+              </tal:loop>
+              <a class="event_website" target="_blank" tal:replace="structure python:view.get_website(contact)"
+                                       tal:condition="python:view.get_website(contact)" />
+          </div>
+
+          <tal:cond condition="python:'event_url' not in excludes">
+          <tal:cond condition="data/event_url">
+          <div class="event-url">
+            <div class="label" i18n:translate="event_url">Web</div>
+            <tal:span>
+            <a href="" tal:attributes="href data/event_url" i18n:translate="external_website" target="_blank">Visit external website</a>
+            </tal:span>
+          </div>
+          </tal:cond>
+          </tal:cond>
+
+          <tal:cond define="mail data/contact_email; name data/contact_name;" tal:condition="python:name or mail">
+          <div class="contact-name">
+            <div class="label" i18n:translate="contact_name">Contact Name</div>
+            <div>
+              <a class="email fn" tal:condition="mail" tal:attributes="href string:mailto:${mail}" tal:content="name"/>
+                <span class="fn" tal:condition="not:mail" tal:content="name"/>
+            </div>
+          </div>
+          </tal:cond>
+
+          <tal:cond condition="data/contact_phone">
+          <div class="contact-phone" tal:define="phone python: view.get_formatted_phone(data.contact_phone)" >
+            <div class="label" i18n:translate="contact_phone">Contact Phone</div>
+            <a class="tel" tal:condition="phone" href="" tal:attributes="href string:tel:${phone/raw}">
+              <div tal:replace="phone/formated"></div>
+            </a>
+          </div>
+          </tal:cond>
+
+          <div class="subjects">
+            <tal:cond condition="python:'subjects' not in excludes">
+            <tal:cond condition="data/subjects">
+            <div class="subject" itemprop="eventType" tal:repeat="item data/subjects" tal:content="item"/>
+            </tal:cond>
+            </tal:cond>
+            </div>
+
+            <tal:cond condition="python:'ical' not in excludes">
+            <div class="event-calendar">
+              <div class="label" i18n:translate="heading_add_to_calendar">Add event to calendar</div>
+              <tal:span tal:define="here_url context/@@plone_context_state/object_url;
+              portal_url context/@@plone_portal_state/portal_url;">
+              <a href="#" tal:attributes="href string:$here_url/ics_view" title="Download this event in iCal format" i18n:attributes="title title_add_to_ical;">
+                <img src="" alt="" tal:attributes="src string:${portal_url}/++resource++plone.app.event/icon_export_ical.png"/>
+                <span i18n:translate="label_add_to_ical">iCal</span>
+              </a>
+              </tal:span>
+            </div>
+            </tal:cond>
+
+            <tal:cond condition="data/attendees|nothing">
+            <div class="attendees">
+              <div class="label" i18n:translate="contact_attendees">Attendees</div>
+              <div itemprop="attendee" class="attendee" tal:repeat="item data/attendees" tal:content="item"/>
+              </div>
+            </tal:cond>
+
+            <div class="partners" tal:define="partners view/get_partners" tal:condition="partners">
+              <div class="label" i18n:translate="">Partners</div>
+              <div class="partner" tal:repeat="partner partners">
+                <a target="_blank" tal:attributes="href partner/absolute_url" tal:content="partner/Title"/>
+              </div>
+            </div>
+            </div>
+      </div>
+
+      <div tal:replace="structure provider:plone.belowcontentbody" />
+    </tal:def>
+    </metal:block>
+    </metal:main>
+
+  </body>
+</html>

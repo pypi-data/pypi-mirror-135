@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:css="http://namespaces.plone.org/diazo/css"
+       xmlns:xhtml="http://www.w3.org/1999/xhtml"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <!-- The condition makes sure that theme is only applied when served in the
+       plone main_template. This is necessary for functional edit popups in
+       Tiny, for example. -->
+  <theme href="++theme++plone/index.html" css:if-content="#visual-portal-wrapper"/>
+
+  <!-- Rules from diazotheme.frameworks -->
+  <xi:include href="/++theme++plone/rules/head/ie-classes.xml"/>
+  <xi:include href="/++theme++plone/rules/head/base.xml"/>
+  <xi:include href="/++theme++plone/rules/head/theme.xml"/>
+  <xi:include href="/++theme++plone/rules/utility/responsify.xml"/>
+
+  <!-- Rules from cpskin.theme -->
+  <xi:include href="/++theme++cpskin.theme.base/rules/head.xml"/>
+  <xi:include href="/++theme++cpskin.theme.base/rules/footer.xml"/>
+  <xi:include href="/++theme++cpskin.theme.base/rules/content.xml"/>
+  <xi:include href="/++theme++cpskin.theme.base/rules/login.xml"/>
+  <xi:include href="/++theme++cpskin.theme.base/rules/annuaire.xml"/>
+
+  <!-- Our own rules -->
+  <xi:include href="/++theme++cpskin.diazotheme.newDream/rules/structures.xml"/>
+  <xi:include href="/++theme++cpskin.diazotheme.newDream/rules/header.xml"/>
+  <xi:include href="/++theme++cpskin.diazotheme.newDream/rules/content.xml"/>
+  <xi:include href="/++theme++cpskin.diazotheme.newDream/rules/footer.xml"/>
+
+  <!-- Copy over the content -->
+  <replace css:theme="body" css:content="body" />
+
+</rules>

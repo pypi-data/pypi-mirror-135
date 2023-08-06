@@ -1,0 +1,28 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:plone="http://namespaces.plone.org/plone"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           xmlns:cmf="http://namespaces.zope.org/cmf"
+           i18n_domain="cpskin">
+
+    <!-- Overrides folder -->
+    <include package="z3c.jbot" file="meta.zcml" />
+    <browser:jbot
+        directory="static/overrides"
+        layer="cpskin.diazotheme.newDream.interfaces.ICPSkinNewDreamLayer" />
+
+    <!-- Dependencies -->
+    <include package="cpskin.theme" />
+
+    <include package=".browser" />
+    <include package=".viewlets" />
+
+    <include file="profiles.zcml" />
+
+    <!-- Theme -->
+    <plone:static
+        directory="static"
+        name="cpskin.diazotheme.newDream"
+        type="theme" />
+
+</configure>
