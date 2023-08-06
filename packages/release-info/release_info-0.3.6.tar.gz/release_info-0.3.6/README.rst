@@ -1,0 +1,217 @@
+
+************
+release-info
+************
+
+.. image:: https://sourceforge.net/p/release-info/code/ci/default/tree/_doc/_static/license.svg?format=raw
+   :target: https://opensource.org/licenses/MIT
+
+.. image:: https://sourceforge.net/p/release-info/code/ci/default/tree/_doc/_static/pypi.svg?format=raw
+   :target: https://pypi.org/project/release-info/
+
+.. image:: https://sourceforge.net/p/oitnb/code/ci/default/tree/_doc/_static/oitnb.svg?format=raw
+   :target: https://pypi.org/project/oitnb/
+
+.. image:: https://sourceforge.net/p/ryd/code/ci/default/tree/_doc/_static/ryd.svg?format=raw
+   :target: https://pypi.org/project/ryd/
+
+For various reasons you might want to know which Python versions are "current":
+
+- provide a list of pyXY targets to tox
+- remove a no longer supported version of Python from the .whl files you generate
+  to upload to PyPI
+- determine which 'Programming Language :: Python ::' classifiers to include in your
+  package information
+- check if you have the latest micro version of a Python installed on all of your servers
+
+extracting this kind of information from various PEPs (that often have  slightly different
+formats), python.org and other web pages, is cumbersome. This package both provides a commandline
+utility ``python_release_info`` that you can use in scripts, makefiles, etc. and a programmatic
+interface to get to release information.
+
+The release information is retrieved from the internet and can be updated e.g.
+on a daily basis, without having update the package itself. A Python based build script can
+check if one or more new versions are available for download and take action accordingly.
+Pre-release information can be queried as well.
+
+The following is a commandline session from March 28th, 2020 ( which you can simulate by specifying ``--dd 2020-03-28``)::
+
+  $ /opt/python/3.8.2/bin/python -m venv --copies /opt/util/pri
+  $ source /opt/util/pri/bin/activate
+  (pri) $ pip install -U -q pip
+  (pri) $ pip install -q release_info
+  (pri) $ python_release_info current
+  2.7.17
+  3.5.9
+  3.6.10
+  3.7.7
+  3.8.2
+  (pri) $ python_release_info pre
+  3.9.0.a.5
+  (pri) $ echo $?    # 0 -> updated, 1 -> not updated
+  1
+  (pri) $ mkdir -p /opt/util/pri/tmp
+  (pri) $ python_release_info --dir /opt/util/pri/tmp update --extract
+  (pri) $ ls --classify /opt/util/pri/tmp
+  Python-3.8.2/  Python-3.8.2.tar.xz
+
+
+If md5 information is available (true for all current and future versions), then the
+downloaded tar file is checked.
+
+The script allows for all-in-one (update, download, extract build) using::
+
+  python_release_info update --dir /data/DOWNLOAD/cpython --extract --build='make -f ../Makefile'
+
+this can be run on a recurring basis e.g. from a crontab. The script checks if there
+are one more new versions, and if there are, downloads the ``.tar.xz`` to ``/data/DOWNLOAD/cpython`` and
+checks the md5 sum of the downloaded file. Then it changes to that directory and extracts the tar file.
+After that it changes to the toplevel directory created by the extraction, sets the environment variable
+PYTHONVERSION to the extracted version and executes the argument to the ``--build`` option.
+
+If this all-in-one solution doesn't cover your needs, it is simple to write a commandline or Python
+program that suits your environment.
+
+
+
+CONFIG FILE
+===========
+
+Your config file normally is ``~/.config/python_release_info/config.ini``
+(i.e. follows XDG) except for Windows: ``%APPDATA%/python_release_info/config.ini``.
+
+The ``[INFO]`` section in that file allows you to add to, or overwrite, data in the
+automatically updated information::
+
+  [INFO]
+  add = xxx.pon
+  overwrite = yyy.pon
+
+You can, but don't have to, have either or both entries set. By default both are
+commented out. The files must have the same hierarchical structure as the
+``release_info.pon``, so it probably best to copy that file and delete what is
+not relevant, then update the rest.
+
+The difference between the two is that when using ``add`` the data loaded
+from there does not overwrite already existing "paths" to leaf node data
+loaded from ``release_info.pon``. You should use ``add`` for information
+that you expect to be incorporated in future automatic updates, and when
+it does get incorporated, you want to use that information. You should use
+``overwrite`` e.g. when you found an error in the data and you cannot wait to have
+it fixed in the ``release_info`` repository and automatically downloaded.
+
+
+So if you would have the following in the automatically updated ``release_info.pon`` (
+in reality there is more data there)::
+
+  dict(
+    cpython={
+      (3, 8): {
+        (3, 8, 0): dict(rel=date(2019, 10, 14)),
+        (3, 8, 1): dict(rel=date(2019, 12, 18)),
+        (3, 8, 2): dict(rel=date(2020, 2, 24), md5='e9d6ebc92183a177b8e8a58cad5b8d67'),
+      },
+    }
+  )
+
+and have the following in your ``xxx.pon`` file (to be added)::
+
+  dict(
+    cpython={
+      (3, 8): {
+        (3, 8, 0): dict(md5='dbac8df9d8b9edc678d0f4cacdb7dbb0'),
+        (3, 8, 1): dict(rel=date(2019, 12, 25), md5='b3fb85fd479c0bf950c626ef80cacb57'),
+        (3, 8, 3): dict(rel=date(2020, 5, 4)),
+      },
+    }
+  )
+
+then the result would be like::
+
+  dict(
+    cpython={
+      (3, 8): {
+        (3, 8, 0): dict(rel=date(2019, 10, 14), md5='dbac8df9d8b9edc678d0f4cacdb7dbb0'),
+        (3, 8, 1): dict(rel=date(2019, 12, 18), md5='b3fb85fd479c0bf950c626ef80cacb57'),
+        (3, 8, 2): dict(rel=date(2020, 2, 24), md5='e9d6ebc92183a177b8e8a58cad5b8d67'),
+        (3, 8, 3): dict(rel=date(2020, 5, 4)),
+      },
+    }
+  )
+
+but if the same content would be in ``yyy.pon`` (to be overwritten), then the result would
+be like::
+
+  dict(
+    cpython={
+      (3, 8): {
+        (3, 8, 0): dict(rel=date(2019, 10, 14), md5='dbac8df9d8b9edc678d0f4cacdb7dbb0'),
+        (3, 8, 1): dict(rel=date(2019, 12, 25), md5='b3fb85fd479c0bf950c626ef80cacb57'),
+        (3, 8, 2): dict(rel=date(2020, 2, 24), md5='e9d6ebc92183a177b8e8a58cad5b8d67'),
+        (3, 8, 3): dict(rel=date(2020, 5, 4)),
+      },
+    }
+  )
+
+with the difference being in the date for release 3.8.1.
+
+Setting defaults
+++++++++++++++++
+
+You can set e.g. a default value value for the global ``--dir`` option in a section ``DEFAULTS``
+in the config file::
+
+  [DEFAULTS]
+  dir = /opt/util/pri/tmp
+
+This also works for the subparsers, you can e.g. always force a download::
+
+  [DEFAULTS.DOWNLOAD]
+  force = True
+
+- The sections names in the config files are converted to lowercase so
+  you can also use ``[defaults.download]`` or ``[Defaults.Download]``.
+- The key/value entries are not converted, your key has to match the
+  option (minus the ``--``) exactly for a default to be set
+  from the config file.
+- Options provided on the commandline override those in the config file
+  (there is currently no way to "un-force" from the commandline
+  if force is set in the config file)
+
+API
+===
+
+You can use the release information from your program::
+
+  import pathlib
+  from release_info import release_info
+
+  def download_and_extract_latest_micro_versions_non_end_of_life():
+      ri = release_info()
+      ri.download_data()
+      latest = None
+      for version in ri.find_current():
+          url = ri.src_url(version)
+          print(version, url)  # list the versions found
+          latest = version
+      # extract the last of the versions found
+      path = pathlib.Path('/var/tmp')
+      ri.download(latest, dir=path, extract=True)
+      print(list(path.glob('Python*')))
+
+  def download_and_extract_new_versions_only():
+      ri = release_info()
+      for version in ri.download_data():
+          path = pathlib.Path('/var/tmp/new')
+          ri.download(latest, dir=path, extract=True)
+
+  download_and_extract_latest_micro_versions_non_end_of_life()
+
+
+which shows::
+
+  (3, 7, 12) https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tar.xz
+  (3, 8, 12) https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz
+  (3, 9, 10) https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tar.xz
+  (3, 10, 2) https://www.python.org/ftp/python/3.10.2/Python-3.10.2.tar.xz
+  [PosixPath('/var/tmp/Python-3.10.1'), PosixPath('/var/tmp/Python-3.10.1.tar.xz'), PosixPath('/var/tmp/Python-3.10.2'), PosixPath('/var/tmp/Python-3.10.2.tar.xz')]
