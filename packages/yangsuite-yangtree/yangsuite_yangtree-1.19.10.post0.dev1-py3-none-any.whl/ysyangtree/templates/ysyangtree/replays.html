@@ -1,0 +1,144 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block javascript %}
+<script src="{% static 'ysyangtree/js/chosen/chosen.jquery.js' %}"></script>
+<script src="{% static 'ysyangtree/js/tasks.js' %}"></script>
+<script src="{% static 'ysyangtree/js/jsoneditor.js' %}"></script>
+<script defer src="{% static 'yangsuite/js/fontawesome-all.js' %}"></script>
+<script src="{% static 'ysyangtree/js/replay_editor.js' %}"></script>
+{% endblock javascript %}
+{% block cui-css %}
+<link rel="stylesheet" href="{% static 'yangsuite/css/cui-standard-1.3.3.min.css' %}"/>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'ysyangtree/css/yangtree.css' %}"/>
+<link rel="stylesheet" href="{% static 'ysyangtree/css/chosen/chosen.css' %}"/>
+{% endblock css %}
+{% block breadcrumbs %}<li><span>Replays</span></li>{% endblock %}
+{% block page-title %}Manage Replays{% endblock %}
+{% block help_url %}{% url 'help' section='ysyangtree' document='manage_replays' %}{% endblock %}
+{% block body %}
+{% csrf_token %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="form-group label--inline">
+        <div class="form-group__text">
+          <label for="ys-replay-dir">Replay Directory</label>
+          <input id="ys-replay-dir" value="{{replay_dir}}" type="text"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 flex-center-vertical">
+      <button id="ys-set-replay-dir-btn" class="btn btn--small">Set</button>
+      <button id="ys-reset-replay-dir-btn" class="btn btn--small">Reset</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-9">
+      <div class="form-group label--inline">
+        <div class="form-group__text select">
+          <label for="ys-cat-list">Category</label>
+          <select id="ys-cat-list">
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 flex-center-vertical">
+      <button id="ys-delete-category-btn" class="btn btn--small btn--negative">Delete Category</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="ys-replay-list">Replays</label><br>
+      <select id="ys-replay-list" multiple size="20" style="width: 100%">
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <button id="ys-show-replay-btn" class="btn btn--small btn--primary">
+        Show/edit replay contents</button>
+    </div>
+    <div class="col">
+      <button id="ys-move-replays-btn" class="btn btn--small">
+        Change category&hellip;</button>
+    </div>
+    <div class="col-3">
+      <button id="ys-delete-replays-btn" class="btn btn--small btn--negative">
+        Delete selected</button>
+    </div>
+  </div>
+</div>
+<div id="ys-replay-editor" hidden></div>
+
+<div id="ys-new-category-dialog" hidden>
+  <div class="form-group label--inline">
+    <div class="form-group__text">
+      <label for="ys-category-input">Category name</label>
+      <input id="ys-category-input" type="text">
+    </div>
+  </div>
+</div>
+{% endblock body %}
+{% block script %}
+<script>
+$(function() {
+    tasks.config.categorySelect = 'select#ys-cat-list';
+    tasks.config.select = 'select#ys-replay-list';
+
+    tasks.getTasks();
+
+    replay_editor.initEditorDialog("ys-replay-editor");
+
+    $("#ys-set-replay-dir-btn").click(tasks.setTopReplayDir);
+    $("#ys-reset-replay-dir-btn").click(tasks.resetTopReplayDir);
+
+    $("#ys-delete-category-btn").click(function() {
+        let cat = $("#ys-cat-list").val();
+        if (confirm('Really delete category "' + cat +
+                    '" and all of its replays? ' +
+                    'This operation cannot be undone!')) {
+            tasks.deleteCategory(cat);
+        }
+    });
+
+    $("#ys-show-replay-btn").click(function() {
+        replay_editor.showEditorDialog($("#ys-cat-list").val(),
+                                       $("#ys-replay-list").val()[0]);
+    });
+
+    $("#ys-replay-list").dblclick(function () {
+        replay_editor.showEditorDialog($("#ys-cat-list").val(),
+                                       $("#ys-replay-list").val()[0]);
+    });
+
+    $("#ys-move-replays-btn").click(function() {
+        $("#ys-new-category-dialog").dialog({
+            title: "Move replays...",
+            minWidth: 500,
+            buttons: {
+                "Update replay category": function() {
+                    if (!$("#ys-category-input").val()) {
+                        popDialog("Enter the name of the new category");
+                        return;
+                    }
+                    tasks.changeCategory($("#ys-replay-list").val(),
+                                         $("#ys-cat-list").val(),
+                                         $("#ys-category-input").val());
+                    $(this).dialog("close");
+                },
+            },
+            modal: true,
+        }).dialog("open");
+    });
+
+    $("#ys-delete-replays-btn").click(function() {
+        tasks.deleteTask($("#ys-replay-list").val(),
+                         $("#ys-cat-list").val());
+    });
+
+});
+</script>
+{% endblock script %}

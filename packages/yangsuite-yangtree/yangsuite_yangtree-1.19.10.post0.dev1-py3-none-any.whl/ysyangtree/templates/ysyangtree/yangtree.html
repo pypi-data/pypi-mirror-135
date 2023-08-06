@@ -1,0 +1,257 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block javascript %}
+<script src="{% static 'ysfilemanager/js/yangsets.js' %}"></script>
+<script src="{% static 'ysyangtree/js/yangtree.js' %}"></script>
+<script src="{% static 'ysyangtree/js/tasks.js' %}"></script>
+<script src="{% static 'ysyangtree/js/rpc_ui.js' %}"></script>
+<script src="{% static 'ysyangtree/js/chosen/chosen.jquery.js' %}"></script>
+<script defer src="{% static 'yangsuite/js/fontawesome-all.js' %}"></script>
+{% endblock javascript %}
+{% block cui-css %}
+<link rel="stylesheet" href="{% static 'yangsuite/css/cui-standard-1.3.3.min.css' %}"/>
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'ysyangtree/css/yangtree.css' %}"/>
+<link rel="stylesheet" href="{% static 'ysyangtree/css/chosen/chosen.css' %}"/>
+{% endblock css %}
+{% block breadcrumbs %}<li><span>Explore YANG</span></li>{% endblock %}
+{% block page-title %}Explore YANG Models{% endblock %}
+{% block help_url %}{% url 'help' section='ysyangtree' %}{% endblock %}
+{% block body %}
+{% csrf_token %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-auto">
+      <div class="form-group label--inline">
+        <div class="form-group__text select">
+          <label for="ytool-yangset">Select a YANG set</label>
+          <select id="ytool-yangset" class="yangset-list"></select>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <form id="ys-module-selection" class="ys-yangset-toggle">
+        <div class="form-group label--inline">
+          <div class="form-group__text select">
+            <label for="ytool-models">Select YANG module(s)</label>
+            <select id="ytool-models" multiple
+                    data-placeholder="Type here to filter available modules">
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-auto">
+      <input id="ys-load-modules" type="submit" class="btn btn--primary btn--small ys-yangset-toggle"
+             value="Load module(s)" form="ys-module-selection">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-auto">
+      <button id="ys-show-legend-btn" class="btn btn--small ys-module-toggle">
+        <span class="icon-info icon-small"></span>
+        Icon legend</button>
+      <button id="ys-search-xpaths-btn" class="btn btn--small ys-module-toggle">
+        <span class="icon-search icon-small"></span>
+        Search XPaths</button>
+      <button id="ys-search-nodes-btn" class="btn btn--small ys-module-toggle">
+        <span class="icon-search icon-small"></span>
+        Search nodes</button>
+      <button id="ys-expand-all-btn" class="btn btn--small ys-module-toggle">
+        <span class="icon-maximize icon-small"></span>
+        Expand all nodes</button>
+    </div>
+    <div class="col">
+      <div class="ys-module-toggle">
+        <span class="ys-search-toggle">
+          Displaying
+          <select id="ys-search-offset-select"></select>
+          of
+          <span id="ys-search-total-matches"></span>
+          matches
+          <button id="ys-node-search-clear"
+                  class="btn btn--small btn--negative ys-search-toggle">
+            Clear search</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="form-group label--inline ys-yangset-toggle">
+        <div class="form-group__text radio">
+          <label class="radio radio--alt">
+            <input type="radio" name="show-nodes" value="schema" checked>
+            <span class="radio__input"></span>
+            <span class="radio__label">Display schema nodes only</span>
+          </label>
+          <label class="radio radio--alt">
+            <input type="radio" name="show-nodes" value="all">
+            <span class="radio__input"></span>
+            <span class="radio__label">Display all nodes</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content">
+ <div class="container-fluid" style="height:100%">
+  <div class="row" style="height:100%">
+    <div class="col-6" style="height:100%; overflow:auto">
+      <div id="tree"></div>
+    </div>
+    <div class="col" style="height:100%; overflow:auto">
+      <div class="ysyangtree-info" id="ytool-prop-info">
+        <h4>Getting Started:</h4>
+        <ol>
+          <li>Select a YANG set from the dropdown menu at left.</li>
+          <li>Select one or more YANG modules from this set above, then click the "Load module(s)" button.</li>
+          <li>In the tree that appears to the left, you can explore the model(s) by expanding the tree.</li>
+          <li>Click on any of the nodes in the tree to view its properties and relevant RFC information in this space.</li>
+          <li>You can also right-click on any node for a context menu with additional options.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+ </div>
+</div>
+<div id="ys-legend-dialog" hidden>
+  <table id="ysyangtree-legend" class="table"></table>
+</div>
+{% include "ysyangtree/search_nodes_dialog.html" %}
+{% include "ysyangtree/search_xpaths_dialog.html" %}
+{% include "ysyangtree/generate_replays_dialog.html" %}
+{% endblock body %}
+{% block script %}
+<script>
+$(function() {
+    yangsets.config.yangsetsSelect = 'select.yangset-list';
+    yangtree.config.nodeTypeSel = 'input[name="show-nodes"]';
+
+    $("#ys-module-selection").submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let names = $("#ytool-models").val();
+        let show_nodes = $(':input[name="show-nodes"]:checked').val();
+        if (show_nodes == "schema") {
+            show_nodes = yangtree.DEFAULT_NODETYPES;
+        } else {
+            show_nodes = yangtree.ALL_NODETYPES;
+        }
+
+        if (names) {
+            yangtree.makeJSTree(names, $("#ytool-yangset").val(), show_nodes, null, function(retObj) {
+                $("#tree").on("changed.jstree", yangtree.getNodeRFCData);
+            });
+            $(".ys-module-toggle").show();
+        } else {
+            $.jstree.destroy($("#tree"));
+        }
+        yangtree.pushExploreState($("#ytool-yangset").val(), names);
+    });
+
+    $("input[name=show-nodes]").change(function() {
+        $("#ys-module-selection").trigger("submit");
+    });
+
+    $("#ys-search-nodes-btn").click(function() {
+        $("#ys-search-nodes-dialog").dialog({
+            title: "Search YANG nodes...",
+            width: 600,
+            buttons: {
+                "Search nodes": function() {
+                    let searchStr = $("#ys-node-search-string").val();
+                    if (!searchStr) {
+                        alert("Please enter a search string");
+                        return;
+                    }
+                    yangtree.config.nodeSearchOffset = 0;
+                    yangtree.config.nodeSearchMaxMatches = parseInt($("#ys-node-search-max-matches").val());
+                    $(this).dialog("close");
+                    yangtree.searchTreeNodes(searchStr);
+                },
+            },
+        }).dialog("open");
+    });
+
+    $("#ys-node-search-clear").click(function() {
+        if ($("#tree").jstree(true)) {
+            $("#tree").jstree(true).clear_search();
+        }
+    });
+
+    $("#ys-search-offset-select").change(function() {
+        let searchStr = $("#ys-node-search-string").val();
+        yangtree.config.nodeSearchOffset = $(this).val();
+        yangtree.searchTreeNodes(searchStr);
+    });
+
+    $("#ys-search-xpaths-btn").click(function() {
+        $("#ys-search-xpaths-dialog").dialog({
+            title: "Searching YANG node XPaths",
+            width: 600,
+            height: 600,
+            buttons: {
+                "Show selected node(s)": function() {
+                    $(this).dialog("close");
+                    yangtree.selectNodes($("#ys-xpath-search-results").val());
+                },
+            },
+        }).dialog("open");
+    });
+
+    $("#ys-xpath-search-form").submit(yangtree.searchXpathsFormSubmit);
+
+    $("#ys-expand-all-btn").click(function() {
+        $("#tree").jstree(true).open_all();
+    });
+
+    $("#ytool-models").chosen({width: "calc(100% - 15em)"});
+    $(".ys-yangset-toggle").hide();
+    $(".ys-module-toggle").hide();
+    $(".ys-search-toggle").hide();
+    yangtree.buildLegend($("#ysyangtree-legend"), yangtree.DEFAULT_NODETYPES);
+    $("#ys-node-search-max-matches").val(yangtree.config.nodeSearchMaxMatches);
+
+    $("#ys-show-legend-btn").click(function() {
+        $("#ys-legend-dialog").dialog({
+            title: "Tree Icon Legend",
+            minHeight: 550,
+            maxWidth: 100
+        }).dialog("open");
+    });
+
+    $("#ytool-yangset").change(function(e) {
+        $.jstree.destroy($("#tree"));
+        $("#ys-module-toggle").hide();
+        $("#ytool-models").empty();
+        if ($("#ytool-yangset").val() == "") {
+            $(".ys-yangset-toggle").hide();
+            return;
+        }
+        yangtree
+            .getModels($("#ytool-yangset").val(), $("#ytool-models"))
+            .done(function() {
+                yangtree.pushExploreState($("#ytool-yangset").val(),
+                                          $("#ytool-models").val());
+                $("#ytool-models").trigger("chosen:updated");
+                $(".ys-yangset-toggle").show();
+                /*
+                 * If we preselected a module(s) through
+                 * yangtree.config.initialModuleSelection,
+                 * load the module(s) now.
+                 */
+                if ($("#ytool-models").val()) {
+                    $("#ys-module-selection").trigger("submit");
+                }
+            });
+    });
+
+    yangtree.config.initialModuleSelection = "{{ modulenames }}".split(',');
+
+    $("#ys-generate-replays-form").submit(tasks.generateReplaysSubmit);
+
+    yangsets.getYangSets("{{ yangset }}");
+});
+</script>
+{% endblock script %}
