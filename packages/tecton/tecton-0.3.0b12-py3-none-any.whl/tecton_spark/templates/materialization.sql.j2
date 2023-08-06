@@ -1,0 +1,27 @@
+{% if destination %}
+COPY INTO {{ destination }}
+{% else %}
+SELECT *
+{% endif %}
+FROM (
+    SELECT
+      {%- for column in materialization_schema.columns %}
+      {{ column.name }}
+      {#- https://docs.snowflake.com/en/user-guide/data-unload-considerations.html#explicitly-converting-numeric-columns-to-parquet-data-types -#}
+      {%- if destination -%}
+        {%- if column.feature_server_type == column_type_pb2.COLUMN_TYPE_INT64 %}::BIGINT AS {{column.name}}{%- endif %}
+      {%- endif -%}
+      {%- if not loop.last %}, {%- endif %}
+      {%- endfor %}
+    FROM (
+    {{ source | indent(8)}}
+    )
+    WHERE {{ timestamp_key }} >= TO_TIMESTAMP_NTZ('{{ start_time }}')
+      AND {{ timestamp_key }} <  TO_TIMESTAMP_NTZ('{{ end_time }}')
+)
+{% if destination %}
+header = true
+detailed_output = true
+file_format = (type=parquet)
+{% if storage_integration %}storage_integration = {{ storage_integration }}{% endif %}
+{% endif %}
