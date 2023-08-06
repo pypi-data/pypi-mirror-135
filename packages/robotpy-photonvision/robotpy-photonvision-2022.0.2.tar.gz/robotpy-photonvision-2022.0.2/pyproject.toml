@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+    "robotpy-build>=2022,<2023",
+    "wpilib>=2022.2.1.0,<2023.0.0",
+]
+
+[tool.robotpy-build]
+base_package = "photonvision"
+
+[tool.robotpy-build.wrappers."photonvision".maven_lib_download]
+artifact_id = "PhotonLib-cpp"
+group_id = "org.photonvision"
+repo_url = "https://maven.photonvision.org/repository/internal/"
+version = "v2022.1.4"
+
+libs = ["Photon"]
+
+[tool.robotpy-build.wrappers."photonvision"]
+name = "photonvision"
+
+depends = ["wpilibc", "wpimath_geometry", "wpimath_cpp", "ntcore", "wpiHal", "wpiutil"]
+
+generate = [
+    { Packet =               "photonlib/Packet.h" },
+    { PhotonCamera =         "photonlib/PhotonCamera.h" },
+    { PhotonPipelineResult = "photonlib/PhotonPipelineResult.h" },
+    { PhotonTrackedTarget =  "photonlib/PhotonTrackedTarget.h" },
+    { PhotonUtils =          "photonlib/PhotonUtils.h" },
+    { SimPhotonCamera =      "photonlib/SimPhotonCamera.h" },
+    { SimVisionSystem =      "photonlib/SimVisionSystem.h" },
+    { SimVisionTarget =      "photonlib/SimVisionTarget.h" },
+]
+
+sources = [
+    "photonvision/src/module.cpp",
+]
+
+generation_data = "gen"
+
+[tool.robotpy-build.metadata]
+name = "robotpy-photonvision"
+description = "RobotPy wrappers for photonvision"
+author = "RobotPy Development Team"
+author_email = "robotpy@googlegroups.com"
+url = "https://github.com/robotpy/robotpy-photonvision"
+license = "MIT"
+install_requires = [
+    "wpilib>=2022.2.1.0,<2023.0.0",
+]
