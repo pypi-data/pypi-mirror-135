@@ -1,0 +1,68 @@
+Metadata-Version: 2.1
+Name: keras-adaptive-softmax
+Version: 0.9.0
+Summary: adaptive-softmax implemented in Keras
+Home-page: https://github.com/CyberZHG/keras-adaptive-softmax
+Author: CyberZHG
+Author-email: CyberZHG@users.noreply.github.com
+License: MIT
+Description: # Keras Adaptive Softmax
+        
+        [![Version](https://img.shields.io/pypi/v/keras-adaptive-softmax.svg)](https://pypi.org/project/keras-adaptive-softmax/)
+        ![License](https://img.shields.io/pypi/l/keras-adaptive-softmax.svg)
+        
+        \[[中文](https://github.com/CyberZHG/keras-adaptive-softmax/blob/master/README.zh-CN.md)|[English](https://github.com/CyberZHG/keras-adaptive-softmax/blob/master/README.md)\]
+        
+        ## Install
+        
+        ```bash
+        pip install keras-adaptive-softmax
+        ```
+        
+        ## Usage
+        
+        Generally, `AdaptiveEmbedding` and `AdaptiveSoftmax` should be used together. `AdaptiveEmbedding` provides variable length embeddings, while `AdaptiveSoftmax` calculates the similarities between the outputs and the generated embeddings.
+        
+        ```python
+        import keras
+        from keras_adaptive_softmax import AdaptiveEmbedding, AdaptiveSoftmax
+        
+        input_layer = keras.layers.Input(shape=(None,))
+        embed_layer = AdaptiveEmbedding(
+            input_dim=30,
+            output_dim=32,
+            cutoffs=[5, 15, 25],
+            div_val=2,
+            return_embeddings=True,
+            return_projections=True,
+            mask_zero=True,
+        )(input_layer)
+        dense_layer = keras.layers.Dense(
+            units=32,
+            activation='tanh',
+        )(embed_layer[0])
+        softmax_layer = AdaptiveSoftmax(
+            input_dim=32,
+            output_dim=30,
+            cutoffs=[5, 15, 25],
+            div_val=2,
+            bind_embeddings=True,
+            bind_projections=True,
+        )([dense_layer] + embed_layer[1:])
+        model = keras.models.Model(inputs=input_layer, outputs=softmax_layer)
+        model.compile('adam', 'sparse_categorical_crossentropy')
+        model.summary()
+        ```
+        
+        `cutoffs` and `div_val` controls the length of embeddings for each token. Suppose we have 30 distinct tokens, in the above example:
+        
+        * The lengths of the embeddings of the first 5 tokens are 32
+        * The lengths of the embeddings of the next 10 tokens are 16
+        * The lengths of the embeddings of the next 10 tokens are 8
+        * The lengths of the embeddings of the last 5 tokens are 4
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
