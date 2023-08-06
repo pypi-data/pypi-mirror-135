@@ -1,0 +1,1 @@
+This package contains the Helper functions and core of the Reloadly SDK.
