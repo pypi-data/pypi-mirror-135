@@ -1,0 +1,31 @@
+<style>
+.new-page-table{
+  width: 100%;
+}
+
+.new-page-table td{
+  width: 33%;
+  text-align: center;
+}
+
+.new-page-table a{
+  color: black;
+}
+
+.err_msg{
+  color: red;
+}
+
+</style>
+
+<h1>Create a new page</h1>
+
+{% if error_message is not none %}
+<p class=err_msg>{{error_message}}</p>
+{%endif %}
+
+<form action="/-/create-from-template/{{template}}">
+  <label for="pagename">Page name</label><br>
+  <input type="text" id="pagename" name="pagename" value="my-new-page"><br>
+  <input type="submit" value="Submit">
+</form> 

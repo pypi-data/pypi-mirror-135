@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ favicon_html | safe }}
+    <link href="{{root}}static/style.css" rel="stylesheet">
+    {% for sheet in custom_stylesheets %}
+        <link href="{{root}}{{sheet}}" rel="stylesheet">
+    {% endfor %}
+    {% if '3D-previewer' in previewers_used %}
+    <script type="text/javascript" src="{{root}}static/3d-viewer.js"></script>
+    {% endif %}
+</head>
+<body>
+{% include 'body.html.jinja' %}
+</body>
+</html>

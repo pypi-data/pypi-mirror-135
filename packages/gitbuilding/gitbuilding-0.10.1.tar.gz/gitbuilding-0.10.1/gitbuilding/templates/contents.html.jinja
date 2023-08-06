@@ -1,0 +1,28 @@
+
+<style>
+#contents-list{
+  font-size: 14pt;
+  list-style-type: none;
+}
+
+.contents-list-el{
+    padding: 5pt 0;
+}
+
+a.contents-list-link{
+  color: #000;
+  text-decoration: underline;
+}
+
+</style>
+
+<h1>Site contents</h1>
+<p>This page only displays locally. It will not be in the final documentation. You can
+use it to find pages in your documentation by their location in the documentation directory.</p>
+<ul id="contents-list">
+    {% for page in md_pages %}
+    <li class="contents-list-el">
+        <a class="contents-list-link" href="/{{page[1]}}">{{page[0]}}</a>
+    </li>
+    {% endfor %}
+</ul>

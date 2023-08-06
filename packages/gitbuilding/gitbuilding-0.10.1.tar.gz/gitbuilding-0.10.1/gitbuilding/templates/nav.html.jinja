@@ -1,0 +1,23 @@
+<li>
+    <a class="navhome" href="{{landing}}">
+        {{title}}
+    </a>
+</li>
+{% for nav_item in navigation %}
+<li class="{{nav_item['class']}}">
+    <a class="{{nav_item['class']}}" href="{{root}}{{nav_item['link']}}">
+        {{nav_item['title']}}
+    </a>
+    {% if 'subnavigation' in nav_item %}
+    <ul class="sub-nav-list">
+        {% for sub_nav_item in nav_item['subnavigation'] %}
+        <li>
+            <a class="{{sub_nav_item['class']}}" href="{{root}}{{sub_nav_item['link']}}">
+                {{sub_nav_item['title']}}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</li>
+{% endfor %}
