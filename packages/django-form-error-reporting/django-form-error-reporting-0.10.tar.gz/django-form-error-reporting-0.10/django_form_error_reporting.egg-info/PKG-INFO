@@ -1,0 +1,71 @@
+Metadata-Version: 2.1
+Name: django-form-error-reporting
+Version: 0.10
+Summary: A form mixin that reports form errors as events to Google Analytics
+Home-page: https://github.com/ministryofjustice/django-form-error-reporting
+Author: Ministry of Justice Digital & Technology
+Author-email: dev@digital.justice.gov.uk
+License: MIT
+Keywords: django form errors google-analytics
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: Framework :: Django :: 3.1
+Classifier: Framework :: Django :: 3.2
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+License-File: LICENSE.txt
+
+Django Form Error Reporting
+===========================
+
+A form mixin that reports form errors as events to Google Analytics.
+
+Usage
+-----
+
+Install using ``pip install django-form-error-reporting``.
+
+See examples in tests/forms.py
+
+.. code-block:: python
+
+    class ReportedForm(GAErrorReportingMixin, Form):
+        ga_tracking_id = 'UA-12345678-0'
+
+        ...
+
+Development
+-----------
+
+.. image:: https://github.com/ministryofjustice/django-form-error-reporting/workflows/Run%20tests/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/django-form-error-reporting/actions
+
+Please report bugs and open pull requests on `GitHub`_.
+
+Use ``python setup.py test`` to run all tests.
+
+Distribute a new version to `PyPi`_ by updating the ``version`` argument in ``setup.py:setup`` and
+publishing a release in GitHub (this triggers a GitHub Actions workflow to automatically upload it).
+Alternatively, run ``python setup.py sdist bdist_wheel upload`` locally.
+
+Copyright
+---------
+
+Copyright (C) 2022 HM Government (Ministry of Justice Digital & Technology).
+See LICENSE.txt for further details.
+
+.. _GitHub: https://github.com/ministryofjustice/django-form-error-reporting
+.. _PyPi: https://pypi.org/project/django-form-error-reporting/
+
+
