@@ -1,0 +1,30 @@
+{% extends 'bas_style_kit/layouts/html.j2' %}
+
+{% block pre_head_styles %}
+    {{ super() }}
+    {% include 'bas_style_kit/includes/bsk--head--favicon.j2' %}
+{% endblock %}
+
+{% block styles %}
+    {% with styles = config.BSK_TEMPLATES.bsk_styles %}
+        {% include 'bas_style_kit/includes/head--core-styles.j2' %}
+    {% endwith %}
+    {{ super() }}
+{% endblock %}
+
+{% block content_classes %}
+    {{ super() }}
+    {% if (config.BSK_TEMPLATES.bsk_container_classes is defined) and config.BSK_TEMPLATES.bsk_container_classes %}{{ config.BSK_TEMPLATES.bsk_container_classes | join(' ') }}{% endif %}
+{% endblock %}
+
+{% block main_content_classes %}
+    {{ self.content_classes() }}
+    {% if (config.BSK_TEMPLATES.bsk_main_container_classes is defined) and config.BSK_TEMPLATES.bsk_main_container_classes %}{{ config.BSK_TEMPLATES.bsk_main_container_classes | join(' ') }}{% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {% with scripts = config.BSK_TEMPLATES.bsk_scripts %}
+        {% include 'bas_style_kit/includes/body--core-scripts.j2' %}
+    {% endwith %}
+    {{ super() }}
+{% endblock %}
