@@ -1,0 +1,218 @@
+{% set py = import_('builtins') %}
+
+module {{module_name}}_ram#(
+                 parameter AWIDTH = 12,                  // Address Width
+                 parameter DWIDTH = 72,                  // Data Width
+                 parameter NBPIPE = 3                   // Number of pipeline Registers
+                 )(
+                   input logic               clk,
+                   input logic               rst,
+
+                   input logic               din_valid,
+                   input logic [DWIDTH-1:0]  din_data,
+                   input logic [AWIDTH-1:0]  din_addr,
+
+                   input logic               dout_read,
+                   input logic [AWIDTH-1:0]  dout_addr,
+                   output logic [DWIDTH-1:0] dout_data,
+                   output logic              dout_valid
+                   );
+
+  {% if comment is defined and isinstance(comment, dict) and 'attrib' in comment %}
+      (* {{ comment['attrib'][0] }} *)
+  {% endif %}
+   logic [DWIDTH-1:0]                        mem[(1<<AWIDTH)-1:0];        // Memory Declaration
+
+  {% if py.isinstance(params['mem'], py.dict) -%}
+   initial begin
+    {% for key, val in params['mem'].items() %}
+      mem[{{key}}] = {{params['w_data'](val).code()}};
+    {% endfor %}
+   end
+  {% elif py.isinstance(params['mem'], py.list) -%}
+
+   initial begin
+    {% py %}
+    from pygears import reg
+    import os
+    mem_path = os.path.join(reg['svgen/conf']['outdir'], module_name + '.hex')
+    with open(mem_path, 'w') as f:
+        for d in params['mem']:
+            v = params['w_data'](d).code()
+            f.write("{0:#0{1}x}\n".format(v,params['w_data'].width//4)[2:])
+
+    print(f'$readmemh("{mem_path}", mem);')
+    {% endpy %}
+   end
+  {% endif -%}
+
+   logic [DWIDTH-1:0]                        dout_mem;
+   always @ (posedge clk) begin
+      if(din_valid)
+        mem[din_addr] <= din_data;
+   end
+
+   always @ (posedge clk)begin
+      if(dout_read) begin
+         dout_mem <= mem[dout_addr];
+      end
+   end
+
+   if (NBPIPE > 0) begin
+      logic                                     dout_valid_pipe[NBPIPE:0];                // Pipelines for decouple_mem enable
+      integer                                   i;
+
+      always @ (posedge clk) begin
+          if (rst) begin
+              dout_valid_pipe[0] <= 1'b0;
+          end else begin
+              dout_valid_pipe[0] <= dout_read;
+          end
+
+          for (i=0; i<NBPIPE; i=i+1)
+            dout_valid_pipe[i+1] <= dout_valid_pipe[i];
+      end
+
+      logic [DWIDTH-1:0] dout_pipe[NBPIPE-1:0];
+
+      always @ (posedge clk) begin
+          if (dout_valid_pipe[0])
+            dout_pipe[0] <= dout_mem;
+      end
+
+      always @ (posedge clk) begin
+          for (i = 0; i < NBPIPE-1; i = i+1)
+            if (dout_valid_pipe[i+1])
+              dout_pipe[i+1] <= dout_pipe[i];
+      end
+
+      assign dout_data = dout_pipe[NBPIPE-1];
+      assign dout_valid = dout_valid_pipe[NBPIPE];
+   end else begin
+      assign dout_data = dout_mem;
+      assign dout_valid = 1'b0;
+   end
+
+endmodule
+
+
+module {{module_name}}
+  (
+   input logic clk,
+   input logic rst,
+   dti.consumer wr_addr_data,
+   dti.consumer rd_addr,
+   dti.producer rd_data
+   );
+
+   localparam W_DATA = {{int(params['w_data'].width)}};
+   localparam W_ADDR = {{int(params['w_addr'])}};
+   localparam DEPTH = {{int(params['depth'])}};
+   localparam LATENCY = {{int(params['latency'])}};
+
+   typedef struct packed
+                  {
+                     logic [W_DATA-1:0] data;
+                     logic [W_ADDR-1:0] addr;
+                  } din_t;
+
+   din_t wr_addr_data_s;
+   assign wr_addr_data_s = wr_addr_data.data;
+   assign wr_addr_data.ready = 1'b1;
+
+   logic [W_DATA-1:0]             dout_data;
+   logic                          dout_valid;
+
+   localparam MSB = $clog2(LATENCY + 1);
+
+    logic         mem_read;
+
+    {{module_name}}_ram#(
+              .AWIDTH     (W_ADDR),
+              .DWIDTH     (W_DATA),
+              .NBPIPE     (LATENCY - 2)
+              )
+    ram(
+        .clk        (clk),
+        .rst        (rst),
+
+        .din_valid  (wr_addr_data.valid),
+        .din_data   (wr_addr_data_s.data),
+        .din_addr   (wr_addr_data_s.addr),
+
+        .dout_read  (mem_read & rd_addr.valid),
+        .dout_addr  (rd_addr.data),
+        .dout_data  (dout_data),
+        .dout_valid (dout_valid)
+        );
+
+
+   if (MSB > 1) begin
+
+      localparam DECOUPLE_DEPTH = 2**MSB;
+
+      logic [W_DATA-1 : 0] decouple_mem [0 : DECOUPLE_DEPTH-1];
+      logic [MSB:0] w_ptr;
+      logic [MSB:0] r_ptr;
+      logic [MSB-1:0] cnt;
+      logic         empty;
+      logic         full;
+      logic         rd_ready;
+
+
+      assign empty = (w_ptr == r_ptr);
+      assign full = (w_ptr[MSB-1:0] == r_ptr[MSB-1:0]) & (w_ptr[MSB]!=r_ptr[MSB]);
+      assign cnt = signed'(w_ptr) - signed'(r_ptr);
+      assign mem_read = (cnt <= 1) && (!full);
+
+      initial begin
+         r_ptr = 0;
+         w_ptr = 0;
+      end
+
+      always @(posedge clk) begin
+          if(rst) begin
+            w_ptr <= 0;
+          end else if(dout_valid & ~full) begin
+            w_ptr <= w_ptr + 1;
+            decouple_mem[w_ptr[MSB-1:0]] <= dout_data;
+          end
+      end
+
+      always @(posedge clk) begin
+          if(rst) begin
+            r_ptr <= 0;
+          end else if(rd_ready & ~empty) begin
+            r_ptr <= r_ptr + 1;
+          end
+      end
+
+      assign rd_ready = rd_data.ready;
+      assign rd_data.data = decouple_mem[r_ptr[MSB-1:0]];
+      assign rd_data.valid = ~empty;
+
+   end else begin
+      logic data_valid_reg;
+
+      initial begin
+         data_valid_reg = 0;
+      end
+
+      // valid and eot for data interface are registered
+      always @(posedge clk) begin
+          if (rst) begin
+            data_valid_reg <= 1'b0;
+          end else if (mem_read) begin
+                data_valid_reg <= rd_addr.valid;
+          end
+      end
+
+      assign rd_data.data = dout_data;
+      assign rd_data.valid = data_valid_reg;
+      assign mem_read = !data_valid_reg || rd_data.ready;
+   end
+
+   assign rd_addr.ready = mem_read;
+
+
+endmodule

@@ -1,0 +1,60 @@
+{%- import 'snippet.j2' as snippet -%}
+
+{% set subenv_w = _din_t.lvl - params['lvl'] %}
+
+{% set out_eot = "din_s.eot[{}:{}]".format(_din_t.lvl-1, subenv_w) %}
+
+{% call snippet.module_with_intf_structs(module_name, intfs, intfs, comment) %}
+
+  {% set input_intf_names = intfs|isinput|keymap("name") %}
+
+  {% if _din_t.lvl <= params['lvl'] %}
+    assign din.ready = dout.ready;
+    assign dout.valid = din.valid;
+    assign dout_s.eot = {{out_eot}};
+  {% else %}
+    logic  handshake;
+    logic  handshake_reg;
+    logic  valid_reg;
+    logic  subelem_done;
+
+    {% if params['lvl'] > 0 %}
+    logic [{{params['lvl']-1}}:0] eots_reg;
+    assign dout_s.eot = valid_reg ? eots_reg : {{out_eot}};
+    {% endif %}
+
+    assign subelem_done = {{'&din_s.eot[{}:0]'.format(subenv_w-1) if _din_t.lvl > params['lvl'] else 1}} && din.valid;
+    assign din.ready = (dout.ready || handshake_reg || (!subelem_done));
+    assign dout.valid = (din.valid || valid_reg) && (!handshake_reg);
+
+    assign handshake = dout.valid & dout.ready;
+
+    always @(posedge clk) begin
+       if (rst) begin
+         handshake_reg <= 1'b0;
+         valid_reg <= 1'b0;
+    {% if params['lvl'] > 0 %}
+         eots_reg <= 0;
+    {% endif %}
+       end
+       else begin
+         if (subelem_done && (handshake || handshake_reg)) begin
+             handshake_reg <= 1'b0;
+             valid_reg <= 1'b0;
+    {% if params['lvl'] > 0 %}
+             eots_reg <= 0;
+    {% endif %}
+         end
+         else begin
+             handshake_reg <= handshake_reg || handshake;
+             if (!valid_reg && din.valid) begin
+    {% if params['lvl'] > 0 %}
+                  eots_reg <= {{out_eot}};
+    {% endif %}
+                  valid_reg <= 1;
+             end
+          end
+       end
+    end
+  {% endif %}
+{% endcall %}

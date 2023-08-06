@@ -1,0 +1,92 @@
+{%- import 'snippet.j2' as snippet -%}
+
+{% set py = import_('builtins') %}
+{% set bitw = import_from('pygears.typing', 'bitw') %}
+
+// TODO: Implement loading from file
+{% call snippet.module_with_intf_structs(module_name, intfs, intfs, comment) %}
+
+   reg                            addr_reg_valid;
+   wire                           reg_empty;
+   wire                           reg_ready;
+
+   assign reg_ready = reg_empty | dout_ready;
+   assign reg_empty = !addr_reg_valid;
+
+   always @(posedge clk)
+     begin
+        if(rst) begin
+           addr_reg_valid <= '0;
+        end else if (reg_ready) begin
+           addr_reg_valid <= addr_valid;
+        end
+     end
+
+{% if params['dflt'] is none -%}
+  {% if py.isinstance(params['data'], py.dict) %}
+   reg [{{_dout_t.width-1}}:0] memory [0:{{py.max(params['data'].keys())}}];
+  {% else %}
+   reg [{{_dout_t.width-1}}:0] memory [0:{{len(params['data'])-1}}];
+  {% endif -%}
+{% else -%}
+   reg [{{_dout_t.width-1}}:0] memory [0:{{2**_addr_t.width - 1}}];
+{% endif %}
+
+   always @(posedge clk)
+     begin
+        if (reg_ready) begin
+           dout_s <= memory[addr_s];
+        end
+     end
+
+   initial begin
+{% if params['dflt'] is none -%}
+
+  {% if py.isinstance(params['data'], py.dict) -%}
+    {% for key, val in params['data'].items() %}
+      memory[{{key}}] = {{params['dtype'](val).code()}};
+    {% endfor %}
+  {% else -%}
+
+    {% py %}
+    from pygears import reg
+    import os
+    mem_path = os.path.join(reg['svgen/conf']['outdir'], params['name'].replace('/', '_') + '.hex')
+    with open(mem_path, 'w') as f:
+        for d in params['data']:
+            v = params['dtype'](d).code()
+            f.write("{0:#0{1}x}\n".format(v,params['dtype'].width//4)[2:])
+
+    print(f'$readmemh("{mem_path}", memory);')
+
+    {% endpy %}
+  {% endif -%}
+
+{% else -%}
+
+  {% if py.isinstance(params['data'], py.dict) -%}
+    {% for i in range(2**_addr_t.width) %}
+      {% if i in params['data'] %}
+      memory[{{i}}] = {{params['dtype'](params['data'][i]).code()}};
+      {% else -%}
+      memory[{{i}}] = {{params['dtype'](params['dflt']).code()}};
+      {% endif -%}
+    {% endfor %}
+  {% else -%}
+    {% for i in range(2**_addr_t.width) %}
+      {% if i < len(params['data']) %}
+      memory[{{i}}] = {{params['dtype'](params['data'][i]).code()}};
+      {% else -%}
+      memory[{{i}}] = {{params['dtype'](params['dflt']).code()}};
+      {% endif -%}
+    {% endfor %}
+  {% endif -%}
+
+{% endif -%}
+
+   end
+
+   assign addr_ready = reg_ready;
+   assign dout_valid = addr_reg_valid;
+
+{% endcall %}

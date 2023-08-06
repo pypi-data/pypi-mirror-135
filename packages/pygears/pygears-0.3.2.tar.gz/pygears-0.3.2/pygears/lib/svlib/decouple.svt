@@ -1,0 +1,126 @@
+{%- import 'snippet.j2' as snippet -%}
+
+{% call snippet.gear_module(module_name, intfs, comment) %}
+
+	   localparam DEPTH = {{int(params['depth'])}};
+     localparam DIN = {{int(params['din'].width)}};
+     localparam INIT = {{int(params['init']) if params['init'] is not none else 0}};
+     localparam INIT_VALID = {{int(params['init'] is not none)}};
+     localparam LATENCY = {{params['latency']}};
+
+    if (DEPTH > 1) begin
+
+      localparam MSB = $clog2(DEPTH);
+      localparam W_DATA = DIN;
+
+      logic [MSB:0] w_ptr;
+      logic [MSB:0] r_ptr;
+      logic empty;
+      logic full;
+      logic rd_ready;
+
+  {% if comment is defined and isinstance(comment, dict) and 'attrib' in comment %}
+      {% for i in comment['attrib'] -%}
+        (* {{ i }} *)
+      {% endfor %}
+  {% endif %}
+      logic [W_DATA-1 : 0] memory [0 : DEPTH-1];
+
+      initial begin 
+         r_ptr = 0; 
+         if (INIT_VALID) begin 
+            memory[0] = INIT; 
+            w_ptr = 1; 
+         end else begin 
+            w_ptr = 0; 
+         end 
+      end 
+
+      assign empty = (w_ptr == r_ptr);
+      assign full = (w_ptr[MSB-1:0] == r_ptr[MSB-1:0]) & (w_ptr[MSB]!=r_ptr[MSB]);
+
+      always @(posedge clk) begin
+        if(rst) begin
+           if (INIT_VALID)
+             w_ptr <= 1;
+           else
+             w_ptr <= 0;
+        end else if(din.valid & ~full) begin
+          w_ptr <= w_ptr + 1;
+          memory[w_ptr[MSB-1:0]] <= din.data;
+        end
+      end
+
+      always @(posedge clk) begin
+        if(rst) begin
+          r_ptr <= 0;
+        end else if(rd_ready & ~empty) begin
+          r_ptr <= r_ptr + 1;
+        end
+      end
+
+      assign din.ready = ~full;
+
+   {% if params['latency'] == 2 %}
+      logic [W_DATA-1 : 0] mem_reg;
+      logic reg_empty;
+
+      initial begin
+         reg_empty = 1;
+      end
+
+      assign rd_ready = reg_empty | dout.ready;
+
+      always @(posedge clk) begin
+         if (rst) begin
+             reg_empty <= 1;
+         end else if (rd_ready) begin
+             mem_reg <= memory[r_ptr[MSB-1:0]];
+             reg_empty <= empty;
+         end
+      end
+
+      assign dout.data = mem_reg;
+      assign dout.valid = ~reg_empty;
+
+   {% else %}
+      assign rd_ready = dout.ready;
+      assign dout.valid = ~empty;
+      assign dout.data = memory[r_ptr[MSB-1:0]];
+   {% endif %}
+
+   end else begin
+
+      logic [DIN-1 : 0] din_reg_data;
+      logic                         din_reg_valid;
+      logic                         reg_empty;
+      logic                         rd_ready;
+
+      assign rd_ready = reg_empty;
+      assign reg_empty = !din_reg_valid;
+
+      initial begin
+         din_reg_valid = INIT_VALID;
+         if (INIT_VALID)
+           din_reg_data = INIT;
+      end
+
+      always @(posedge clk) begin
+         if (rst) begin
+            din_reg_valid <= INIT_VALID;
+            if (INIT_VALID)
+              din_reg_data <= INIT;
+         end else if(!reg_empty && dout.ready) begin
+            din_reg_valid <= '0;
+         end else if (rd_ready)begin
+            din_reg_valid <= din.valid;
+            din_reg_data <= din.data;
+         end
+      end
+
+      assign din.ready = rd_ready;
+      assign dout.data = din_reg_data;
+      assign dout.valid = din_reg_valid;
+   end
+
+{% endcall %}
