@@ -1,0 +1,97 @@
+---
+extra_includes:
+- networktables/NetworkTableType.h
+- src/py2value.h
+
+inline_code: |
+  #include <src/NetworkTableValue.cpp.inl>
+
+classes:
+  Value:
+    methods:
+      Value:
+        overloads:
+          "":
+          NT_Type, uint64_t, Value::private_init:
+            ignore: true
+      type:
+        cpp_code: |
+          [](Value *t) {
+            return (NetworkTableType)t->type();
+          }
+      value:
+        cpp_code: |
+          [](Value * t) -> py::object {
+            return pyntcore::ntvalue2py(t);
+          }
+      last_change:
+      time:
+      IsValid:
+      IsBoolean:
+      IsDouble:
+      IsString:
+      IsRaw:
+      IsRpc:
+      IsBooleanArray:
+      IsDoubleArray:
+      IsStringArray:
+      GetBoolean:
+      GetDouble:
+      GetString:
+      GetRaw:
+      GetRpc:
+      GetBooleanArray:
+          cpp_code: |
+              [](Value *t) -> py::object {
+                auto v = t->value();
+                py::list l(v.data.arr_boolean.size);
+                for (size_t i = 0; i < v.data.arr_boolean.size; i++) {
+                  auto b = py::bool_(v.data.arr_boolean.arr[i]);
+                  PyList_SET_ITEM(l.ptr(), i, b.release().ptr());
+                }
+                return std::move(l);
+              }
+      GetDoubleArray:
+      GetStringArray:
+      MakeBoolean:
+      MakeDouble:
+      MakeString:
+        overloads:
+          std::string_view, uint64_t:
+          T&&, uint64_t:
+            ignore: true
+      MakeRaw:
+        overloads:
+          std::string_view, uint64_t:
+          T&&, uint64_t:
+            ignore: true
+      MakeRpc:
+        overloads:
+          std::string_view, uint64_t:
+          T&&, uint64_t:
+            ignore: true
+      MakeBooleanArray:
+        overloads:
+          wpi::span<const bool>, uint64_t:
+          wpi::span<const int>, uint64_t:
+            ignore: true
+          std::initializer_list<bool>, uint64_t:
+            ignore: true
+          std::initializer_list<int>, uint64_t:
+            ignore: true
+      MakeDoubleArray:
+        overloads:
+          wpi::span<const double>, uint64_t:
+          std::initializer_list<double>, uint64_t:
+            ignore: true
+      MakeStringArray:
+        overloads:
+          wpi::span<const std::string>, uint64_t:
+            ignore: true
+          std::vector<std::string>&&, uint64_t:
+          std::initializer_list<std::string>, uint64_t:
+            ignore: true
+      operator==:
+
+  private_init:
+    ignore: true
