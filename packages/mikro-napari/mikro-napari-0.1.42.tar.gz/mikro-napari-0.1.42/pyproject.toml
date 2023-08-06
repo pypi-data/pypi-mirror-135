@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "mikro-napari"
+version = "0.1.42"
+description = ""
+authors = ["jhnnsrs <jhnnsrs@gmail.com>"]
+license = "CC BY-NC 3.0"
+packages = [{include = "mikro_napari"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+arkitekt = "^0.1.113"
+mikro = "^0.1.69"
+napari-plugin_engine = "^0.1.4"
+
+
+[tool.poetry.scripts]
+mikro-napari = "mikro_napari.run:main"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-aiohttp = "^0.3.0"
+pytest-cov = "^3.0.0"
+black = "^21.12b0"
+
+[tool.poetry.plugins."napari.plugin"]
+mikro-napari  = "mikro_napari.plugin"
+
+
+[[tool.pydoc-markdown.loaders]]
+type = "python"
+search_path = [ "mikro_napari" ]
+
+[tool.pydoc-markdown.renderer]
+type = "docusaurus"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
