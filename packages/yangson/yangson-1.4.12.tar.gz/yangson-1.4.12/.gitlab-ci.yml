@@ -1,0 +1,41 @@
+image: python:latest
+
+stages:
+  - test
+  - build-docs
+  - publish-docs
+
+before_script:
+  - apt update
+  - apt install -yqq git make
+  - pip install pip-tools importlib-metadata
+  - pip-compile
+  - pip-sync
+
+test:
+  stage: test
+  script:
+    - make test
+    - cd docs
+    - make doctest
+
+build-docs:
+  stage: build-docs
+  script:
+    - cd docs
+    - make html
+  artifacts:
+    paths:
+      - docs/_build/html
+
+pages:
+  stage: publish-docs
+  dependencies:
+    - build-docs
+  script:
+    - mv docs/_build/html public
+  artifacts:
+    paths:
+      - public
+  only:
+    - tags
