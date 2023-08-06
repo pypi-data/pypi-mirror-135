@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: foodx_devops_tools
+Version: 0.12.1
+Summary: Foodx DevOps pipeline utilities.
+Home-page: https://github.com/Food-X-Technologies/foodx_devops_tools
+Author: FoodX Technologies
+Author-email: support@foodxtech.com
+Requires-Python: >=3.8
+Description-Content-Type: text/x-rst
+Classifier: License :: OSI Approved :: MIT License
+Requires-Dist: aiofiles >=0.7.0
+Requires-Dist: ansible >=4.4.0, <6.0
+Requires-Dist: azure-devops >=6.0.0b4, <7.0
+Requires-Dist: click >=8.0.1, <9.0
+Requires-Dist: deepmerge >=0.3.0, <1.0
+Requires-Dist: jinja2 >=3.0.1, <4.0
+Requires-Dist: pydantic >=1.8.2, <2.0
+Requires-Dist: ruamel.yaml >=0.17.9, <1.0
+Requires-Dist: build_harness >=0.2.1, <1.0 ; extra == "dev"
+Requires-Dist: pre_commit >=2.7.1, <3.0 ; extra == "dev"
+Requires-Dist: pyjson5 >=1.5.2, <2.0 ; extra == "dev"
+Requires-Dist: types-aiofiles >= 0.1.9 ; extra == "dev"
+Requires-Dist: sphinx >=3.2.1, <4.0 ; extra == "doc"
+Requires-Dist: sphinx_rtd_theme >=0.5.0, <1.0 ; extra == "doc"
+Requires-Dist: asynctest >=0.13.0, <1.0 ; extra == "test"
+Requires-Dist: pytest >=6.1.1, <7.0 ; extra == "test"
+Requires-Dist: pytest-asyncio >=0.15.1, <1.0 ; extra == "test"
+Requires-Dist: pytest-cov >=2.10.1, <3.0 ; extra == "test"
+Requires-Dist: pytest-mock >=2.0.0, <3.0 ; extra == "test"
+Provides-Extra: dev
+Provides-Extra: doc
+Provides-Extra: test
+
+foodx_devops_tools
+==================
+
+Foodx DevOps pipeline utilities.
+
+.. contents::
+
+.. section-numbering::
+
+
+Installation
+------------
+
+The ``foodx_devops_tools`` package is available from PyPI. Installing into a virtual
+environment is recommended.
+
+.. code-block::
+
+   python3 -m venv .venv; .venv/bin/pip install foodx_devops_tools
+
+
+Developers
+----------
+
+The first time you clone this project use the following command to set up the virtual environment for the project.
+Ensure that you have Python3, git and the Python package venv installed on your system.
+
+Note that while ``venv`` is in the Python standard library, in Ubuntu it is not installed with the standard Python 3
+apt package so you must explicitly install it with ``sudo apt install python3-venv``.
+
+.. code-block::
+
+   git clone <foodx_devops_tools repo url>
+   cd foodx_devops_tools
+   python3 -m venv .venv; .venv/bin/pip install build_harness; .venv/bin/build-harness install
+
+Run the same static analysis as the pipeline using the ``build-harness`` utility:
+
+.. code-block::
+
+   # apply PEP-8 formatting to the code (mandatory as the pipeline will fail if not PEP-8 compliant formatting)
+   build-harness formatting
+   # apply formatting and then do additional static checks using flake8, mypy and pydocstyle
+   build-harness static-analysis
+   # run unit tests - for this project the test dir specification is necessary to avoid running manual tests
+   build-harness unit-test --test-dir tests/ci
+   # generate unit test coverage report
+   build-harness unit-test --test-dir tests/ci --coverage-html
+
+Examine the ``.gitlab-ci.yml`` file for more examples of using the ``build-harness`` utility.
+
