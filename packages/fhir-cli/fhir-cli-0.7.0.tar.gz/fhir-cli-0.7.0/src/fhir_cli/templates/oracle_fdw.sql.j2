@@ -1,0 +1,13 @@
+BEGIN;
+
+CREATE SERVER IF NOT EXISTS source_server
+    FOREIGN DATA WRAPPER oracle_fdw
+    OPTIONS (dbserver '//{{ source_host }}:{{ source_port }}/{{ source_db }}');
+
+GRANT USAGE ON FOREIGN SERVER source_server TO PUBLIC;
+
+CREATE USER MAPPING IF NOT EXISTS FOR PUBLIC
+    SERVER source_server
+    OPTIONS (user '{{ source_user }}', password '{{ source_password }}');
+
+COMMIT;

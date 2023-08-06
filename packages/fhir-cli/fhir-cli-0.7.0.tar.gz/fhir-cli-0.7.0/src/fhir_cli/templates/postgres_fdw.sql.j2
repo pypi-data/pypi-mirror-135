@@ -1,0 +1,13 @@
+BEGIN;
+
+CREATE SERVER IF NOT EXISTS source_server
+    FOREIGN DATA WRAPPER postgres_fdw
+    OPTIONS (host '{{ source_host }}', port '{{ source_port }}', dbname '{{ source_db }}', fetch_size '50000');
+
+GRANT USAGE ON FOREIGN SERVER source_server TO PUBLIC;
+
+CREATE USER MAPPING IF NOT EXISTS FOR PUBLIC
+    SERVER source_server
+    OPTIONS (user '{{ source_user }}', password '{{ source_password }}');
+
+COMMIT;
