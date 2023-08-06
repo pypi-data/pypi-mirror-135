@@ -1,0 +1,46 @@
+bento_server:
+  port: 5000
+  host: 0.0.0.0
+  backlog: 2048
+  workers: 1
+  timeout: 60
+  max_request_size: 20971520
+  batch_options:
+    enabled: True
+    max_batch_size: 10000
+    max_latency_ms: 10000
+  ngrok:
+    enabled: False
+  metrics:
+    enabled: True
+    namespace: BENTOML
+  logging:
+    level: INFO
+  cors:
+    enabled: False
+    access_control_allow_origin: Null
+    access_control_allow_credentials: Null
+    access_control_allow_methods: Null
+    access_control_allow_headers: Null
+    access_control_max_age: Null
+    access_control_expose_headers: Null
+
+logging:
+  level: INFO
+  console:
+    enabled: True
+  file:
+    enabled: True
+    directory: Null
+  advanced:
+    enabled: False
+    config: Null
+
+tracing:
+  type: zipkin
+  sample_rate: 0.0
+  zipkin:
+    url: Null
+  jaeger:
+    address: Null
+    port: Null
