@@ -1,0 +1,106 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html : #}
+<div class="segment">
+  <div class="segment-liner">
+    <h1 id="{{taskid}}" class="task_header">
+      Instructions for {{taskid}}
+    </h1>
+    (produced {{timestamp|at_time}})
+  </div>
+</div>
+
+<div id="{{taskid}}_body" class="task_body with_rubric">
+
+  <!-- Preliminaries -->
+  <section class="preliminaries segment">
+    <div class="segment-liner">
+      {% if task_info.pset_entries|length == 1 %}
+        {% set psinfo=task_info.pset_entries[0] %}
+        <p>
+        This task is part of {{psinfo.id}} which is due
+        {{psinfo.due|at_time}}.
+        </p>
+
+        <p>
+        {% if psinfo.partner %}
+          You have the option to work with a partner on this task if you
+          wish. Working with a partner requires more work to coordinate
+          schedules, but if you work together and make sure that you are
+          both understanding the code you write, you will make progress
+          faster and learn more.
+        {% else %}
+          This is an individual task.
+        {% endif %}
+        </p>
+
+        {% if "submission_url" in psinfo %}
+        <p>
+        You can
+        <a
+         href="{{psinfo.submission_url}}"
+         target="_blank"
+        >submit this task using this link</a>.
+        </p>
+        {% endif %}
+      {% endif %}
+
+      <p>
+      Put all of your work for this task into the file
+      <code>{{task_info.target}}</code><br>
+      {% if task_info.target in task_info.specification.starter_files %}
+        (which is provided among the starter files)
+      {% else %}
+        (you will create this file from scratch)
+      {% endif %}
+      </p>
+    </div>
+  </section>
+
+  <!-- Instructions -->
+  <section class="instructions segment">
+    <div class="segment-liner">
+      <!-- Toggle for goal link coloring -->
+      <p>
+        <label for="decorate_goal_links">
+          <input type="checkbox" id="decorate_goal_links">
+          Click here to toggle highlighting for goal links
+        </label>
+      </p>
+      {{instructions}}
+    </div>
+  </section>
+
+  <!-- Snippets -->
+  <div class="sticky_context" id="{{taskid}}_snippets_context">
+    <section
+     class='sticky_bin segment'
+     id="{{taskid}}_snippets"
+     tabindex="0"
+     aria-label="Examples"
+     aria-live="polite"
+    >
+      <h2 class="bin_label" tabindex="0">Examples</h2>
+      <div class="segment-liner">
+          {% for snippet in snippets %}
+            {{snippet|safe}}
+          {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <!-- Rubric -->
+  <div class="sticky_context" id="{{taskid}}_rubric_context">
+    <section
+     class='sticky_bin segment last-segment'
+     id="{{taskid}}_rubric"
+     tabindex="0"
+     aria-label="The rubric"
+     aria-live="polite"
+    >
+      <h2 class="bin_label" tabindex="0">Rubric</h2>
+      <div class="segment-liner">
+        {{rendered_rubric}}
+      </div>
+    </section>
+  </div>
+  
+</div>

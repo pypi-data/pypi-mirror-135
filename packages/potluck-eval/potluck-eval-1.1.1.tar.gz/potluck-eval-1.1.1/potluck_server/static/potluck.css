@@ -1,0 +1,678 @@
+/* ------- *
+ * General *
+ * ------- */
+
+:root {
+    --body-color-top: #49f;
+    --body-color-mid: #08c;
+    --body-color-low: #027;
+    --body-color-bottom: #016;
+
+    --text-color: #206;
+
+    --offwhite: #f8feff;
+    --silver: #f8f8f8;
+    --subwhite: #e8f8ff;
+
+    --submitted-bg: #afd;
+    --submitted-border: #4c8;
+
+    --inflight-bg: #ffd;
+    --inflight-border: #dd8;
+
+    --issue-bg: #c9f;
+    --issue-border: #83c;
+
+    --warning-bg: #fda;
+    --warning-border: #c84;
+
+    --validation-bg: #fdf;
+    --validation-border: #d8d;
+
+    --info-color: #7ef;
+
+    --header-color: #7fe;
+
+    --messages-color: #ffa;
+    --messages-trim: #fca;
+
+    --div-color: #9df;
+
+    --subdiv-color: #aef;
+
+    --link-color: #057;
+    --visited-color: #068;
+
+    --shadow-color: #9bf;
+    --disabled: #999;
+
+    --missing-grade: #dd3300;
+    --missing-revision: #dd4499;
+    --low-grade: #ffbb66;
+    --mid-grade: #ff88bb;
+    --high-grade: #fff0f8;
+
+    --fast-time: #dddddd;
+    --slow-time: #bbbbbb;
+    --very_slow-time: #999999;
+    --unknown-time: #ffff99;
+}
+
+a:link {
+    color: var(--link-color);
+    text-decoration: none;
+    text-shadow: 1px 1px 0px var(--shadow-color);
+}
+
+a:visited {
+    color: var(--visited-color);
+    text-decoration: none;
+    text-shadow: 1px 1px 0px var(--shadow-color);
+}
+
+body {
+    font-size: 14pt;
+    font-family: "Noto Sans Display", "DejaVu Sans", sans-serif;
+    color: var(--text-color);
+    background-color: var(--body-color-top);
+    background: linear-gradient(
+        var(--body-color-top),
+        var(--body-color-mid) 40%,
+        var(--body-color-low) 80%,
+        var(--body-color-bottom)
+    );
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: 0pt;
+    padding: 8pt 8pt 18pt 8pt;
+}
+
+div {
+    margin: 0pt;
+    padding: 5pt;
+    border-radius: 4pt;
+}
+
+div.group {
+    display: content;
+    margin: 0pt;
+    padding: 0pt;
+}
+
+body > div {
+    background-color: var(--offwhite);
+    margin: 6pt 0pt;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 4pt 0pt 8pt 0pt;
+    padding: 5pt;
+    border-radius: 4pt;
+    background-color: var(--offwhite);
+    border-left: 3pt solid var(--header-color);
+}
+
+.task_container h1,
+.task_container h2,
+.task_container h3,
+.task_container h4,
+.task_container h5,
+.task_container h6 {
+    margin: 4pt 0pt 8pt 0pt;
+    padding: 5pt;
+    border: none;
+    background-color: transparent;
+}
+
+button, input[type="submit"], input[type="button"], input[type="file"] {
+    font-size: 100%;
+    font-family: inherit;
+}
+
+input[type="text"], textarea {
+    font-size: 100%;
+    font-family: inherit;
+}
+
+input[type="checkbox"] {
+}
+
+/* Make all checkboxes bigger by default so they're easier to click on */
+@supports (zoom:1.5) {
+  input[type="checkbox"] {
+    zoom:1.5
+  }
+}
+@supports not (zoom:1.5) {
+  input[type="checkbox"] {
+    transform: scale(1.5);
+  }
+}
+
+/* ---- *
+ * Base *
+ * ---- */
+
+#messages {
+    background-color: var(--messages-color);
+    border-left: 3pt solid var(--messages-trim);
+    margin: 0pt 0pt 6pt 0pt;
+}
+
+#user_info {
+    background-color: var(--offwhite);
+    border-left: 3pt solid var(--info-color);
+}
+
+#important_info {
+    position: fixed;
+    top: 6pt;
+    left: 10vw;
+    width: 80vw;
+    background: none;
+    margin: 0pt;
+    padding: 0pt;
+}
+
+#masquerade, #pause {
+    background-color: var(--warning-bg);
+    border: 3pt solid var(--warning-border);
+    width: 95%;
+    margin: 6pt;
+}
+
+
+/* --------- *
+ * Dashboard *
+ * --------- */
+
+.psets {
+    list-style-type: none;
+    margin: 4pt 4pt 4pt 8pt;
+    padding: 0pt 0pt 0pt 8pt;
+}
+
+.pset {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: start;
+    padding: 5pt;
+    border-radius: 4pt;
+    margin: 8pt 4pt 18pt 4pt;
+    background-color: var(--offwhite);
+    border-left: 3pt solid var(--div-color);
+}
+
+.pset > * {
+    margin: 0pt 6pt 0pt 6pt;
+}
+
+.tasks {
+    list-style-type: none;
+    margin-left: 6pt;
+    padding-left: 0pt;
+    flex-grow: 5;
+}
+
+.tasks .task { /* notably .unsubmitted */
+    background-color: var(--subwhite);
+    border-left: 2pt solid var(--subdiv-color);
+    border-bottom: 2pt solid var(--subdiv-color);
+    border-radius: 8pt;
+    padding: 5pt 8pt;
+    margin: 0pt 0pt 4pt 0pt;
+}
+
+.status-final .tasks .task.unsubmitted {
+    background-color: var(--issue-bg);
+    border-color: var(--issue-border);
+}
+
+.tasks .task.inflight {
+    background-color: var(--inflight-bg);
+    border-color: var(--inflight-border);
+}
+
+.tasks .task.unprocessed {
+    border-radius: 0pt;
+    background-color: var(--warning-bg);
+    border-color: var(--warning-border);
+}
+
+.tasks .task.issue {
+    border-radius: 0pt;
+    background-color: var(--issue-bg);
+    border-color: var(--issue-border);
+}
+
+.tasks .task.complete {
+    border-radius: 0pt;
+    background-color: var(--submitted-bg);
+    border-color: var(--submitted-border);
+}
+
+.tasks .task .controls {
+    margin: 0pt;
+    padding: 4pt;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.task_submit {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 0pt 6pt;
+    flex-grow: 2;
+}
+
+.task_submit > * {
+    margin: 2pt 0pt;
+    max-width: 22rem;
+    overflow: auto;
+}
+
+.time_spent {
+    width: 3em;
+}
+
+.tasks .task .controls > .submission_status,
+.tasks .task .controls > .revision_status {
+    display: inline-block;
+    margin: 0pt 6pt;
+}
+
+.tasks .task .controls > a:last-child {
+    display: inline-block;
+    text-align: center;
+}
+
+.messages {
+    width: 100%;
+    list-style-type: none;
+    padding-left: 0pt;
+}
+
+.messages > * {
+    background-color: var(--offwhite);
+    padding: 2pt 4pt;
+    border-radius: 4pt;
+    border-bottom: 1pt solid var(--subdiv-color);
+    border-left: 1pt solid var(--subdiv-color);
+}
+
+.messages .assurance {
+    background-color: var(--submitted-bg);
+    border-color: var(--submitted-border);
+}
+
+.messages .inflight {
+    background-color: var(--inflight-bg);
+    border-color: var(--inflight-border);
+}
+
+.messages .warning {
+    background-color: var(--warning-bg);
+    border-color: var(--warning-border);
+}
+
+.messages .validation {
+    background-color: var(--validation-bg);
+    border-color: var(--validation-border);
+}
+
+.invalid {
+    box-shadow: 0px 0px 4px var(--validation-border);
+    border: 1pt solid var(--validation-border);
+}
+
+.timing {
+    width: 10em;
+    margin: 0pt;
+    padding: 0pt;
+}
+
+.timing > * {
+    display: block;
+    padding: 0pt;
+    margin: 0pt 5pt 5pt 5pt;
+}
+
+.feedback_items {
+    list-style-type: none;
+    padding-left: 0pt;
+}
+
+.grade_value {
+    font-weight: bold;
+}
+
+.action_link {
+    display: inline-block;
+    margin: 4pt 0pt;
+    border: 1.5pt solid var(--shadow-color);
+    background: var(--silver);
+    border-radius: 3pt;
+    padding: 0pt 3pt;
+}
+
+.disabled_link {
+    border-color: var(--disabled);
+    color: var(--disabled);
+}
+
+.extension_taken {
+    font-weight: bold;
+}
+
+
+/* -------- *
+ * Feedback *
+ * -------- */
+
+.container {
+    background-color: var(--subwhite);
+    border-left: 3pt solid var(--div-color);
+}
+
+.container > .timer, .container > .due {
+    display: inline-block;
+    margin: 4pt;
+}
+
+.container .task, .container .submit {
+    background-color: var(--offwhite);
+    border-left: 3pt solid var(--div-color);
+}
+
+.manual_evaluation {
+    padding: 4pt;
+    border-radius: 3pt;
+    border: 1pt solid black;
+    background: white;
+    font-size: larger;
+}
+
+.grade_override {
+    padding: 4pt;
+    border-radius: 3pt;
+    border: 1pt solid black;
+    background: white;
+    font-weight: bold;
+    font-size: larger;
+}
+
+
+/* ---------- *
+ * Extensions *
+ * ---------- */
+
+.extensions_form {
+    margin: 8pt 0pt;
+}
+
+
+/* ---------- *
+ * Gradesheet *
+ * ---------- */
+
+.grade_table,
+.timing_table {
+    border-collapse: collapse;
+}
+
+.grade_table > thead,
+.timing_table > thead {
+    text-align: center;
+    background-color: var(--silver);
+}
+
+.grade_table > thead,
+.grade_table > tbody > tr,
+.timing_table > thead,
+.timing_table > tbody > tr {
+    border-bottom: 2pt solid var(--text-color);
+}
+
+.grade_table th.groupend,
+.grade_table td.groupend,
+.timing_table th.groupend,
+.timing_table td.groupend {
+    border-right: 2pt solid var(--text-color);
+}
+
+.grade_table > tbody > tr:nth-child(odd),
+.timing_table > tbody > tr:nth-child(odd) {
+    background-color: var(--subwhite);
+}
+
+.grade_table > tbody > tr:nth-child(even),
+.timing_table > tbody > tr:nth-child(even) {
+    background-color: var(--silver);
+}
+
+.grade_table, .timing_table {
+    table-layout: fixed;
+}
+
+.grade_table > thead > tr > th,
+.grade_table > tbody > tr > td,
+.timing_table > thead > tr > th,
+.timing_table > tbody > tr > td {
+    padding: 0pt 5pt;
+}
+
+.timing_table td.timespent {
+    text-align: center;
+}
+
+.grade_table > thead > tr > th > span,
+.grade_table > tbody > tr > td > span {
+    display: inline-block;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.grade_table > thead > tr > th.taskid > span {
+    max-width: 4em;
+}
+
+.grade_table > tbody > tr > td.timespent > span {
+    max-width: 1.5em;
+}
+
+.grade_table > tbody > tr > td.name {
+    text-align: right;
+}
+
+.grade_table > tbody > tr > td.name > span {
+    max-width: 5em;
+}
+
+.grade_table > tbody > tr > td.pronouns {
+    text-align: center;
+}
+
+.grade_table > tbody > tr > td.pronouns > span {
+    max-width: 4em;
+}
+
+.grade_table > tbody > tr > td.username {
+    text-align: center;
+}
+
+.grade_table > tbody > tr > td.username > span {
+    max-width: 3.5em;
+}
+
+.grade_table .status_and_grade {
+    padding: 0pt;
+}
+
+.grade_table .submission_status {
+    padding: 0pt 2pt;
+}
+
+.grade_table .task_grade,
+.grade_table .revision_grade {
+    padding: 0pt 4pt;
+}
+
+.grade_table .status_unsubmitted {
+    background-color: var(--issue-bg);
+    border-color: var(--issue-border);
+}
+
+.grade_table .status_inflight {
+    background-color: var(--inflight-bg);
+    border-color: var(--inflight-border);
+}
+
+.grade_table .status_unprocessed {
+    background-color: var(--warning-bg);
+    border-color: var(--warning-border);
+}
+
+.grade_table .status_issue {
+    background-color: var(--issue-bg);
+    border-color: var(--issue-border);
+}
+
+.grade_table .status_complete {
+    background-color: var(--submitted-bg);
+    border-color: var(--submitted-border);
+}
+
+.grade_table .missing {
+    background-color: var(--missing-grade);
+}
+
+.grade_table .revision_grade.missing {
+    background-color: var(--missing-revision);
+}
+
+.grade_table .low {
+    background-color: var(--low-grade);
+}
+
+.grade_table .mid {
+    background-color: var(--mid-grade);
+}
+
+.grade_table .high {
+    background-color: var(--high-grade);
+}
+
+.grade_table .timespent.faster {
+    background-color: var(--fast-time);
+}
+
+.grade_table .timespent.slower {
+    background-color: var(--slow-time);
+}
+
+.grade_table .timespent.very_slow {
+    background-color: var(--very_slow-time);
+}
+
+.grade_table .timespent.unknown {
+    background-color: var(--unknown-time);
+}
+
+/* ------------- *
+ * Fixed Layouts *
+ * ------------- */
+
+@media only screen and (min-width: 899px) {
+    body {
+        width: 900px;
+        margin: 0pt auto;
+    }
+
+    body.fullwidth {
+        width: 100vw;
+        margin: 0pt;
+        box-sizing: border-box;
+    }
+}
+
+@media only screen and (max-width: 899px) {
+    body {
+        width: 520px;
+        margin: 0pt auto;
+    }
+
+    body.fullwidth {
+        width: 100vw;
+        min-width: max-content;
+        margin: 0pt;
+        box-sizing: border-box;
+    }
+
+    .pset {
+        flex-direction: column;
+    }
+
+    .tasks .task .controls {
+        flex-direction: column;
+    }
+
+    .tasks .task .controls > form {
+        flex-direction: column;
+    }
+
+    .timing {
+      width: auto;
+    }
+}
+
+@media only screen and (max-width: 519px) {
+    body {
+        width: 20em;
+        padding: 0.2em 0.1em;
+        margin: 0pt auto;
+    }
+
+    body.fullwidth {
+        width: 100vw;
+        min-width: max-content;
+        margin: 0pt;
+        box-sizing: border-box;
+    }
+
+    .psets {
+        padding: 0pt;
+        margin: 0pt;
+    }
+
+    .pset {
+        margin: 4pt 0pt;
+        flex-direction: column;
+    }
+
+    .tasks .task {
+        max-width: 16em;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+
+    .tasks .task .controls {
+        flex-direction: column;
+        max-width: 15em;
+        box-sizing: border-box;
+    }
+
+    .tasks .task .controls > form {
+        flex-direction: column;
+        max-width: 14em;
+        box-sizing: border-box;
+    }
+
+    .timing {
+      width: auto;
+    }
+}

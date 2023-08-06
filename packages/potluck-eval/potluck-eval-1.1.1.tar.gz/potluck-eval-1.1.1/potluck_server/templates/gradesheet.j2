@@ -1,0 +1,419 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+{% extends "base.j2" %}
+
+{% block body_attrs %}
+class="gradesheet fullwidth"
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <a
+   href="{{url_for("route_dash", course=course, semester=semester)}}"
+   title="Click here to go back to the dashboard"
+   tabindex="0"
+  >Back to the dashboard</a>
+
+<h2>
+  Gradesheet for
+  <a href="{{ps["url"]}}" title="View instructions for {{ps.id}}">{{ps.id}}</a>
+</h2>
+
+<p>
+{{ due_at(ps["status"]) }}
+{{ countdown(ps["status"]) }}
+</p>
+
+<p>
+Time spent on this problem set:<br>
+<table class="timing_table">
+  <thead>
+    <tr>
+      <th colspan="2" class="groupend">Part</th>
+      <th>Average</th>
+      <th>Median</th>
+      <th>75th percentile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2" class="groupend">total</td>
+      <td class="timespent">{{aggregate_times["all"]["average"]|timespent}}</td>
+      <td class="timespent">{{aggregate_times["all"]["median"]|timespent}}</td>
+      <td class="timespent">{{aggregate_times["all"]["75th"]|timespent}}</td>
+    </tr>
+    {% for phase in aggregate_times %}
+      {% if phase != "all" %}
+        {% set aggregates = aggregate_times[phase] %}
+        {% for taskid in aggregates["average"]|sorted %}
+          <tr>
+            <td>{% if loop.first %}{{ phase }}{% endif %}</td>
+            <td class="groupend">{{ taskid }}</td>
+            <td class="timespent">
+              {{aggregates["average"][taskid]|timespent}}
+            </td>
+            <td class="timespent">
+              {{aggregates["median"][taskid]|timespent}}
+            </td>
+            <td class="timespent">
+              {{aggregates["75th"][taskid]|timespent}}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+</p>
+
+<table class="grade_table" id="grades">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th title="Hover for more student information">🛈</th>
+      <th>Pronoun</th>
+      <th>Username</th>
+      <th colspan="2">Sections</th>
+      <th class="groupend">Exp?</th>
+      <th class="groupend" colspan="4">Overall</th>
+      <th class="groupend" colspan="{{ps["tasks"]|length}}">Combined</th>
+      <th class="groupend" colspan="{{2 * ps["tasks"]|length}}">Initial</th>
+      <th class="groupend" colspan="{{2 * ps["tasks"]|length}}">Revised</th>
+    </tr>
+    {% if ps|uses_pools %}
+      {# Add an extra row showing the pool IDs #}
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="groupend"></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="groupend"></th>
+        {% for pool, span in ps|pset_pools %}
+          <th
+           colspan="{{ span }}"
+           {% if loop.last %}class="groupend"{% endif %}
+          >
+            {{ pool }}
+          </th>
+        {% endfor %}
+        {% for _ in "IR" %}
+          {% for pool, span in ps|pset_pools %}
+            <th
+             colspan="{{ 2*span }}"
+             {% if loop.last %}class="groupend"{% endif %}
+            >
+              {{ pool }}
+            </th>
+          {% endfor %}
+        {% endfor %}
+      </tr>
+    {% endif %} {# ps uses pools #}
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th class="section">Lec</th>
+      <th class="section">Lab</th>
+      <th class="groupend"></th>
+      <th>Grade</th>
+      <th>Time</th>
+      <th>Ext?</th>
+      <th class="groupend">Notes?</th>
+      {% for task in ps["tasks"] %}
+        <th class="taskid{% if loop.last %} groupend{% endif %}">
+          <span>{{ task["id"] }}</span>
+        </th>
+      {% endfor %}
+      {% for _ in "IR" %}
+        {% for task in ps["tasks"] %}
+          <th colspan="2" class="taskid{% if loop.last %} groupend{% endif %}">
+            <span>{{ task["id"] }}</span>
+          </th>
+        {% endfor %}
+      {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for student in roster %}
+      {% if student_info %}
+        {% set sinfo = student_info.get(student["username"], {}) %}
+      {% else %}
+        {% set sinfo = {} %}
+      {% endif %}
+      <tr> <!-- one row per student -->
+        <td class="name" title="{{sinfo["pronunciation"]}}">
+          <span>
+            {% if sinfo["nonce"] %}({{sinfo["nonce"]}}){% endif %}
+            {{sinfo["full_name"] or student["fullname"]}}
+          </span>
+        </td>
+        <td title="My favorite thing: {{sinfo["favorite_thing"]}}
+My expectations: {{sinfo["expectations"]}}">
+          🛈 
+        </td>
+        <td class="pronouns">
+          <span>{{sinfo.get("pronouns","?")|pronoun}}</span>
+        </td>
+        <td class="username"><span>{{student["username"]}}</span></td>
+        <td class="section lec_section" title="{{sinfo["lecture_instructor"]}}">
+          {{sinfo.get("lecture_instructor", "")|initials}}
+        </td>
+        <td class="section lab_section" title="{{sinfo["lab_instructor"]}}">
+          {{sinfo.get("lab_instructor", "")|initials}}
+        </td>
+        {% set exp = sinfo.get("experience_amount") %}
+        {% if exp in (None, "None") %}
+          {% set estr = "none" %}
+          {% set eclass = "no-experience" %}
+        {% elif exp.startswith("More") %}
+          {% set estr = "a bit" %}
+          {% set eclass = "short-experience" %}
+        {% elif exp.startswith("Less") %}
+          {% set estr = ">1mo" %}
+          {% set eclass = "long-experience" %}
+        {% else %}
+          {% set estr = exp %}
+          {% set eclass = "unknown-experience" %}
+        {% endif %}
+        <td
+         class="experience groupend {{eclass}}"
+         title="{{sinfo["experience_description"] or ""}}"
+        >
+          {{estr|safe}}
+        </td>
+        {% if student["this_pset"] == None %}
+          <td colspan="3" class="pset_grade missing groupend">
+            missing
+          </td>
+          <td
+           colspan="{{2 * ps["tasks"]|length}}"
+           class="task_grade unsubmitted"
+          >
+            No data
+          </td>
+          {% for _ in "IR" %}
+            <td
+             colspan="{{3 * ps["tasks"]|length}}"
+             class="task_grade unsubmitted {% if loop.last %}groupend{% endif%}"
+            >
+              No data
+            </td>
+          {% endfor %}
+        {% else %}
+          {% set this_ps = student["this_pset"] %}
+          {% set timing = student["task_info"] %}
+
+          {# Overall grade, time spent, and extensions #}
+          {% set pset_grade = this_ps|pset_combined_grade %}
+          <td class="pset_grade {{pset_grade|grade_category}}">
+            {{pset_grade|grade_string|shorter_grade}}
+          </td>
+          {% if this_ps["total_time"] != "?" %}
+            {% if this_ps["total_time"] < aggregate_times["all"]["median"] %}
+              {% set timecat="faster" %}
+            {% elif this_ps["total_time"] < aggregate_times["all"]["75th"] %}
+              {% set timecat="slower" %}
+            {% else %}
+              {% set timecat="very_slow" %}
+            {% endif %}
+          {% else %}
+            {% set timecat="unknown" %}
+          {% endif %}
+          <td class="timespent {{timecat}}">
+            {{this_ps["total_time"]|timespent}}
+          </td>
+          
+          {# extensions info + link #}
+          {% set initial_ext = this_ps["status"]["initial_extension"] %}
+          {% set revision_ext = this_ps["status"]["revision_extension"] %}
+          {% set has_extension = initial_ext > 0 or revision_ext > 0 %}
+          <td
+           class="extensions {% if has_extension %}extended{% endif %}"
+           {% if has_extension %}
+             title="{{ initial_ext }}h initial, {{ revision_ext }}h revision"
+           {% else %}
+             title="no extensions"
+           {% endif %}
+          >
+            <a
+             href="{{url_for(
+               'route_manage_extensions',
+               course=course,
+               semester=semester,
+               target_user=student["username"],
+               psid=this_ps["id"]
+             )}}"
+             title="Manage extensions for {{student["username"]}}"
+            >
+            {% if has_extension %}
+              {% if initial_ext > 0 %}I{% endif %}
+              {% if revision_ext > 0 %}R{% endif %}
+            {% else %}
+              -
+            {% endif %}
+            </a>
+          </td>
+
+          {# custom feedback ? #}
+          {% set notes = [] %}
+          {% set overrides = [] %}
+          {% for task in this_ps["tasks"] %}
+            {% if task.grade_overridden %}
+              {{ overrides.append(task.id) or "" }}
+            {% endif %}
+            {% if task.revision.grade_overridden %}
+              {{ overrides.append("rev_" + task.id) or "" }}
+            {% endif %}
+            {% if task.notes %}
+              {{ notes.append(task.id) or "" }}
+            {% endif %}
+            {% if task.revision.notes %}
+              {{ notes.append("rev_" + task.id) or "" }}
+            {% endif %}
+          {% endfor %}
+          <td
+           class="notes groupend {% if notes %}has_notes{% endif %} {% if overrides %}has_overrides{% endif %}"
+           {% if notes and overrides %}
+             title="notes for {{notes|join(', ')}} and overrides for {{overrides|join(', ')}}"
+           {% elif notes %}
+             title="notes for {{notes|join(', ')}}"
+           {% elif overrides %}
+             title="overrides for {{overrides|join(', ')}}"
+           {% else %}
+             title="no notes or overrides"
+           {% endif %}
+          >
+            {% if notes and overrides %}
+              {{ notes|length }}n
+              {{ overrides|length }}o
+            {% elif notes %}
+              {{ notes|length }}n
+            {% elif overrides %}
+              {{ overrides|length }}o
+            {% else %}
+              -
+            {% endif %}
+            </a>
+          </td>
+
+          {# Combined grades for each task #}
+          {% for task in this_ps["tasks"] %}
+            {% set combined_grade = task|task_combined_grade %}
+            <td
+             class="task_combined {{combined_grade|grade_category}} {% if loop.last %}groupend{% endif %}"
+             title="spent {{task["combined_time_val"]|timespent}}"
+            >
+              {{combined_grade|grade_string|shorter_grade}}
+            </td>
+          {% endfor %}
+
+          {# Initial grades for each task #}
+          {% for task in this_ps["tasks"] %}
+            {% set grade = task.get("grade") %}
+            {% set spent = task["initial_time_val"]|timespent %}
+            {% set subdesc = task["submission_desc"] %}
+            {% if spent != '-' %}
+              {% set subdesc = subdesc + "; spent " + spent %}
+            {% endif %}
+            {% if task.notes or task.grade_overridden %}
+              {% set subdesc = subdesc + "; customized" %}
+            {% endif %}
+            <td
+             class="submission_status status_{{task["submission_status"]}}"
+             title="{{subdesc}}"
+             aria-label="{{subdesc}}"
+            >
+              <span aria-hidden="true">
+                {{task["submission_icon"]}}
+                {% if task.notes or task.grade_overridden %}*{% endif %}
+              </span>
+            </td>
+            <td class="task_grade {{grade|grade_category}} {% if loop.last %}groupend{% endif %}">
+              <a
+               href="{{url_for(
+                 'route_evaluate',
+                 course=course,
+                 semester=semester,
+                 target_user=student["username"],
+                 phase="initial",
+                 psid=this_ps["id"],
+                 taskid=task["id"]
+               )}}"
+               title="Evaluate {{student["fullname"]}}'s initial {{task["id"]}} submission."
+              >
+                {{grade|grade_string|shorter_grade}}
+              </a>
+            </td>
+          {% endfor %}
+
+          {# Revised grades for each task #}
+          {% for task in this_ps["tasks"] %}
+            {% set rev_task = task["revision"] %}
+            {% set grade = rev_task.get("grade") %}
+            {% set spent = task["revision_time_val"]|timespent %}
+            {% set subdesc = "revision " + rev_task["submission_desc"] %}
+            {% if spent != '-' %}
+              {% set subdesc = subdesc + "; spent " + spent %}
+            {% endif %}
+            <td
+             class="revision_status status_{{rev_task["submission_status"]}}"
+             title="{{subdesc}}"
+             aria-label="{{subdesc}}"
+            >
+              <span aria-hidden="true">
+                {{rev_task["submission_icon"]}}
+                {% if rev_task.notes or rev_task.grade_overridden %}*{% endif %}
+              </span>
+            </td>
+            <td class="revision_grade {{grade|grade_category}} {% if loop.last %}groupend{% endif %}">
+              <a
+               href="{{url_for(
+                 'route_evaluate',
+                 course=course,
+                 semester=semester,
+                 target_user=student["username"],
+                 phase="revision",
+                 psid=this_ps["id"],
+                 taskid=task["id"]
+               )}}"
+               title="Evaluate {{student["fullname"]}}'s revised {{task["id"]}} submission."
+              >
+                {{grade|grade_string|shorter_grade}}
+              </a>
+            </td>
+          {% endfor %}
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+Text for copy-pasting:
+<textarea id="copy-area">
+</textarea>
+<!-- A script to manage copy-pasting functionality -->
+<script type="text/javascript" nonce="{{csp_nonce()}}">
+let grade_table = document.getElementById("grades");
+let copy_area = document.getElementById("copy-area");
+// Copy over grade info on page load. Note that this doesn't line up the
+// header rows correctly, but that shouldn't matter as long as our spreadsheets
+// are simply looking for a particular column.
+document.addEventListener("DOMContentLoaded", function () {
+    copy_area.value = grade_table.innerText;
+});
+// Set up select-all-on-click
+copy_area.addEventListener("click", function (ev) {
+  copy_area.select();
+});
+</script>
+
+</div> <!-- end of container -->
+
+{% endblock %}

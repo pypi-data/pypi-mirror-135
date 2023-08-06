@@ -1,0 +1,144 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+{# This template requires "pset" and "task" variables to be set up,
+which should be sourced from amended task info. #}
+
+{% set ps_state = pset.status.state %}
+{% if ps_state in ("unreleased", "released") %}
+  {% set sub_phase="initial" %}
+{% elif ps_state in ("under_review", "revisable") %}
+  {% set sub_phase="revision" %}
+{% elif ps_state == "final" %}
+  {% set sub_phase="belated" %}
+{% else %} {# "unknown", etc. #}
+  {% set sub_phase="invalid" %}
+{% endif %}
+<form
+action="{{url_for(
+ 'route_submit',
+ course=course,
+ semester=semester,
+ target_user=target_user,
+ psid=pset.id,
+ taskid=task.id
+)}}"
+method="POST"
+enctype="multipart/form-data"
+class="task_submit"
+data-pset="{{pset.id}}"
+data-task="{{task.id}}"
+>
+{# CSRF token for flask_seasurf #}
+<input
+ type="hidden"
+ name="_csrf_token"
+ value="{{csrf_token()}}"
+>
+<label for="{{pset.id}}-{{task.id}}-upload">
+  Submit
+  <code>{{task.target}}</code>
+  {% if sub_phase == "revision" %}
+    (revision)
+  {% elif sub_phase == "belated" %}
+    (late)
+  {% elif sub_phase == "invalid" %}
+    (???)
+  {% endif %}
+  <input
+   type="file"
+   name="upload"
+   id="{{pset.id}}-{{task.id}}-upload"
+   required
+   {% if task.target.endswith(".py") %}
+   accept=".py"
+   {% endif %}
+  >
+</label>
+{% if is_admin %}
+  {% if not target_user %}
+    {% set target_user = effective_user %}
+  {% endif %}
+  <span class="form_row">
+    {% if username != target_user %}
+      <strong>(Note: by default from this page you will be creating
+      {{"an initial submission" if phase == "initial" else "a revision"}}
+      for {{target_user}}, which will override their latest
+      submission)</strong><br>
+    {% endif %}
+    As an admin, you may:
+    <ul>
+      <li>
+        <label for="{{pset.id}}-{{task.id}}-submit_as">
+          Choose a user to submit as (just the username):
+          <input
+           type="text"
+           name="target_user"
+           id="{{pset.id}}-{{task.id}}-submit_as"
+           class="submit_as"
+           value="{{target_user}}"
+          >
+          </input>
+        </label>
+      </li>
+      <li>
+        <label for="{{pset.id}}-{{task.id}}-submission_phase">
+          Should the submission count as an initial submission or a revision?
+          {% if not phase %}
+            {% set rel_phase = sub_phase %}
+          {% else %}
+            {% set rel_phase = phase %}
+          {% endif %}
+          <select id="{{pset.id}}-{{task.id}}-submission_phase" name="phase">
+            <option {% if rel_phase == "initial" %}selected{% endif %}>
+              initial
+            </option>
+            <option {% if rel_phase != "initial" %}selected{% endif %}>
+              revision
+            </option>
+          </select>
+        </label>
+      </li>
+    </ul>
+  </span>
+{% endif %}
+<span class="form_row">
+  <label for="{{pset.id}}-{{task.id}}-time_spent">
+    {% if is_admin and username != target_user %}
+      What is the time spent for this submission (use -1 if you don't
+      know)?
+    {% else %}
+      {% if sub_phase == "initial" %}
+        How many hours have you spent on {{pset.id}}
+        {{task.id}} (all attempts before revisions)?
+      {% else %}
+        How many hours have you spent revising
+        {{pset.id}} {{task.id}} (across all
+        revisions)?
+      {% endif %}
+    {% endif %}
+    <input
+     type="text"
+     name="time_spent"
+     id="{{pset.id}}-{{task.id}}-time_spent"
+     class="time_spent"
+     required
+     {# TODO: Update this default when admin selects phase! #}
+     {% if rev_task %}
+       {% if sub_phase == "initial" %}
+         {% if task.time_spent %}
+           value="{{task.time_spent.time_spent}}"
+         {% endif %}
+       {% else %}
+         {% if rev_task.time_spent %}
+           value="{{rev_task.time_spent.time_spent}}"
+         {% endif %}
+       {% endif %}
+     {% else %}
+       {% if task.time_spent %}
+         value="{{task.time_spent.time_spent}}"
+       {% endif %}
+     {% endif %}
+    >
+  </label>
+</span>
+<input type="submit" value="Submit task">
+</form>
