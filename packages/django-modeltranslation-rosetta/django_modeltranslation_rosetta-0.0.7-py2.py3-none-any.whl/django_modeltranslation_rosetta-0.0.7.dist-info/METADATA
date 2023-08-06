@@ -1,0 +1,90 @@
+Metadata-Version: 2.1
+Name: django-modeltranslation-rosetta
+Version: 0.0.7
+Summary: UNKNOWN
+Home-page: https://github.com/Apkawa/django-modeltranslation-rosetta
+Author: Apkawa
+Author-email: apkawa@gmail.com
+License: MIT
+Keywords: django
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.2
+Classifier: Framework :: Django :: 4.0
+Classifier: Intended Audience :: Developers
+Classifier: Environment :: Web Environment
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.7, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: six
+Requires-Dist: Django (>=1.11)
+Requires-Dist: tablib
+Requires-Dist: openpyxl (>=2.6.0)
+Requires-Dist: Babel (>=2.9.1)
+Requires-Dist: inflection
+Requires-Dist: lxml
+Requires-Dist: defusedxml
+Requires-Dist: django-modeltranslation
+
+[![Build Status](https://travis-ci.org/Apkawa/django-modeltranslation-rosetta.svg?branch=master)](https://travis-ci.org/Apkawa/django-modeltranslation-rosetta)
+[![codecov](https://codecov.io/gh/Apkawa/django-modeltranslation-rosetta/branch/master/graph/badge.svg)](https://codecov.io/gh/Apkawa/django-modeltranslation-rosetta)
+
+[![PyPi](https://img.shields.io/pypi/v/django-modeltranslation-rosetta.svg)](https://pypi.python.org/pypi/django-modeltranslation-rosetta)
+[![PyPI Python versions](https://img.shields.io/pypi/pyversions/django-modeltranslation-rosetta.svg)](https://pypi.python.org/pypi/django-modeltranslation-rosetta)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+Project for interface translate fields like django-rosetta
+
+# Installation
+
+```bash
+pip install django-modeltranslation-rosetta
+
+```
+
+or from git
+
+```bash
+pip install -e git+https://githib.com/Apkawa/django-modeltranslation-rosetta.git#egg=django-modeltranslation-rosetta
+```
+
+## Django and python version
+
+| Python<br/>Django | 3.7 | 3.8 | 3.9 | 3.10 |
+|:-----------------:|-----|-----|-----|------|
+|        2.2        | ✅   | ✅  | ✅   | ✅   |
+|        3.2        | ✅   | ✅  | ✅   | ✅   |
+|        4.0        | ❌   | ✅  | ✅   | ✅   |
+
+# Usage
+
+Add `modeltranslation_rosetta` into `INSTALLED_APPS` after `modeltranslation`
+settings.py
+
+```python
+INSTALLED_APPS = [
+    # ...
+    'modeltranslation',
+    'modeltranslation_rosetta',
+    # ...
+]
+```
+
+Open `/admin/modeltranslation_rosetta/trans/`
+
+![](docs/source/images/import_export_all_models.png)
+
+![](docs/source/images/import_export_model.png)
+
+
