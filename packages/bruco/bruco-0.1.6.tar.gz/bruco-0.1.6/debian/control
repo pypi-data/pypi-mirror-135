@@ -1,0 +1,41 @@
+# -- bruco source package --------------------------------------------------
+
+Source: bruco
+Section: python
+Priority: optional
+Maintainer: Duncan Macleod <duncan.macleod@ligo.org>
+Standards-Version: 4.2.1
+X-Python-Version: >= 3.0
+Homepage: https://github.com/duncanmmacleod/bruco
+Build-Depends: debhelper (>= 9),
+               dh-python,
+               python-all,
+               python-setuptools,
+               python3-all,
+               python3-setuptools,
+
+# -- python-bruco ----------------------------------------------------------
+
+Package: python-bruco
+Architecture: all
+Depends: ${misc:Depends},
+         ${python:Depends},
+         python-gwdatafind,
+         python-gwpy,
+         python-matplotlib,
+         python-numpy,
+         python-scipy
+Description: Brute force coherence (Python 2)
+
+# -- python3-bruco ----------------------------------------------------------
+
+Package: python3-bruco
+Architecture: all
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         python3-gwdatafind,
+         python3-gwpy,
+         python3-matplotlib,
+         python3-numpy,
+         python3-scipy
+Description: Brute force coherence (Python 3)
