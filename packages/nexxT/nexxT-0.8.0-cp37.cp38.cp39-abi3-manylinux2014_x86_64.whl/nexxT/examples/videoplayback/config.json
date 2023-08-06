@@ -1,0 +1,51 @@
+{
+  "_guiState": {},
+  "composite_filters": [],
+  "applications": [
+    {
+      "name": "videoplayback",
+      "_guiState": {
+        "filters__display": {
+          "mdi_mdi_MainWindow_MDI_ImageDisplay_geom": "AdnQywABAAAAAAAAAAAAVQAAAAAAAAAPAAAAAAAABRoAAAAAAAAC/gAAAAAAAABVAAAAAAAAAA8AAAAAAAAFGgAAAAAAAAL+AAAAAAAAAAA=",
+          "mdi_mdi_MainWindow_MDI_ImageDisplay_visible": 1
+        }
+      },
+      "nodes": [
+        {
+          "name": "source",
+          "library": "entry_point://examples.videoplayback.AviReader",
+          "factoryFunction": "entry_point",
+          "dynamicInputPorts": [],
+          "staticInputPorts": [],
+          "dynamicOutputPorts": [],
+          "staticOutputPorts": [
+            "video_out"
+          ],
+          "thread": "thread-source",
+          "properties": {
+            "filename": "/tmp/testLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNNNNNNNNNNNNGGGGGGGGGGGGGG.avi"
+          }
+        },
+        {
+          "name": "ImageView",
+          "library": "entry_point://examples.framework.ImageView",
+          "factoryFunction": "ImageView",
+          "dynamicInputPorts": [],
+          "staticInputPorts": [
+            "video_in"
+          ],
+          "dynamicOutputPorts": [],
+          "staticOutputPorts": [],
+          "thread": "main",
+          "properties": {
+            "caption": "view",
+            "scale": 1.0
+          }
+        }
+      ],
+      "connections": [
+        "source.video_out -> ImageView.video_in"
+      ]
+    }
+  ]
+}
