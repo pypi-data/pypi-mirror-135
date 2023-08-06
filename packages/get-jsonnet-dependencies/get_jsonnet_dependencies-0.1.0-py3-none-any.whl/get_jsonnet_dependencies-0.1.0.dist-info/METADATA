@@ -1,0 +1,46 @@
+Metadata-Version: 2.1
+Name: get-jsonnet-dependencies
+Version: 0.1.0
+Summary: Extracts import dependencies from a Jsonnet file
+Home-page: https://pypi.org/project/get-jsonnet-dependencies/
+License: MIT
+Author: George Zhang
+Author-email: geetransit@gmail.com
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Build Tools
+Project-URL: Repository, https://github.com/GeeTransit/get-jsonnet-dependencies
+Description-Content-Type: text/markdown
+
+# get-jsonnet-dependencies
+
+Extracts import dependencies from a Jsonnet file
+
+## Usage
+
+```sh
+> pip install get-jsonnet-dependencies
+> get-jsonnet-dependencies -
+> local thing = import "thing.jsonnet";
+thing.jsonnet
+> local amoguise = import @"C:\Users\sus\Documents\amoguise.libsonnet";
+C:\Users\sus\Documents\amoguise.libsonnet
+> local a = import "a.jsonnet"; local b = importstr "b.txt";
+a.jsonnet
+b.txt
+```
+
+Pass a list of files to extract dependencies from
+
+Passing - means to take extract dependencies from stdin
+
+No arguments means `get-jsonnet-dependencies -`
+
+Note that imports spanning multiple lines won't be found by this script
+
