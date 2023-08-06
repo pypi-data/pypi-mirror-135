@@ -1,0 +1,199 @@
+# Meter Management System Client
+The python implementation of the pf-dre-database repo provides a client
+for all Data interactions required with the Meter Management System:
+- Relational tables (Read Only)
+- Timescale DB (Read/Write - No insertion or deletion)
+    - JSON Schema
+    - Narrow Data Format Schema
+
+This python implementation is to be built and deployed to PyPI for use
+across all python subsystems of the Demand Response Engine.
+
+## Real-Time Input Data Format 
+When issuing calls to the MMS which require a time series based DataFrame to be
+passed the format of the schema should be followed with the following general 
+rules. 
+- Timestamps are to be generated in string format following the ISO 8601 
+standard and to follow simple conventions should be kept in UTC format.
+- Any columns within the data structure which are a JSON datatype are to be 
+created in serialized string format, not as a pure python dictionary.
+```python
+import json
+# Correct Format
+correct_jsonb_value = json.dumps({'A': 'Dictionary', 'B': 'to', 'C': 'Send'})
+# Incorrect Format
+incorrect_jsonb_value = {'A': 'Dictionary', 'B': 'to', 'C': 'Send'}
+```
+###### **Example Data Frame for a narrow column format schema**
+
+|      measurement_date | device_id | device_metric_type_id |   value    |
+|----------------------:|----------:|----------------------:|-----------:|
+|2020-01-01T12:00:00.000|    1      |          P            | 1.0        |
+|2020-01-01T12:01:00.000|    1      |          P            | 2.0        |
+|2020-01-01T12:00:00.000|    1      |          Q            | -1.0       |
+|2020-01-01T12:01:00.000|    1      |          Q            | -2.0       |
+|2020-01-01T12:00:00.000|    2      |          P            | 10.0       |
+|2020-01-01T12:01:00.000|    2      |          P            | 20.0       |
+|2020-01-01T12:00:00.000|    2      |          Q            | -10.0      |
+|2020-01-01T12:01:00.000|    2      |          Q            | -20.0      |
+| object (str)          | int64     | object (str)          | float64    |
+
+###### **Example Data Frame for a JSON schema**
+
+|      measurement_date | device_id | metrics                           |
+|----------------------:|----------:|----------------------------------:|
+|2020-01-01T12:00:00.000|    1      | {"P": 1.0, "Q": -1.0, "S": 'NaN'} |
+|2020-01-01T12:00:00.000|    2      | {"P": 2.0, "Q": -2.0}             |
+|2020-01-01T12:01:00.000|    1      | {"P": 10.0, "Q": -10.0}           |
+|2020-01-01T12:01:00.000|    2      | {"P": 20.0, "Q": -20.0}           |
+| object (str)          | int64     | object (str)                      |
+
+## Real-Time Standardized Output DataFrame Format
+When issuing calls to the MMS which return a time series DataFrame, the client, 
+regardless of schema will be constructed to return in a standardized format.
+This makes the reading and manipulation of data consistent.
+
+| device_id | device_metric_type_id |      measurement_date |   value    |
+|----------:|----------------------:|----------------------:|-----------:|
+|    1      |          P            |2020-01-01T12:00:00.000| 1001.0     |
+|           |                       |2020-01-01T12:01:00.000| 1012.0     |
+|           |          Q            |2020-01-01T12:00:00.000| 12.132     |
+|           |                       |2020-01-01T12:01:00.000| -2.132     |
+|    2      |          P            |2020-01-01T12:00:00.000| 2001.0     |
+|           |                       |2020-01-01T12:01:00.000| 2012.0     |
+|           |          Q            |2020-01-01T12:00:00.000| 22.132     |
+|           |                       |2020-01-01T12:01:00.000| -3.132     |
+| int64     | object (str)          | object (str)          | float64    |
+
+The client also has the option of returing the data frame results in a raw, 
+un-standardised format. In this case, the dataframe will be returned in the 
+format of the underlying database schema without any alteration.
+
+## Forecast Input Data Format 
+When issuing calls to the MMS which require a forecast time series based 
+DataFrame to be passed, the format of the schema should be followed with the 
+following general rules. 
+- Timestamps are to be generated in string format following the ISO 8601 
+standard and to follow simple conventions should be kept in UTC format.
+- Any columns within the data structure which are a JSON datatype are to be 
+created in serialized string format, not as a pure python dictionary.
+
+###### **Example Data Frame for a narrow column format schema**
+
+|      received_date    | device_id | device_metric_type_id |   measurement_date    |   value    |
+|----------------------:|----------:|----------------------:|----------------------:|-----------:|
+|2020-01-01T12:00:00.000|    1      |          P            |2020-01-01T12:00:00.000| 1.0        |
+|2020-01-01T12:00:00.000|    1      |          P            |2020-01-01T12:01:00.000| 2.0        |
+|2020-01-01T12:00:00.000|    1      |          P            |2020-01-01T12:02:00.000| 3.0        |
+|2020-01-01T12:00:00.000|    1      |          Q            |2020-01-01T12:00:00.000| -1.0       |
+|2020-01-01T12:00:00.000|    1      |          Q            |2020-01-01T12:01:00.000| -2.0       |
+|2020-01-01T12:00:00.000|    1      |          Q            |2020-01-01T12:02:00.000| -3.0       |
+|2020-01-01T12:01:00.000|    1      |          P            |2020-01-01T12:01:00.000| 2.0        |
+|2020-01-01T12:01:00.000|    1      |          P            |2020-01-01T12:02:00.000| 3.0        |
+|2020-01-01T12:01:00.000|    1      |          P            |2020-01-01T12:03:00.000| 4.0        |
+|2020-01-01T12:01:00.000|    1      |          Q            |2020-01-01T12:01:00.000| -2.0       |
+|2020-01-01T12:01:00.000|    1      |          Q            |2020-01-01T12:02:00.000| -3.0       |
+|2020-01-01T12:01:00.000|    1      |          Q            |2020-01-01T12:03:00.000| -4.0       |
+| object (str)          | int64     | object (str)          | object                | float64    |
+
+###### **Example Forecast Data Frame for a JSON schema**
+
+|      received_date    | device_id | metrics                               |
+|----------------------:|----------:|--------------------------------------:|
+|2020-01-01T12:00:00.000|    1      | { "P": {"2020-01-01T12:00:00+00:00": 1.0, "2020-01-01T12:01:00+00:00": 2.0, "2020-01-01T12:02:00+00:00": 3.0}, "Q": {"2020-01-01T12:00:00+00:00": -1.0, "2020-01-01T12:01:00+00:00": -2.0, "2020-01-01T12:02:00+00:00": -3.0, "2020-01-01T12:03:00+00:00": 'NaN'}}|
+|2020-01-01T12:01:00.000|    1      | { "P": {"2020-01-01T12:01:00+00:00": 2.0, "2020-01-01T12:02:00+00:00": 3.0, "2020-01-01T12:03:00+00:00": 4.0}, "Q": {"2020-01-01T12:01:00+00:00": -2.0, "2020-01-01T12:02:00+00:00": -3.0, "2020-01-01T12:03:00+00:00": -4.0}}|
+| object (str)          | int64     | object                                |
+
+## Forecast Standardized Output DataFrame Format
+When issuing calls to the MMS which return a time series DataFrame, the client, 
+regardless of schema will be constructed to return in a standardized format.
+This makes the reading and manipulation of data consistent.
+
+|      received_date    | device_id | device_metric_type_id |      measurement_date | value |
+|----------------------:|----------:|----------------------:|----------------------:|------:|
+|2020-01-01T12:00:00.000|    1      |          P            |2020-01-01T12:00:00.000| 1.0   |
+|                       |           |                       |2020-01-01T12:01:00.000| 2.0   |
+|                       |           |                       |2020-01-01T12:02:00.000| 3.0   |
+|                       |           |          Q            |2020-01-01T12:00:00.000| -1.0  |
+|                       |           |                       |2020-01-01T12:01:00.000| -2.0  |
+|                       |           |                       |2020-01-01T12:02:00.000| -3.0  |
+|2020-01-01T12:01:00.000|    1      |          P            |2020-01-01T12:01:00.000| 2.0   |
+|                       |           |                       |2020-01-01T12:02:00.000| 3.0   |
+|                       |           |                       |2020-01-01T12:03:00.000| 4.0   |
+|                       |           |          Q            |2020-01-01T12:01:00.000| -2.0  |
+|                       |           |                       |2020-01-01T12:02:00.000| -3.0  |
+|                       |           |                       |2020-01-01T12:03:00.000| -4.0  |
+| object (str)          | int64     | object (str)          | object (str)          |float64|
+
+The client also has the option of returning the data frame results in a raw, 
+un-standardised format by initializing the client with the argument:
+```standardized=False```
+In this case, the data frame will be returned in the 
+format of the underlying database schema without any alteration.
+
+
+## Accessing Standardized DataFrame Contents
+*Real-time DataFrames*
+    ```python
+    # Accessing Device Metric Timeseries
+    time_series = df.loc[(1, 'P'), 'value']
+    time_series_times = df.loc[(1, 'P'), 'value'].index.values.tolist())
+    time_series_values = df.loc[(1, 'P'), 'value'].values.tolist())
+    # Accessing Most Recent Device Metric 
+    # (Note the standardized format is sorted in ascending order)
+    latest_P = df.loc[(1, 'P'), 'value'].iloc[0]
+    ```
+*Forecast DataFrames*
+
+
+
+### Prerequisites
+- Python 3.7.0+
+
+### Setup
+The following environment variables are required in order to make use
+of the client.
+
+- `PGDATABASE`: The name of the MMS Database instance.
+- `PGUSER`: MMS Database user.
+- `PGPASSWORD`: MMS Database password.
+- `PGHOST`: MMS Database host.
+- `PGPORT`: MMS Database port (read/write permissions required).
+
+These can be set through updating the file at ./static/local-ssm-values.json
+Note that there 
+
+### Development
+
+1. Clone the repo
+2. Create a python virtual environment:
+    - Windows: `C:\>   python -m venv .\venv` (Python must be in PATH variable)
+    - Linux: `$ python3 -m venv ./venv`
+3. Activate the virtual environment:
+    - Windows: `C:\>   .\venv\Scripts\activate.bat` (Python must be in PATH variable)
+    - Linux: `$ ./venv/bin/activate`
+4. Install development specific requirements
+    `(venv) pip install --upgrade twine setuptools wheel`
+5. Install requirements:
+    `(venv) pip install -r requirements.txt`
+
+
+### Tests
+
+Tests should be run locally. Access must be granted to the test
+database and .env.template should be renamed to .env and configured with
+appropriate parameters.
+
+To run tests:
+ `(venv) python -m tests`
+
+
+### Deployment
+
+#### Test PyPI
+    `python setup.py sdist --dist-dir=dist/test/ bdist_wheel --dist-dir=dist/test/`
+    `python -m twine upload --skip-existing --repository pf-dre-core-test --config-file .pypirc dist/test/*`
+
+#### PyPI
+    `python setup.py sdist --dist-dir=dist/prod/ bdist_wheel --dist-dir=dist/prod/`
+    `python -m twine upload --skip-existing --repository pf-dre-core --config-file .pypirc dist/prod/*`
