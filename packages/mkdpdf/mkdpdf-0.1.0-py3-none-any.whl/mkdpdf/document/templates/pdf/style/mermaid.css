@@ -1,0 +1,367 @@
+:root {
+
+  --linework-color: white;
+  --linework-size: 0.15em;
+  --linework-size-thin: 0.05em;
+  --shape-color: currentColor;
+  --shape-line: currentColor;
+  --shape-text: white;
+
+}
+
+/*************** FLOWCHART ***************/
+
+/* node */
+svg[id^="mermaid"] .node rect,
+svg[id^="mermaid"] .node polygon {
+
+  fill: var(--shape-color)!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* node text */
+svg[id^="mermaid"] .nodeLabel,
+svg[id^="mermaid"] .cluster-labe,
+svg[id^="mermaid"] .label {
+
+  color: var(--shape-text)!important;
+
+}
+
+/* edge label */
+svg[id^="mermaid"] .edgeLabel {
+
+  background-color: transparent!important;
+  color: var(--copy)!important;
+
+}
+
+/* edge label background */
+svg[id^="mermaid"] .edgeLabel rect {
+
+  background-color: var(--dark)!important;
+  fill: var(--dark)!important;
+  opacity: 1!important;
+
+}
+
+/* edge path */
+svg[id^="mermaid"] .edgePath .path {
+
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* edge arrow */
+svg[id^="mermaid"] .arrowheadPath {
+
+  fill: var(--linework-color)!important;
+
+}
+
+/*************** SEQUENCE ***************/
+
+/* node */
+svg[id^="mermaid"] .actor {
+
+  fill: var(--shape-color)!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* node text */
+svg[id^="mermaid"] text.actor > tspan {
+
+  fill: var(--shape-text)!important;
+
+}
+
+/* lines */
+svg[id^="mermaid"] .actor-line {
+
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* message uses stroke as faux bold */
+svg[id^="mermaid"] .messageText {
+
+  fill: var(--copy)!important;
+  stroke: var(--copy)!important;
+
+}
+
+/* message line */
+svg[id^="mermaid"] line[class^="messageLine"] {
+
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+#arrowhead path {
+
+  fill: var(--linework-color)!important;
+  stroke: transparent!important;
+
+}
+
+/*************** CLASS ***************/
+
+/* node */
+svg[id^="mermaid"] g.classGroup rect {
+
+  fill: var(--shape-color)!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* node text */
+svg[id^="mermaid"] g.classGroup text {
+
+  fill: var(--shape-text)!important;
+
+}
+
+/* node lines */
+svg[id^="mermaid"] g.classGroup line {
+
+  fill: white!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size-thin)!important;
+
+}
+
+/* lines */
+svg[id^="mermaid"] #extensionStart path,
+svg[id^="mermaid"] .extension,
+svg[id^="mermaid"] #extensionEnd path,
+svg[id^="mermaid"] #compositionStart path,
+svg[id^="mermaid"] .composition,
+svg[id^="mermaid"] #compositionEnd path,
+svg[id^="mermaid"] #aggregationStart path,
+svg[id^="mermaid"] .aggregation,
+svg[id^="mermaid"] #aggregationEnd path,
+svg[id^="mermaid"] #dependencyStart path,
+svg[id^="mermaid"] #dependencyEnd path {
+
+  fill: var(--linework-color)!important;
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* edge line */
+svg[id^="mermaid"] .relation {
+
+  stroke: var(--shape-line)!important;
+
+}
+
+/*************** STATE ***************/
+
+/* starting node */
+svg[id^="mermaid"] .node circle.state-start {
+
+  fill: transparent!important;
+  stroke: var(--linework-color)!important;
+
+}
+
+/* ending node */
+svg[id^="mermaid"] .node circle.state-end {
+
+  fill: var(--light)!important;
+  stroke: white!important;
+
+}
+
+/* lines */
+svg[id^="mermaid"] .transition {
+
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* arrow head */
+svg[id^="mermaid"] #statediagram-barbEnd {
+
+  fill: white!important;
+
+}
+
+/*************** GANTT ***************/
+
+/* title */
+svg[id^="mermaid"] .titleText {
+
+  fill: var(--copy)!important;
+
+}
+
+/* background */
+svg[id^="mermaid"] .section {
+
+  fill: transparent!important;
+
+}
+
+/* section text */
+svg[id^="mermaid"] .sectionTitle {
+
+  fill: var(--copy)!important;
+
+}
+
+/* node */
+svg[id^="mermaid"] .task {
+
+  fill: var(--shape-color)!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* node text */
+svg[id^="mermaid"] .taskText {
+
+  fill: var(--shape-text)!important;
+
+}
+
+/* time line */
+svg[id^="mermaid"] .grid .tick {
+
+  stroke: var(--light)!important;
+
+}
+
+/* time text */
+svg[id^="mermaid"] .grid .tick text {
+
+  fill: var(--copy)!important;
+
+}
+
+/*************** PIE ***************/
+
+/* title */
+svg[id^="mermaid"] .pieTitleText {
+
+  fill: var(--copy)!important;
+
+}
+
+/* legend */
+svg[id^="mermaid"] .legend text {
+
+  fill: var(--copy)!important;
+
+}
+
+/* slice text */
+svg[id^="mermaid"] .slice {
+
+  fill: var(--shape-text)!important;
+
+}
+
+/*************** ER ***************/
+
+/* node */
+svg[id^="mermaid"] .entityBox {
+
+  fill: var(--shape-color)!important;
+  stroke: var(--shape-line)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* node text */
+svg[id^="mermaid"] .entityLabel {
+
+  fill: var(--shape-text)!important;
+
+}
+
+/* relation label */
+svg[id^="mermaid"] .relationshipLabel {
+
+  background-color: transparent!important;
+  fill: var(--copy)!important;
+
+}
+
+/* relation label background */
+svg[id^="mermaid"] .relationshipLabelBox {
+
+  background-color: var(--dark)!important;
+  fill: var(--dark)!important;
+  opacity: 1!important;
+
+}
+
+
+/* line shapes */
+svg[id^="mermaid"] #ONLY_ONE_START path,
+svg[id^="mermaid"] #ONLY_ONE_END path,
+svg[id^="mermaid"] #ZERO_OR_ONE_START path,
+svg[id^="mermaid"] #ZERO_OR_ONE_END path,
+svg[id^="mermaid"] #ONE_OR_MORE_START path,
+svg[id^="mermaid"] #ONE_OR_MORE_END path,
+svg[id^="mermaid"] #ZERO_OR_MORE_START path,
+svg[id^="mermaid"] #ZERO_OR_MORE_END path {
+
+  fill: var(--linework-color)!important;
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size)!important;
+
+}
+
+/* lines */
+svg[id^="mermaid"] .relationshipLine {
+
+  stroke: var(--linework-color)!important;
+  stroke-width: var(--linework-size-thin)!important;
+
+}
+
+
+/* active bar */
+svg[id^="mermaid"] .active0,
+svg[id^="mermaid"] .active1,
+svg[id^="mermaid"] .active2,
+svg[id^="mermaid"] .active3 {
+  fill: lightgrey!important;
+  stroke: lightgrey!important;
+}
+
+/* active bar text */
+svg[id^="mermaid"] .activeText0,
+svg[id^="mermaid"] .activeText1,
+svg[id^="mermaid"] .activeText2,
+svg[id^="mermaid"] .activeText3 {
+  fill: red!important;
+}
+
+svg[id^="mermaid"] .done0,
+svg[id^="mermaid"] .done1,
+svg[id^="mermaid"] .done2,
+svg[id^="mermaid"] .done3 {
+  stroke: white!important;
+  fill: white!important;
+}
+
+svg[id^="mermaid"] .doneText0,
+svg[id^="mermaid"] .doneText1,
+svg[id^="mermaid"] .doneText2,
+svg[id^="mermaid"] .doneText3 {
+  fill: currentColor !important;
+}
