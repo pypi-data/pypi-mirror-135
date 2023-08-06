@@ -1,0 +1,82 @@
+[tool.poetry]
+name = "diamond-miner"
+version = "0.6.1"
+description = "High-speed, Internet-scale, load-balanced paths discovery."
+license = "MIT"
+authors = [
+    "Kevin Vermeulen <kevin.vermeulen@columbia.edu>",
+    "Matthieu Gouel <matthieu.gouel@lip6.fr>",
+    "Maxime Mouchet <maxime.mouchet@lip6.fr>"
+]
+readme = "README.md"
+homepage = "https://github.com/dioptra-io/diamond-miner"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Internet",
+    "Typing :: Typed"
+]
+build = "build_ext.py"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+orjson = "^3.6.5"
+pygfc = "^1.0.3"
+requests = "^2.26.0"
+zstandard = ">=0.15.2,<0.17.0"
+
+[tool.poetry.dev-dependencies]
+bumpversion = "^0.6.0"
+coverage = {extras = ["toml"], version = "^6.2"}
+Cython = "^0.29.26"
+hypothesis = "^6.34.1"
+pytest = "^6.2"
+pytest-cov = "^3.0.0"
+Sphinx = "^4.3.2"
+sphinx-rtd-theme = "^1.0.0"
+sphinxcontrib-bibtex = "^2.2.1"
+
+[tool.pytest.ini_options]
+addopts = "--capture=no --doctest-modules --log-cli-level=info --strict-markers --verbosity=2"
+
+[tool.mypy]
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+implicit_reexport = false
+no_implicit_optional = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "if TYPE_CHECKING:$",
+    "if __name__ == \"__main__\":$",
+    "pass$",
+    "\\s\\.\\.\\.$",
+    "raise NotImplementedError$"
+]
+
+[tool.cibuildwheel]
+# Keep emulated aarch64 build times manageable...
+skip = ["*-musllinux_*"]
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64", "aarch64"]
+
+[tool.cibuildwheel.macos]
+archs = ["universal2"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools>=40.6.0", "Cython>=0.29.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+requires-python = ">=3.8"
