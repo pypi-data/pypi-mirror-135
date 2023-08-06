@@ -1,0 +1,81 @@
+Metadata-Version: 2.1
+Name: aqueduct-utility
+Version: 0.6.1
+Summary: Automate Cloud Development Kit (CDK) bootstrapping into an AWS Organization using Single Sign-On (SSO) authentication.
+Home-page: https://github.com/4n6ir/aqueduct
+Author: John Lukach
+Author-email: help@lukach.io
+License: Apache-2.0
+Platform: UNKNOWN
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: boto3
+Requires-Dist: simple-term-menu
+
+# aqueduct
+
+### Permissions
+
+I recommend using an AWS Account with Delegated Administration from Firewall Manager, Guard Duty, Stack Sets, etc., to access the required Organization permission.
+
+ - ec2:DescribeRegions
+ - organizations:ListAccounts
+
+### Requirements
+
+- https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+```
+
+- https://github.com/benkehoe/aws-sso-util
+
+```
+pip install aws-sso-util
+```
+
+### Installation
+
+```
+pip install aqueduct-utility
+```
+
+### Initial Configuration
+
+```
+$ aqueduct 
+SSO Start URL [ ]: https://portal.awsapps.com/start
+SSO Region [ ]: us-east-2
+SSO Role [AWSAdministratorAccess]: 
+CLI Region [ ]: us-east-2
+CLI Output [json]:     
+CDK Qualifier [ ]: 4n6ir
+```
+
+### Aqueduct Menu
+
+```
+--------------------------------
+AQUEDUCT v0.6.1
+--------------------------------
+> Bootstrap
+  Command
+  Configure
+  Deploy
+  Destroy
+  Presets
+  Quit
+```
+
+### Local Development
+
+```
+$ python setup.py install --user
+```
+
+
