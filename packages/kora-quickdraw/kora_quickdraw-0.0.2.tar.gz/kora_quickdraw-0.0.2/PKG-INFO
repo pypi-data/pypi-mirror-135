@@ -1,0 +1,53 @@
+Metadata-Version: 2.1
+Name: kora_quickdraw
+Version: 0.0.2
+Summary: Quick graph simple matplotlib
+Home-page: https://github.com/karnigen/kora_quickdraw
+Author: Tony Karnigen
+Author-email: karnigen@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/karnigen/kora_quickdraw/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# kora_quickdraw
+Matplotlib simple graph template
+
+# Install
+`pip install kora_quickdraw`
+
+# Usage
+There two commands
+- defining figure and axes
+- showing graph
+
+```
+fig, ax1, ax2 = start_plot2()
+...
+show_plot2(1, fig, ax1, ax2)
+```
+# Full example
+In example directory
+
+```
+from kora_quickdraw import *
+import numpy as np
+
+x = np.linspace(-np.pi , np.pi)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+fig, ax1, ax2 = start_plot2()
+ax1.plot(x,y1)
+ax1.plot(x,y2)
+ax2.plot(x, y1*y2)
+show_plot2(1, fig, ax1, ax2, t1="sin(x) and cos(x)", t2="sin(x) x cos(x)", y2='y')
+```
+
+
+
