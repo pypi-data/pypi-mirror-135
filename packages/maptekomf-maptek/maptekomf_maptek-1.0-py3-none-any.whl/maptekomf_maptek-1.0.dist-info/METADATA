@@ -1,0 +1,193 @@
+Metadata-Version: 2.1
+Name: maptekomf-maptek
+Version: 1.0
+Summary: Provides interoperability between Maptek SDK and OMF
+Home-page: https://www.maptek.com
+Author: Maptek
+Author-email: support@maptek.com.au
+License: Maptek End User Licence Agreement
+Project-URL: Documentation, https://help.maptek.com/mapteksdk/
+Project-URL: Support, https://www.maptek.com/support/index.html
+Keywords: mining data interchange
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Natural Language :: English
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Requires-Python: >=3.7, <3.9
+Description-Content-Type: text/markdown
+Requires-Dist: mapteksdk (<1.4.0,>=1.2.0)
+Requires-Dist: pillow (<9.1.0,>=7.0.0)
+Requires-Dist: omf (==1.0.1)
+
+# maptekomf.maptek
+Provides support for inter-operability with the Open Mining Format (OMF) and
+Maptek applications which share an underlying infrastructure. This includes
+BlastLogic, PointStudio and Vulcan GeologyCore.
+
+The sister package maptekomf.vulcan provides support for inter-operability with
+the Open Mining Format (OMF) and Maptek Vulcan which does not share the same
+underlying infrastructure of Maptek's other applications.
+
+## Usage
+This package can be installed as a Python package and used to develop
+in-house tooling for working with Open Mining Format (OMF) and Maptek
+applications.
+
+Alternatively, it can be provided alongside workflows to enable the Maptek
+Workbench to provide custom import/export functionality for OMF.
+
+### Set-up workflows
+
+#### Method 1
+1. Install the maptekomf package
+1. Copy/download the workflows to a suitable folder
+1. Run the workflows.
+
+#### Method 2
+1. Download the `maptekomf_with_workflows.zip` archive.
+1. Extract the archive
+1. Run the workflows from the extracted location.
+
+#### Follow-up
+If you are wishing to export from an application other than PointStudio,
+you will need to edit the workflow to use the `Get Active Selection` component
+from the other application.
+
+### Within a script
+
+#### Import a file to project
+
+The following script will import a file called `test_file.omf` into the
+Maptek project at the path `/scrapbook/omf/test_file`.
+
+```python
+from mapteksdk.project import Project
+
+from maptekomf.maptek.importer import omf_to_project
+
+if __name__ == '__main__':
+    with Project() as project:
+        omf_to_project('test_file.omf' project, '/scrapbook/omf/test_file',
+                       overwrite=False)
+```
+
+#### Export selection to OMF
+
+The following script will export selected objects  into a file called
+`exported.omf`. It will however not skip over any unsupported objects.
+
+```python
+from mapteksdk.project import Project
+
+from maptekomf.maptek.importer import omf_to_project
+
+if __name__ == '__main__':
+    with Project() as project:
+        omf_to_project(project, project.get_selected(), 'exported.omf')
+```
+
+## Supported application versions
+* Maptek PointStudio 2021 & 2021.1
+* Maptek Vulcan GeologyCore 2021
+
+The recommended version of the mapteksdk to use this against is mapteksdk-1.3
+which is released as part of Maptek Extend Plugins 2021.2. This version that
+introduced support for Maptek Vulcan GeologyCore.
+
+You may find it will also work with 1.2 (from 2021.1) and 1.1 (from 2021) for
+PointStudio and BlastLogic however no guarantee or support is offered for that
+situation.
+
+## Implementation defined behaviour
+This OMF importer/exporter implementation has the following behaviour that
+may be different to how other implementations, scripts and applications handle
+a given OMF project file. This is done in places where the OMF specification
+does not specify how such cases should be handled, especially in cases
+where data can't be represented natively in the data format.
+
+### Naming
+The name of objects in an OMF project are not required to be unique.
+The names of objects in a given container in a Maptek project must be
+unique.
+
+As a result, during import if a duplicate name is detected a numerical suffix,
+will be added. When adding this suffix, if there is an object in the OMF
+project with that name, it will be skipped even if that element/object won't be
+imported. For example, if an OMF file contained three objects, two called
+"point_set" and a third called "point_set 2" then the first will be named
+"point_set", the second will be named "point set 3" so that it does not clash
+with "point_set 2" and the last will be called "point_set 2". The name
+"point_set 1" will not be used when selecting a unique name; "point_set" is
+considered the first object.
+
+### Point colouring
+Maptek applications built on a shared underlying infrastructure have the
+concept of per-point colour.
+
+If the colours are not all the same when exporting, then they will be written
+as an attribute of type `omf.ColorData` on the object called "point colours".
+
+When importing, the "point colours" attribute will be recognised and read in
+as a colour array. Maptek applications only support one set of colours per
+primitive (primitive being point, edge, cell or facet). Multiple colour array
+attributes are not supported.
+
+### Cell visibility
+The Maptek object type `GridSurface` has the concept of point visibility, which
+is a way to hide cells that are not relevant. For example, they may fall
+outside the data range (i.e. the area that was measured/recorded). This is
+achieved by saving it as an attribute for vertices called "visibility" in OMF
+and recognising the attribute in the importer.
+
+## Limitations
+
+* Maptek objects of type `Polyline` and `Polygon` will be re-imported as
+  `EdgeNetwork`. There is potential here to improve this situation.
+* Objects cannot have primitive attributes of type "date time" in Maptek
+  applications. Importing an OMF element with date time attributes is not
+  supported.
+* The Maptek object type `GridSurface` does not support textures. This means
+  textures for gridded surfaces in an OMF file won't be imported.
+* The Maptek object type `GridSurface` does not support cell colouring.
+* Exporting a `GridSurface` object from a Maptek project may not work, as
+  the `GridSurface` object is more general than the gridded surface object in
+  OMF.
+* Exporting a textured `Surface` from a Maptek project to OMF may not work,
+  as texturing in Maptek applications is more sophisticated than what OMF
+  supports.
+* Only one colour map (legend) will be imported per object. Maptek applications
+  only allow a single colour map to be assigned to an object.
+* Importing colour maps on edge, cell and facet attributes is not supported in
+  the 2021 versions of Maptek applications. If there are strings in the legend,
+  then the strings will still be imported as an edge, cell or facet attribute.
+* Only specific cases of `omf.MappedData` will be imported; at this time, this
+  means string and colour. Only data that was found in the sample data file
+  provided by the OMF GitHub project is handled, as the full scope of what
+  is possible appears to be unbounded.
+* Primitive visibility is not preserved in the export. This means certain
+  types of filtering in Maptek applications will be lost on export.
+* Container hierarchy will not be preserved, as OMF has no concept of
+  containers or folders within its file format. This may be subject to change
+  depending on what other OMF applications handle (for example using
+  backslashes in the names of objects to define a hierarchy).
+
+## Future work
+* Import and export for block models.
+  Support may be added on request; however the plan is to wait until this
+  package is updated to use omf-2.0.
+* Upgrade omf package from 1.0 to 2.0.
+* Add handling for identifying `Polyline` and `Polygon`, so they aren't
+  imported as `EdgeNetwork`.
+
+## Distribution
+This project is typically distributed as a Python wheel through PyPi.
+However, other mechanisms exist.
+
+
