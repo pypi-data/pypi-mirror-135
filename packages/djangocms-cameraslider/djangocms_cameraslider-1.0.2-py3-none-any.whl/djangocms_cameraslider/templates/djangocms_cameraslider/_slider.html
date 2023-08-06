@@ -1,0 +1,35 @@
+{% load cms_tags sekizai_tags %}
+
+<section class="slider_area row m0" id="{{ instance.slider_id }}">
+  <div class="slider_inner">
+  {% for plugin in instance.child_plugin_instances %}
+		{% render_plugin plugin %}
+  {% endfor %}
+  </div>
+</section>
+
+
+
+{% addtoblock "css" %}
+	<link rel="stylesheet" type="text/css" href="{{ app_settings.CSS_URL }}">
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+	<script type="text/javascript" src="{{ app_settings.JS_URL }}"></script>
+	<script type="text/javascript">
+		function init_camera_slider(){
+			var blockName = '#{{ instance.slider_id }} > .slider_inner',
+          sliderConfig = null;
+      {% if instance.slider_config %}
+          sliderConfig = {{ instance.slider_config|safe }};
+      {% endif %}
+      if ( $(blockName).length && sliderConfig){
+        $(blockName).camera(sliderConfig);
+      }
+    }
+		$(function(){
+      new WOW().init();
+      setTimeout(function() {init_camera_slider();}, 199);
+		});
+	</script>
+{% endaddtoblock %}
