@@ -1,0 +1,176 @@
+Metadata-Version: 2.1
+Name: auger.ai.predict
+Version: 1.0.92
+Summary: Auger ML predict python and command line interface
+Home-page: https://github.com/deeplearninc/auger-ai
+Author: Deep Learn, Inc.
+Author-email: augerai@dplrn.com
+License: Apache
+Keywords: augerai auger ai machine learning automl deeplearn api sdk prediction predict
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pandas (==1.3.5)
+Requires-Dist: six (==1.15.0)
+Requires-Dist: scipy (==1.5.2)
+Requires-Dist: scikit-learn (==0.24.2)
+Requires-Dist: matplotlib (==3.2.2)
+Requires-Dist: xgboost (==1.5.2)
+Requires-Dist: catboost (==1.0.4)
+Requires-Dist: lightgbm (==3.3.2)
+Requires-Dist: joblib
+Requires-Dist: liac-arff (==2.4.0)
+Requires-Dist: boto3
+Requires-Dist: s3fs (==0.4.2)
+Requires-Dist: stopit
+Requires-Dist: smart-open (==5.1.0)
+Requires-Dist: xlrd (==1.2.0)
+Requires-Dist: openpyxl
+Requires-Dist: psycopg2-binary (==2.9.1)
+Requires-Dist: nltk (==3.6.7)
+Requires-Dist: spacy-universal-sentence-encoder (==0.4.3)
+Requires-Dist: multiprocess (==0.70.12.2)
+Requires-Dist: tqdm (==4.62.3)
+Requires-Dist: celery (==4.4.7)
+
+# Install
+```
+pip install auger.ai.predict
+```
+
+# Auger.ai.predict
+Auger ML predict Python API and command line interface
+
+
+# Download exported model
+
+To download exported model you can use:
+
+- Auger.ai web : https://app.auger.ai
+- auger.ai command line interface: https://pypi.org/project/auger.ai/
+
+# Predict using exported model
+
+- Unzip file with model
+- Run client.py from model folder:
+
+python <model_path>/client.py --path_to_predict <data_path> --model_path model_path
+
+--path_to_predict - path to file with data to predict. Should contain features used to train model
+--model_path - folder which contain model.pkl.gz file
+
+For example:
+
+python ./models/export_9BB0BFA3D368454/client.py --path_to_predict ./files/baseball_predict.csv --model_path ./models/export_9BB0BFA3D368454/model
+
+## Client.py command line parameters
+
+  --path_to_predict Path to file for predict
+
+  --model_path Path to folder with model
+
+  --threshold Threshold to use for calculate target using predict_proba
+
+  --score 0/1 Build scores after prediction if prediction data contain actual target
+
+# Auger.ai.predict Python API
+## auger_ml.model_exporter.ModelExporter
+ModelExporter provides interface to Auger predict API.
+
+- **ModelExporter(options)** - constructs ModelExporter instance.
+  - options - optional parameters. Must be {} for now
+
+- **predict_by_model(model_path, path_to_predict=None, records=None, features=None, threshold=None)** - produce prediction based on exported model and data
+  - model_path - folder which contain model.pkl.gz file
+  - path_to_predict - data to predict
+  - records - data to predict: list of lists. path_to_predict should be None in this case. For example: [[0.1,0.2],[0.1, 0.3]]
+  - features - feature names for records. Used only when records is not None
+  - threshold - set threshold to produce prediction for classification based on probabilities. proba_ column will be added to prediction result for each target class
+
+  - RETURN: predictions - if path_to_predict is not None, then file in same directory with predcitions, or pandas dataframe
+
+  Example:
+  ```
+  def predict_by_model_example(path_to_predict=None, threshold=None, model_path=None):
+      #features is an array mapping your data to the feature, your feature and data should be
+      #the same that you trained your model with.
+      #If it is None, features read from model/options.json file
+      #['feature1', 'feature2']
+      features = None 
+
+      # data is an array of arrays to get predictions for, input your data below
+      # each record should contain values for each feature
+      records = [[],[]]
+
+      if path_to_predict:
+          path_to_predict=os.path.abspath(path_to_predict)
+              
+      predictions = ModelExporter({}).predict_by_model(
+          records=records,
+          model_path=model_path,
+          path_to_predict=path_to_predict,
+          features=features,
+          threshold=threshold
+      )
+
+      return predictions
+  ```
+
+- **load_model(model_path)** - load model from file.
+  - model_path - folder which contain model.pkl.gz file
+
+  - RETURN: model, timeseries_model
+    - model - ML model to call predict    
+    - timeseries_model - flag is this timeseries model or not
+
+- **preprocess_data(model_path, data_path, records=None, features=None)** - preprocess data for predict. It will process data same way as train data used for model
+  - model_path - folder which contain model.pkl.gz file
+  - data_path - data to preprocess
+  - records - data to predict: list of lists. data_path should be None in this case. For example: [[0.1,0.2],[0.1, 0.3]]
+  - features - feature names for records. Used only when records is not None
+
+  - RETURN: X_test, Y_test, target_categoricals
+    - X_test - data to call predict    
+    - Y_test - array with target values
+    - target_categoricals - dict with categories for target, may be used to get actual target values
+
+  Example:
+  ```
+  def predict_by_model_example(path_to_predict=None, model_path=None):
+      model_exporter = ModelExporter({})
+      model, timeseries_model = model_exporter.load_model(model_path)
+      X_test, Y_test, target_categoricals = model_exporter.preprocess_data(model_path, 
+          data_path=path_to_predict)
+
+      results = model.predict(X_test)
+
+      # If your target is categorical you can translate predicted values back to original:
+      # target_feature = "target"
+      # categories = target_categoricals[target_feature]['categories']
+      # results = map(lambda x: categories[int(x)], results)
+  ```
+
+  Example for timeseries data:
+  ```
+  def predict_by_model_timeseries_example(path_to_predict=None, model_path=None):
+      model_exporter = ModelExporter({})
+      model, timeseries_model = model_exporter.load_model(model_path)
+      X_test, Y_test, target_categoricals = model_exporter.preprocess_data(model_path, 
+          data_path=path_to_predict)
+
+      if timeseries_model:
+          results = model.predict((X_test, Y_test, False))[-1:]
+      else:
+          results = model.predict(X_test.iloc[-1:])
+  ```
+
+
