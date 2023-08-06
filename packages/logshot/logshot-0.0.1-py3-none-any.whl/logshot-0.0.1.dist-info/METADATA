@@ -1,0 +1,50 @@
+Metadata-Version: 2.1
+Name: logshot
+Version: 0.0.1
+Summary: Simplified log tool that allows an easy manageable global logger
+Home-page: https://github.com/pgmesa-packages/logshot
+Author: Pablo García Mesa
+Author-email: pgmesa.sm@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.7
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+# Log-Shot
+
+A simplified log tool with some custom features that allows to manage loggers across multiple python files, with a root logger that is easy to enable or disable whenever it is necessary from any file.
+
+### Instalation
+```
+pip install logshot
+```
+
+### Usage Example
+```
+# -- Global logger config
+title = "log-file"
+logs_dir = 'logs'
+if not os.path.exists(logs_dir):
+    os.mkdir(logs_dir)
+logging.config_log_capture(logs_dir, logfile_title=title)
+logging.root_level = logging.DEBUG;
+logging.start_log_capture()
+# -- Logger
+logger = logging.Logger(module_name=__name__)
+logger.level = logging.DEBUG
+```
+
+### File Output
+```
+2022-01-24 00:59:32.138305
+[INFO] __main__: Opening example path...
+
+2022-01-24 00:59:40.446509
+[ERROR] __main__: [WinError 3] The system cannot find the path specified: 'C:\\Users\\example\\of\\logshot\\package'
+```
+
+
