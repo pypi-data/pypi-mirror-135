@@ -1,0 +1,69 @@
+Metadata-Version: 2.1
+Name: ddna
+Version: 0.1.2
+Summary: Encode and decode strings to DNA
+Home-page: https://github.com/Aayush9029/DDNA
+Author: Aayush Pokharel
+Author-email: aayushpokharel36@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# DDNA
+Program / Library that converts sentences to DNA sequence and vice-versa.
+
+[![Pylint](https://github.com/Aayush9029/DDNA/actions/workflows/pylint.yml/badge.svg)](https://github.com/Aayush9029/DDNA/actions/workflows/pylint.yml) [![pytest](https://github.com/Aayush9029/DDNA/actions/workflows/pytest.yml/badge.svg)](https://github.com/Aayush9029/DDNA/actions/workflows/pytest.yml)
+```js
+O       o O       o O       o
+A O   o | A O   o | | O   o G
+| G O | C 1 | O G | T | O | 1
+1 o   O | T o   O A | o   O C
+o       O o       O o       O
+```
+
+### Installation:
+```sh
+pip install ddna
+```
+
+
+### Usage:
+
+- *program*
+```
+ python3 -m ddna -h    
+usage: ddna.py [-h] [-e ENCODE] [-d DECODE]
+
+DDNA - DNA Encoder/Decoder
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENCODE, --encode ENCODE
+                        Encode String to DNA
+  -d DECODE, --decode DECODE
+                        Decode DNA to String
+```
+
+- *pip package*
+```
+>>> from ddna import DDNA
+>>> DDNA().encode("HELLO WORLD")
+'CAGACACCCATACATACATTAGAACCCTCATTCCAGCATACACA'
+>>> DDNA().decode("CAGACACCCATACATACATTAGAACCCTCATTCCAGCATACACA")
+'HELLO WORLD'
+```
+
+### Plans:
+- [ ] Introduce Mutations
+- [ ] Introduce new form of encryption based on mutations
+
+
+
