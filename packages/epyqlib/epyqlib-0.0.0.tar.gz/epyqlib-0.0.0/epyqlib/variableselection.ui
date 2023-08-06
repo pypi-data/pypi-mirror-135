@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>636</width>
+    <height>473</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="update_from_can_file" stdset="0">
+   <bool>false</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="4">
+      <widget class="Led" name="logging_led">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="label_override" stdset="0">
+        <string>Logging</string>
+       </property>
+       <property name="label_from_enumeration" stdset="0">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="update_parameters_button">
+       <property name="text">
+        <string>Update Parameters</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="save_selection_button">
+       <property name="text">
+        <string>Save Selection</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="load_binary_button">
+       <property name="text">
+        <string>Load Binary</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="Button" name="reset_button">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="label_override" stdset="0">
+        <string>Reset Log</string>
+       </property>
+       <property name="label_visible" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="tx" stdset="0">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="load_selection_button">
+       <property name="text">
+        <string>Load Selection</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="5">
+      <widget class="VariableSelectionView" name="view"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="Led" name="configuration_is_valid_led">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="label_override" stdset="0">
+        <string>Configuration Is Valid</string>
+       </property>
+       <property name="label_from_enumeration" stdset="0">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="process_raw_log_button">
+       <property name="text">
+        <string>Process Raw Log</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>VariableSelectionView</class>
+   <extends>QWidget</extends>
+   <header>epyqlib.variableselectionview</header>
+  </customwidget>
+  <customwidget>
+   <class>Button</class>
+   <extends>QWidget</extends>
+   <header>epyqlib.widgets.button</header>
+  </customwidget>
+  <customwidget>
+   <class>Led</class>
+   <extends>QWidget</extends>
+   <header>epyqlib.widgets.led</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
