@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: infra-enver
+Version: 1.0.3
+Summary: Infra Enver
+Home-page: UNKNOWN
+Author: Daniil Vladimirov
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: pydantic
+
+<h1>INFRA_ENVER</h1>
+
+example
+```py
+from infra_enver import infra_enver
+from pydantic import BaseSettings
+import typing as t
+import random
+
+class MySettings(BaseSettings):
+    OPA: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+if __name__ == '__main__':
+    env = infra_enver.Enver("TEST", "I_zNOoADzwnVcEQRn2Xr8NK3aXClLkibZw", True, MySettings())
+
+    # get setting
+    print(env.OPA)
+
+    # experiment
+    for i in range(10):
+        print(env.get_experiment("TEST_EXP_2", random.randint(3, 1000000)))
+```
+
+
