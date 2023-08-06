@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<link rel="icon" href="/logo.ico" type="image/x-icon"/>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+		<script src="/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <style>
+        iframe{border:0;}
+        .view_files{
+            width:50%;
+            padding:0;
+            margin:0;
+            float:left;
+        }
+        .view_notice{
+            width:30%;
+            padding:0;
+            margin:0;
+            float:left;
+        }
+    </style>
+    <body>
+        <iframe src="/head.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:75px;"></iframe><br>
+        <div style="position:fixed;right:0px;top:0px;">
+            <button class="btn btn-outline-secondary" onclick="window.open(`/setting`)">
+                <svg t="1629270386797" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6006" width="20" height="20"><path d="M881 512c0-52.4 32.9-96.8 79-114.5-11-43.2-28-83.9-50.2-121.3C864.6 296.3 810 288.1 773 251c-37-37-45.2-91.7-25.1-136.8C710.4 92 669.7 75 626.5 64c-17.8 46.1-62.2 79-114.5 79-52.4 0-96.8-32.9-114.5-79-43.2 11-83.9 28-121.3 50.2 20.1 45.2 11.9 99.8-25.1 136.8-37 37-91.7 45.2-136.8 25.2C92 313.6 75 354.3 64 397.5c46.1 17.8 79 62.2 79 114.5 0 52.4-32.9 96.8-79 114.5 11 43.2 28 83.9 50.2 121.3C159.4 727.7 214 735.9 251 773c37 37 45.2 91.7 25.1 136.8C313.6 932 354.3 949 397.5 960c17.8-46.1 62.2-79 114.5-79 52.4 0 96.8 32.9 114.5 79 43.2-11 83.9-28 121.3-50.2-20.1-45.2-11.9-99.8 25.1-136.8 37-37 91.7-45.2 136.8-25.2C932 710.4 949 669.7 960 626.5c-46.1-17.7-79-62.1-79-114.5zM512 635c-67.9 0-123-55.1-123-123s55.1-123 123-123 123 55.1 123 123-55.1 123-123 123z" fill="#6C757D" p-id="6007"></path></svg>
+                ￥{LanguageCode:2001}￥
+            </button>
+            {git_button}
+            <button class="btn btn-outline-warning" onclick="javascript:button_quit()">
+                <svg t="1626337115769" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1942" width="20" height="20"><path d="M512 128v70.4H249.6c-25.6 0-51.2 25.6-51.2 51.2v524.8c0 25.6 25.6 51.2 51.2 51.2H512V896H249.6c-64 0-121.6-57.6-121.6-121.6V249.6C128 185.6 185.6 128 249.6 128H512z m384 390.4c0 6.4 0 6.4 0 0-6.4 6.4-6.4 6.4 0 0 0 6.4-6.4 6.4-6.4 6.4s0 6.4-6.4 6.4l6.4-6.4-6.4 6.4L704 704c-6.4 6.4-12.8 12.8-25.6 12.8s-19.2-6.4-25.6-12.8c-12.8-12.8-12.8-38.4 0-51.2L768 537.6H403.2c-19.2 0-32-12.8-38.4-32v-6.4c0-19.2 19.2-38.4 38.4-38.4H768l-115.2-115.2c-12.8-12.8-12.8-32-6.4-44.8l6.4-6.4c12.8-12.8 38.4-12.8 51.2 0l179.2 172.8 6.4 6.4v12.8-6.4c6.4 32 6.4 38.4 6.4 38.4z" p-id="1943" fill="#FFC157"></path></svg>
+                ￥{LanguageCode:2003}￥
+            </button>
+            <button class="btn btn-outline-danger" onclick="javascript:button_close()">
+                <svg t="1626264762889" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2608" width="20" height="20"><path d="M502.46235723 511.12844316a32.99604434 32.99604434 0 0 1-33.61436983-32.26529707V94.43393106C468.8479874 76.55873135 483.91262158 62 502.46235723 62c18.60594697 0 33.72679159 14.61494268 33.7267916 32.43393105v384.26058106a33.05225566 33.05225566 0 0 1-33.67058028 32.43393105zM492.34431904 961.38111377a437.15543203 437.15543203 0 0 1-304.10323857-121.52887295A413.49046729 413.49046729 0 0 1 96.05451641 707.98048438a402.0233581 402.0233581 0 0 1 15.4581126-354.01889004A424.67651982 424.67651982 0 0 1 242.37258154 209.27365771a34.45753887 34.45753887 0 0 1 46.99266241 7.53231622 31.59076201 31.59076201 0 0 1-7.86958418 45.13768945 358.96548692 358.96548692 0 0 0-110.39903175 122.20340889 334.738408 334.738408 0 0 0-41.54016532 162.22586835c0 93.53563594 37.77400635 181.45013994 106.35181699 247.55465128a367.17233994 367.17233994 0 0 0 256.54846201 102.52944755 367.39718437 367.39718437 0 0 0 256.54846289-102.47323623 341.53997783 341.53997783 0 0 0 106.23939434-247.6108626 334.45735136 334.45735136 0 0 0-41.42774268-162.22586835 358.62821895 358.62821895 0 0 0-110.56766573-122.09098623 31.59076201 31.59076201 0 0 1-8.26306435-44.51936485l0.56211328-0.67453593a34.40132754 34.40132754 0 0 1 46.93645196-7.53231623 424.11440654 424.11440654 0 0 1 130.80374121 144.6317253 401.62987881 401.62987881 0 0 1 15.51432392 354.01889004 412.92835401 412.92835401 0 0 1-92.18656406 131.92796777 430.57870839 430.57870839 0 0 1-136.70592978 88.92630703A442.4955082 442.4955082 0 0 1 492.34431904 961.38111377z" fill="#d81e06" p-id="2609"></path></svg>
+                ￥{LanguageCode:2004}￥
+            </button>
+        </div>
+            {breadcrumb}
+        <button class="btn btn-outline-primary" style="margin-left:10%;" onclick="javascript:new_file()">
+            <svg t="1626441297260" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2297" width="20" height="20"><path d="M61.44 122.92096A122.83904 122.83904 0 0 1 184.32 0h532.48a40.96 40.96 0 0 1 28.95872 12.00128l204.8 204.8A40.96 40.96 0 0 1 962.56 245.76v655.5648c0 67.74784-55.11168 122.6752-122.88 122.6752H184.32a122.88 122.88 0 0 1-122.88-122.92096V122.92096z m819.2 139.79648L699.84256 81.92H184.29952C161.64864 81.92 143.36 100.22912 143.36 122.92096v778.15808A40.96 40.96 0 0 0 184.32 942.08h655.36c22.56896 0 40.96-18.30912 40.96-40.7552V262.71744zM307.2 512a40.96 40.96 0 0 1 40.7552-40.96h328.0896c22.50752 0 40.7552 18.18624 40.7552 40.96a40.96 40.96 0 0 1-40.7552 40.96H347.9552A40.7552 40.7552 0 0 1 307.2 512z m204.8-204.8a40.96 40.96 0 0 1 40.96 40.7552v328.0896c0 22.50752-18.18624 40.7552-40.96 40.7552a40.96 40.96 0 0 1-40.96-40.7552V347.9552c0-22.50752 18.18624-40.7552 40.96-40.7552z" fill="#007BFF" p-id="2298"></path></svg>
+            ￥{LanguageCode:2005}￥
+        </button>
+        <button class="btn btn-outline-primary" onclick="javascript:new_folder()">
+            <svg t="1626441415447" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2686" width="20" height="20"><path d="M846.3 233.4H514c-10 0-19.1-5.8-23.2-14.9l-20.7-45.2c-18.5-40.5-58.9-66.4-103.4-66.4h-187C116.9 106.9 66 157.8 66 220.6V790c0 62.8 50.9 113.7 113.7 113.7h666.5c62.8 0 113.7-50.9 113.7-113.7V347.2c0.1-62.9-50.8-113.8-113.6-113.8zM896 790c0 27.5-22.3 49.7-49.7 49.7H179.7c-27.5 0-49.7-22.3-49.7-49.7V220.6c0-27.5 22.3-49.7 49.7-49.7h187c19.4 0 37.2 11.4 45.2 29l29.1 63.6c9.4 20.6 30 33.8 52.7 33.8h352.6c27.5 0 49.7 22.3 49.7 49.7v443z" p-id="2687" fill="#007BFF"></path><path d="M670.1 537.1H543V410c0-17.6-14.4-32-32-32s-32 14.4-32 32v127.1H351.9c-17.6 0-32 14.4-32 32s14.4 32 32 32H479v127.1c0 17.6 14.4 32 32 32s32-14.4 32-32V601.1h127.1c17.6 0 32-14.4 32-32s-14.4-32-32-32z" p-id="2688" fill="#007BFF"></path></svg>
+            ￥{LanguageCode:2006}￥
+        </button>
+        <div style="width:80%;padding-left:10%;">
+            <div class="view_files" style="margin-right:20%;">
+                {view_files}
+            </div>
+            <div class="view_notice" id="notice"></div>
+        </div>
+        <script>
+            async function real_close()
+            {
+                axios.post("/close");
+                await swal({"text":"￥{LanguageCode:2008}￥","icon":"info"});
+                window.close();
+            }
+            async function button_close()
+            {
+                var confirm_value;
+                await swal({"text":"￥{LanguageCode:2009}￥","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"],"dangerMode":true}).then((value)=>{confirm_value=value;});
+                if(confirm_value)
+                {
+                    real_close();
+                }
+            }
+            function real_quit()
+            {
+                axios.post("/quit");
+                window.location.href="/begin";
+            }
+            async function button_quit()
+            {
+                var confirm_value;
+                await swal({"text":"￥{LanguageCode:2010}￥","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"]}).then((value)=>{confirm_value=value;});
+                if(confirm_value)
+                {
+                    real_quit();
+                }
+            }
+            async function new_file()
+            {
+                var file_name;
+                await swal({"text":"￥{LanguageCode:2011}￥","content":"input","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"]}).then((value)=>{file_name=value;});
+                if(!file_name)
+                {
+                    return;
+                }
+                var path=GetQueryString("path");
+                if(path==null)
+                {
+                    path=""
+                }
+                try
+                {
+                    const response=await axios.post("/new_file?path="+encodeURIComponent(path)+"&file_name="+encodeURIComponent(file_name))
+                    console.log(response);
+                    if(response.status==200)
+                    {
+                         await swal({"text":"￥{LanguageCode:2013}￥","icon":"success"});
+                         location.reload();
+                    }
+                }
+                catch(err)
+                {
+                    await swal({"text":"￥{LanguageCode:2014}￥","icon":"error"});
+                }
+            }
+            async function new_folder()
+            {
+                var folder_name;
+                await swal({"text":"￥{LanguageCode:2012}￥","content":"input","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"]}).then((value)=>{folder_name=value;});
+                if(!folder_name)
+                {
+                    return;
+                }
+                var path=GetQueryString("path");
+                if(path==null)
+                {
+                    path=""
+                }
+                try
+                {
+                    const response=await axios.post("/new_folder?path="+encodeURIComponent(path)+"&folder_name="+encodeURIComponent(folder_name));
+                    console.log(response);
+                    if(response.status==200)
+                    {
+                         await swal({"text":"￥{LanguageCode:2013}￥","icon":"success"});
+                         location.reload();
+                    }
+                }
+                catch(err)
+                {
+                    await swal({"text":"￥{LanguageCode:2014}￥","icon":"error"});
+                }
+            }
+            async function rename(file_name)
+            {
+                var new_file_name;
+                await swal({"text":"￥{LanguageCode:2017}￥"+file_name+"￥{LanguageCode:2018}￥","content":"input","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"]}).then((value)=>{new_file_name=value;});
+                if(!new_file_name)
+                {
+                    return;
+                }
+                var path=GetQueryString("path");
+                if(path==null)
+                {
+                    path=""
+                }
+                try
+                {
+                    const response=await axios.post("/rename?path="+encodeURIComponent(path)+"&file_name="+encodeURIComponent(file_name)+"&new_file_name="+encodeURIComponent(new_file_name));
+                    console.log(response);
+                    if(response.status==200)
+                    {
+                         await swal({"text":"￥{LanguageCode:2015}￥","icon":"success"});
+                         location.reload();
+                    }
+                }
+                catch(err)
+                {
+                    await swal({"text":"￥{LanguageCode:2016}￥","icon":"error"});
+                }
+            }
+            async function get_notice()
+            {
+                var version="{version}".slice(1);
+                try
+                {
+                    const response=await axios.get("https://cyrxdzj.github.io/PyCheerNotice/notice.json");
+                    console.log(response);
+                    var notice_data=response.data;
+                    var notice_html=``;
+                    console.log(notice_data);
+                    for(var i=0;i<notice_data.length;i++)
+                    {
+                        var now_notice=notice_data[i];
+                        if(now_notice["from_version"]!="-")
+                        {
+                            if(compare_version(version,now_notice["from_version"])=="<")
+                            {
+                                continue;
+                            }
+                        }
+                        if(now_notice["to_version"]!="-")
+                        {
+                            if(compare_version(version,now_notice["to_version"])==">")
+                            {
+                                continue;
+                            }
+                        }
+                        now_time=new Date().getTime();
+                        if(now_notice["from_time"]!="-")
+                        {
+                            from_time=new Date(now_notice["from_time"]).getTime();
+                            if(now_time<from_time)
+                            {
+                                continue;
+                            }
+                        }
+                        if(now_notice["to_time"]!="-")
+                        {
+                            to_time=new Date(now_notice["to_time"]).getTime();
+                            if(now_time>to_time)
+                            {
+                                continue;
+                            }
+                        }
+                        notice_html+=`<li class="list-group-item"><a onclick="javascript:swal({'title':'${now_notice["title"]}','text':'${now_notice["text"]}'});">${now_notice["title"]}</a></li>`
+                    }
+                    document.getElementById("notice").innerHTML=notice_html;
+                }
+                catch(err)
+                {
+                    console.log(err);
+                    console.log("Can't get notice");
+                }
+            }
+            get_notice();
+        </script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

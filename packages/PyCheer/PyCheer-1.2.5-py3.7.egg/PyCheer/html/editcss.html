@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <style>
+		body{background-color: white}
+        iframe{margin:0;}
+	</style>
+	<!--<iframe src="//player.bilibili.com/player.html?aid=889091583&bvid=BV1UK4y1M7oE&cid=367063448&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>-->
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="icon" href="/logo.ico" type="image/x-icon"/>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/css/modern-business.css" rel="stylesheet">
+		<link href="/css/font-awesome.min.css" rel="stylesheet" type="textcss">
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/edit.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			#editor
+			{
+				width:100%;
+				height:79%;
+			}
+		</style>
+	</head>
+	<body background-color="white">
+        <iframe src="/head.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:8%;"></iframe><br>
+        <iframe src="/main-control1.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" id="main-control1" style="height:6%;"></iframe>
+		<div id="editor"></div>
+		<script>
+			var init_code="<init_code>";
+			var show_init_code=decodeURIComponent(init_code);
+			console.log(show_init_code)
+			var editor=ace.edit("editor");
+			editor.setValue(show_init_code);
+			editor.setTheme("ace/theme/<theme>");
+			editor.getSession().setMode("ace/mode/css");
+			editor.getSession().setTabSize(4);
+			function GetQueryString(name)
+			{
+				var reg=new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r=window.location.search.substr(1).match(reg);
+				if (r!=null)
+				{
+					return unescape(r[2]);
+				}
+				return null;
+			}
+			document.onkeydown=function(key)
+			{
+				if(key.code=="KeyS"&&key.ctrlKey==true)
+				{
+					save();
+					return false;
+				}
+			}
+			function change_event()
+			{
+				var bottom_div=document.getElementById("main-control2").contentWindow.document.getElementById("bottom_div");
+				var left_span=document.getElementById("main-control2").contentWindow.document.getElementById("left-span");
+				bottom_div.style.background="red";
+				left_span.innerHTML="已编辑，未保存";
+			}
+			editor.getSession().on("change",change_event);
+		</script>
+        <iframe src="/main-control2.html" style="height: 5%;width:100%;" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" id="main-control2"></iframe>
+        <script src="/js/bootstrap.min.js"></script>
+	</body>
+</html>

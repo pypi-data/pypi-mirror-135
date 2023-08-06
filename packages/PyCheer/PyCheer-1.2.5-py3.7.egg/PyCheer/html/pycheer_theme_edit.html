@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="icon" href="/logo.ico" type="image/x-icon"/>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+		<script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/common.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			#editor
+			{
+				width:100%;
+				height:calc(100vh - 140px);
+			}
+		</style>
+	</head>
+	<body>
+        <iframe src="/head.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:75px;"></iframe><br>
+        <button class="btn btn-outline-primary" style="position:fixed;right:0px;top:0px;" onclick="save();">
+			<svg style="width: 24px" t="1595928179012" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2154"><path d="M227.555556 142.222222a85.333333 85.333333 0 0 0-85.333334 85.333334v568.888888a85.333333 85.333333 0 0 0 85.333334 85.333334h568.888888a85.333333 85.333333 0 0 0 85.333334-85.333334V227.555556a85.333333 85.333333 0 0 0-85.333334-85.333334H227.555556z m0-56.888889h568.888888a142.222222 142.222222 0 0 1 142.222223 142.222223v568.888888a142.222222 142.222222 0 0 1-142.222223 142.222223H227.555556a142.222222 142.222222 0 0 1-142.222223-142.222223V227.555556a142.222222 142.222222 0 0 1 142.222223-142.222223z" fill="#007BFF" p-id="2155"></path><path d="M284.444444 142.222222v256h455.111112V142.222222h56.888888v264.760889c0 26.567111-25.457778 48.128-56.888888 48.128H284.444444c-31.431111 0-56.888889-21.560889-56.888888-48.128V142.222222h56.888888z" fill="#007BFF" p-id="2156"></path><path d="M625.777778 199.111111m28.444444 0l0 0q28.444444 0 28.444445 28.444445l0 85.333333q0 28.444444-28.444445 28.444444l0 0q-28.444444 0-28.444444-28.444444l0-85.333333q0-28.444444 28.444444-28.444445Z" fill="#007BFF" p-id="2157"></path></svg>
+            ￥{LanguageCode:0003}￥
+		</button>
+		<a class="unlink_text">￥{LanguageCode:8001}￥</a>
+		<input class="form-control" id="pycheer-theme-name">
+		<a class="unlink_text">￥{LanguageCode:8005}￥</a>
+		<div id="editor"></div>
+		<script>
+			var init_name=`<name>`;
+			var init_code=`<init_code>`;
+			var show_init_name=decodeURIComponent(init_name);
+			var show_init_code=decodeURIComponent(init_code);
+			document.getElementById("pycheer-theme-name").value=show_init_name;
+			var editor=ace.edit("editor");
+			editor.setValue(show_init_code);
+			editor.setTheme("ace/theme/<theme>");
+			editor.getSession().setMode("ace/theme/css");
+			async function save()
+			{
+				var name=encodeURIComponent(document.getElementById("pycheer-theme-name").value);
+				var code=encodeURIComponent(editor.getValue());
+				var id=GetQueryString("id");
+				try
+				{
+					const response=await axios.post(`/pycheer-theme/save?id=${id}&name=${name}`,data=code);
+					await swal({"text":"￥{LanguageCode:8006}￥","icon":"success"});
+                    location.reload();
+				}
+				catch(err)
+				{
+					await swal({"text":"￥{LanguageCode:8007}￥","icon":"error"});
+				}
+			}
+		</script>
+		<script src="/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

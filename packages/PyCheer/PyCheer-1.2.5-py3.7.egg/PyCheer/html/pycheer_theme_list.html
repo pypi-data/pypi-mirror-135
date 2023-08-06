@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<link rel="icon" href="/logo.ico" type="image/x-icon"/>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+		<script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/sha256.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+        <iframe src="/head.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:75px;"></iframe><br>
+        <center>
+            <div style="width:60%">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="unlink_text" scope="col">￥{LanguageCode:8001}￥</th>
+                            <th class="unlink_text" scope="col">￥{LanguageCode:8002}￥</th>
+                        </tr>
+                    </thead>
+                    {pycheer_theme_list}
+                </table>
+                <a class="link_text" onclick="new_theme();">￥{LanguageCode:8010}￥</a>
+            </div>
+        </center>
+        <script>
+			async function apply(id)
+			{
+				try
+				{
+					const response=await axios.post(`/pycheer-theme/apply?id=${id}`);
+					await swal({"text":"￥{LanguageCode:8008}￥","icon":"success"});
+                    location.reload();
+				}
+				catch(err)
+				{
+					await swal({"text":"￥{LanguageCode:8009}￥","icon":"error"});
+				}
+			}
+			async function new_theme()
+			{
+				var d=new Date();
+				var year=d.getFullYear();
+				var month=d.getMonth()+1;
+				var day=d.getDate();
+				var hour=d.getHours();
+				var minute=d.getMinutes();
+				var second=d.getSeconds();
+				var m_second=d.getMilliseconds();
+				var id=`${year}-${month}-${day}-${hour}-${minute}-${second}-${m_second}`;
+				try
+				{
+					const response=await axios.post(`/pycheer-theme/new?id=${id}`);
+					await swal({"text":"￥{LanguageCode:8012}￥","icon":"success"});
+                    location.reload();
+				}
+				catch(err)
+				{
+					await swal({"text":"￥{LanguageCode:8013}￥","icon":"error"});
+				}
+			}
+			async function del(id)
+			{
+				var confirm_value;
+				await swal({"text":"￥{LanguageCode:8016}￥","buttons":["￥{LanguageCode:0001}￥","￥{LanguageCode:0002}￥"],"dangerMode":true}).then((value)=>{confirm_value=value;});
+				if(!confirm_value)
+				{
+					return;
+				}
+				try
+				{
+					const response=await axios.post(`/pycheer-theme/delete?id=${id}`);
+					await swal({"text":"￥{LanguageCode:8014}￥","icon":"success"});
+                    location.reload();
+				}
+				catch(err)
+				{
+					await swal({"text":"￥{LanguageCode:8015}￥","icon":"error"});
+				}
+			}
+        </script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
