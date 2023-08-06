@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "align-benchmark"
+version = "0.1.0"
+description = "Benchmark tests for dualtext alignment"
+authors = ["ffreemt"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ffreemt/text-alignment-benchmarks"
+include = ["LICENSE"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+logzero = "^1.7.0"
+numpy = "^1.22.1"
+pandas = "^1.4.0"
+icecream = "^2.1.1"
+openpyxl = "^3.0.9"
+
+[tool.poe.executor]
+type = "poetry"
+
+[tool.poe.tasks]
+memo = "echo poe test"
+test = "pytest tests"
+build = "poetry build"
+_publish = "poetry publish"
+release = ["test", "build", "_publish"]
+lint = { cmd = "pylint al_benchmark" }
+format = "black tests al_benchmark"
+tunnel = {cmd ="ssh -CN ip_or_hostname_defined_in_hosts -L 9091:127.0.0.1:9091"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+flake8 = "^3.9.2"
+pep257 = "^0.7.0"
+poethepoet = "^0.10.0"
+
+[tool.poetry.scripts]
+align-benchmark = "align_benchmark.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
