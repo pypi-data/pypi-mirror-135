@@ -1,0 +1,35 @@
+#!/bin/bash
+echo "`date -uIns` - prepost/run $@"
+
+
+cd "${AML_APP_ROOT:-/var/azureml-app}"
+
+
+# TODO: Add support for other dynamic installation and put all the code in common spot
+
+if [[ -n "$AZUREML_ENTRY_SCRIPT" ]]; then
+    # Remove leading forward slash if it exists and then append the directory to the AML_APP_ROOT
+    export ENTRY_SCRIPT_DIR="${AML_APP_ROOT:-/var/azureml-app}/$(dirname "${AZUREML_ENTRY_SCRIPT#/}")"
+else 
+    export ENTRY_SCRIPT_DIR=${AML_APP_ROOT:-/var/azureml-app}
+fi
+
+if [[ -n "$AZUREML_EXTRA_REQUIREMENTS_TXT" ]]; then
+    # Dynamic installation requirements.txt, check for the variable and if the file exists for relative and absolute paths.
+    
+    export REQUIREMENTS_TXT_FULL_PATH="${ENTRY_SCRIPT_DIR}/${AZUREML_EXTRA_REQUIREMENTS_TXT}"
+
+    if [[ -f $REQUIREMENTS_TXT_FULL_PATH ]]; then
+        echo "Installing Python packages from ${REQUIREMENTS_TXT_FULL_PATH} !"
+        pip install -r "$REQUIREMENTS_TXT_FULL_PATH"
+    else
+        echo "Dynamic Python packages installation is enabled but expected requirements file not found: ${REQUIREMENTS_TXT_FULL_PATH}. Exiting with error ..."
+        exit 99
+    fi
+else
+    echo "Dynamic Python package installation is disabled."
+fi
+
+echo "Starting AzureML Inference Server HTTP."
+exec azmlinfsrv --entry_script "${AZUREML_ENTRY_SCRIPT:-main.py}" --port 31311 --prepost
+
