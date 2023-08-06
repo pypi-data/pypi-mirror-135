@@ -1,0 +1,57 @@
+Metadata-Version: 2.1
+Name: transform-airflow
+Version: 0.0.2
+Summary: Transform airflow Library
+Home-page: UNKNOWN
+Author: Transform Data
+Author-email: marco@transformdata.io
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+
+# Transform Airflow
+
+## Install:
+```bash
+pip install transform-airflow
+```
+
+## Available Operators:
+- MaterializeOperator
+  - materialization_name: str
+  - start_time: Optional[str]
+  - end_time: Optional[str]
+  - model_key_id: Optional[int]=None
+  - output_table: Optional[str]=None
+  - force: bool=False
+
+
+## Creating DAG:
+```python
+from transform_airflow.operators import MaterializeOperator
+
+# Init DAG
+my_dag = DAG("my_dag_name")
+
+
+# Associate task with DAG
+op = MaterializeOperator(
+  task_id=task_id,
+  materialization_name="test",
+  start_time="2021-01-01",
+  end_time="2021-01-10",
+)
+
+# Perform any dependency structuring on tasks
+```
+
