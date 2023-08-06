@@ -1,0 +1,419 @@
+Metadata-Version: 2.1
+Name: vpn-server
+Version: 0.5.5
+Summary: Create an on demand VPN Server running with OpenVPN using AWS EC2.
+Home-page: https://github.com/thevickypedia/vpn-server
+Author: Vignesh Sivanandha Rao
+Author-email: svignesh1793@gmail.com
+License: UNKNOWN
+Project-URL: Docs, https://thevickypedia.github.io/vpn-server
+Project-URL: Bug Tracker, https://github.com/thevickypedia/vpn-server/issues
+Keywords: openvpn-server,vpn-server,aws-ec2
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Information Technology
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: System :: Networking :: Firewalls
+Description-Content-Type: text/markdown; charset=UTF-8
+License-File: LICENSE
+
+[![Python 3.8](https://img.shields.io/badge/python-3.8-orange.svg)](https://www.python.org/downloads/release/python-385/)
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-391/)
+
+###### Platform Supported
+![Generic badge](https://img.shields.io/badge/Platform-MacOS|Windows-1f425f.svg)
+
+###### Repo Stats
+[![GitHub](https://img.shields.io/github/license/thevickypedia/vpn-server)](https://github.com/thevickypedia/vpn-server/blob/main/LICENSE)
+[![GitHub repo size](https://img.shields.io/github/repo-size/thevickypedia/vpn-server)](https://api.github.com/repos/thevickypedia/vpn-server)
+[![GitHub code size](https://img.shields.io/github/languages/code-size/thevickypedia/vpn-server)](https://api.github.com/repos/thevickypedia/vpn-server)
+[![LOC](https://img.shields.io/tokei/lines/github/thevickypedia/vpn-server)](https://api.github.com/repos/thevickypedia/vpn-server)
+
+###### Deployments
+[![docs](https://github.com/thevickypedia/vpn-server/actions/workflows/docs.yml/badge.svg)](https://thevickypedia.github.io/vpn-server/)
+
+# VPN Server
+Create an on demand VPN Server running with `OpenVPN` using `AWS EC2` and `Python`.
+
+### ENV Variables
+If a `.env` file is present (with the required variables) in current working directory, there is no need for env vars,
+as [`vpn-server`](https://github.com/thevickypedia/vpn-server) loads `.env` files during start up.
+
+<details>
+<summary><strong>More on Environment variables</strong></summary>
+
+Use [cloudping.info](https://www.cloudping.info/) to pick the fastest (from current location) available region.
+
+> AMI IDs are got from `OpenVPN Access Server Community Images` per region.
+
+- **AMI_ID_{REGION_NAME}** - AMI ID in a region. Looks for `AMI_ID_us-west-2` since `us-west-2` is the default region.
+- **VPN_USERNAME** - Username to access VPN Server once, configuration is done. If `null`, looks for the env var `USER`.
+Defaults to `openvpn`
+- **VPN_PASSWORD** - Password to access VPN Server once, configuration is done. Defaults to `awsVPN2021`
+- **VPN_PORT** - Port number where the traffic has to be forwarded. Defaults to `943`
+- **REGION_NAME** - Region where the VPN Server should live. Defaults to `us-west-2`
+
+**To get notification of login information:**<br>
+- **gmail_user** - Username of the gmail account.
+- **gmail_pass** - Password of the gmail account.
+- **phone** - Phone number to which the notification has to be sent.
+- **recipient** - Email address to which the notification has to be sent.
+
+Optionally `env vars` for AWS config (`ACCESS_KEY`, `SECRET_KEY`, `REGION_NAME`) can be setup.
+</details>
+
+### Install
+`pip install vpn-server`
+
+### Usage
+```python
+from vpn.controller import VPNServer
+
+vpn_server = VPNServer()
+
+vpn_server.create_vpn_server()  # Create a VPN Server
+
+vpn_server.reconfigure_vpn()  # Re-configure an existing VPN Server
+
+vpn_server.test_vpn()  # Test an existing VPN Server
+
+vpn_server.delete_vpn_server()  # Delete the VPN Server
+```
+
+<details>
+<summary><strong>Manual Configuration</strong></summary>
+
+1. Are you sure you want to continue connecting (yes/no)? `yes` 
+2. Please enter 'yes' to indicate your agreement [no]: `yes`
+3. Will this be the primary Access Server node? Default: `yes`
+4. Please specify the network interface and IP address to be used by the Admin Web UI: `Default: all interfaces: 0.0.0.0`
+5. Please specify the port number for the Admin Web UI. Default: `{PORT}`
+6. Please specify the TCP port number for the OpenVPN Daemon. Default: `443`
+7. Should client traffic be routed by default through the VPN? `yes`
+8. Should client DNS traffic be routed by default through the VPN? Default: `No`
+9. Use local authentication via internal DB? Default: `yes`
+10. Should private subnets be accessible to clients by default? Default: `yes`
+11. Do you wish to login to the Admin UI as "openvpn"? Default: `yes`
+12. Specify the username for an existing user or for the new user account: `{USERNAME}`
+13. Type the password for the 'vicky' account: `{PASSWORD}`
+14. Confirm the password for the 'vicky' account: `{PASSWORD}`
+15. Please specify your Activation key (or leave blank to specify later): `{ENTER/RETURN}`
+16. Download the `OpenVPN` application and get connected to the VPN server.
+
+</details>
+
+### AWS Resources Used
+- EC2
+  - Instances
+  - AMI
+  - KeyPairs
+  - SecurityGroups
+- Network Interfaces
+- VPC [Default]
+- Subnet [Default]
+
+### Linting
+`PreCommit` will ensure linting, and the doc creation are run on every commit.
+
+Requirement:
+<br>
+`pip install --no-cache --upgrade sphinx pre-commit recommonmark`
+
+Usage:
+<br>
+`pre-commit run --all-files`
+
+### Links
+[Repository](https://github.com/thevickypedia/vpn-server)
+
+[Runbook](https://thevickypedia.github.io/vpn-server/)
+
+[Package](https://pypi.org/project/vpn-server/)
+
+## License & copyright
+
+&copy; Vignesh Sivanandha Rao
+
+Licensed under the [MIT License](https://github.com/thevickypedia/vpn-server/blob/main/LICENSE)
+
+
+Change Log
+==========
+
+0.5.5 (01/19/2022)
+------------------
+- Take optional args to delete vpn server
+
+0.5.4 (01/17/2022)
+------------------
+- Redirect prints to log file when used
+- Split server config into its own module
+
+0.5.3 (01/12/2022)
+------------------
+- Take `vpn_username` and `vpn_password` as args
+- Create log files only when requested
+- Notify upon failure and attach logfile in email
+
+0.5.2 (01/10/2022)
+------------------
+- Disable printing final config when logged in a file
+
+0.5.1 (01/10/2022)
+------------------
+- Change configuration input to match regex
+- Set interactive timeouts
+
+0.5.0 (01/10/2022)
+------------------
+- Take notification args during class instantiation
+
+0.4.9 (01/09/2022)
+------------------
+- Bump `gmail-connector` version
+- Include sender in email notification
+
+0.4.8 (01/09/2022)
+------------------
+- Update return types and docstrings
+
+0.4.7 (01/09/2022)
+------------------
+- Remove AMI_ID from mandatory args
+- Retrieve AMI_ID automatically
+- Setup AWS defaults
+- Update docs
+
+0.4.6 (01/09/2022)
+------------------
+- Make `vpn-server` a package and onboard to pypi
+
+0.4.5 (01/09/2022)
+------------------
+- Automate onboarding to pypi
+
+0.4.4 (01/09/2022)
+------------------
+- Remove `os.system` usage and introduce hybrid logger
+
+0.4.3 (01/09/2022)
+------------------
+- Add a note on firewall configuration ports
+
+0.4.2 (01/02/2022)
+------------------
+- Change sensitive values to a list to hide from logs
+- Do not log server info
+
+0.4.1 (01/02/2022)
+------------------
+- Hide port number and password from the logs
+- Add timeout and display options as arguments
+- Add one more option to test/update existing connection
+
+0.4.0 (01/01/2022)
+------------------
+- Add more logging and remove unnecessary args
+- Pass the initial 'yes' as part of the configuration dict
+- Bump timeout to 30 seconds
+
+0.3.9 (01/01/2022)
+------------------
+- Restructure static methods into a single module
+
+0.3.8 (01/01/2022)
+------------------
+- Use paramiko for interactive ssh commands
+- Get rid of the OS limitation
+- Improve the overall speed of configuration
+- Add an option to reconfigure
+
+0.3.7 (12/31/2021)
+------------------
+- Upgrade gmailconnector version
+- Update year in LICENSE file
+
+0.3.6 (10/04/2021)
+------------------
+- Strip https from notification URL
+- Distinguish attempt wise notification
+- Log a warning message if env vars for notification is missing
+
+0.3.5 (09/24/2021)
+------------------
+- FEATURE::Sends a notification when a second instance is triggered
+- Swap delete security group and sleeper
+
+0.3.4 (09/24/2021)
+------------------
+- Simplify notification process
+- Add logs to .gitignore
+
+0.3.3 (09/23/2021)
+------------------
+- Write only to file when triggered by Jarvis
+- Remove root logger
+- Move sleeper within class
+
+0.3.2 (09/23/2021)
+------------------
+- Add `loggingWrapper` for file and console logging
+- Create log files when triggered by `Jarvis`
+- Add datetime to email subject to avoid threads
+
+0.3.1 (09/22/2021)
+------------------
+- Add optional email notification upon vpn startup
+
+0.3.0 (09/21/2021)
+------------------
+- Fix buggy walrus operator which kept failing notifications
+- Reduce file IO operations
+- Strip https from url in notification
+- Increase wait time while shutting down vpn
+- Modify sleeper in _instance_info
+- Remove optional arguments
+
+0.2.9 (09/21/2021)
+------------------
+- Split sleep time as its own function to avoid redundancy
+
+0.2.8 (09/21/2021)
+------------------
+- Log results of notification
+- Change method name to avoid conflict with module
+- Add waiting time for file IO to finish
+
+0.2.7 (09/20/2021)
+------------------
+- Add a feature to send login details via SMS
+- Update requirements.txt and docstrings
+
+0.2.6 (09/20/2021)
+------------------
+- Add custom `PORT` number feature
+
+0.2.5 (09/20/2021)
+------------------
+- Add `VPN_USERNAME` option for custom login info
+- Write region name in `server_info.json`
+- Add a color to terminal
+- Update README.md and docstrings
+
+0.2.4 (09/20/2021)
+------------------
+- Update styling in `README.md` to populate in sphinx docs
+
+0.2.3 (09/20/2021)
+------------------
+- Use region specific AMI IDs
+- Add more info on env vars to README.md
+- Clean up and update docstrings
+
+0.2.2 (09/20/2021)
+------------------
+- Redirect client traffic via VPN automatically
+- Update README.md and add applescript in docstring
+
+0.2.1 (09/20/2021)
+------------------
+- Optionally load `env-vars` from `.env` file
+
+0.2.0 (09/20/2021)
+------------------
+- Make script to initiate only from `commandline`
+- Don't exit script until `SecurityGroup` is deleted
+- Update requirements.txt and docs
+
+0.1.9 (09/16/2021)
+------------------
+- Change branch name to `main` to pick up page build
+
+0.1.8 (09/16/2021)
+------------------
+- Add manual config info for `Windows OS`
+- Clean up
+- Update README.md and docs
+
+0.1.7 (09/16/2021)
+------------------
+- FEATURE::Spins up a VPN Server on EC2 with a single click
+- Add all the automation bits
+- Add time converter to calculate run time
+- Add an apple script for the automation
+- Add functionality to re-use AWS resources
+
+0.1.6 (09/16/2021)
+------------------
+- Setup github action for docs
+
+0.1.5 (09/15/2021)
+------------------
+- Add features to create and delete `SecurityGroups`
+- Reconfigure flow of code
+- Update docstrings and docs
+
+0.1.4 (09/15/2021)
+------------------
+- Proceed to terminate instance even when `KeyPair` deletion fails
+- Add access key and secret id as optional arguments during class initialization
+
+0.1.3 (09/15/2021)
+------------------
+- First automation to add `ip` and `host` entry in known_hosts file
+
+0.1.2 (09/15/2021)
+------------------
+- Delete recent instance if an instance id is not provided to terminate
+- Delete instance_info.json while terminating an instance
+
+0.1.1 (09/14/2021)
+------------------
+- Onboard sphinx auto docs
+- Add pre-commit and sync up with doc generation
+- Rename repo from openvpn to vpn-server
+
+0.1.0 (09/14/2021)
+------------------
+- Update README.md
+
+0.0.9 (09/14/2021)
+------------------
+- Wrap everything inside a class and add docstrings
+
+0.0.8 (09/14/2021)
+------------------
+- Add exception handlers where necessary
+
+0.0.7 (09/14/2021)
+------------------
+- Get public dns name and public ip address and write as JSON
+
+0.0.6 (09/14/2021)
+------------------
+- Add functions to delete keypair and terminate instance
+
+0.0.5 (09/14/2021)
+------------------
+- Add logging instead of print statements
+
+0.0.4 (09/14/2021)
+------------------
+- Create pem file while spinning up an instance
+
+0.0.3 (09/14/2021)
+------------------
+- Base script to create an instance using an AMI ID
+- Add `requirements.txt`
+
+0.0.2 (09/14/2021)
+------------------
+- Update LICENSE, README.md and add .gitignore
+
+0.0.1 (09/14/2021)
+------------------
+- Initial commit
+
+
