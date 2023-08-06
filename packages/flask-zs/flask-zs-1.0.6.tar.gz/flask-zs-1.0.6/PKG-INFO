@@ -1,0 +1,56 @@
+Metadata-Version: 2.1
+Name: flask-zs
+Version: 1.0.6
+Summary: A helpers for Flask.
+Home-page: https://github.com/codeif/flask-zs
+License: MIT
+Author: codeif
+Author-email: me@codeif.com
+Requires-Python: >=3.8,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Provides-Extra: all
+Provides-Extra: http-client
+Provides-Extra: mixins
+Requires-Dist: Flask
+Requires-Dist: flask-http-client; extra == "http-client" or extra == "all"
+Requires-Dist: requests
+Requires-Dist: zs-mixins; extra == "mixins" or extra == "all"
+Project-URL: Repository, https://github.com/codeif/flask-zs
+Description-Content-Type: text/x-rst
+
+Helpers for Flask.
+====================
+
+Helpers for Flask. 使用示例 `codeif/flask-zs-template  <https://github.com/codeif/flask-zs-template>`_
+
+依赖:
+
+- flask
+- requests
+
+
+安装
+----
+
+.. code-block:: sh
+
+    pip install flask-zs
+
+额外安装 `codeif/zs-mixins <https://github.com/codeif/zs-mixins>`_
+
+.. code-block:: sh
+
+    pip install flask-zs[mixins]
+
+
+集中models
+-------------
+
+把models集中到一个__init__.py中(zsdemo为package name)::
+
+    PYTHONPATH=. collect-models <zsdemo> instance/__init__.py
+
