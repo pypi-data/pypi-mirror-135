@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<contentrules>
+ <rule name="ims-workflow-change" title="IMSv4: notify on workflow state change "
+    cascading="False"
+    description="this rule sends and email when an indicator changes workflow status"
+    enabled="True" event="Products.CMFCore.interfaces.IActionSucceededEvent"
+    stop-after="False">
+  <conditions>
+   <condition type="plone.conditions.PortalType">
+    <property name="check_types">
+     <element>ims_indicator</element>
+    </property>
+   </condition>
+  </conditions>
+  <actions>
+   <action type="plone.actions.Mail">
+    <property name="source"/>
+    <property name="message">Dear IMS user,
+
+     ${taxonomy_hog_users}
+
+     Indicator with title ${title}
+     has changed state to ${review_state_title}
+
+     ${absolute_url}
+
+     Note, the following authors have received this mail:
+     ${creators_emails}
+
+     DEBUG
+
+     creators_emails
+     creators_emails
+
+     Creator E-Mail
+     ${creator_email}
+
+     *Local Roles:*
+
+     Contributors E-Mails
+     ${contributor_emails}
+
+     Editors E-Mails
+     ${editor_emails}
+
+     Managers E-Mails
+     ${manager_emails}
+
+     Owners E-Mails
+     ${owner_emails}
+
+     Readers E-Nails
+     ${reader_emails}
+
+     Reviewers E-Mails
+     ${reviewer_emails}
+
+
+     -----------
+     EEA Web CMS
+     -----------</property>
+    <property
+       name="subject">[IMSv4] Indicator state change ${review_state_title} for ${title}</property>
+    <property
+       name="recipients">${creators_emails}, demarinis@eea.europa.eu</property>
+    <property name="exclude_actor">False</property>
+   </action>
+  </actions>
+ </rule>
+ <assignment name="ims-workflow-change" bubbles="True" enabled="True" location="/SITE/ims"/>
+</contentrules>
