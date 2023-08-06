@@ -1,0 +1,72 @@
+Metadata-Version: 2.1
+Name: polyendtracker-midi-export
+Version: 0.0.1
+Summary: Unoficial tool that converts Polyend Tracker *.mtp pattern files to midi files.
+Home-page: https://github.com/DataGreed/polyendtracker-midi-export
+Author: Alexey Strelkov
+Author-email: datagreed@gmail.com
+License: MIT License
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+# Polyend Tracker MIDI Export tool
+
+MIDI conversion tool for Polyend Tracker project files. 
+
+## Disclaimer
+
+I am in no way affiliated with Polyend. This is a hobby project.
+
+## Usage
+
+Converting Polyend Tracker `*.mtp` pattern file to midi (pattern files are nested in project folders under `patterns`):
+
+```sh
+:$ python polytracker2midi.py ./my-tracker-project/patterns/pattern_02.mtp 
+```
+
+Specify custom output file name:
+
+```sh
+:$ python polytracker2midi.py ./my-tracker-project/patterns/pattern_02.mtp ./my-midi-file.mid
+```
+
+Converting Polyend Tracker `*.mtp` pattern file to a text file (outputs a table view of the 
+pattern similar to how you see it in Tracker UI):
+
+```sh
+:$ python polytracker2text.py ./my-tracker-project/patterns/pattern_02.mtp 
+```
+
+You can see an example of pattern text representation [here](./reverse-engineering/session%201/project%20files/datagreed%20-%20rebel%20path%20tribute%202/patterns/pattern_01.txt)
+
+## Reverse Engineering
+
+- [Pattern *.mtp files](reverse-engineering/patterns-reverse-engineering.md)
+ 
+## TODOs
+
+- ~~Pattern file parsing~~
+- Render names for All FX types 
+- Support rendering of all possible ranges of values for FXs
+- Pattern MIDI export
+  - ~~basic export~~
+  - support for velocity (volume FX)
+  - support for chord FX
+  - support for arp FX
+  - support for microtiming (micromove, `m`) FX
+  - support for microtuning `M` fx (do midi files support that?) 
+  - ~~cli tool for converting files~~
+  - support for panning ([it seems](http://midi.teragonaudio.com/tech/midispec/pan.htm) to be supported by midi )
+- Song arrangement MIDI export
+  - export
+  - extract BPM
+  - cli tool for converting files 
+- PyPi package
+
+
+
