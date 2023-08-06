@@ -1,0 +1,1 @@
+export default __webpack_public_path__ + "dio/js/socket.io/socket.io.min.js";
