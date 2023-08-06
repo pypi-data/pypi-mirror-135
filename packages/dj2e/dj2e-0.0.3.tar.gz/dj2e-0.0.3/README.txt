@@ -1,0 +1,1 @@
+Parser for embed jsons to python embed object
