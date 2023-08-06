@@ -1,0 +1,31 @@
+import os
+import sys
+import inspect
+import rich.pretty
+from loguru import logger
+
+__version__ = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@"
+__description__ = "The @PROJECT_NAME_UPPER@' toolbox"
+__maintainers__ = ["@MAIN_AUTHOR@ <@MAIN_AUTHOR_EMAIL@>"]
+
+# -- Configure the rich package.
+rich.pretty.install()
+
+# -- Configure le loguru package.
+config = {
+    "handlers": [
+        {
+            "sink": sys.stderr,
+            "filter": lambda record: record["level"].name == "ERROR",
+            "format": "<g>[{time:HH:mm:ss}]</g> <lvl>[{level}]</lvl> <lvl>{message}</lvl> <cyan>{name}</cyan>:<magenta>{line}</magenta>",
+        },
+        {
+            "sink": sys.stdout,
+            "filter": lambda record: record["level"].name == "INFO",
+            "format": "<g>[{time:HH:mm:ss}]</g> <lvl>[{level}]</lvl> {message}",
+        },
+    ]
+}
+logger.configure(**config)
+logger.level("ERROR", color="<red>")
+logger.level("INFO", color="<green>")
