@@ -1,0 +1,81 @@
+<imprint-template>
+
+This document contains some pathological artifacts that trigger warnings in
+Imprint. For example, this paragraph should trigger at least four warnings:
+
+<par list="bul">Unexpected content in &lt;imprint-template&gt;</par>
+<par list="cont">One for spurious content outside a paragraph</par>
+<par list="cont">One for terminating the spurious run by the first list item</par>
+<par list="cont">One for terminating the spurious paragraph by the first list item</par>
+
+<par><run>Each list item above will trigger a warning for content outside a run as well.</run></par>
+
+<par style="Heading 3"><run>Jump right into Heading 3</run></par>
+<par>
+    <run>
+        The heading above will trigger a reference processor warning since it
+        jumps from level 0 to level 3.
+        <break/>
+        This run is broken across pages.
+    </run>
+</par>
+
+<par><run>Let's just stick a random bunch of refs here:</run></par>
+
+<par list="num"><run><segment-ref title="Jump right into Heading 3"/></run></par>
+<par list="cont"><run><segment-ref title="A runless heading, this time Heading 2"/></run></par>
+<par list="cont"><run><segment-ref title="A runless heading, finally Heading 1"/></run></par>
+<par list="cont"><run><segment-ref title="And jump right into Heading 4 from there"/></run></par>
+<par list="cont"><run><segment-ref title="A fake table"/></run></par>
+
+<n/>
+
+<par style="Heading 2" id="second">A runless heading, this time Heading 2</par>
+
+<par style="Heading 1">A runless heading, finally Heading 1</par>
+
+<par style="Heading 4">And jump right into Heading 4 from there</par>
+<par>
+    <run>
+        The heading above will trigger a reference processor warning since it
+        jumps from level 1 to level 4.
+    </run>
+</par>
+
+For good measure, here is an out-of place table with some text. It should
+trigger a couple of warnings for being inside a paragraph:
+
+<par>
+    <table role="par" id="xor" handler="imprint.handlers.tables.CSVFile">
+        A fake table
+    </table>
+</par>
+
+<par>
+    <run>
+        The text "A fake table" above appears inside the table, and is
+        therefore appended to a spurious run in the surrounding paragraph. It
+        also allows the table to be referenced by title as a segment in the
+        list just before "<segment-ref id="second" />".
+    </run>
+</par>
+
+<par>
+    <run>
+        The following figure and table are going to be alt-texted because they
+        don't have valid data configs and handlers:
+    </run>
+</par>
+
+<table id="fail" handler="imprint.handlers.tables.CSVFile" />
+
+<figure id="fail" handler="" />
+
+<par>
+    <run>
+        You should see <kwd name="Warnings"/> warnings and <kwd name="Errors"/>
+        (non-fatal) errors in the generation of this document.
+    </run>
+</par>
+
+</imprint-template>

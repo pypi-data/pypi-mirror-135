@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+
+<imprint-template>
+    <!-- Header (Definitions) -->
+    <expr name="CustomerName">f'{CustomerFirst} {CustomerLast}'</expr>
+    <expr name="DueDate" imports="datetime">InvoiceDate + datetime.timedelta(days=PaymentDays)</expr>
+
+    <!-- First (Letter) Page -->
+    <par style="Title">
+        <run>Invoice for <kwd name="InvoiceName"/></run>
+    </par>
+    <par style="Normal">
+        <run>Dear <kwd name="CustomerFirst"/>,</run>
+    </par>
+    <par style="Normal">
+        <run>
+            Enclosed please find an invoice for our recent shipment. Payment is
+            due within <kwd name="PaymentDays"/> days after the initial
+            transaction completed. We expect payment in full within that time.
+            Any outstanding amount will be assessed a
+            <kwd name="LateFee" format=".0%"/> late fee, to be compounded
+            monthly.
+        </run>
+    </par>
+    <par style="Normal">
+        <run>
+            <string id="damage_assessment" handler="invoice.damage_assessment"/>
+        </run>
+    </par>
+    <par style="Normal">
+        <run>Your payment options are as follows:</run>
+    </par>
+    <par style="List Bullet" list="bul">
+        <run>
+            Personal check payable to <kwd name="Payable"/> mailed to our
+            headquarters at:
+        </run>
+    </par>
+    <par style="List Paragraph">
+        <run><kwd name="AddressAttn"/><n/>
+             <kwd name="Address1"/><n/>
+             <kwd name="Address2"/><n/>
+             <kwd name="Address3"/></run>
+    </par>
+    <par list="cont">
+        <run>
+            Cash tendered to one of our representatives at a predetermined
+            location.
+        </run>
+    </par>
+    <par list="cont">
+        <run>
+            Waiver from a licensed medical practitioner explaining why you
+            cannot pay.
+        </run>
+    </par>
+    <par style="Normal">
+        <run>Kindest Regards,</run>
+    </par>
+    <par style="Figure Container">
+        <figure id="authorized_signature" handler="imprint.handlers.figure.ImageFile"/>
+    </par>
+    <par style="Normal">
+        <run><kwd name="AuthorizedSigner"/></run>
+    </par>
+
+    <break/>
+
+    <!-- Second (Invoice) Page -->
+    <par style="Title">
+        <run>Customer Invoice</run>
+    </par>
+    <par style="Subtitle">
+        <run><kwd name="Company"/></run>
+    </par>
+    <par style="Invoice Text">
+        <run>Invoice </run>
+        <run style="Strong">#<kwd name="InvoiceNumber"/></run>
+    </par>
+    <par style="Invoice Text">
+        <run>Customer: </run>
+        <run style="Strong"><kwd name="CustomerName"/></run>
+    </par>
+    <par style="Normal">
+        <run>Transaction Date: </run>
+        <run style="Strong"><kwd name="InvoiceDate" format="%Y-%b-%d"/></run>
+    </par>
+    <table handler="invoice.invoice_table" id="financial_data" style="Plain Table 1" />
+    <par style="Post Table">
+        <run>Payment in full is due on </run>
+        <run style="Strong"><kwd name="DueDate" format="%Y-%b-%d"/></run>
+    </par>
+    <par style="Normal">
+        <run>
+            After the due date, a late fee of <kwd name="LateFee" format=".1%"/>
+            will be compounded every month for any outstanding amount.
+        </run>
+    </par>
+</imprint-template>

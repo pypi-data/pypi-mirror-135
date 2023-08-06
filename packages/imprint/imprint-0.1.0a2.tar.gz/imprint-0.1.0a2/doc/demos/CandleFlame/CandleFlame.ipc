@@ -1,0 +1,13 @@
+import datetime
+import re
+
+BrandName = 'Acme Corp.'
+
+input_xml = 'templates/CandleFlame.xml'
+__brand_name = re.sub(r'\W', BrandName, '')
+output_docx = f'CandleFlame_{__brand_name}.docx'
+overwrite_output = 'warn'
+data_config = re.sub('.ipc$', __file__, '.idc')
+
+log_file = f'CandleFlame_{datetime.datetime.now():%Y%m%d-%H%M%S}.log'
+file_level = 'INFO'

@@ -1,0 +1,19 @@
+import datetime
+
+InvoiceNumber = '12345522'
+InvoiceDate = datetime.date(2018, 4, 23)
+InvoiceName = 'Vacation Rental'
+
+input_xml = 'templates/Invoice.xml'
+input_docx = 'templates/Invoice.docx'
+data_config = 'Invoice.idc'          # The data of the invoice
+output_docx = 'Invoice.docx'
+
+includes = [
+    'templates/Company.iif',         # Company information does not need to change often
+    'data/Customer-0000919538.iif',  # This makes it easy to include info about repeat customers
+]
+overwrite_output = 'raise'           # Don't overwrite existing invoices without permission
+
+log_file = True
+log_images = True

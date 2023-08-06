@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# imprint: a program for creating documents from data and content templates
+#
+# Copyright (C) 2019  Joseph R. Fox-Rabinovitz <jfoxrabinovitz at gmail dot com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Author: Joseph Fox-Rabinovitz <jfoxrabinovitz at gmail dot com>
+# Version: 13 Apr 2019: Initial Coding
+
+
+"""
+A script for dumping MS Word OpenXML documents (docx) into a minimalist
+XML format. The XML file can then be annotated with keyword, figure and
+table tags for use as a proper :program:`imprint` template.
+
+:program:`docx2xml` outputs XML with the following tags:
+
+  par: paragraph
+      style: style name of paragraph
+  run: run
+      style: style name of run
+  n: newline (like HTML's <br/>)
+"""
+
+import sys, os, re
+from xml.etree import ElementTree
+from xml.etree.ElementTree import Element, SubElement
+from xml.dom import minidom
+
+from docx import Document, table
+
+from haggis.files import docx, ensure_extension
+
+from imprint.core import root_tag, encoding
+
+
+def line_wrap(txt, n, indent):
+    """
+    Wraps the text to `n` characters with a given indentation.
+    """
+    ilen = len(indent)
+    length = len(txt)
+
+    output = []  # List of wrapped lines
+    pos = 0      # Position of next line in txt
+
+    def skip_spaces():
+        nonlocal pos
+        while pos < length and txt[pos].isspace():
+            pos += 1
+
+    skip_spaces()
+
+    while pos < length:
+        prevPos = pos
+        pos += n - ilen
+        if pos < length:
+            if txt[pos].isspace():
+                skip_spaces()
+            else:
+                while pos > prevPos and not txt[pos - 1].isspace():
+                    pos -= 1
+                if pos == prevPos:
+                    # Got a word > 120 chars, deal with it
+                    pos += n - ilen
+                    while pos < length and not txt[pos].isspace():
+                        pos += 1
+                    skip_spaces()
+        else:
+            pos = length
+        output.append(txt[prevPos:pos])
+
+    # Add indent + necessary chars to line.
+
+    return '\n'.join(indent + line.strip() for line in output)
+
+
+def check_text(run):
+    """
+    Verify that an XML run element contains valid text.
+
+    Retain all whitespace, but replace any all-whitepace texts with
+    `None`. Return `True` if the run is not `None` and contains some
+    non-whitespace text.
+    """
+    if run is None:
+        return False
+
+    txt = run.text
+
+    if txt is not None:
+        txt = txt.strip()
+        if txt:
+            txt = re.sub(r'\.\s+', '. ', txt)
+            if len(txt) + len(run.get('style', '')) + 36 > 120:
+                txt = '\n' + line_wrap(txt, 120, '            ') + '\n        '
+        else:
+            txt = None
+        run.text = txt
+
+    return (txt is not None)
+
+
+def add_paragraph(node, par):
+    """
+    Append a docx paragraph to a new node under the provided root.
+
+    Paragraph-level and run-level styles are preserved. Runs with
+    similar styles are merged into a single run.
+    """
+    p = Element('par')
+    p.set('style', par.style.name)
+
+    prev_run = None
+    r = None  # Initialization to make warning disappear
+
+    for run in par.runs:
+        # Only process if there is at least one non-empty run.
+        pieces = run.text.split(os.linesep)
+
+        if not prev_run or prev_run.style != run.style:
+            # If first run or run with different style, append to previous
+            # "run" element and make a new one
+            if check_text(r):
+                p.append(r)
+            r = Element('run')
+            if run.style:
+                r.set('style', run.style.name)
+            r.text = pieces.pop(0)
+
+        if pieces:
+            r.text += ''.join(pieces)
+
+        prev_run = run
+
+    if check_text(r):
+        p.append(r)
+
+    if p:
+        node.append(p)
+
+
+def add_table(node, tab):
+    """
+    Append a docx table stub to a  new node under the provided root.
+
+    Styles are trashed as the table is currently replaced by a
+    placeholder.
+    """
+    t = SubElement(node, 'table')
+    t.set('id', '???')
+    t.set('style', 'Table')
+    t.set('handler', 'imprint.plugins.tables.???')
+
+
+def dump_docx(in_file, out_file):
+    """
+    Dump the contents and structure of a .docx file into an XML file.
+
+    This will create a raw content template for `imprint` to work with.
+    The XML output of this function should be modified with keywords,
+    data and image placeholders to create the final template.
+    """
+    doc = Document(in_file)
+
+    print(f'The input document contains {len(doc.sections)} section(s)')
+    print(f'                        ... {len(doc.paragraphs)} paragraph(s)')
+    print(f'                        ... {len(doc.tables)} tables(s)')
+    print(f'                        ... {len(doc.inline_shapes)} pictures(s)')
+
+    xml = Element(root_tag)
+    for element in docx.block_iterator(doc):
+        if isinstance(element, table.Table):
+            add_table(xml, element)
+        else:
+            add_paragraph(xml, element)
+    raw = ElementTree.tostring(xml, encoding)
+    out = minidom.parseString(raw).toprettyxml(indent='    ')
+    with open(out_file, 'w') as output:
+        print(out, file=output)
+
+
+if __name__ == '__main__':
+    nargs = len(sys.argv) - 1
+    if 1 <= nargs <= 2:
+        in_file = sys.argv[1]
+
+        in_file = ensure_extension(sys.argv[1], '.docx',
+                                   partial_policy='+', partial_limit=1)
+
+        if nargs == 1:
+            out_file = ensure_extension(in_file, '.xml',
+                                        partial_policy='replace')
+        else:
+            out_file = ensure_extension(sys.argv[2], '.xml')
+
+        dump_docx(in_file, out_file)
+    else:
+        print('Usage: {} input[.docx] [output.xml]'.format(sys.argv[0]),
+              file=sys.stderr)
+        exit(1)
