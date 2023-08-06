@@ -1,0 +1,742 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data visualization &#8212; BCI-Framework  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="shortcut icon" href="../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples of data visualizations" href="05-default_visualizations.html" />
+    <link rel="prev" title="Data analysis" href="03-data_analysis.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 0;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+}
+</style><div class="section" id="Data-visualization">
+<h1>Data visualization<a class="headerlink" href="#Data-visualization" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">Data visualization are based on <a class="reference external" href="https://figurestream.readthedocs.io/en/latest/">Matplotlib-FigureStream</a>, this interface inherits all features from it and extends the utilities with an specific ones.</div>
+<div class="line">All topics explained in <a class="reference external" href="70-data_analysis.ipynb">Data analysis</a> are valid here too, since visualizations is a special case of <em>Data analysis</em>.</div>
+</div>
+<div class="section" id="Bare-minimum">
+<h2>Bare minimum<a class="headerlink" href="#Bare-minimum" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># visualizations backend classes
+from bci_framework.extensions.visualizations import EEGStream
+from bci_framework.extensions.visualizations.utils import loop_consumer
+
+# Main class must inherit `EEGStream`
+class Stream(EEGStream):  # This is `matplotlib.Figure` based class
+    def __init__(self):
+        # Initialize `StimuliAPI` class
+        super().__init__()
+
+        # -------------------------------------------------------------
+        self.axis = self.add_subplot(111)
+        self.axis.set_title(&#39;Title&#39;)
+        self.axis.set_xlabel(&#39;Time&#39;)
+        self.axis.set_ylabel(&#39;Amplitude&#39;)
+        self.axis.grid(True)
+        self.stream()
+        # -------------------------------------------------------------
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self, *args, **kwargs):
+        self.feed()
+
+
+if __name__ == &#39;__main__&#39;:
+    # Create and run the server
+    Stream()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="bc9d15cbd1564cfcb602d47417c68b04" src="../_images/visualization_bare_minimum.png" /></p>
+</center></div>
+<div class="section" id="Data-stream-access">
+<h2>Data stream access<a class="headerlink" href="#Data-stream-access" title="Permalink to this headline">¶</a></h2>
+<p>The decorator <code class="docutils literal notranslate"><span class="pre">&#64;loop_consumer</span></code> is explained in <a class="reference external" href="70-data_analysis.ipynb#Data-stream-access">Data analysis</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self, data):
+    eeg, aux = data
+
+    # First eeg channel
+    ch0 = eeg[0]
+    self.line.set_ydata(ch0)
+    self.axis.set_ylim(ch0.min(), ch0.max())
+
+    # Time axis
+    time = range(len(ch0))
+    self.line.set_xdata(time)
+    self.axis.set_xlim(time[0], time[-1])
+
+    self.feed()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="22e6dbf985a14859bfcb19b2e164e74a" src="../_images/visualization-simple.png" /></p>
+</center><p>So chaotic, lets create a buffer to visualize more than 100 samples.</p>
+</div>
+<div class="section" id="Buffer">
+<h2>Buffer<a class="headerlink" href="#Buffer" title="Permalink to this headline">¶</a></h2>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">self.create_buffer</span></code> to implement an automatic buffer with a fixed time view:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_buffer(30)  # create a buffer of 30 seconds
+</pre></div>
+</div>
+</div>
+<p>The data can be accessed with <code class="docutils literal notranslate"><span class="pre">self.buffer_eeg</span></code>, <code class="docutils literal notranslate"><span class="pre">self.buffer_aux</span></code> and <code class="docutils literal notranslate"><span class="pre">self.buffer_timestamp</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self):
+    eeg = self.buffer_eeg
+
+    # First eeg channel
+    ch0 = eeg[0]
+    self.line.set_ydata(ch0)
+    self.axis.set_ylim(-1, 1)
+
+    # Time axis
+    time = np.linspace(0, 30, len(ch0))
+    self.line.set_xdata(time)
+    self.axis.set_xlim(time[0], time[-1])
+
+    self.feed()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="2f35adb9744e45cd8de69007f01a4fea" src="../_images/visualization-full.png" /></p>
+</center></div>
+<div class="section" id="Resampling">
+<h2>Resampling<a class="headerlink" href="#Resampling" title="Permalink to this headline">¶</a></h2>
+<p>This visualization has a big issue, there is a lot of data visualize, in this particular case it’s sampling at <code class="docutils literal notranslate"><span class="pre">1000</span> <span class="pre">kHz</span></code> and <code class="docutils literal notranslate"><span class="pre">30</span></code> seconds, which means <code class="docutils literal notranslate"><span class="pre">30000</span></code> points to visualize on the window with (likely) an inferior number of pixels, moreover, this amount of data will affect the speed of the visualization, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> use all data to render the plot.</p>
+<p>We can resample the data, to speed up the visualization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_buffer(30, resampling=1000)  # create a buffer of 30 seconds and a resampling to 1000 samples
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self):
+    eeg = self.buffer_eeg_resampled
+
+    # First eeg channel
+    ch0 = eeg[0]
+    self.line.set_ydata(ch0)
+    self.axis.set_ylim(-1, 1)
+
+    # Time axis
+    time = np.linspace(0, 30, len(ch0))
+    self.line.set_xdata(time)
+    self.axis.set_xlim(time[0], time[-1])
+
+    self.feed()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="1dd8a659adc347b6b2ab594f49ac44e6" src="../_images/visualization-1000.png" /></p>
+</center><div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_buffer(30, resampling=300)
+</pre></div>
+</div>
+</div>
+<center><p><img alt="e5350f6cedc64cd8a694f8d335968773" src="../_images/visualization-300.png" /></p>
+</center></div>
+<div class="section" id="Plot-raw-data">
+<h2>Plot raw data<a class="headerlink" href="#Plot-raw-data" title="Permalink to this headline">¶</a></h2>
+<p>There is a method to create <code class="docutils literal notranslate"><span class="pre">matplotlib.lines</span></code> automatically for the current configurations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.axis, self.time, self.lines = self.create_lines(time=-30, window=1000)
+</pre></div>
+</div>
+</div>
+<p>It will return the <code class="docutils literal notranslate"><span class="pre">axis</span></code> object the <code class="docutils literal notranslate"><span class="pre">time</span></code> array and a list of <code class="docutils literal notranslate"><span class="pre">lines</span></code> according to the number of channels.</p>
+<p>We can also configure the visualization with channel names as ticks.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.axis.set_ylim(0, len(prop.CHANNELS) + 1)
+self.axis.set_yticks(range(1, len(prop.CHANNELS) + 1))
+self.axis.set_yticklabels(prop.CHANNELS.values())
+</pre></div>
+</div>
+</div>
+<p>To update the visualization we only need to iterate over <code class="docutils literal notranslate"><span class="pre">self.lines</span></code> and <code class="docutils literal notranslate"><span class="pre">self.buffer_eeg_resampled</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self):
+    eeg = self.buffer_eeg_resampled
+    for i, line in enumerate(self.lines):
+        line.set_data(self.time, eeg[i] + 1 + i)
+    self.feed()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="0f000b22acb34234bcab1f8213f92dcd" src="../_images/visualization-8ch.png" /></p>
+</center><p>The complete example looks like:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.visualizations import EEGStream
+from bci_framework.extensions.data_analysis import loop_consumer
+from bci_framework.extensions import properties as prop
+
+import numpy as np
+
+class Stream(EEGStream):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        DATAWIDTH = 1000
+
+        self.axis, self.time, self.lines = self.create_lines(time=-30, window=DATAWIDTH)
+        self.axis.set_title(&#39;Raw EEG&#39;)
+        self.axis.set_xlabel(&#39;Time&#39;)
+        self.axis.set_ylabel(&#39;Channels&#39;)
+        self.axis.grid(True)
+        self.axis.set_ylim(0, len(prop.CHANNELS) + 1)
+        self.axis.set_yticks(range(1, len(prop.CHANNELS) + 1))
+        self.axis.set_yticklabels(prop.CHANNELS.values())
+
+        self.create_buffer(30, resampling=DATAWIDTH)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+        eeg = self.buffer_eeg_resampled
+        for i, line in enumerate(self.lines):
+            line.set_data(self.time, eeg[i] + 1 + i)
+        self.feed()
+
+
+if __name__ == &#39;__main__&#39;:
+    Stream()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Plot-a-reverse-buffer">
+<h2>Plot a reverse buffer<a class="headerlink" href="#Plot-a-reverse-buffer" title="Permalink to this headline">¶</a></h2>
+<p>This option will optimize the image rendering, although the buffer will be transformed too.</p>
+<center><p><img alt="37fe32a237d54015bb3fed72ba7fad15" src="../_images/visualization-8ch_r.png" /></p>
+</center><p>This feature can be activated with 2 simple changes, set the <code class="docutils literal notranslate"><span class="pre">time</span></code> positive:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_lines(time=30, window=1000)
+</pre></div>
+</div>
+</div>
+<p>And call <code class="docutils literal notranslate"><span class="pre">self.reverse_buffer</span></code> with the generated <code class="docutils literal notranslate"><span class="pre">axis</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.reverse_buffer(self.axis)
+</pre></div>
+</div>
+</div>
+<p>Here the full code:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.visualizations import EEGStream
+from bci_framework.extensions.data_analysis import loop_consumer
+from bci_framework.extensions import properties as prop
+
+import numpy as np
+
+class Stream(EEGStream):
+
+    def __init__(self, *args, **kwargs):
+        &quot;&quot;&quot;&quot;&quot;&quot;
+        super().__init__(*args, **kwargs)
+        DATAWIDTH = 1000
+
+        self.axis, self.time, self.lines = self.create_lines(time=30, window=DATAWIDTH)
+        self.axis.set_title(&#39;Raw EEG&#39;)
+        self.axis.set_xlabel(&#39;Time&#39;)
+        self.axis.set_ylabel(&#39;Channels&#39;)
+        self.axis.grid(True)
+        self.axis.set_ylim(0, len(prop.CHANNELS) + 1)
+        self.axis.set_yticks(range(1, len(prop.CHANNELS) + 1))
+        self.axis.set_yticklabels(prop.CHANNELS.values())
+
+        self.create_buffer(30, resampling=DATAWIDTH, fill=np.nan)
+        self.reverse_buffer(self.axis)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+        eeg = self.buffer_eeg_resampled
+        for i, line in enumerate(self.lines):
+            line.set_data(self.time, eeg[i] + 1 + i)
+        self.feed()
+
+if __name__ == &#39;__main__&#39;:
+    Stream()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Topoplot">
+<h2>Topoplot<a class="headerlink" href="#Topoplot" title="Permalink to this headline">¶</a></h2>
+<p>Following the same instructions is possible to draw topoplots by setting the explicit axes.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.visualizations import EEGStream, loop_consumer
+import mne
+
+class Stream(EEGStream):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.axis = self.add_subplot(1, 1, 1)
+        self.tight_layout()
+        self.info = self.get_mne_info()
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self, data):
+        eeg, _ = data.value[&#39;data&#39;]
+        self.axis.clear()
+        mne.viz.plot_topomap(eeg.mean(axis=1) - eeg.mean(), self.info, axes=self.axis, show=False, outlines=&#39;skirt&#39;, cmap=&#39;cool&#39;)
+        self.feed()
+
+if __name__ == &#39;__main__&#39;:
+    Stream()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="ced47a445ff145edb72cc6baf825d790" src="../_images/visualization-topoplot.png" /></p>
+</center></div>
+<div class="section" id="Skip-frames">
+<h2>Skip frames<a class="headerlink" href="#Skip-frames" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes when the data processing is slow than acquisition, is necessary just to drop some data packages, this will prevent the buffer saturation and improve the visualization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@fake_loop_consumer(&#39;eeg&#39;)
+def stream(self, data, frame):
+    if (frame % 5) == 0:  # use only 1 of 5 packages
+        eeg, _ = data.value[&#39;data&#39;]
+        self.axis.clear()
+        mne.viz.plot_topomap(eeg.mean(axis=1) - eeg.mean(), self.info, axes=self.axis, show=False, outlines=&#39;skirt&#39;, cmap=&#39;cool&#39;)
+
+        self.feed()
+</pre></div>
+</div>
+</div>
+<center><p><img alt="f9e83ffdc0ca4120993aa5983031210b" src="../_images/visualization-topoplot_slow.png" /></p>
+</center></div>
+<div class="section" id="Framework-integration">
+<h2>Framework integration<a class="headerlink" href="#Framework-integration" title="Permalink to this headline">¶</a></h2>
+<p>In this interface is possible to load multiple visualizations at the same time (just keep an eye on your machine resources).</p>
+<center><p><img alt="f97a361e290d463da6973982a2193c39" src="../_images/visualization-integration.png" /></p>
+</center></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="00-installation.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-interface.html">Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-data_analysis.html">Data analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data visualization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Bare-minimum">Bare minimum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-stream-access">Data stream access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Buffer">Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Resampling">Resampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-raw-data">Plot raw data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-a-reverse-buffer">Plot a reverse buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Topoplot">Topoplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Skip-frames">Skip frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Framework-integration">Framework integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05-default_visualizations.html">Examples of data visualizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-stimuli_delivery.html">Stimuli delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-default_stimuli_delivery_paradigms.html">Examples of stimuli delivery paradigms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-event_marker_synchronization.html">Event marker synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-ilustrative_example.html">Illustrative example</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="03-data_analysis.html" title="previous chapter">Data analysis</a></li>
+      <li>Next: <a href="05-default_visualizations.html" title="next chapter">Examples of data visualizations</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, DunderLab SAS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/notebooks/04-data_visualizations.ipynb"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
