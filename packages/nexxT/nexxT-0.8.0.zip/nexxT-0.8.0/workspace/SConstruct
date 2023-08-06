@@ -1,0 +1,65 @@
+import platform
+import os
+import sysconfig
+import PySide2
+
+qtversion = ".".join(PySide2.__version__.split(".")[:2])
+
+if platform.system() == "Linux":
+    if os.path.isfile("/etc/centos-release") and "CentOS Linux release 7" in open("/etc/centos-release", "r").read():
+        target_platform = "manylinux2014_x86_64"
+    else:
+        target_platform = "linux_x86_64"
+    env = Environment(target_platform=target_platform,
+                      deploy_platform="linux_x86_64",
+                      QT5VERSION=qtversion,
+                      toolpath=["#/sconstools3"],
+                      ENV = os.environ,
+                      variant="unknown")
+    
+    if "QTDIR" in ARGUMENTS: 
+        env["QT5DIR"] = ARGUMENTS["QTDIR"]
+        os.environ["QTDIR"] = ARGUMENTS["QTDIR"]
+        print("QTDIR=",ARGUMENTS["QTDIR"])
+    env.Tool("qt5")
+
+    env['ENV']['PKG_CONFIG_PATH'] = env.subst("$QT5DIR") + '/lib/pkgconfig'
+    # fix shiboken2 lib not found issues
+    env.PrependENVPath('LD_LIBRARY_PATH', sysconfig.get_paths()['purelib'] + "/PySide2/Qt/lib")
+    # make sure moc is working
+    env.PrependENVPath('LD_LIBRARY_PATH', env.subst("$QT5DIR") + "/lib")
+    
+else:
+    # windows environment
+    env = Environment(MSVC_VERSION="14.0", 
+                      QT5VERSION=qtversion,
+                      tools=["default", "qt5"], 
+                      toolpath=["#/sconstools3"],
+                      target_platform="msvc_x86_64",
+                      deploy_platform="msvc_x86_64",
+                      variant="unknown")                     
+
+env.EnableQt5Modules(['QtCore'])
+env.AddMethod(lambda env, args: args, "RegisterSources")
+env.AddMethod(lambda env, args: None, "RegisterTargets")
+env.Append(CPPDEFINES=["Py_LIMITED_API"])
+
+if platform.system() == "Linux":
+    dbg_env = env.Clone(CCFLAGS=Split("-Wall -g -std=c++14 -O0"), #-fvisibility=hidden 
+                        LINKFLAGS=Split("-g"),
+                        variant="nonopt")
+    rel_env = env.Clone(CCFLAGS=Split("-Wall -std=c++14 -O3"), #-fvisibility=hidden 
+                        variant="release")    
+else:    
+    env.Append(CPPDEFINES=["_CRT_SECURE_NO_WARNINGS"])
+    dbg_env = env.Clone(CCFLAGS=Split("/nologo /EHsc /TP /W3 /Od /Ob2 /Z7 /MD /std:c++14"),
+                        LINKFLAGS=Split("/nologo /DEBUG"),
+                        variant="nonopt")
+    rel_env = env.Clone(CCFLAGS=Split("/nologo /EHsc /TP /W3 /Ox /Z7 /MD /std:c++14"),
+                        LINKFLAGS=Split("/nologo /DEBUG"),
+                        variant="release")
+
+SConscript('../nexxT/src/SConscript.py', variant_dir=dbg_env.subst("build/${target_platform}_${variant}/nexxT/src"), exports=dict(env=dbg_env), duplicate=0)
+SConscript('../nexxT/src/SConscript.py', variant_dir=rel_env.subst("build/${target_platform}_${variant}/nexxT/src"), exports=dict(env=rel_env), duplicate=0)
+SConscript('../nexxT/tests/src/SConscript.py', variant_dir=dbg_env.subst("build/${target_platform}_${variant}/nexxT/tests/src"), exports=dict(env=dbg_env), duplicate=0)
+SConscript('../nexxT/tests/src/SConscript.py', variant_dir=rel_env.subst("build/${target_platform}_${variant}/nexxT/tests/src"), exports=dict(env=rel_env), duplicate=0)
