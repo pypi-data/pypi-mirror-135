@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "specklepy"
+version = "2.5.2"
+description = "The Python SDK for Speckle 2.0"
+readme = "README.md"
+authors = ["Speckle Systems <devops@speckle.systems>"]
+license = "Apache-2.0"
+repository = "https://github.com/specklesystems/speckle-py"
+documentation = "https://speckle.guide/dev/py-examples.html"
+homepage = "https://speckle.systems/"
+
+
+[tool.poetry.dependencies]
+python = "^3.6.5"
+pydantic = "^1.8.2"
+appdirs = "^1.4.4"
+gql = {version = ">=3.0.0b1", extras = ["all"], allow-prereleases = true}
+ujson = "^4.3.0"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+isort = "^5.7.0"
+pytest = "^6.2.2"
+pytest-ordering = "^0.6"
+pytest-cov = "^3.0.0"
+
+
+[tool.black]
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+include = '\.pyi?$'
+line-length = 88
+target-version = ["py36", "py37", "py38"]
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
