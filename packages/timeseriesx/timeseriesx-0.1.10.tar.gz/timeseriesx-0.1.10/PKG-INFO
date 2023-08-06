@@ -1,0 +1,178 @@
+Metadata-Version: 1.2
+Name: timeseriesx
+Version: 0.1.10
+Summary: Manage time series data with explicit frequency and unit.
+Home-page: https://github.com/carlculator/timeseriesx
+Author: Alexander Schulz
+Author-email: info@alexander-schulz.eu
+License: MIT license
+Description: ===========
+        TimeSeriesX
+        ===========
+        
+        
+        .. image:: https://img.shields.io/pypi/v/timeseriesx.svg
+                :target: https://pypi.python.org/pypi/timeseriesx
+        
+        .. image:: https://travis-ci.com/carlculator/timeseriesx.svg?branch=master
+            :target: https://travis-ci.com/carlculator/timeseriesx
+        
+        .. image:: https://readthedocs.org/projects/timeseriesx/badge/?version=latest
+                :target: https://timeseriesx.readthedocs.io/en/latest/?badge=latest
+                :alt: Documentation Status
+        
+        .. image:: https://pyup.io/repos/github/carlculator/timeseriesx/shield.svg
+             :target: https://pyup.io/repos/github/carlculator/timeseriesx/
+             :alt: Updates
+        
+        .. image:: https://api.codeclimate.com/v1/badges/8777e8089ca4fe83e8ab/test_coverage
+           :target: https://codeclimate.com/github/carlculator/timeseriesx/test_coverage
+           :alt: Test Coverage
+        
+        
+        The eXtended time series library.
+        
+        Manage time series data with explicit time zone, frequency and unit.
+        
+        
+        * Free software: MIT license
+        * Documentation: https://timeseriesx.readthedocs.io.
+        
+        About
+        -----
+        
+        TimeSeriesX is motivated by handling time series data in a convenient way. Almost all the features are actually already
+        provided by `pandas`_. TimeSeriesX extends the pandas time series functionality by the unit functionalities of `pint`_ and `pint-pandas`_.
+        Further, TimeSeriesX offers an easy and convenient interface to work with time series without the need to
+        dig deep into these libraries, which nevertheless is still recommended, since they go way beyond time series data.
+        
+        The main challenges that arise when handling time series data are time zones and frequencies. Since time series
+        data is often obtained by measurements, the values are associated with units. Then these units can be confused easily, since
+        the units are often not modeled in code.
+        
+        TimeSeriesX forces the user to handle time zones, frequencies and units explicitly, while taking care
+        of validation and convenient formats. It also supports deriving these attributes from raw time series data.
+        It offers a limited set of actions on time series that are translated to pandas or pint functionality under the hood.
+        It was designed to guarantee that every transformation of time series data results in a new valid time series, which
+        would require quite some pandas code if done "manually".
+        
+        
+        Features
+        --------
+        
+        * model time series data with explicit frequency, time zone and unit
+        * convert time zone or unit
+        * resample data to new frequency
+        * fill and get gaps
+        * join time series
+        * perform calculations on time series with python standard operators
+        
+        
+        Credits
+        -------
+        
+        This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+        
+        .. _Cookiecutter: https://github.com/audreyr/cookiecutter
+        .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+        .. _`pandas`: https://pandas.pydata.org/
+        .. _`pint`: https://github.com/hgrecco/pint
+        .. _`pint-pandas`: https://github.com/hgrecco/pint-pandas
+        
+        
+        =======
+        History
+        =======
+        
+        
+        0.1.10 (2021-01-21)
+        -------------------
+        
+        * fix equals method
+        * update dependencies
+        
+        
+        0.1.9 (2021-11-19)
+        ------------------
+        
+        * allow aggregation functions to return magnitudes or quantities
+        * update dependencies
+        
+        
+        0.1.8 (2021-09-28)
+        ------------------
+        
+        * fix time zone bug in gap handling
+        * update dependencies
+        * add more tests
+        
+        
+        0.1.7 (2021-09-28)
+        ------------------
+        
+        * improve gap handling
+        * update dependencies
+        * improve documentation
+        * fix calculations with quantity scalar
+        
+        
+        0.1.6 (2021-09-13)
+        ------------------
+        
+        * fix time zone issue with UTC in basic calculations for TimestampSeries as 2nd operand
+        * update pint-pandas version dependency
+        * use pint's default unit registry
+        * add support of callables as arguments for frequency resampling
+        * add more tests
+        
+        
+        0.1.5 (2021-09-10)
+        ------------------
+        
+        * fix time zone issue with UTC in basic calculations
+        * add round-method for TimestampSeries
+        * fix map-function for series with unit
+        * add more tests
+        
+        
+        0.1.4 (2021-09-09)
+        ------------------
+        
+        * improve test coverage
+        * improve TimeSeries equality check
+        * support NaN-removal in as_pd_series-method
+        
+        
+        0.1.3 (2021-09-08)
+        ------------------
+        
+        * remove manual timezone checks because it is handled by pandas
+        * fix skipped tests
+        * fix repr() method of TimestampSeries
+        * fix basic calculation with units involved
+        
+        
+        0.1.2 (2021-09-07)
+        ------------------
+        
+        * fix timezone handling
+        * First release on PyPI Index.
+        
+        
+        
+        0.1.1 (2021-02-16)
+        ------------------
+        
+        * First release on PyPI Test Index.
+        
+Keywords: timeseriesx
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.7
