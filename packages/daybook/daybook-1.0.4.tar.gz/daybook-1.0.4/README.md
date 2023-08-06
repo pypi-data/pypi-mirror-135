@@ -1,0 +1,109 @@
+# daybook: reading log for the cli
+
+
+daybook is a reading log app made for the command-line interface (cli).
+
+## Install
+
+pip install daybook
+
+## Usage
+
+### Adding Reading Log Entries
+
+daybook [-h] [-v] {add,del,books,entries,logs,update,config} ...
+
+
+usage: daybook add [-h] [-r READER] [-k BOOK_KEY] [-t TITLE] [-a AUTHOR] [-d DATE] [--start START] --end END
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+reading log:
+  -r READER, --reader READER
+
+book:
+  -k BOOK_KEY, --key BOOK_KEY
+                        this can be used instead of title and author
+  -t TITLE, --title TITLE
+                        requires author
+  -a AUTHOR, --author AUTHOR
+                        requires title
+
+date:
+  -d DATE, --date DATE
+
+pages:
+  --start START
+  --end END
+
+
+### Deleting Reading Log Entries
+
+usage: daybook del [-h] [-r READER] -e ENTRY_ID
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+reading log:
+  -r READER, --reader READER
+
+entry:
+  -e ENTRY_ID, --entry ENTRY_ID
+
+
+### Querying Books
+
+usage: daybook books [-h] [-q QUERY]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -q QUERY, --query QUERY
+                        this query returns all books containing this value in their titles, authors, or subtitles
+
+
+### Querying Reading Log Entries
+
+usage: daybook entries [-h] [-r READER] [--from FROM_DATE] [--to TO_DATE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+reading log:
+  -r READER, --reader READER
+
+date range:
+  --from FROM_DATE
+  --to TO_DATE
+
+
+### Listing Reading Logs
+
+sage: daybook logs [-h]
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+
+### Updating Entries, Books, Reading Logs, etc.
+
+usage: daybook update [-h] [-r READER] (-e ENTRY_ID | -b KEY | -l KEY)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r READER, --reader READER
+  -e ENTRY_ID, --entry ENTRY_ID
+  -b KEY, --book KEY
+  -l KEY, --log KEY
+
+
+### App Settings
+
+usage: daybook config [-h] [--get-default-reading-log] [--set-default-reading-log DEFAULT_READING_LOG]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+reading log:
+  --get-default-reading-log
+  --set-default-reading-log DEFAULT_READING_LOG
