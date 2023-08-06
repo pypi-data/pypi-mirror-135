@@ -1,0 +1,112 @@
+# `impy` is All You Need in Image Analysis
+
+`impy` is an all-in-one image analysis library, equipped with parallel processing, GPU support, GUI based tools and so on.
+
+The core array, `ImgArray`, is a subclass of `numpy.ndarray`, tagged with information such as 
+
+- image axes
+- scale of each axis
+- directory of the original image
+- history of image processing 
+- and other image metadata
+
+By making full use of them, `impy` provides super efficient tools of image analysis for you. 
+
+I'm also working on [documentation](https://hanjinliu.github.io/impy/) for tutorials and API. Please take a look if you're interested in.
+
+:warning: Image processing algorithms in `ImgArray` are almost stable so that their behavior will not change a lot. However, since `napari` is under development and I'm groping for better UI right now, any functions that currently implemented in `impy` viewer may change or no longer work in the future. Make sure keeping `napari` and `impy` updated when you use.
+
+## Installation
+
+- use pip
+
+```
+pip install impy-array
+```
+
+- from source
+
+```
+git clone https://github.com/hanjinliu/impy
+```
+
+### Code as fast as you speak
+
+Almost all the functions, such as filtering, deconvolution, labeling, single molecule detection, and even those pure `numpy` functions, are aware of image metadata. They "know" which dimension corresponds to `"z"` axis, which axes they should iterate along or where to save the image. As a result, **your code will be very concise**:
+
+```python
+import impy as ip
+import numpy as np
+
+img = ip.imread("path/to/image")       # Read images with metadata.
+img["z=3;t=0"].imshow()                # Plot image slice at z=3 and t=0.
+img_fil = img.gaussian_filter(sigma=2) # Paralell batch denoising. No more for loop!
+img_prj = np.max(img_fil, axis="z")    # Z-projection (numpy is aware of image axes!).
+img_prj.imsave(f"Max-{img.name}")      # Save in the same place. Don't spend time on searching for the directory!
+```
+
+### Seamless interface between `napari`
+
+[napari](https://github.com/napari/napari) is an interactive viewer for multi-dimensional images. `impy` has a **simple and efficient interface** with it, via the object `ip.gui`. Since `ImgArray` is tagged with image metadata, you don't have to care about axes or scales. Just run 
+
+```python
+ip.gui.add(img)
+```
+
+`impy`'s viewer also provides **many useful widgets and functions** such as 
+
+- Excel-like table for data analysis, layer property editing etc.
+- Compact file explorer
+- interactive `matplotlib` figure canvas
+- cropping, duplication, measurement, filtering tools
+
+### Extend your function for batch processing
+
+Already have a function for `numpy` and `scipy`? Decorate it with `@ip.bind`
+
+```python
+@ip.bind
+def imfilter(img, param=None):
+    # Your function here.
+    # Do something on a 2D or 3D image and return image, scalar or labels
+    return out
+```
+
+and it's ready for batch processing!
+
+```python
+img.imfilter(param=1.0)
+```
+
+### Commaind line usage
+
+`impy` also supports command line based image analysis. All method of `ImgArray` is available
+from commad line, such as
+
+```powershell
+impy path/to/image.tif ./output.tif --method gaussian_filter --sigma 2.0
+```
+
+which is equivalent to
+
+```python
+import impy as ip
+img = ip.imread("path/to/image.tif")
+out = img.gaussian_filter(sigma=2.0)
+out.imsave("./output.tif")
+```
+
+For more complex procedure, it is possible to send image directly to `IPython`
+
+```
+impy path/to/image.tif -i
+```
+```python
+thr = img.gaussian_filter().threshold()
+```
+
+or to `napari`
+
+```
+impy path/to/image.tif -n
+```
