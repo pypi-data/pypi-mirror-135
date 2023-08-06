@@ -1,0 +1,8 @@
+; Use a stable stochastic rescaling barostat that is suitable for equilibration and production runs at 1 atm.
+; Suitable for a membrane system in the x-y plane, scaling x-y and z separately
+pcoupl                  = C-rescale             ; Pressure coupling on in NPT
+pcoupltype              = semiisotropic         ; scale x-y together and z seperately
+tau-p                   = 5.0 5.0               ; time constant, in ps
+ref-p                   = 1.0 1.0               ; reference pressure, in bar
+compressibility         = 4.5e-5 4.5e-5         ; isothermal compressibility of water, bar^-1
+refcoord-scaling        = com
