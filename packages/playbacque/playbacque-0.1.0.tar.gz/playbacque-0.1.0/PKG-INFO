@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: playbacque
+Version: 0.1.0
+Summary: Loop play audio
+Home-page: https://pypi.org/project/playbacque/
+License: MIT
+Author: George Zhang
+Author-email: geetransit@gmail.com
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Multimedia :: Sound/Audio :: Players
+Requires-Dist: SoundFile (>=0.10.3,<0.11.0)
+Requires-Dist: sounddevice (>=0.4.4,<0.5.0)
+Project-URL: Repository, https://github.com/GeeTransit/playbacque
+Description-Content-Type: text/markdown
+
+# playbacque
+
+Loop play audio
+
+## Usage
+
+```sh
+> pip install playbacque
+> playbacque "audio.wav"
+```
+
+Use Ctrl+C to stop playback
+
+Supports most file formats (as this uses soundfile which uses libsndfile)
+
+Notable exceptions include .mp3 and .ogg
+
+As an alternative, one can first convert to a .wav using FFmpeg and pipe into
+`playbacque -`, where - means to take audio from stdin
+
+```sh
+> ffmpeg -i "audio.mp3" -f wav pipe: | playbacque -
+```
+
+Note when passing -, the entire stdin is buffered before playback
+

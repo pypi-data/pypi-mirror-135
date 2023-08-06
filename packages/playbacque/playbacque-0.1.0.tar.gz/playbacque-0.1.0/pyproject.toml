@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "playbacque"
+version = "0.1.0"
+description = "Loop play audio"
+authors = ["George Zhang <geetransit@gmail.com>"]
+homepage = "https://pypi.org/project/playbacque/"
+repository = "https://github.com/GeeTransit/playbacque"
+readme = "README.md"
+license = "MIT"
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: End Users/Desktop",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.9",
+	"Topic :: Multimedia :: Sound/Audio :: Players",
+]
+packages = [
+	{ include = "playbacque.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sounddevice = "^0.4.4"
+SoundFile = "^0.10.3"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+playbacque = "playbacque:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
