@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "pyemr"
+version = "0.3.5"
+description = "A lightweight package for running poetry projects on emr."
+authors = ["Richard Brooker <richjbrooker@gmail.com>"]
+packages = [
+    { include = "pyemr"}
+]
+include = [ "**/*.sh", "**/*.txt" , '**/*' ]
+
+[tool.poetry.dependencies]
+python = ">=3.7.1,<3.9"
+fire = "^0.4.0"
+sh = "^1.14.2"
+tomlkit = "0.7.2"
+awswrangler = "^2.0.0"
+poetry = "^1.1.12"
+pandas = "^1.1.0"
+numpy = "1.18.0"
+boto3 = "^1.20.23"
+tqdm = "^4.62.3"
+loguru = "^0.5.3"
+cron-descriptor = "^1.2.24"
+pylint = "^2.12.2"
+autopep8 = "^1.6.0"
+brunette = "^0.2.2"
+datefinder = "^0.7.1"
+Jinja2 = "^3.0.3"
+autocorrect = "^2.6.1"
+pyenchant = "^3.2.2"
+xdoctest = "^0.15.10"
+Pygments = "^2.10.0"
+termcolor = "^1.1.0"
+black = "^21.12b0"
+ipykernel = "^6.6.0"
+pexpect = "^4.8.0"
+docker = "^5.0.3"
+findspark = "^1.4.2"
+setuptools = "^60.5.0"
+
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+pyemr = "pyemr.cli:main"
+
+
+
+
