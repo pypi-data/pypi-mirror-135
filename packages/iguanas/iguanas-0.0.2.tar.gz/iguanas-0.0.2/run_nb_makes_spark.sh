@@ -1,0 +1,1 @@
+pytest ./iguanas/*/examples/*spark* --nbmake --nbmake-kernel=$1
