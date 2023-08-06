@@ -1,0 +1,312 @@
+#
+#  This file is part of Sequana software
+#
+#  Copyright (c) 2016-2021 - Sequana Dev Team (https://sequana.readthedocs.io)
+#
+#  Distributed under the terms of the 3-clause BSD license.
+#  The full license is in the LICENSE file, distributed with this software.
+#
+#  Website:       https://github.com/sequana/sequana
+#  Website:       https://github.com/sequana/fastqc
+#  Documentation: http://sequana.readthedocs.io
+#  Documentation: https://github.com/sequana/fastqc/README.rst
+##############################################################################
+"""Ribofinder pipeline"""
+import glob
+import os
+import shutil
+from os.path import join
+from collections import Counter
+
+import sequana
+
+from sequana_pipetools import PipelineManager
+from sequana_pipetools import snaketools as sm
+from sequana import logger as log
+
+from sequana.gff3 import GFF3
+
+configfile: "config.yaml"
+
+manager = PipelineManager("ribofinder", config)
+manager.setup(globals(), mode="warning")
+
+
+
+__data__input = manager.getrawdata()
+
+rule pipeline:
+    input: 
+        ".sequana/rulegraph.svg",
+        "outputs/proportions.png",
+        "outputs/RPKM.png",
+        "multiqc/multiqc_report.html"
+
+__fasta_file__ = config['general']['reference_file']
+if config['general']['genbank_file']:
+    __annot_file__   = config['general']['genbank_file']
+elif config['general']['gff_file']:
+    __annot_file__   = config['general']['gff_file']
+elif config['general']['rRNA_file']:
+    __annot_file__   = config['general']['rRNA_file']
+
+__prefix_name__ = "indexing/features"
+
+
+if manager.config.general.rRNA_file:
+    __bowtie1_index_rna__fasta = config["general"]["rRNA_file"]
+    if os.path.exists(__bowtie1_index_rna__fasta) is False:
+        log.error(f"File {__bowtie1_index_rna__fasta} does not exists. Check your config file")
+        sys.exit(1)
+elif __annot_file__.endswith(".gbk"):
+    # This is for genbank input
+    __build_feature_fasta__output = "build_feature_fasta/feature.fasta"
+    for this in [__fasta_file__, __annot_file__]:
+        if os.path.exists(this) is False:
+            raise IOError("File {} not found".format(__fasta_file__))
+    rule build_feature_fasta:
+        input:
+            fasta = __fasta_file__,
+            annot = __annot_file__
+        output: __build_feature_fasta__output
+        run:
+            from sequana.genbank import GenBank
+            gg = GenBank(input.annot)
+            sequence = gg.extract_fasta(input.fasta, features=['rRNA'])
+            with open(output[0], "w") as fout:
+                fout.write(sequence)
+    __bowtie1_index_rna__fasta = __build_feature_fasta__output
+elif __annot_file__.endswith(".gff") or __annot_file__.endswith(".gff3"):
+    for this in [__fasta_file__, __annot_file__]:
+        if os.path.exists(this) is False:
+            raise IOError("File {} not found".format(__fasta_file__))
+    # extract rRNA feature from GFF and get corresponding fasta
+    # and gff. if no match for rRNA, save empty fasta as AAAAAAAAAAA
+    __build_feature_fasta__output = "build_feature_fasta/feature.fasta"
+
+    __extract_fasta_from_bed__input =       __fasta_file__
+    __extract_fasta_from_bed__gff =         __annot_file__
+    __extract_fasta_from_bed__feature =     config["general"]["rRNA_feature"]
+    __extract_fasta_from_bed__output =          __build_feature_fasta__output
+    __extract_fasta_from_bed__output_features = __prefix_name__ + "_rRNA.gff"
+    __extract_fasta_from_bed__log =             "indexing/get_rRNA.log"
+    # ----------------------------------------------------------------------------
+    include: sm.modules["extract_fasta_from_bed"]
+    __bowtie1_index_rna__fasta = __extract_fasta_from_bed__output
+
+
+__bowtie1_reference__ = __bowtie1_index_rna__fasta.rsplit(".",1)[0] + "_rRNA.1.ebwt"
+
+
+
+rule bowtie1_indexing:
+    input:
+        reference= __bowtie1_index_rna__fasta
+    output:
+        __bowtie1_reference__
+    log:
+        "indexing/bowtie_rRNA.log"
+    params:
+        options=""
+    threads: 2
+    wrapper:
+        "main/wrappers/bowtie1/build"
+
+
+
+"""With paired data, alignement on rRNA leads to 0% alignment if we use R1 and
+R2. If we use R1 only, the percentage is >0. First reason is that reads are not
+trimmed properly. In truth, bowtie2 supports local alignments which means it can
+soft-clip non-matching (=adapter) content while still align the local part of
+the read that matches the reference. With Bowtie1 the read will probably go
+unaligned due to the many mismatches. So we do not include R2.
+"""
+
+rule unpigz:
+    input: manager.getrawdata()
+    output: temp("{sample}/unpigz/{sample}.fastq")
+    threads: 4
+    shell:
+        """
+        unpigz -p {threads} -fk --stdout {input[0]} > {output}
+        """
+
+
+# ========================================================== Bowtie1 indexing
+#
+rule bowtie1_mapping_rna:
+    input:
+        fastq="{sample}/unpigz/{sample}.fastq",
+        index=__bowtie1_reference__
+    output:
+        bam="{sample}/bowtie1/{sample}.bam",
+        sorted="{sample}/bowtie1/{sample}.sorted.bam"
+    log:
+        "{sample}/bowtie1/{sample}.log"
+    params:
+        options=""
+    threads: config['bowtie1_mapping_rna']['threads']
+    wrapper:
+        "main/wrappers/bowtie1/align"
+
+
+# ======================================================== Fix bowtie log
+# This fix_bowtie1_log is used to fix a bug in multiqc showing 0% match in all samples.
+# Note: same rule as in rnaseq pipeline.
+rule fix_bowtie1_log:
+    input:
+        expand("{sample}/bowtie1/{sample}.log", sample=manager.samples)
+    output:
+        "logs/fix_bowtie1_log"
+    run:
+        for filename in input:
+            # we read the file
+            with open(filename) as fin:
+                data = fin.readlines()
+            # we update the file
+            with open(filename, "w") as fout:
+                for line in data:
+                    if "least one alignment" in line:
+                        fout.write(line)
+                        fout.write(line.replace("least one alignment", "least one reported alignment"))
+                    else:
+                        fout.write(line)
+        with open(output[0], "w") as fout:
+            fout.write("")
+
+
+rule plotting:
+    input:
+        bam_files=expand("{sample}/bowtie1/{sample}.sorted.bam", sample=manager.samples),
+        fasta_file=__bowtie1_index_rna__fasta
+    output:
+        png="outputs/proportions.png",
+        rpkm="outputs/RPKM.png"
+    run:
+        import pandas as pd
+        from sequana import BAM
+        from pylab import tight_layout, savefig, xlabel, ylabel, clf
+
+        results = []
+        for sample in input['bam_files']:
+            b = BAM(sample)
+            subdf = b.get_df()
+            N = len(subdf)
+            mapped = subdf.query("flag < 256 and flag != 4").rname
+            c = Counter(mapped)
+            for k in c.keys():
+                c[k] /= N
+                c[k] *= 100
+            results.append(c)
+        df = pd.DataFrame(results)
+
+        # a copy to preserve correcte sequence name for later
+        df1 = df.copy()
+        df1.columns = [x[0:30] for x in df1.columns ]
+
+        
+        # first plot shown percentage of hits on each sequence 
+        import seaborn as sns
+        sns.violinplot(data=df1, orient='h')
+        xlabel("Ribosomal content (%)", fontsize=16)
+        ylabel("Sequence name", fontsize=10)
+        tight_layout()
+        savefig(output['png'])
+
+        # now, we shown the RPKM (read count normalised by gene length)
+        from sequana import FastA
+        f = FastA(input['fasta_file'])
+        df = df.T
+        L = [ f.get_lengths_as_dict()[x] for x in df.index]
+        df = df.divide(L, axis=0)*1000
+        clf()
+        sns.violinplot(data=df.T, orient='h')
+        xlabel("RPKM", fontsize=16)
+        ylabel("Sequence name", fontsize=10)
+        tight_layout()
+        savefig(output['rpkm'])
+
+
+
+# ========================================================== BAM indexing
+#
+rule bam_indexing:
+    input:
+        "{sample}/bowtie1/{sample}.sorted.bam"
+    output:
+        "{sample}/bowtie1/{sample}.sorted.bam.bai"
+    shell:
+        """
+        bamtools index -in {input}
+        """
+
+
+# ========================================================== multiqc
+#
+sequana_multiqc_input = expand("{sample}/bowtie1/{sample}.sorted.bam.bai", sample=sorted(manager.samples))
+sequana_multiqc_input += ["logs/fix_bowtie1_log"]
+include: sm.modules["multiqc/2.0"]
+
+# ========================================================== rulegraph
+#
+sequana_rulegraph_mapper = {"multiqc": "../multiqc/multiqc_report.html"}
+include: sm.modules['rulegraph']
+
+
+
+# Those rules takes a couple of seconds so no need for a cluster
+localrules:  rulegraph
+
+
+onsuccess:
+    from sequana import logger
+
+    logger.setLevel("INFO")
+    manager.teardown()
+
+
+    from sequana.modules_report.summary import SummaryModule2
+    from sequana_pipelines import ribofinder
+    data = {
+            "name": manager.name,
+            "rulegraph": ".sequana/rulegraph.svg",
+            "pipeline_version": ribofinder.version
+            }
+
+    HTML = """<h2>Summary</h2><p>Please see the ribosomal rates here below 
+        (a similar plot from multiqc is <a href="multiqc/multiqc_report.html">here</a> ) </p>"""
+
+    from sequana.multiqc.plots import Bowtie1Reader
+    if os.path.exists("multiqc/multiqc_report_data/multiqc_bowtie1.txt"):
+        br = Bowtie1Reader("multiqc/multiqc_report_data/multiqc_bowtie1.txt")
+        fig = br.plot_bar(html_code=True)
+        from plotly import offline
+        HTML += offline.plot(fig, output_type="div", include_plotlyjs=True)
+
+    HTML += '<p>Here below, you can see how the ribosomal hits are distributed amongst the sequences (note that this is not normalised against the lenth of each sequence)</p> <img src="outputs/proportions.png"></img>'
+    HTML += '<p>Here below, you can see how the reads are distributed amongst the sequences normalised by their  lengths (RPKM=reads per kilo base)</p> <img src="outputs/RPKM.png"></img>'
+
+    # Now the final report. add the original command in the HTML report
+    try:
+        command = ""
+        with open(".sequana/info.txt", "r") as fin:
+            for line in fin:
+                if not line.startswith("#"):
+                    command += line
+        HTML += f"<h2>Command used</h2>{command}"
+    except Exception:
+        pass
+
+    s = SummaryModule2(data, intro=HTML)
+
+
+    shell("chmod -R g+w .")
+    shell("rm -rf rulegraph")
+onerror:
+    print("An error occurred. See message above.")
+
+onerror:
+    from sequana_pipetools.errors import PipeError
+    p = PipeError("ribofinder")
+    p.status()
+

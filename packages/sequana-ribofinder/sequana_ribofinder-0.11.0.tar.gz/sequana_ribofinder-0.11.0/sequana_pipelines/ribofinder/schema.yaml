@@ -1,0 +1,74 @@
+# Schema validator for the ribofinder pipeline
+# author: Thomas Cokelaer
+
+type: map
+mapping:
+    "input_directory":
+        type: str
+        required: True
+    "input_readtag":
+        type: str
+        required: True
+    "input_pattern":
+        type: str
+        required: True
+
+    "general":
+        type: map
+        mapping:
+            "aligner":
+                type: str
+                required: True
+                enum: ["bowtie1"]
+            "rRNA_feature":
+                type: str
+            "rRNA_file":
+                type: str
+            "genbank_file":
+                type: str
+            "reference_file":
+                type: str
+            "gff_file":
+                type: str
+
+    'bowtie1_mapping_ref':
+        type: map
+        mapping:
+            "options":
+                type: str
+            "threads":
+                type: int
+                required: True
+                range: { min: 1 }
+
+
+    'bowtie1_mapping_rna':
+        type: map
+        mapping:
+            "do":
+                type: bool
+            "options":
+                type: str
+            "threads":
+                type: int
+                required: True
+                range: { min: 1}
+
+    "multiqc":
+        type: map
+        mapping:
+            "do":
+              type: bool
+            "options":
+                type: str
+            "config_file":
+                type: str
+            "input_directory":
+                type: str
+            "output_directory":
+                type: str
+            "modules":
+                type: str
+
+
+

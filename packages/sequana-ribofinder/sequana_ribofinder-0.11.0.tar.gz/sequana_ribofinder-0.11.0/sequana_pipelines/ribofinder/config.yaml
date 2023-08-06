@@ -1,0 +1,78 @@
+# ============================================================================
+# Config file for RNA-seq
+#
+# ==================[ Sections for the users ]================================
+#
+# One of input_directory, input_pattern and input_samples must be provided
+# If input_directory provided, use it otherwise if input_pattern provided,
+# use it, otherwise use input_samples.
+# ============================================================================
+input_directory: /home/cokelaer/Work/github/sequana_pipelines/ribofinder/test/data
+input_readtag: _R[12]_
+input_pattern: '*fastq.gz'
+# =========================================== Sections for the users
+
+#############################################################################
+# Genome section:
+#
+# :Parameters:
+#
+# - aligner: bowtie (no other mapper for now)
+# - rRNA_file: path to an existing fasta file for ribosomal RNA (to be found in
+#   genome_directory)
+# - rRNA_feature: if rRNA_file is not provided, ribosomal RNA will be extract
+#     from GFF using this feature name. It must be found. 
+# - indexing: if indexing is set to True, the index for bowtie1 will be done as
+#   well as the indexing of the aligner provided. If the files exists already, not
+#   indexing is performed. If you want to force the index building despite the
+#   presence of the index files, then, use the force_indexing parameter and set
+#   it to True. Indexing is followed by force_indexing to make sure we do not
+#   erase the index files, which may be large.
+#
+#   Only one annotation file must be provided. If so, we extract the feature
+#   rRNA from the annotation, identifiy start/end and create fasta file on the
+#   fly. You may simply provide an input fasta file with rRNA if you have one.
+general:
+    aligner: bowtie1
+    rRNA_file: ''
+    rRNA_feature: rRNA
+    genbank_file: ''
+    gff_file: /home/cokelaer/Work/github/sequana_pipelines/ribofinder/test/data/Lepto.gff
+    reference_file: /home/cokelaer/Work/github/sequana_pipelines/ribofinder/test/data/Lepto.fa
+
+
+
+#############################################################################
+# bowtie1_mapping_rna used to align reads against ribosomal RNA
+#
+# :Parameters:
+#
+# - do: if unchecked, this rule is ignored
+# - options: any options recognised by bowtie1 tool
+# - threads: number of threads to be used
+#
+bowtie1_mapping_rna:
+    do: true
+    options: ''
+    threads: 4
+
+
+
+
+#############################################################################
+#   MultiQC aggregates results from bioinformatics analyses across many
+#   samples into a single report.
+#
+# :Parameters:
+#
+# - options: any options recognised by multiqc
+# - output-directory: Create report in the specified output directory
+# - config_file: by default, we use sequana RNA-seq multiqc_config file. 
+#       If you want your own multiqc, fill this entry
+multiqc:
+    options: -f
+    input_directory: .
+    modules: ""
+    config_file: multiqc_config.yaml
+
+
