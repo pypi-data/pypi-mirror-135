@@ -1,0 +1,102 @@
+# -*- coding: utf-8 -*-
+
+"""Generate the Resilient customizations required for {{package_name}}"""
+
+import base64
+import os
+import io
+try:
+    from resilient import ImportDefinition
+except ImportError:
+    # Support Apps running on resilient-circuits < v35.0.195
+    from resilient_circuits.util import ImportDefinition
+
+RES_FILE = "data/export.res"
+
+
+def codegen_reload_data():
+    """
+    Parameters required reload codegen for the {{package_name}} package
+    """
+    return {
+        "package": u"{{package_name}}",
+        "message_destinations": {% if message_destinations %}[{% for o in message_destinations|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "functions": {% if functions %}[{% for o in functions|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "workflows": {% if workflows %}[{% for o in workflows|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "actions": {% if rules %}[{% for o in rules|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "incident_fields": {% if fields %}[{% for o in fields|sort(attribute="x_api_name") %}u"{{o.name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "incident_artifact_types": {% if artifact_types %}[{% for o in artifact_types|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "incident_types": {% if incident_types %}[{% for o in incident_types|sort(attribute="name") %}u"{{o.name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "datatables": {% if datatables %}[{% for o in datatables|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "automatic_tasks": {% if tasks %}[{% for o in tasks|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[],{% endif %}
+
+        "scripts": {% if scripts %}[{% for o in scripts|sort(attribute="x_api_name") %}u"{{o.x_api_name}}"{{ ", " if not loop.last }}{% endfor %}],{% else %}[]{% endif %}
+
+    }
+
+
+def customization_data(client=None):
+    """
+    Returns a Generator of ImportDefinitions (Customizations).
+    Install them using `resilient-circuits customize`
+
+    IBM Resilient Platform Version: {{export_data.server_version.version}}
+
+    Contents:
+    {% if message_destinations %}    - Message Destinations:
+    {% for o in message_destinations|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if functions %}    - Functions:
+    {% for o in functions|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if workflows %}    - Workflows:
+    {% for o in workflows|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if rules %}    - Rules:
+    {% for o in rules|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if fields %}    - Incident Fields:
+    {% for o in fields|sort(attribute="x_api_name") %}        - {{o.name}}
+    {% endfor %}
+    {% endif %}
+    {% if artifact_types %}    - Custom Artifact Types:
+    {% for o in artifact_types|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if datatables %}    - Data Tables:
+    {% for o in datatables|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if phases %}    - Phases:
+    {% for o in phases|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if tasks %}    - Tasks:
+    {% for o in tasks|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    {% if scripts %}    - Scripts:
+    {% for o in scripts|sort(attribute="x_api_name") %}        - {{o.x_api_name}}
+    {% endfor %}
+    {% endif %}
+    """
+
+    res_file = os.path.join(os.path.dirname(__file__), RES_FILE)
+    if not os.path.isfile(res_file):
+        raise FileNotFoundError("{} not found".format(RES_FILE))
+
+    with io.open(res_file, mode='rt') as f:
+        b64_data = base64.b64encode(f.read().encode('utf-8'))
+        yield ImportDefinition(b64_data)
