@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<link rel="icon" href="/logo.ico" type="image/x-icon"/>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+		<script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/js/sha256.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <style>
+		#editor
+		{
+			width:100%;
+			height:450px;
+		}
+	</style>
+    <body>
+        <iframe src="/head.html" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:75px;"></iframe><br>
+        <button class="btn btn-outline-primary" onclick="javascript:save();" style="position:fixed;right:0px;top:0px;">
+            <svg style="width: 24px" t="1595928179012" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2154"><path d="M227.555556 142.222222a85.333333 85.333333 0 0 0-85.333334 85.333334v568.888888a85.333333 85.333333 0 0 0 85.333334 85.333334h568.888888a85.333333 85.333333 0 0 0 85.333334-85.333334V227.555556a85.333333 85.333333 0 0 0-85.333334-85.333334H227.555556z m0-56.888889h568.888888a142.222222 142.222222 0 0 1 142.222223 142.222223v568.888888a142.222222 142.222222 0 0 1-142.222223 142.222223H227.555556a142.222222 142.222222 0 0 1-142.222223-142.222223V227.555556a142.222222 142.222222 0 0 1 142.222223-142.222223z" fill="#007BFF" p-id="2155"></path><path d="M284.444444 142.222222v256h455.111112V142.222222h56.888888v264.760889c0 26.567111-25.457778 48.128-56.888888 48.128H284.444444c-31.431111 0-56.888889-21.560889-56.888888-48.128V142.222222h56.888888z" fill="#007BFF" p-id="2156"></path><path d="M625.777778 199.111111m28.444444 0l0 0q28.444444 0 28.444445 28.444445l0 85.333333q0 28.444444-28.444445 28.444444l0 0q-28.444444 0-28.444444-28.444444l0-85.333333q0-28.444444 28.444444-28.444445Z" fill="#007BFF" p-id="2157"></path></svg>
+            ￥{LanguageCode:0003}￥
+        </button>
+        <center>
+            <div style="width:60%">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="unlink_text" scope="col">￥{LanguageCode:6001}￥</th>
+                            <th class="unlink_text" scope="col">￥{LanguageCode:6002}￥</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6003}￥<a href="https://www.jianshu.com/p/b21d8562d2e3" target="_blank" title="￥{LanguageCode:6019}￥"><svg t="1629273213139" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2093" width="16" height="16"><path d="M512 960C264.6 960 64 759.4 64 512S264.6 64 512 64s448 200.6 448 448-200.6 448-448 448z m0-59.7c214.4 0 388.3-173.8 388.3-388.3S726.4 123.7 512 123.7 123.7 297.6 123.7 512 297.6 900.3 512 900.3z" p-id="2094" fill="#2c2c2c"></path><path d="M523.6 293c40.8 0 73.9 10.8 99.4 33.8 25.5 22.3 38.2 52.9 38.2 91.1 0 31.2-8.3 57.3-24.2 77.7-5.7 7-23.6 23.6-53.5 49.7-12.1 10.2-21 21.7-26.8 33.1-7 12.7-10.2 26.8-10.2 42.1v10.8h-68.2v-10.8c0-23.6 3.8-44 12.7-60.5 8.3-17.8 32.5-44 72-79l10.8-12.1c11.5-14.7 17.8-29.9 17.8-46.5 0-22.3-6.4-39.5-18.5-52.2-12.7-12.7-31.2-19.1-54.2-19.1-28.7 0-49.7 8.9-62.4 27.4-11.5 15.3-17.2 37-17.2 65h-66.9c0-46.5 13.4-82.8 40.1-109.6 27-27.5 64-40.9 111.1-40.9z m-11.4 372.7c13.4 0 24.8 3.8 33.8 12.7 8.9 8.3 13.4 19.1 13.4 32.5 0 13.4-5.1 24.2-14 33.1-8.9 8.3-20.4 12.7-33.1 12.7-12.7 0-24.2-4.5-33.1-13.4-8.9-8.9-13.4-19.8-13.4-32.5 0-13.4 4.5-24.2 13.4-32.5 8.7-8.8 20.2-12.6 33-12.6z" p-id="2095" fill="#2c2c2c"></path></svg></a></td>
+                        <td>
+                            <select class="form-select" id="theme">
+                                {theme}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+		                    <div id="editor"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6004}￥<a title="￥{LanguageCode:6017}￥"><svg t="1629273213139" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2093" width="16" height="16"><path d="M512 960C264.6 960 64 759.4 64 512S264.6 64 512 64s448 200.6 448 448-200.6 448-448 448z m0-59.7c214.4 0 388.3-173.8 388.3-388.3S726.4 123.7 512 123.7 123.7 297.6 123.7 512 297.6 900.3 512 900.3z" p-id="2094" fill="#2c2c2c"></path><path d="M523.6 293c40.8 0 73.9 10.8 99.4 33.8 25.5 22.3 38.2 52.9 38.2 91.1 0 31.2-8.3 57.3-24.2 77.7-5.7 7-23.6 23.6-53.5 49.7-12.1 10.2-21 21.7-26.8 33.1-7 12.7-10.2 26.8-10.2 42.1v10.8h-68.2v-10.8c0-23.6 3.8-44 12.7-60.5 8.3-17.8 32.5-44 72-79l10.8-12.1c11.5-14.7 17.8-29.9 17.8-46.5 0-22.3-6.4-39.5-18.5-52.2-12.7-12.7-31.2-19.1-54.2-19.1-28.7 0-49.7 8.9-62.4 27.4-11.5 15.3-17.2 37-17.2 65h-66.9c0-46.5 13.4-82.8 40.1-109.6 27-27.5 64-40.9 111.1-40.9z m-11.4 372.7c13.4 0 24.8 3.8 33.8 12.7 8.9 8.3 13.4 19.1 13.4 32.5 0 13.4-5.1 24.2-14 33.1-8.9 8.3-20.4 12.7-33.1 12.7-12.7 0-24.2-4.5-33.1-13.4-8.9-8.9-13.4-19.8-13.4-32.5 0-13.4 4.5-24.2 13.4-32.5 8.7-8.8 20.2-12.6 33-12.6z" p-id="2095" fill="#2c2c2c"></path></svg></a></td>
+                        <td>
+                            <input class="form-control" id="set_password" type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6005}￥</td>
+                        <td>
+                            <input class="form-control" id="confirm_password" type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6006}￥</td>
+                        <td>
+                            <button class="btn btn-outline-danger" onclick="javascript:delete_password();">
+                                <svg t="1629293953667" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2739" width="20" height="20"><path d="M796.16 858.624a62.272 62.272 0 0 1-62.144 62.208H286.08a62.4 62.4 0 0 1-62.208-62.208V198.784h572.224v659.84z m-448-771.456c0-7.168 5.632-12.8 12.8-12.8h298.88c7.168 0 12.672 5.632 12.672 12.8v37.504H348.16v-37.504z m634.368 37.504h-235.84v-37.504A87.04 87.04 0 0 0 659.84 0.32H361.024a87.04 87.04 0 0 0-86.912 86.848v37.504H37.504a37.44 37.44 0 1 0 0 74.88h111.488v659.072c0 75.648 61.44 137.088 137.088 137.088h447.808c75.712 0 137.088-61.44 137.088-137.088V198.784h111.616c20.736 0 37.504-16.64 37.504-37.504a36.736 36.736 0 0 0-37.568-36.608zM510.016 808.384c20.672 0 37.504-16.64 37.504-37.504V372.48a37.44 37.44 0 1 0-75.008 0v398.4c0 20.736 16.768 37.504 37.504 37.504m-174.528 0c20.736 0 37.504-16.64 37.504-37.504V372.48a37.44 37.44 0 1 0-75.008 0v398.4a38.592 38.592 0 0 0 37.504 37.504m348.992 0c20.736 0 37.504-16.64 37.504-37.504V372.48a37.44 37.44 0 1 0-75.008 0v398.4a37.568 37.568 0 0 0 37.504 37.504" p-id="2740" fill="#d81e06"></path></svg>
+                                ￥{LanguageCode:6007}￥
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6008}￥</td>
+                        <td>
+                            <select class="form-select" id="open_and_edit">
+                                {open_and_edit}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6016}￥</td>
+                        <td>
+                            <select class="form-select" id="language">
+                                {language}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="unlink_text">￥{LanguageCode:6020}￥</td>
+                        <td>
+                            <select class="form-select" id="pycheer-theme">
+                                {pycheer-theme}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </center>
+        <script>
+            var editor=ace.edit("editor");
+            editor.setTheme("ace/theme/"+document.getElementById("theme").value);
+            editor.getSession().setMode("ace/mode/python");
+            editor.setValue(decodeURIComponent("from%20setuptools%20import%20setup%2C%20find_packages%0A%0Asetup(%0A%20%20%20%20name%3D%22PyCheer%22%2C%0A%20%20%20%20version%3D%221.0.8%22%2C%0A%20%20%20%20author%3D%22cyrxdzj%22%2C%0A%20%20%20%20author_email%3D%22cyrxdzj%40qq.com%22%2C%0A%20%20%20%20url%3D%22https%3A%2F%2Fgitee.com%2Fcyrxdzj%2FPyCheer%22%2C%0A%20%20%20%20packages%3D%5B%0A%20%20%20%20%20%20%20%20'PyCheer'%2C%0A%20%20%20%20%5D%2C%0A%20%20%20%20package_dir%3D%7B'PyCheer'%3A%20'PyCheer'%7D%2C%0A%20%20%20%20package_data%3D%7B%0A%20%20%20%20%20%20%20%20'PyCheer'%3A%20%5B'html%2F*.html'%2C'js%2F*.js'%2C'css%2F*.css'%2C'logo%2F*'%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20license%3D%22MulanPSL-2.0%22%2C%0A%20%20%20%20zip_safe%3DFalse%2C%0A%20%20%20%20keywords%3D'PyCheer'%2C%0A%20%20%20%20entry_points%3D%7B%0A%20%20%20%20%20%20%20%20'console_scripts'%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20'pycheer%3DPyCheer%3Amain_function'%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20'PyCheer%3DPyCheer%3Amain_function'%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%7D%2C%0A%20%20%20%20install_requires%3D%5B%0A%20%20%20%20%20%20%20%20%22flask%22%2C%0A%20%20%20%20%20%20%20%20%22requests%22%2C%0A%20%20%20%20%20%20%20%20%22GitPython%22%0A%20%20%20%20%5D%0A)%0A"));
+            document.getElementById("theme").onchange=function(){editor.setTheme("ace/theme/"+document.getElementById("theme").value);};
+            async function save()
+            {
+                if(document.getElementById("set_password").value&&document.getElementById("confirm_password").value)
+                {
+                    if(document.getElementById("set_password").value!=document.getElementById("confirm_password").value)
+                    {
+                        await swal({"text":"￥{LanguageCode:6011}￥","icon":"error"});
+                        return;
+                    }
+                }
+                try
+                {
+                    const response=await axios.post("/save_setting",data=JSON.stringify({"theme":document.getElementById("theme").value,"password":(document.getElementById("set_password").value&&document.getElementById("confirm_password").value)?sha256_digest(document.getElementById("set_password").value):"","open_and_edit":document.getElementById("open_and_edit").value,"language":document.getElementById("language").value,"pycheer_theme":document.getElementById("pycheer-theme").value}));
+                    await swal({"text":"￥{LanguageCode:6012}￥","icon":"success"});
+                    location.reload();
+                }
+                catch(err)
+                {
+                    await swal({"text":"￥{LanguageCode:6013}￥","icon":"error"});
+                }
+            }
+            async function delete_password()
+            {
+                try
+                {
+                    const response=await axios.post("/delete_password");
+                    await swal({"text":"￥{LanguageCode:6014}￥","icon":"success"});
+                    location.reload();
+                }
+                catch(err)
+                {
+                    await swal({"text":"￥{LanguageCode:6015}￥","icon":"error"});
+                }
+            }
+        </script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
