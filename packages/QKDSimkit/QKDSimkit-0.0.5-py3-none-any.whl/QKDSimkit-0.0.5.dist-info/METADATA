@@ -1,0 +1,130 @@
+Metadata-Version: 2.1
+Name: QKDSimkit
+Version: 0.0.5
+Summary: Quantum Key Distribution simulator
+Home-page: https://github.com/CERN/Quantumacy/tree/main/QKDSimkit
+Author: Alberto Di Meglio and Gabriele Morello
+Author-email: gabriele.morello@cern.ch
+License: MIT License
+Project-URL: Bug Tracker, https://github.com/CERN/Quantumacy/issues
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Unix
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cryptography
+Requires-Dist: fastapi[all]
+Requires-Dist: aiocache[memcached,redis]
+Requires-Dist: aioredis (==1.3.1)
+Requires-Dist: msgpack
+
+# Instructions
+
+How to set up the server and run the client with a default configuration
+
+## Server
+
+
+### Installing
+* Create a conda environment (optional but recommended)
+```
+$ conda create -n Quantumacy python=3.8.10
+$ conda activate Quantumacy
+```
+
+* install requirements
+```
+$ pip install QKDSimkit
+```
+
+* Download, install and run Redis 
+```
+$ wget https://download.redis.io/releases/redis-6.2.6.tar.gz
+$ tar xzf redis-6.2.6.tar.gz
+$ cd redis-6.2.6
+$ make
+$ src/redis-server
+```
+
+
+### Executing
+
+* Run with the most basic configuration: channel will run on the same machine as the server
+```
+$ QKDSimkit server local
+```
+
+* Run with custom channel settings (noise, eavesdropper)
+```
+$ QKDSimkit server local -n 0.5 -e True
+```
+
+* Run server using an external channel
+```
+$ QKDSimkit server -a [host:port] external -ca [host:port]
+```
+
+### Help
+
+For more options please check
+```
+$ QKDSimkit server -h
+$ QKDSimkit server local -h
+$ QKDSimkit server external -h
+```
+
+## Client
+
+
+### Installing
+* Create a conda environment (optional but recommended)
+```
+$ conda create -n Quantumacy python=3.8.10
+$ conda activate Quantumacy
+```
+* Install requirements
+```
+$ pip install QKDSimkit
+```
+
+### Executing
+
+* Run with the most basic configuration
+```
+QKDSimkit client [server_host:port] [channel_host:port]
+```
+* If you want to specify the number of keys use and their size use:
+```
+QKDSimkit client [server_host:port] [channel_host:port] -n [num_keys] -s [size]
+```
+
+### Help
+
+For more options please check
+```
+python client -h
+```
+
+## Authors
+
+Contributor names and contact info:
+
+Alberto Di Meglio
+
+Gabriele Morello [[email]](mailto:gabriele.morello@cern.ch)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
+
+## Version History
+
+* 0.0.1
+    * Initial Release
+    
+
+## Acknowledgments
+
+
+
