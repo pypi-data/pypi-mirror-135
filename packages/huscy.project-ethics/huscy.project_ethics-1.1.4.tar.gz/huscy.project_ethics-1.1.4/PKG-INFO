@@ -1,0 +1,108 @@
+Metadata-Version: 2.1
+Name: huscy.project_ethics
+Version: 1.1.4
+Summary: Managing ethics and ethic files for projects in a human research context.
+Home-page: UNKNOWN
+Author: Stefan Bunde
+Author-email: stefanbunde+git@posteo.de
+License: AGPLv3+
+Description: huscy.project-ethics
+        ======
+        
+        ![PyPi Version](https://img.shields.io/pypi/v/huscy-project-ethics.svg)
+        ![PyPi Status](https://img.shields.io/pypi/status/huscy-project-ethics)
+        ![PyPI Downloads](https://img.shields.io/pypi/dm/huscy-project-ethics)
+        ![PyPI License](https://img.shields.io/pypi/l/huscy-project-ethics?color=yellow)
+        ![Python Versions](https://img.shields.io/pypi/pyversions/huscy-project-ethics.svg)
+        ![Django Versions](https://img.shields.io/pypi/djversions/huscy-project-ethics)
+        
+        
+        
+        Requirements
+        ------
+        
+        - Python 3.6+
+        - A supported version of Django
+        
+        Tox tests on Django versions 2.2, 3.1 and 3.2.
+        
+        
+        
+        Installation
+        ------
+        
+        To install `husy.project-ethics` simply run:
+        ```
+        pip install huscy.project-ethics
+        ```
+        
+        
+        
+        Configuration
+        ------
+        
+        First of all, the `huscy.project_ethics` application has to be hooked into the project.
+        
+        1. Add `huscy.project_ethics` and further required apps to `INSTALLED_APPS` in settings module:
+        
+        ```python
+        INSTALLED_APPS = (
+            ...
+            'guardian',
+            'rest_framework',
+        
+            'huscy.project_ethics',
+            'huscy.projects',
+        )
+        ```
+        
+        2. Create `huscy.project-ethics` database tables by running:
+        
+        ```
+        python manage.py migrate
+        ```
+        
+        
+        
+        Development
+        ------
+        
+        After checking out the repository you should activate any virtual environment.
+        Install all development and test dependencies:
+        
+        ```
+        make install
+        ```
+        
+        Create database tables:
+        
+        ```
+        make migrate
+        ```
+        
+        We assume you're having a running postgres database with a user `huscy` and a database also called `huscy`.
+        You can easily create them by running
+        
+        ```
+        sudo -u postgres createuser -d huscy
+        sudo -u postgres createdb huscy
+        sudo -u postgres psql -c "ALTER DATABASE huscy OWNER TO huscy;"
+        sudo -u postgres psql -c "ALTER USER huscy WITH PASSWORD '123';"
+        ```
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.1
+Classifier: Framework :: Django :: 3.2
+Description-Content-Type: text/markdown
+Provides-Extra: development
+Provides-Extra: testing
