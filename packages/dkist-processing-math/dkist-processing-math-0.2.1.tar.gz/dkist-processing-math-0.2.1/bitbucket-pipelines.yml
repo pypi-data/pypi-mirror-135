@@ -1,0 +1,46 @@
+image: python:3.8
+definitions:
+  steps:
+    - step: &lint
+        caches:
+          - pip
+        name: Lint
+        script:
+          - pip install pre-commit
+          - pre-commit install
+          - pre-commit run --all-files
+    - step: &scan
+        caches:
+          - pip
+        name: Scan
+        script:
+          - pip install .
+          - pip install safety
+          - safety check --full-report ${SAFETY_IGNORE}
+    - step: &test
+        caches:
+          - pip
+        name: Test
+        script:
+          - pip install .[test]
+          - pytest --cov -m "not development" dkist_processing_math
+    - step: &push
+        caches:
+          - pip
+        name: Push
+        script:
+          - python setup.py sdist
+          - pip install twine
+          - twine upload dist/*
+
+pipelines:
+  default:
+    - step: *lint
+    - step: *test
+    - step: *scan
+  tags:
+    'v*':
+      - step: *lint
+      - step: *test
+      - step: *scan
+      - step: *push
