@@ -1,0 +1,120 @@
+[build-system]
+requires = ["setuptools >= 60.1.0", "wheel >= 0.37.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.semantic_release]
+version_variable = ["setup.py:__version__"]
+
+[tool.mypy]
+# https://mypy.readthedocs.io/en/stable/config_file.html#confval-exclude
+# exclude = ""
+namespace_packages = false
+explicit_package_bases = false
+ignore_missing_imports = false
+follow_imports = "normal"        # possible values are normal, silent, skip and error
+follow_imports_for_stubs = false
+# python_executable=""
+no_site_packages = true
+no_silence_site_packages = false
+# Disallow dynamic typing¶
+disallow_any_unimported = true
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_any_explicit = false
+disallow_any_generics = false
+disallow_subclassing_any = false
+disallow_untyped_calls = true
+# Untyped definitions and calls¶
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+# None and Optional handling¶
+no_implicit_optional = true
+strict_optional = true
+# Configuring warnings¶
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+# Suppressing errors¶
+show_none_errors = true
+ignore_errors = false
+# Miscellaneous strictness flags¶
+allow_untyped_globals = false
+allow_redefinition = false
+local_partial_types = false
+implicit_reexport = true
+strict_equality = true
+strict = false
+# Configuring error messages¶
+show_error_context = false
+show_column_numbers = false
+show_error_codes = true
+pretty = false
+color_output = true
+error_summary = true
+show_absolute_path = false
+# Incremental mode¶
+incremental = true
+cache_dir = ".mypy_cache"
+sqlite_cache = false
+cache_fine_grained = false
+skip_version_check = false
+skip_cache_mtime_checks = false
+# Advanced options¶
+pdb = false
+show_traceback = false
+raise_exceptions = false
+warn_incomplete_stub = false
+
+[[tool.mypy.overrides]]
+module = [
+    "setuptools",
+    "structlog",
+    "requests",
+    "websocket",
+    "dotenv.main",
+    "pytest",
+]
+ignore_missing_imports = true
+
+# PROGRAM SETTINGS
+[tool.coverage.run]
+branch = true
+source = [
+    "bitvavo_api_upgraded",
+] # I don't know why this shouldn't be "src/bitvavo_api_upgraded", but that value doesn't work...
+parallel = true
+relative_files = true
+
+[tool.coverage.paths]
+source = ["src/bitvavo_api_upgraded", ".tox/py3*/lib/python3.*/site-packages/bitvavo_api_upgraded"]
+
+[tool.coverage.report]
+# fail_under = 100
+precision = 0
+# show_missing = True
+skip_covered = true
+skip_empty = true
+sort = "Cover"
+
+[tool.black]
+line-length = 120
+include = "(src|tests)/.*.py"
+
+[tool.isort]
+line_length = 120
+profile = "black"
+src_paths = ["src", "tests"]
+
+[tool.pytest.ini_options]
+addopts = "--durations-min=1 --verbosity=2 --no-header --show-capture=all"
+# addopts = "--durations-min=1 --stepwise --verbosity=2 --no-header --show-capture=all"
+# addopts = "--durations=10 --durations-min=1 --stepwise --verbosity=1 --no-header"
+testpaths = ["tests"]
+markers = ["no_cover: some pytest-integration default mark that's not known?."]
+python_classes = "Test*"
+python_files = "test_*.py"
+python_functions = "test_*"
