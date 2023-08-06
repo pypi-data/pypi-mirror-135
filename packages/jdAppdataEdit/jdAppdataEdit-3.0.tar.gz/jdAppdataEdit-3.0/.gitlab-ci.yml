@@ -1,0 +1,13 @@
+stages:
+    - deploy
+
+pip_deploy:
+    image: "python:latest"
+    stage: deploy
+    script:
+        - apt install qttools5-dev-tools
+        - pip install twine wheel
+        - python setup.py sdist bdist_wheel
+        - twine upload -u "$PYPI_USERNAME" -p "$PYPI_PASSWORD" dist/*
+    only:
+        - tags
