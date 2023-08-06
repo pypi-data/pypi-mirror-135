@@ -1,0 +1,242 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block javascript %}
+<script src="{% static 'ysfilemanager/js/yangsets.js' %}"></script>
+<script src="{% static 'ysyangtree/js/chosen/chosen.jquery.js' %}"></script>
+<script src="{% static 'ysyangtree/js/yangtree.js' %}"></script>
+{% endblock javascript %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'ysyangtree/css/chosen/chosen.css' %}"/>
+<style type="text/css">
+  #ys-dataset-table tr td {
+    white-space: normal;
+  }
+
+  #ys-dataset-table tr th.xpath {
+    min-width: 40%;
+  }
+
+  #ys_addons_chosen {
+    width:100% !important;
+  }
+</style>
+{% endblock css %}
+{% block breadcrumbs %}<li>YANG datasets and diffs</li>{% endblock %}
+{% block page-title %}YANG datasets and diffs{% endblock %}
+{% block help_url %}{% url 'help' section='yscoverage' document='datasets'  %}{% endblock %}
+{% block body %}
+{% csrf_token %}
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <div class="form-group__text select">
+            <label for="ys-primary-yangset">Current YANG Set</label>
+            <select id="ys-primary-yangset" class="ys-yangset"></select>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <div class="form-group__text select">
+            <label for="ys-module">YANG module</label>
+            <select id="ys-module"></select>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <div class="form-group__text select">
+            <select id="ys-addons" multiple
+                    data-placeholder="Additional fields to include in dataset">
+              <option>nodetype</option>
+              <option>deviation</option>
+              <option>datatype</option>
+              <option>description</option>
+              <option>module</option>
+              <option>prefix</option>
+              <option>revision</option>
+              <option>default</option>
+              <option>leafref_path</option>
+              <option>key</option>
+              <option>mandatory</option>
+              <option>base</option>
+              <option>options</option>
+              <option>presence</option>
+              <option>min</option>
+              <option>max</option>
+              <option>access</option>
+              <option>operations</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <ul class="list list--inline list--compressed">
+          <li>
+            <button id="ys-dataset-btn" class="btn btn--small">
+              Display dataset
+            </button>
+          </li><li>
+            <button id="ys-dataset-csv-btn" class="btn btn--small">
+              Download .csv
+            </button>
+          </li><li>
+            <div class="form-group">
+              <div class="form-group__text select">
+                <select id="ys-include-dependencies">
+                  <option value=true selected>Include all modules</option>
+                  <option value=false>Filter other modules</option>
+                </select>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <div class="form-group__text select">
+            <label for="ys-secondary-yangset">Previous YANG Set for comparison</label>
+            <select id="ys-secondary-yangset" class="ys-yangset"></select>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <ul class="list list--inline list--compressed">
+          <li>
+            <button id="ys-diff-btn" class="btn btn--small">
+              Display diff
+            </button>
+          </li><li>
+            <button id="ys-diff-csv-btn" class="btn btn--small">
+              Download .csv
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="responsive-table"">
+          <table id="ys-dataset-table" class="table"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+{% block script %}
+<script>
+$(function() {
+    yangsets.config.yangsetsSelect = 'select.ys-yangset';
+    yangsets.getYangSets();
+
+    $("#ys-addons").chosen();
+
+    $("#ys-primary-yangset").change(function(e) {
+        let yangset = $("#ys-primary-yangset").val();
+        if (!yangset) {
+            return;
+        }
+        yangtree.getModels(yangset, $("#ys-module")).done(function() {
+            return;
+        });
+    });
+
+    function renderTable(retObj) {
+        $("#ys-dataset-table").empty();
+        let tr = $("<tr>");
+        for (let col of retObj.header) {
+            tr.append($('<th class="' + col + '">').text(col));
+        };
+        $("#ys-dataset-table").append(tr);
+        for (let row of retObj.data) {
+            let tr = $("<tr>");
+            for (let col of row) {
+                if (Array.isArray(col)) {
+                    let td = $("<td>");
+                    let ul = $('<ul class="list list--inline list--compressed">');
+                    for (let item of col) {
+                        ul.append($("<li>").text(item));
+                    }
+                    td.append(ul);
+                    tr.append(td);
+                } else {
+                    tr.append($("<td>").text(col));
+                }
+            }
+            $("#ys-dataset-table").append(tr);
+        };
+    };
+
+    $("#ys-dataset-btn").click(function() {
+        let progressbar = startProgress($("#ys-progress"));
+        $("#ys-dataset-table").empty();
+        getPromise("/coverage/getdataset/", {
+            yangset: $("#ys-primary-yangset").val(),
+            model: $("#ys-module").val(),
+            addons: $("#ys-addons").val(),
+            format: 'json',
+            all_data: $("#ys-include-dependencies").val(),
+        }).then(function(retObj) {
+            renderTable(retObj);
+            $("#ys-dataset-table").addClass("table--fixed");
+            stopProgress(progressbar);
+        }, function(retObj) {
+            popDialog("Error " + retObj.status + ": " + retObj.statusText);
+            stopProgress(progressbar);
+        });
+    });
+
+    $("#ys-dataset-csv-btn").click(function() {
+        let uri = "/coverage/getdataset/";
+        uri += "?format=csv";
+        uri += "&yangset=" + encodeURIComponent($("#ys-primary-yangset").val());
+        uri += "&model=" + encodeURIComponent($("#ys-module").val());
+        uri += "&all_data=" + encodeURIComponent($("#ys-include-dependencies").val());
+        if ($("#ys-addons").val()) {
+          for (let addon of $("#ys-addons").val()) {
+              uri += "&addons[]=" + encodeURIComponent(addon);
+          }
+        }
+        window.open(uri, '_blank');
+    });
+
+    $("#ys-diff-btn").click(function() {
+        let progressbar = startProgress($("#ys-progress"));
+        $("#ys-dataset-table").empty();
+
+        getPromise("/coverage/getdiff/", {
+            model: $("#ys-module").val(),
+            fromset: $("#ys-secondary-yangset").val(),
+            toset: $("#ys-primary-yangset").val(),
+            addons: $("#ys-addons").val(),
+            format: 'json',
+        }).then(function(retObj) {
+            renderTable(retObj);
+            $("#ys-dataset-table").removeClass("table--fixed");
+            stopProgress(progressbar);
+        }, function(retObj) {
+            popDialog("Error " + retObj.status + ": " + retObj.statusText);
+            stopProgress(progressbar);
+        });
+    });
+
+    $("#ys-diff-csv-btn").click(function() {
+        let uri = "/coverage/getdiff/";
+        uri += "?format=csv";
+        uri += "&fromset=" + encodeURIComponent($("#ys-secondary-yangset").val());
+        uri += "&toset=" + encodeURIComponent($("#ys-primary-yangset").val());
+        uri += "&model=" + encodeURIComponent($("#ys-module").val());
+        for (let addon of $("#ys-addons").val()) {
+            uri += "&addons[]=" + encodeURIComponent(addon);
+        }
+        window.open(uri, '_blank');
+    });
+
+});
+</script>
+{% endblock script %}

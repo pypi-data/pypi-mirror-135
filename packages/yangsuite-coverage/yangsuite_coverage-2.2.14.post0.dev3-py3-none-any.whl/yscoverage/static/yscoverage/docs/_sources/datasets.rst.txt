@@ -1,0 +1,75 @@
+Datasets
+========
+
+YANG models are designed in a hierachial fashion represented in xpath notation.
+Analytics gives you the capability of producing datasets with the xpath
+representing the key and data associated to the xpath as the columns.
+
+.. list-table:: Dataset Format
+   :widths: 25 20 15 15
+   :header-rows: 1
+
+   * - xpath
+     - module
+     - nodetype
+     - datatype
+   * - xpath/number/one
+     - Cisco-model1
+     - container
+     -
+   * - xpath/number/two
+     - Cisco-model1
+     - leaf
+     - string
+   * - xpath/number/three
+     - Cisco-model2
+     - container
+     -
+   * - xpath/number/four
+     - Cisco-model2
+     - leaf
+     - integer
+   * - etc...
+     -
+     -
+     -
+
+The only required field is the xpath.
+
+Choose a "Current YANG Set" and the YANG module in the set that you want the
+dataset based on. If you want data associated to the xpath, choose those
+additional fields. Ignore the "Previous YANG Set for comparison" as that is
+for YANG Diffs discussed later.
+
+.. image:: images/datasetcfg.png
+   :alt: Screenshot of Dataset setup.
+
+Now you have a choice to "Display dataset" in the web page or "Download .csv"
+to download a file to the browser which is in a format that can be imported
+into various other applications such as Microsoft Excel.
+
+.. image:: images/dataset.png
+   :alt: Screenshot of Dataset results.
+
+
+YANG Diffs
+==========
+
+Making use of the dataset functionality, you can also produce dataset that will
+show you changes of a module between versions. To do this, you will need 2 YANG
+sets, one containing the module with the newer version and one containing the
+same module with the older version. Do the same dataset setup used to output a
+dataset, but then also choose the "Previous YANG Set for comparison" to instead
+output the differences between them.
+
+Just like the datasets "Display diff" shows in the web page or "Download .csv"
+to download a results file to the browser.
+
+- greater than less than (< and >) represent differences between an xpath
+
+- minus (-) shows an xpath that has been removed
+
+- plus (+) shows an xpath that has been added
+
+.. image:: images/yangdiff.png
+   :alt: Screenshot of YANG Diff results.
