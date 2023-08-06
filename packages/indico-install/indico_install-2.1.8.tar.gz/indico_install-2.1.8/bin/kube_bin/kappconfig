@@ -1,0 +1,4 @@
+#! /bin/bash
+
+output=$(kubectl get configmap app-edge-nginx-conf -o json | jq '.data["nginx.conf"]')
+python3 -c "print(${output})"

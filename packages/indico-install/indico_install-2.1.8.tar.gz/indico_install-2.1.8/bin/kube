@@ -1,0 +1,221 @@
+#! /bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+if [ $1 = "switch" ]; then
+    export PYTHONWARNINGS="ignore"
+    echo "Using kubeconfig ${KUBECONFIG}"
+    chmod 755 $KUBECONFIG
+    cloud=$(kube get-cloud raw)
+    account=$(kube get-account raw)
+    if [ "$cloud" = "gcp" ]; then
+        clusters=$(gcloud container clusters list --project $account | grep ${2} | head -n 1)
+        if [ -z "$clusters" ]; then
+            echo -e "\033[0;91m No clusters matching ${2} in $account project. Try 'kube ls' \033[0m"
+        else
+            cluster_name=$(echo ${clusters} | awk '{print $1}' )
+            zone=$(echo ${clusters} | awk '{print $2}' )
+            echo "Switching to CLUSTER $cluster_name, ZONE $zone"
+            gcloud container clusters get-credentials ${cluster_name} --zone ${zone} --project $account
+            gcloud config set compute/zone ${zone}
+        fi
+    elif [ "$cloud" = "aws" ]; then
+        clusters=$(aws eks list-clusters | jq -r .clusters[] | grep ${2} | head -n 1)
+        if [ -z "$clusters" ]; then
+            echo -e "\033[0;91m No clusters matching ${2} in $account project. Try 'kube ls' \033[0m"
+        else
+            aws eks update-kubeconfig --name ${clusters}
+        fi
+    else
+        echo "No cloud variable set"
+    fi
+fi
+
+
+if [ $1 = "set-config" ]; then
+    CLOUD=$2
+    ACCOUNT=$3
+    kube set-cloud $CLOUD
+    kube set-account $ACCOUNT
+    if [ $CLOUD = "aws" ]; then
+        echo "Set to aws"
+        export AWS_PROFILE=$ACCOUNT
+        kubectl config unset current-context
+    elif [ $CLOUD = "gcp" ]; then
+        echo "Set to gcp"
+        gcloud config set project $ACCOUNT
+        kubectl config unset current-context
+    else
+        echo "First argument must be 'gcp' or 'aws', not $CLOUD"
+    fi
+fi
+
+if [ $1 = "ls" ]; then
+    cloud=$(kube get-cloud raw)
+    if [ $cloud = "gcp" ]; then
+        gcloud container clusters list 2>/dev/null | awk '{print $1}' | tail -n +2
+    elif [ $cloud = "aws" ]; then
+        aws eks list-clusters | jq -r .clusters[]
+    else
+        echo "No cloud variable set"
+    fi
+fi
+
+if [ $1 = "accounts" ]; then
+    cloud=$(kube get-cloud raw)
+    if [ $cloud = "gcp" ]; then
+        gcloud projects list 2>/dev/null | awk '{print $1}' | tail -n +2
+    elif [ $cloud = "aws" ]; then
+        grep "^\[.*\]$" ~/.aws/credentials | grep -vi secret | tr -d '[]'
+    else
+        echo "No account variable set"
+    fi
+fi
+
+if [ $1 = "set-ns" ]; then
+    namespace=$2
+    if [ -z $namespace ]; then
+        current_context=$(kubectl config current-context)
+        kubectl config unset contexts.$current_context.namespace
+    else
+        kubectl config set-context --current --namespace $namespace
+    fi
+fi
+
+if [ $1 = "get-ns" ]; then
+    namespace=$(kubectl config view -o jsonpath='{.contexts[?(@.name=="'"$(kubectl config current-context)"'")].context.namespace}')
+    if [[ $2 == "raw" ]]; then
+        echo -e $namespace
+    else
+        echo -e "\\[\e[33m\\]${namespace}\\[\e[m\\]"
+    fi
+fi
+
+if [ $1 = "exec" ]; then
+    kubectl exec -it $(kubectl get pods | grep $2 | grep Running | head -n 1 | awk '{print $1}') ${3:-bash}
+fi
+
+if [ $1 = "pods" ]; then
+    indico pod ls
+fi
+
+if [ $1 = "update" ]; then
+    indico svc restart ${@:2}
+fi
+
+if [ $1 = "apply" ]; then
+    indico apply ${@:2}
+fi
+
+if [ $1 = "taints" ]; then
+    kubectl get nodes -o json | jq '.items[].spec | .providerID, .taints'
+fi
+
+if [ $1 = "get-env" ]; then
+    gcloud container clusters list --filter="resourceLabels.environment=${2}" | tail -n +2 | awk '{print $1}'
+fi
+
+if [ $1 = "scale" ]; then
+    indico svc scale ${@:2}
+fi
+
+if [ $1 = "get-cluster" ]; then
+      cluster_name=$(kubectl config current-context | awk -F "_" '{print $NF}' | awk -F "/" '{print $NF}')
+      if [[ $cluster_name == *"feat"* ]]; then
+            color="93"
+      fi
+
+      if [[ $cluster_name == *"dev"* ]]; then
+            color="92"
+      fi
+
+      if [[ $cluster_name == *"stage"* ]]; then
+            color="34"
+      fi
+
+      if [[ $cluster_name == *"prod"* ]]; then
+            color="91"
+      fi
+
+      if [[ $2 == "raw" ]]; then
+          echo -e $cluster_name
+      else
+          echo -e "\\[\e[${color}m\\]${cluster_name}\\[\e[m\\]"
+      fi
+fi
+
+if [ $1 = "gen" ]; then
+    api=$2
+    queue=$3
+    tag=$4
+    workers=${5:-1}
+    scaling=${6:-1}
+
+    helm template -f $DIR"/../values/api.yaml" $DIR"/../worker" --set api.name=$api,api.queue=$queue,api.workers=$workers,image.tag=$tag,scaling.default=$scaling> $DIR"/../kubernetes/build/${tag}/${api}${queue}.yaml"
+fi
+
+if [ $1 = "image" ]; then
+    deployment=$2
+    image=$3
+    kubectl set image --record=true deployment/${deployment} ${deployment}=${image}
+fi
+
+if [ $1 = "drain" ]; then
+    kubectl drain $2 --ignore-daemonsets --delete-local-data
+fi
+
+if [ $1 = "images" ]; then
+    kubectl get pods -o custom-columns=NAME:.metadata.name,IMAGE:{.status.containerStatuses[0].image} | grep "$2"
+fi
+
+if [ $1 = "top" ]; then
+    kubectl top pods | sort -nk 3 -
+fi
+
+if [ $1 = "rbac" ]; then
+    kubectl create clusterrolebinding cluster-admin-binding-$(echo $2 | awk -F "@" '{print $1}') --clusterrole cluster-admin --user $2
+fi
+
+if [ $1 = "reset" ]; then
+    instance=$2
+    kubectl cordon ${instance}
+    gcloud compute instances reset $instance
+    sleep 10
+    gcloud compute ssh $instance --command "sudo service kubelet restart"
+fi
+
+if [ $1 = "cluster" ]; then
+    indico infra gke create ${@:2}
+    kube switch $2
+    email=$(cat /indico-deployment/.config/gcloud/configurations/config_default | grep account | awk -F "=" '{print $2}')
+
+    kube rbac $email
+fi
+
+if [ $1 = "sync-images" ]; then
+    indico sync images $2
+fi
+
+if [ $1 = "get-account" ]; then
+    if [ "$2" = "raw" ]; then
+        cat /var/run/account 2>/dev/null
+    else
+        echo -e "\033[0;36m$(cat /var/run/account 2>/dev/null)\033[0m"
+    fi
+fi
+
+if [ $1 = "get-cloud" ]; then
+    if [ "$2" = "raw" ]; then
+        cat /var/run/cloud 2>/dev/null
+    else
+        echo -e "\033[1;36m$(cat /var/run/cloud 2>/dev/null)\033[0m"
+    fi
+fi
+
+if [ $1 = "set-account" ]; then
+    echo $2 > /var/run/account
+fi
+
+if [ $1 = "set-cloud" ]; then
+    echo $2 > /var/run/cloud
+fi

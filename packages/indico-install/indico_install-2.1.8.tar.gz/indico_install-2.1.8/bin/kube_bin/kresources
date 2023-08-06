@@ -1,0 +1,3 @@
+#! /bin/bash
+
+kubectl get  node -o jsonpath='{range .items[*]}Name:{"\t"}{.metadata.name}{"\n"}Capacity:{"\n\t"}CPU:{"\t"}{.status.capacity.cpu}{"\n\t"}Memory:{"\t"}{.status.capacity.memory}{"\n"}Allocatable:{"\n\t"}CPU:{"\t"}{.status.allocatable.cpu}{"\n\t"}Memory:{"\t"}{.status.allocatable.memory}{"\n"}=========================={"\n"}{end}'
