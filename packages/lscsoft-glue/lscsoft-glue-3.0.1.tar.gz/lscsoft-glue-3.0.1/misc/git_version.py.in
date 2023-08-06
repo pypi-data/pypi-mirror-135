@@ -1,0 +1,59 @@
+# This file is part of the Grid LSC User Environment (GLUE)
+#
+# GLUE is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+version = {version!r}
+
+# git information
+id = {0.id!r}
+date = {0.date!r}
+branch = {0.branch!r}
+tag = {0.tag!r}
+author = {0.author!r}
+builder = {0.builder!r}
+committer = {0.committer!r}
+status = {0.status!r}
+verbose_msg = """Branch: {0.branch}
+Tag: {0.tag}
+Id: {0.id}
+
+Builder: {0.builder}
+Build date: {0.build_date}
+Repository status: {0.status}"""
+
+import warnings
+
+class VersionMismatchError(ValueError):
+    pass
+
+def check_match(foreign_id, onmismatch="raise"):
+    """
+    If foreign_id != id, perform an action specified by the onmismatch
+    kwarg. This can be useful for validating input files.
+
+    onmismatch actions:
+      "raise": raise a VersionMismatchError, stating both versions involved
+      "warn": emit a warning, stating both versions involved
+    """
+    if onmismatch not in ("raise", "warn"):
+        raise ValueError(onmismatch + " is an unrecognized value of onmismatch")
+    if foreign_id == {0.id!r}:
+        return
+    msg = "Program id ({0.id} does not match given id (%s)." % foreign_id
+    if onmismatch == "raise":
+        raise VersionMismatchError(msg)
+
+    # in the backtrace, show calling code
+    warnings.warn(msg, UserWarning)
+

@@ -1,0 +1,84 @@
+# -- source package -----------------------------
+
+Source: lscsoft-glue
+Section: python
+Priority: optional
+Maintainer: Steffen Grunewald <steffen.grunewald@aei.mpg.de>
+Homepage: https://www.lsc-group.phys.uwm.edu/daswg/projects/glue.html
+Build-Depends:
+ debhelper (>= 9),
+ dh-python,
+ help2man,
+ python3-all-dev,
+ python3-kerberos,
+ python3-lal,
+ python3-ligo-segments,
+ python3-matplotlib,
+ python3-numpy,
+ python3-pyrxp,
+ python3-setuptools,
+ python3-six,
+X-Python3-Version: >= 3.5
+Standards-Version: 3.9.8
+
+# -- transitional packages ----------------------
+
+Package: python3-glue
+Depends:
+ ${misc:Depends},
+ python3-lscsoft-glue,
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: python3-glue-common
+Depends:
+ ${misc:Depends},
+ python3-lscsoft-glue,
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+# -- python 3 packages --------------------------
+
+Package: python3-lscsoft-glue
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-kerberos,
+ python3-ligo-segments,
+ python3-numpy,
+ python3-openssl,
+ python3-pyrxp,
+ python3-six,
+Recommends:
+ libsqlite3-0 (>= 3.3),
+ python3-xml,
+Replaces: python3-glue (<< 2.1.0-2)
+Breaks: python3-glue (<< 2.1.0-2)
+Description: Grid LSC User Environment Python 3 library
+ Glue (Grid LSC User Environment) is a suite of python3 modules and programs to
+ allow users to run LSC codes on the grid.
+ .
+ This package provides the Python 3 library
+
+# -- scripts package ----------------------------
+
+Package: lscsoft-glue-utils
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-lscsoft-glue (= ${binary:Version}),
+Conflicts: python-glue (<< 2.1.0-2)
+Description: Grid LSC User Environment command-line scripts
+ Glue (Grid LSC User Environment) is a suite of python3 modules and programs to
+ allow users to run LSC codes on the grid.
+ .
+ This package provides the command-line scripts.

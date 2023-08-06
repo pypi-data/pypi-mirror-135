@@ -1,0 +1,13 @@
+To add a new test:
+
+1. create a Python script that defines the tests
+    - please use either pytest or unittest to construct the tests
+    - make sure that the script can be executed as `python <script>`,
+      i.e. that it includes the `if __name__ == "__main__":` construct
+
+2. add a new entry to the `check` prerequisite in the `Makefile`, the
+   entry should be the basename of the script minus the `.py` file extension,
+   e.g. if the script is `test/test_module.py` the entry in the `Makefile`
+   should just be `test_module`
+
+3. run `make test_module` to verify that the test runs
