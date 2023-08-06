@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "psdtoolsx"
+version = "19.18.0"
+description = "Python package for working with Adobe Photoshop PSD files"
+authors = ["FredHappyface", "Kota Yamaguchi"]
+license = "MIT"
+classifiers = [
+	'Development Status :: 4 - Beta',
+	'Intended Audience :: Developers',
+	'Programming Language :: Python',
+	'Topic :: Multimedia :: Graphics',
+	'Topic :: Multimedia :: Graphics :: Viewers',
+	'Topic :: Multimedia :: Graphics :: Graphics Conversion',
+	'Topic :: Software Development :: Libraries :: Python Modules',
+]
+homepage = "https://github.com/FHPythonUtils/psdtoolsx"
+repository = "https://github.com/FHPythonUtils/psdtoolsx"
+documentation = "https://github.com/FHPythonUtils/psdtoolsx/blob/master/README.md"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+attrs = "<22,>=21.4.0"
+Pillow = "<10,>=9.0.0"
+numpy = "<2,>=1.22.1"
+
+[tool.pylint.format]
+indent-string = "    "
+
+[tool.pylint.master]
+ignore-patterns = "test_.*?py"
+
+[tool.pylint.messages_control]
+enable = ["F", "E", "W", "R", "C"]
+disable = [
+	"pointless-string-statement",
+	"superfluous-parens",
+	"bad-continuation",
+	"invalid-name"
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+indent = "Tab"
+
+[tool.pydocstyle]
+convention = "google"
+ignore = "D205,D415"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
