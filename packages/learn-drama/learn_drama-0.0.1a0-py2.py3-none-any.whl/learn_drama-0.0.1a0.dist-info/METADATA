@@ -1,0 +1,282 @@
+Metadata-Version: 2.1
+Name: learn-drama
+Version: 0.0.1a0
+Summary: Type and learn drama helper.
+Home-page: https://github.com/Boltzmann/learn_drama
+Author: Stefan Bollmann
+Author-email: stefan.bollmann@rwth-aachen.de
+License: GNU General Public License v3
+Keywords: learn_drama
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: Click (>=7.0)
+
+learn-drama
+===========
+
+|docs| |pipeline| |coverage|
+
+
+
+A Python script and helper classes to learn the drama Faust by heart. Please be aware that this project is still in a pre-alpha phase - compare Goal_ and Usage_.
+
+-  Free software: GNU General Public License v3
+
+
+Contents
+--------
+ * Goal_
+ * Usage_
+ * Development_
+ * Credits_
+
+Goal
+----
+.. _goal:
+
+While the project has a version < 0.1.0 the project is in pre-alpha phase and not as useful as projected. This is, what the script should do at minimum:
+
+Version 0.1.0 will have a command line application to learn drama verses. Supported xml file format will be the one of textgridref_/-lab_ (here Faust). The plan is, that the invocation of
+
+.. _textgridref: https://textgridrep.org/
+.. _lab: https://textgridlab.org/1.0/tgcrud-public/rest/textgrid:11g9q.0/datae
+
+::
+
+    $ learn_drama -f Faust.xml --quiz --verses 1-10
+
+gives the following dialogue:
+
+::
+
+    Test of verse 3
+         1 Habe nun, ach! Philosophie,
+         2 Juristerei und Medizin
+         3 ?
+    Please type the missing verse!
+
+If the user input is
+
+::
+
+    Durchaus studiert mit heißem Bemühn.
+
+On the command line one will get a::
+
+    Correct!
+
+
+Usage
+-----
+
+.. _usage:
+
+The easiest way to use this script is to install it with the `Python Package Index PyPI <https:pypi.org>`_. For this you have to have pip3 installed. If not, have a look at the `Package installation help of python.org <https://packaging.python.org/en/latest/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line>`_.
+
+Installation
+~~~~~~~~~~~~
+
+::
+
+   pip3 install -U -i https://test.pypi.org/simple/ learn-drama
+
+Get help
+~~~~~~~~
+
+.. _gethelp:
+
+| You can find help via the command line with ``--help``.
+|
+
+.. image:: docs/res/220118_learn_drama_help.png
+
+Example
+~~~~~~~
+
+For example you can type
+
+::
+
+   learn_drama --text_input "This is verse1\nThis is verse2" --print_drama
+
+And the expected output is
+
+::
+
+   -- Formatted text --
+   1 This is verse1
+   2 This is verse2
+
+Remove learn_drama
+~~~~~~~~~~~~~~~~~~
+
+::
+
+   pip3 uninstall learn_drama
+
+
+Development
+-----------
+
+.. _development:
+
+To contribute, you should have a look at the tickets in the repository_ to get an overview of what is planned or documented. To be able to make changes you need to clone the code from the repository_. If you can run the program using the source code and get green tests, you can start playing around! To be sure that no python configuration issues exist, in the following steps ``virtualenv`` is used. This ensures that packages will be installed isolated to those you have on you dev system to get a unperturbed test.
+
+
+Repository
+~~~~~~~~~~
+
+.. _repository:
+
+Issue tickets, code (future), milestones are maintained at
+
+::
+
+   https://gitlab.com/goethe_faust/learn_drama_
+
+to clone the code use e.g.
+
+::
+
+    git clone git@gitlab.com:goethe_faust/learn_drama.git
+
+or follow the instructions of Gitlab.
+
+|
+
+.. image:: docs/res/gitlab_clone.png
+
+Setup
+~~~~~
+
+Virtual environment
+^^^^^^^^^^^^^^^^^^^
+
+python3 with pip3 is needed (for instruction see usage_). Install virtualenv (as user with ``-U``):
+
+::
+
+   pip3 install -U virtualenv
+
+
+The easiest way to test testing and to get a clean environment for testing
+is to run 
+
+::
+
+   make run-args='--help' run
+
+once. If the output shows the help for using the script, you have a virtual environment. Its configuration and executables are in the (now) created ``venv`` folder. By activating it with
+
+::
+
+   source venv/bin/activate
+
+you work in the virtual environment. If you try e.g.
+
+::
+
+   python3 main.py
+
+The script runs using the source code in the virtual environment. If you get an output like shown in gethelp_, the script runs in principle.
+
+Run and test
+~~~~~~~~~~~~
+
+Run Cli
+
+::
+
+   python3 main.py
+
+Run the Tests - here you can change ``tests/`` to whatever test you
+wish. E.g.
+``tests/test_learn_drama_console.py::TestConsoleTextFromFile``
+
+::
+
+   python3 -m pytest tests/
+
+Install package locally and use the package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+   make local-install
+
+If successful, ``learn_drama --help`` is possible. Note: For this you
+need ``$HOME/.local/bin`` included in your ``$PATH``. If not, change
+``$PATH`` or change the desired directory in setup.py (Please do not
+push this).
+
+Upload to test.pypi.org
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Change release version and do
+
+::
+
+   make test-release-testpypi
+
+Prerequisites
+^^^^^^^^^^^^^
+
+::
+
+   ```
+   python3 -m pip install --upgrade twine
+   python3 -m twine upload --repository testpypi dist/*
+   ```
+
+…from
+`packaging.python.org <https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-the-distribution-archives>`__
+
+Code ownership/Maintainer
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The software will be shipped publicly and shall be open source. However, currently
+Stefan Bollmanny is the maintainer.
+
+Credits
+-------
+
+.. _credits:
+
+This package was created with
+`Cookiecutter <https://github.com/audreyr/cookiecutter>`__ and the
+`audreyr/cookiecutter-pypackage <https://github.com/audreyr/cookiecutter-pypackage>`__
+project template.
+
+Help was given by `cdesch <https://github.com/cdesch/testingonly>`__, Marijke Viveen, and Steve Wolter.
+
+.. |docs| image:: https://readthedocs.org/projects/docs/badge/?version=latest
+    :alt: Documentation Status
+    :scale: 100%
+    :target: https://learn-drama.readthedocs.io/en/latest/?badge=latest
+
+.. |pipeline| image:: https://gitlab.com/goethe_faust/learn_drama/badges/main/pipeline.svg         
+    :target: https://gitlab.com/goethe_faust/learn_drama/commits/main
+    :alt: pipeline status
+
+.. |coverage| image:: https://gitlab.com/goethe_faust/learn_drama/badges/4-badges/coverage.svg
+    :target: https://gitlab.com/goethe_faust/learn_drama/commits/main
+    :alt: coverage report
+
+
+
+History
+=======
+
+0.0.1 (2022-01-11)
+------------------
+
+-  First release on Test.PyPI.
+
+
