@@ -1,0 +1,31 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+
+[project]
+name = "binance_pandas_dataframe"
+authors = [
+    {name = "binance"},
+]
+dependencies = [
+    "pandas_dataframe_convert",
+    "pandas"]
+
+readme="README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3"
+]
+
+dynamic = ['version', 'description']
+[project.urls]
+Home="https://github.com/dougransom/binance-pandas-dataframe"
+
+
+[project.scripts]
+download_kline = "binance_pandas_dataframe.download_kline:main"
+download_aggTrade = "binance_pandas_dataframe.download_aggTrade:main"
+download_trade = "binance_pandas_dataframe.download_trade:main"
