@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "kubectlfr"
+version = "1.0.1"
+description = "Utilitaire de contrôle de Kubernetes"
+authors = ["Théophane Vié <theophane.vie@petit-nuage.org>"]
+license = "MIT"
+homepage = "https://github.com/theophanevie/kubectlfr"
+repository = "https://github.com/theophanevie/kubectlfr"
+readme = "README.md"
+keywords = ["kubernetes", "kubectl", "francais"]
+
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.0.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.poetry.scripts]
+kubectlfr = 'kubectlfr:main'
