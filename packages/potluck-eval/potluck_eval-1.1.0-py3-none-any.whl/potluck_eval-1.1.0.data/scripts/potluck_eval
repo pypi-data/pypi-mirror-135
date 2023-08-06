@@ -1,0 +1,242 @@
+#!python
+"""
+potluck_eval
+
+Command-line potluck evaluation entry point; run this file in the shell
+to evaluate a single submission or to generate a rubric file for a single
+task. Run with '-h' or '--help' for a summary of command-line arguments.
+You can also import it and all `main` with a list of strings instead.
+
+Depends on the `potluck` module.
+
+This script relies on a configuration file to find task meta-data, task
+specifications, and the submission it will evaluate. By default it loads
+`potluck_config.py` in the current directory. Command-line options can
+control where the necessary information is looked up.
+
+See `potluck.default_config` for a configuration file template; values
+not specified in a custom config file will be pulled from that file.
+"""
+
+import sys
+
+__version__ = "1.0.0"
+
+
+def create_argument_parser():
+    """
+    Creates an argument parser for handling command-line arguments.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="potluck_eval",
+        description="Potluck: Evaluates code and behavior of Python programs."
+    )
+    parser.add_argument(
+        "--version",
+        action='version',
+        version="%(prog)s v{}".format(__version__)
+    )
+
+    parser.add_argument(
+        '-t', "--task",
+        required=True,
+        help="ID string for task to evaluate"
+    )
+    parser.add_argument(
+        "-u", "--user",
+        help="who's submission are we evaluating?",
+        default=None # okay if we're just generating rubrics
+    )
+    parser.add_argument(
+        "--target",
+        help="manually specify a file (or folder) to evaluate",
+        default=None
+    )
+    parser.add_argument(
+        "--tests",
+        help="manually specify a tests file (or folder) to validate",
+        default=None
+    )
+    parser.add_argument(
+        "--log",
+        help="where should we write our log file (default stdout)",
+        default=None
+    )
+    parser.add_argument(
+        "--rubric",
+        help="generate blank rubric files and exit",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--check",
+        help="test specification against expectations",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--snippets",
+        help="generate snippet files",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--instructions",
+        help="generate instructions files",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--prep",
+        help=(
+            "run a check, then generate a rubric, snippets, and"
+            " instructions; equivalent to --check --rubric --snippets"
+            " --instructions; DO NOT use with --outfile"
+        ),
+        action="store_true"
+    )
+    parser.add_argument(
+        "--validate",
+        help="validate submitted tests against solution (or submitted) code",
+        action="store_true"
+    )
+    parser.add_argument(
+        "--outfile",
+        help="where should we write our report JSON file or rubric",
+        default=None
+    )
+    parser.add_argument(
+        "--conf",
+        help="name of configuration module to load (without the .py)",
+        default="potluck_config"
+    )
+    parser.add_argument(
+        "--specs",
+        help="custom specifications directory",
+        default=None
+    )
+    parser.add_argument(
+        "--clean",
+        action='store_true',
+        help="do not use or create reference value caches"
+    )
+    parser.add_argument(
+        "--import-from",
+        help="use a specific directory for imports (including potluck)",
+        default=None
+    )
+    parser.add_argument(
+        "--fragments",
+        help=(
+            "create HTML fragment instructions files instead of"
+            " stand-alone HTML files"
+        ),
+        action='store_true',
+        default=True
+    )
+
+    return parser
+
+
+def main(args):
+    """
+    Main entry point for running from the command line.
+    """
+    # Set up argument handling via argparse
+    parser = create_argument_parser()
+    opts = parser.parse_args()
+    if opts.prep:
+        opts.check = True
+        opts.rubric = True
+        opts.snippets = True
+        opts.instructions = True
+
+    # Add the current directory to sys.path so we can find config files
+    # there...
+    sys.path.insert(0, '.')
+
+    print("This is potluck_eval version " + __version__)
+
+    # Set up to import a specific potluck install...
+    if opts.import_from:
+        sys.path.insert(0, opts.import_from)
+
+    # Actually import the potluck control module after options are parsed
+    # to that -h works even without it being on sys.path.
+    import potluck.control
+
+    # Load the specified config file
+    config = potluck.control.load_configuration(opts.conf)
+
+    # Common setup stuff
+    potluck.control.setup(config, opts.specs)
+
+    # Run each requested task. Note that running multiple tasks at once
+    # is only supported for submission-less tasks, and basically requires
+    # that e.g., outfile is not used.
+    did_anything = False
+    if opts.check:
+        potluck.control.launch_specifications_test(
+            config,
+            opts.task,
+            opts.log,
+            opts.clean
+        )
+        did_anything = True
+
+    if opts.rubric:
+        potluck.control.launch_rubric_generation(
+            config,
+            opts.task,
+            opts.log,
+            opts.outfile
+        )
+        did_anything = True
+
+    if opts.snippets:
+        potluck.control.launch_snippet_generation(
+            config,
+            opts.task,
+            opts.log,
+            opts.outfile
+        )
+        did_anything = True
+
+    if opts.instructions:
+        potluck.control.launch_instruction_generation(
+            config,
+            opts.task,
+            opts.log,
+            opts.outfile,
+            not opts.fragments
+        )
+        did_anything = True
+
+    if opts.validate:
+        potluck.control.launch_test_validation(
+            config,
+            opts.task,
+            opts.user,
+            opts.log,
+            opts.tests,
+            opts.target,
+            opts.outfile,
+            opts.clean
+        )
+        did_anything = True
+
+    # If we haven't done anything, run an evaluation (our default action)
+    if not did_anything:
+        potluck.control.launch_evaluation(
+            config,
+            opts.task,
+            opts.user,
+            opts.log,
+            opts.target,
+            opts.outfile,
+            opts.clean
+        )
+
+
+# If we're running this file, call main() using arguments from the
+# command line
+if __name__ == "__main__":
+    main(sys.argv)

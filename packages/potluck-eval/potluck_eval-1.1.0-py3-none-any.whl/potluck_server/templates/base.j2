@@ -1,0 +1,139 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name="author" content="Scott D. Anderson">
+  <meta name="author" content="Peter Mawhorter">
+  <title>{{ class_name }} Potluck</title>
+  <link
+   rel="icon"
+   type="image/png"
+   href="{{url_for('static', filename='pot_icon.png')}}"
+  >
+  <link
+   rel='stylesheet'
+   href="{{url_for('static', filename='potluck.css')}}"
+  >
+  <script
+   defer
+   type="module"
+   src="{{url_for('static', filename='potluck.js')}}"
+  >
+  </script>
+  {% block head_stuff %} {% endblock %}
+</head>
+<body {% block body_attrs %} {%endblock %}>
+
+{% macro countdown(status) -%}
+{% if status['state'] == 'unreleased' %}
+  {% set which = 'release' %}
+{% elif status['state'] == 'released' %}
+  {% set which = 'due' %}
+{% elif status['state'] == 'under_review' %}
+  {% set which = 'reviewed' %}
+{% elif status['state'] == 'revisable' %}
+  {% set which = 'finalized' %}
+{% elif status['state'] == 'final' %}
+  {% set which = 'finalized' %}
+{% else %}
+  {% set which = 'due' %}
+  <!-- Unknown status: {{status}} -->
+{% endif %}
+<div
+ role="timer"
+ aria-live="off"
+ class="timer"
+ data-time="{{status[which]['until']|seconds}}"
+>
+  {% if status[which]['until']|seconds < 0 %}
+    ({{status[which]['until_str']|safe}} ago)
+  {% else %}
+    ({{status[which]['until_str']|safe}} from&nbsp;now)
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro due_at(status) -%}
+{% if status['state'] == 'unreleased' %}
+  {% set which = 'release' %}
+  {% set desc = 'Will be released' %}
+{% elif status['state'] == 'released' %}
+  {% set which = 'due' %}
+  {% set desc = 'Due' %}
+{% elif status['state'] == 'under_review' %}
+  {% set which = 'reviewed' %}
+  {% set desc = 'Feedback will be available' %}
+{% elif status['state'] == 'revisable' %}
+  {% set which = 'finalized' %}
+  {% set desc = 'Revisions due' %}
+{% elif status['state'] == 'final' %}
+  {% set which = 'finalized' %}
+  {% set desc = 'Finalized' %}
+{% else %}
+  {% set which = 'due' %}
+  {% set desc = 'Due' %}
+{% endif %}
+<div class="due">
+  {{desc}}
+  <span class="due" data-remaining="{{status[which]['until']|seconds}}">
+    {{status[which]['at_str']|safe}}
+  </span>
+</div>
+{%- endmacro %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="messages">
+    {% for msg in messages %}
+      <p>{{msg|safe}}</p>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div id="user_info" tabindex="0">
+<!-- tabindex here insures that tabbing through the page speaks this
+ important information -->
+{% if username %}
+  You are logged in as: <strong>{{username}}</strong>.
+  <a href="{{url_for('cas.logout')}}">Click here to log out.</a>
+{% else %}
+  You are not logged in.
+  <a href="{{url_for('cas.login')}}">Click here to log in.</a>
+{% endif %}
+</div>
+
+{% if masquerade_as or task_info["PAUSE_AT"] %}
+<div id="important_info">
+  {% if masquerade_as %}
+  <div id="masquerade" tabindex=0>
+    You are viewing the perspective of: <strong>{{masquerade_as}}</strong>.
+    Actions you take will affect their account!
+  </div>
+  {% endif %}
+
+  {% if task_info["PAUSE_AT"] %}
+  <div id="pause" tabindex=0>
+    Your account time has been paused at:
+    <strong>{{task_info["PAUSE_AT"]}}</strong>
+    Actions you take will work as if they had happened at that time,
+    although timestamps should be accurate to the actual current time.
+  </div>
+  {% endif %}
+  <style>
+/* Make space for pinned messages */
+body {
+    margin-top: 8em !important;
+}
+  </style>
+</div>
+{% endif %}
+            
+<h1>Potluck Server for {{course_name}} {{semester}}</h1>
+{% block main_content %}
+<h1>Main content goes here.</h1>
+{% endblock %}
+
+</body>
+</html>
