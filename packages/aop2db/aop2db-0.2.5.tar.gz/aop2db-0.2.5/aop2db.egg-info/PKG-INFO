@@ -1,0 +1,82 @@
+Metadata-Version: 2.1
+Name: aop2db
+Version: 0.2.5
+Summary: AOP2DB - Python parser for converting importing adverse outcome pathway data into a relational database.
+Home-page: https://github.com/brucetony/aop2db
+Author: Bruce Schultz
+Author-email: bruce.schultz@scai.fraunhofer.de
+Maintainer: Bruce Schultz
+Maintainer-email: bruce.schultz@scai.fraunhofer.de
+License: MIT
+Project-URL: Issue Tracker, https://github.com/brucetony/aop2db/issues
+Project-URL: Documentation, https://aop2db.readthedocs.io/en/latest/
+Project-URL: Source Code, https://github.com/brucetony/aop2db
+Keywords: Biomedical Database
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Requires-Python: >=3.7
+Description-Content-Type: text/x-rst
+Provides-Extra: docs
+License-File: LICENSE
+
+====================================================
+AOP2DB |docs| |python_versions| |travis| |coverage|
+====================================================
+
+Package for compiling the adverse outcome pathway (AOP) data into a relational database. The data is publicly available at the `AOP website <https://aopwiki.org/>`_.
+
+Installation |pypi_version| |pypi_license|
+==========================================
+
+``aop2db`` can be directly installed from PyPi with pip::
+
+    $ pip install aop2db
+
+Usage
+=====
+
+To load the data into a relational database::
+
+    $ aop2db load
+
+To set the driver of your database::
+
+    $ aop2db conn mysql+pymysql://<user>:<password>@<server>/<database>
+
+Disclaimer
+==========
+AOP2DB is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or
+guarantee of maintenance, support, or back-up of data.
+
+
+.. |pypi_version| image:: https://img.shields.io/pypi/v/aop2db.svg
+    :target: https://pypi.python.org/pypi/aop2db
+    :alt: Current version on PyPI
+
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/aop2db.svg
+    :alt: Stable Supported Python Versions
+
+.. |travis| image:: https://app.travis-ci.com/brucetony/aop2db.svg?branch=master
+    :alt: Current build status
+
+.. |docs| image:: https://readthedocs.org/projects/aop2db/badge/?version=latest
+        :target: https://readthedocs.org/projects/aop2db/badge/?version=latest
+        :alt: Documentation Status
+
+.. |pypi_license| image:: https://img.shields.io/pypi/l/aop2db.svg
+    :alt: MIT
+
+.. |coverage| image:: https://codecov.io/gh/brucetony/aop2db/branch/master/graphs/badge.svg?
+    :alt: Coverage Status
+
