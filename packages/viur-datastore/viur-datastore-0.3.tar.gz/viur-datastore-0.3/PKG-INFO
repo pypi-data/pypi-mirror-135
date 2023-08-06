@@ -1,0 +1,31 @@
+Metadata-Version: 2.1
+Name: viur-datastore
+Version: 0.3
+Summary: A faster replacement for google-cloud-datastore
+Home-page: https://github.com/viur-framework/viur-datastore
+Author: Tobias Steinrücken
+Author-email: ts@mausbrand.de
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Database :: Front-Ends
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: LICENSE-APACHE
+License-File: LICENSE-GPL
+
+The Datastore wrapper for ViUR-Core
+-----------------------------------
+
+This repository contains the datastore wrapper for the ViUR framework.
+We build our own wrapper around it's REST-API as the original wrapper has significant CPU overhead.
+Using a fast JSON-Parser (simdjson) and Cython, we can go directly from the received JSON-encoded protocol-wrapper
+representation to the final python objects, without converting that JSON into an intermediate python object
+representation which then gets discarded right away.
+
+While it has some ViUR specific functions, it's also possible to use this wrapper outside ViUR.
+
+
