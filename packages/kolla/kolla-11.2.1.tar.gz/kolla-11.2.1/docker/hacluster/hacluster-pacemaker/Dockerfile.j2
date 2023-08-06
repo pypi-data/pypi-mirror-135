@@ -1,0 +1,13 @@
+FROM {{ namespace }}/{{ infra_image_prefix }}hacluster-base:{{ tag }}
+{% block labels %}
+LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build_date }}"
+{% endblock %}
+
+{% block hacluster_pacemaker_header %}{% endblock %}
+
+{% import "macros.j2" as macros with context %}
+
+{% set hacluster_pacemaker_packages = ['pacemaker'] %}
+{{ macros.install_packages(hacluster_pacemaker_packages | customizable("packages")) }}
+
+{% block hacluster_pacemaker_footer %}{% endblock %}
