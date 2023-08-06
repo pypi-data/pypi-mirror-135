@@ -1,0 +1,130 @@
+#!python
+
+"""
+This script performs a registration between two images, aiming to measure a
+single Phi (a homogeneous deformation function) to map im1 into im2
+
+Copyright (C) 2020 SPAM Contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+This script is a good initial starting point for a the measurement of a displacement
+field, if there is a homogeneous background movement to measure
+"""
+
+import spam.helpers
+import spam.DIC
+import spam.deformation
+
+import numpy
+numpy.seterr(all='ignore')
+
+import argparse
+import tifffile
+import os
+
+
+# Define argument parser object
+parser = argparse.ArgumentParser(description="spam-register "+spam.helpers.optionsParser.GLPv3descriptionHeader +\
+                                             "This script tries to measure Phi from im1 to im2\n",
+                                 formatter_class=argparse.RawTextHelpFormatter)
+
+# Parse arguments with external helper function
+args = spam.helpers.optionsParser.register(parser)
+
+print("spam-reg -- Current Settings:")
+argsDict = vars(args)
+for key in sorted(argsDict):
+    print("\t{}: {}".format(key, argsDict[key]))
+
+# Load reference image
+im1 = tifffile.imread(args.im1.name)
+
+if args.MASK1:
+    im1mask = tifffile.imread(args.MASK1.name) != 0
+else:
+    im1mask = None
+
+im2 = tifffile.imread(args.im2.name)
+
+
+if args.PHIFILE is not None:
+    PhiFromFile = spam.helpers.readCorrelationTSV(args.PHIFILE.name, fieldBinRatio=args.PHIFILE_BIN_RATIO)
+    # If the read Phi-file has only one line -- it's a single point registration!
+    if PhiFromFile['fieldCoords'].shape[0] == 1:
+        PhiInit   = PhiFromFile['PhiField'][0]
+        #regCentre = PhiFromFile['fieldCoords'][0]
+        #print("\tI read a registration from a file in binning {} at centre {} at this scale".format(args.PHIFILE_BIN_RATIO, regCentre) )
+        print("\tI read a registration from a file in binning {}".format(args.PHIFILE_BIN_RATIO))
+
+        decomposedPhiInit = spam.deformation.decomposePhi(PhiInit)
+
+        print("\tTranslations (px)")
+        print("\t\t", decomposedPhiInit['t'])
+        print("\tRotations (deg)")
+        print("\t\t", decomposedPhiInit['r'])
+        print("\tZoom")
+        print("\t\t", decomposedPhiInit['z'])
+
+    # If the read F-file contains multiple lines it's an F field!
+    else:
+        print("You can't pass a field to register!!!")
+        exit()
+else:
+    PhiInit = None
+
+if args.INTERPOLATION_ORDER == 1:
+    # Override interpolator to save memory
+    interpolator = 'C'
+else:
+    interpolator = 'python'
+
+
+regReturns = spam.DIC.correlate.registerMultiscale(im1,
+                                                   im2,
+                                                   args.BIN_BEGIN, binStop=args.BIN_END,
+                                                   margin=args.MARGIN,
+                                                   PhiInit=PhiInit,
+                                                   PhiRigid=args.RIGID,
+                                                   im1mask=im1mask,
+                                                   interpolationOrder=args.INTERPOLATION_ORDER,
+                                                   maxIterations=args.MAX_ITERATIONS,
+                                                   deltaPhiMin=args.MIN_DELTA_PHI,
+                                                   updateGradient=args.UPDATE_GRADIENT,
+                                                   interpolator=interpolator,
+                                                   verbose=True,
+                                                   imShowProgress=args.GRAPH)
+
+
+if regReturns['returnStatus'] == 2:
+    print("\n\nRegistration converged, great... saving")
+
+if regReturns['returnStatus'] == 1:
+    print("\n\nRegistration hit max iterations, OK... saving")
+
+if regReturns['returnStatus'] > 0 and args.DEF:
+    if len(im1.shape) == 2:
+        im1 = im1[numpy.newaxis, ...]
+        tifffile.imsave(args.OUT_DIR+"/"+os.path.splitext(os.path.basename(args.im1.name))[0]+'-reg-def.tif',
+                    spam.DIC.applyPhiPython(im1, Phi=regReturns['Phi']).astype(im1.dtype))
+    else:
+        tifffile.imsave(args.OUT_DIR+"/"+os.path.splitext(os.path.basename(args.im1.name))[0]+'-reg-def.tif',
+                    spam.DIC.applyPhi(im1, Phi=regReturns['Phi']).astype(im1.dtype))
+
+if regReturns['returnStatus'] < 0:
+    print("\n\nWe're saving this registration but we don't trust it at all")
+
+spam.helpers.writeRegistrationTSV(args.OUT_DIR+"/"+args.PREFIX+".tsv", (numpy.array(im1.shape )-1)/2.0, regReturns)
