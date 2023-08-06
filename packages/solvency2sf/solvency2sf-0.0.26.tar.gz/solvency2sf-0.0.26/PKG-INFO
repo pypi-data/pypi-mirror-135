@@ -1,0 +1,54 @@
+Metadata-Version: 2.1
+Name: solvency2sf
+Version: 0.0.26
+Summary: Solvency 2 Standard Formula
+Home-page: https://github.com/pdavidsonFIA/solvency2sf
+Author: Peter Davidson
+Author-email: peterjd41@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/pdavidsonFIA/solvency2sf/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Financial and Insurance Industry
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# solvency2sf
+Solvency 2 Standard Formula
+
+Pandas/numpy implementation of the standard formula for non-life.
+
+The calculation logic generally mimics the calculations within the standard formula guidance provided by Lloyd's.
+https://www.lloyds.com/resources-and-services/capital-and-reserving/capital-guidance/standard-formula-scr
+
+The template populated with sample data is saved under /tests
+
+Provides:
+- scr:
+  - non-life
+    - premium and reserve
+    - lapse
+    - catastrophy
+      - natcat euro
+      - man-made
+  - default
+  - bscr
+  - op
+  - scr
+- mcr
+
+Structure:
+- Each scr sub-module is within its own package.
+- Any required parameters are typically stored in CSV files in the same package 
+- Functions often return tuples. The first item will be a numerical result, the subsequent items data frames containing additional breakdown to debug and support QRT completion.
+
+Known limitations:
+- only gross scr calculated in natcat: approach for reinsurance may be very company specific.
+- not all nat-cat modules included (yet)
+- default quite simple
+
+
