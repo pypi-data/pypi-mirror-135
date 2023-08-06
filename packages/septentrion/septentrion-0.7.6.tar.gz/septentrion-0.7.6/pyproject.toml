@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "septentrion"
+version = "0.7.6"
+description = "Python CLI tool for managing and executing hand-written PostgreSQL migrations"
+authors = ["Python UKG Community <peopledoc-python@ukg.com>"]
+license = "MIT License"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+]
+readme = "README.rst"
+homepage = "https://septentrion.readthedocs.io/en/latest/"
+repository = "https://github.com/peopledoc/septentrion"
+documentation = "https://septentrion.readthedocs.io/en/latest/"
+keywords = ["postgresql", "migration", "psql"]
+
+[tool.poetry.scripts]
+septentrion = 'septentrion.__main__:main'
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "*"
+sqlparse = "*"
+colorama = "*"
+importlib-metadata = "*"
+psycopg2 = {version = "*", optional = true}
+psycopg2_binary = {version = "*", optional = true}
+
+[tool.poetry.extras]
+psycopg2 = ["psycopg2"]
+psycopg2_binary = ["psycopg2_binary"]
+
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-click = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+Sphinx = "*"
+sphinx-autodoc-typehints = "*"
+sphinxcontrib-programoutput = "*"
+dunamai = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
