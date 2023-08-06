@@ -1,0 +1,75 @@
+Metadata-Version: 2.1
+Name: django-moj-irat
+Version: 0.7
+Summary: Tools to support adding a Django-based service to Ministry of Justice’s Incidence Response and Tuning
+Home-page: https://github.com/ministryofjustice/django-moj-irat
+Author: Ministry of Justice Digital & Technology
+Author-email: dev@digital.justice.gov.uk
+License: MIT
+Keywords: moj django irat monitoring
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: Framework :: Django :: 3.1
+Classifier: Framework :: Django :: 3.2
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+License-File: LICENSE.txt
+
+IRaT support for Django
+=======================
+
+A set of tools to make it easier to add a Django-based service to Ministry of Justice's Incidence Response and Tuning:
+
+* ping.json view
+* healthcheck.json view with extensible healthchecks
+
+Usage
+-----
+
+Install using ``pip install django-moj-irat``.
+
+Django settings:
+
+.. code-block:: python
+
+    HEALTHCHECKS = [
+        'moj_irat.healthchecks.database_healthcheck',
+        # override default list of healthcheck callables
+    ]
+    AUTODISCOVER_HEALTHCHECKS = True  # whether to autodiscover and load healthcheck.py from all installed apps
+
+Development
+-----------
+
+.. image:: https://github.com/ministryofjustice/django-moj-irat/workflows/Run%20tests/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/django-moj-irat/actions
+
+Please report bugs and open pull requests on `GitHub`_.
+
+Use ``python setup.py test`` to run all tests.
+
+Distribute a new version to `PyPi`_ by updating the ``VERSION`` tuple in ``moj_irat/__init__.py`` and
+publishing a release in GitHub (this triggers a GitHub Actions workflow to automatically upload it).
+Alternatively, run ``python setup.py sdist bdist_wheel upload`` locally.
+
+Copyright
+---------
+
+Copyright (C) 2022 HM Government (Ministry of Justice Digital & Technology).
+See LICENSE.txt for further details.
+
+.. _GitHub: https://github.com/ministryofjustice/django-moj-irat
+.. _PyPi: https://pypi.org/project/django-moj-irat/
+
+
