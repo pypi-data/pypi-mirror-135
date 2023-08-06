@@ -1,0 +1,86 @@
+Metadata-Version: 2.1
+Name: dataclass2PySide6
+Version: 1.5.0
+Summary: Package to construct PySide6 widgets from dataclass
+Home-page: https://github.com/JSS95/dataclass2PySide6
+Author: Jisoo Song
+Author-email: jeesoo9595@snu.ac.kr
+Maintainer: Jisoo Song
+Maintainer-email: jeesoo9595@snu.ac.kr
+License: LGPL
+Keywords: GUI
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: PySide6 (!=6.2.2,!=6.2.2.1)
+Provides-Extra: full
+Requires-Dist: pytest-qt ; extra == 'full'
+Requires-Dist: pytest ; extra == 'full'
+Requires-Dist: pytest-xvfb ; extra == 'full'
+Requires-Dist: flake8 ; extra == 'full'
+Provides-Extra: test
+Requires-Dist: flake8 ; extra == 'test'
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-qt ; extra == 'test'
+Provides-Extra: test-ci
+Requires-Dist: flake8 ; extra == 'test-ci'
+Requires-Dist: pytest ; extra == 'test-ci'
+Requires-Dist: pytest-qt ; extra == 'test-ci'
+Requires-Dist: pytest-xvfb ; extra == 'test-ci'
+
+Python package to dynamically create PySide6 widgets from dataclass
+
+# Introduction
+
+dataclass2PySide6 is a package which provides widgets and functions to represent `dataclass` instance as `PySide6` GUI.
+
+For example, here is a simple dataclass:
+
+```python
+from dataclasses import dataclass
+from typing import Tuple
+
+@dataclass
+class DataClass:
+    a: bool
+    b: int
+    c: Tuple[float, Tuple[bool, int]] = (4.2, (True, 99))
+```
+
+Dataclass widget can be dynamically created as follows.
+
+<div align="center">
+  <img src="https://github.com/JSS95/dataclass2PySide6/raw/master/imgs/example.png"/><br>
+</div>
+
+# Installation
+
+Before you install, be careful for other Qt-dependent packages installed in your environment.
+For example, non-headless `OpenCV-Python` module modifies the Qt dependency thus making PySide6 unavailable.
+
+`dataclass2PySide6` can be installed using `pip`.
+
+```
+$ pip install dataclass2PySide6
+```
+
+# How to use
+
+1. Create dataclass widget using ``DataclassWidget.fromDataclass()``.
+2. Get current state of widget with ``dataValueChanged`` signal and ``dataValue()`` method.
+3. Update the current state of widget with ``setDataValue()`` method.
+
+User may subclass ``DataclassWidget`` to define own datclass widget.
+Refer to the docstring for detailed description.
+
+
