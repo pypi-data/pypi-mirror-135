@@ -1,0 +1,35 @@
+{% extends "base_template.j2" %}
+{% block template %}
+# SPDX-FileCopyrightText: 2020 Mintlab B.V.
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+
+from unittest import TestCase, mock
+
+import webtest
+
+from {{ package_name }} import main, views
+
+{% for group in routes %}
+{% set group_label = group.replace(".", "_") %}
+class TestRoutes_{{ group_label }}(TestCase):
+    def setUp(self):
+        self.patched_{{ group_label }} = mock.patch(
+            "{{ package_name }}.views.{{ group }}", spec=views.{{ group }}
+        )
+        self.{{ group_label }} = self.patched_{{ group_label }}.start()
+
+        settings = {
+            "minty_service.infrastructure.config_file": "tests/data/config.conf"
+        }
+        app = main({}, **settings)
+        self.mock_app = webtest.TestApp(app)
+
+    def tearDown(self):
+        self.patched_{{ group_label }}.stop()
+
+    def test_routes_{{ group_label }}(self):{% for route in routes[group] %}
+        self.{{ group_label }}.{{ route.handler }}.return_value = 200
+        self.mock_app.{{ route.method.lower() }}("{{ route.route }}", status=200){% endfor %}
+{% endfor %}{% endblock %}

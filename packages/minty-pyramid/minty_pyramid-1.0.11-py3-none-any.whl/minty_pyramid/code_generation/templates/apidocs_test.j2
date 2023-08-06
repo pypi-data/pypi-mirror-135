@@ -1,0 +1,36 @@
+{% extends "base_template.j2" %}
+{% block template %}
+# SPDX-FileCopyrightText: 2020 Mintlab B.V.
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+from unittest import mock
+
+import pytest
+from minty import exceptions
+
+from {{ package_name }}.views import apidocs
+
+
+class TestApidocsViews:
+    def test_apidocs_fileserver(self):
+        mock_request = mock.MagicMock()
+        mock_request.matchdict = {"filename": "openapi30.json"}
+        return_value = apidocs.apidocs_fileserver(mock_request)
+
+        assert return_value.status_code == 200
+
+    def test_apidocs_fileserver_filenotfound(self):
+        mock_request = mock.MagicMock()
+        mock_request.matchdict = {"filename": "notopenapi.json"}
+
+        with pytest.raises(exceptions.NotFound):
+            apidocs.apidocs_fileserver(mock_request)
+
+    def test_apidocs_fileserver_conflict(self):
+        mock_request = mock.MagicMock()
+        mock_request.matchdict = {"filename": "openapi30.yaml"}
+
+        with pytest.raises(exceptions.Conflict):
+            apidocs.apidocs_fileserver(mock_request)
+{% endblock %}

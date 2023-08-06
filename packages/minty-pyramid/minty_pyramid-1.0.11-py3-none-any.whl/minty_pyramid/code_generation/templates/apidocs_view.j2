@@ -1,0 +1,40 @@
+{% extends "base_template.j2" %}
+{% block template %}
+# SPDX-FileCopyrightText: 2020 Mintlab B.V.
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+import os
+from pyramid.response import FileResponse
+from minty.exceptions import NotFound, Conflict
+
+
+def apidocs_fileserver(request):
+    """Serve files in the apidocs folder.
+
+    :param request: request
+    :type request: request
+    :raises Conflict: wrong filetype (not JSON)
+    :raises NotFound: file not found
+    :return: file
+    :rtype: JSON file
+    """
+    filename = request.matchdict["filename"]
+    if not filename.endswith(".json"):
+        raise Conflict(f"File: '{filename}' extension not allowed")
+
+    # Take the name of this source file
+    my_path = os.path.dirname(__file__)
+
+    # Strip one level. This gives us the project root
+    root_path = os.path.dirname(os.path.dirname(my_path))
+
+    # Add "apidocs/filename" (use basename, so escaping the root using "../"
+    # won't work)
+    file_path = os.path.join(root_path, "apidocs", os.path.basename(filename))
+
+    try:
+        return FileResponse(file_path, request=request)
+    except IOError:
+        raise NotFound(f"File: '{filename}' not found")
+{% endblock %}
