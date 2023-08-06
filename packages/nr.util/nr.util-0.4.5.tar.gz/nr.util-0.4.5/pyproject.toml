@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "nr.util"
+version = "0.4.5"
+description = "General purpose Python utility library."
+authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
+license = "MIT"
+readme = "readme.md"
+packages = [
+  { include="nr/util", from="src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.extras]
+config = ["databind.core ^1.3.2"]
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+mypy = "^0.931"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
