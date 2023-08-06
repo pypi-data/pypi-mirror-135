@@ -1,0 +1,30 @@
+# this is an anaconda environment for ancient compute clusters such as inria's
+# rioc. It uses the anaconda builds of pytorch which are compatible down to
+# RH6 but it requires an outdated version of pillow with security bugs.
+name: kraken
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python>=3.6
+  - python-bidi
+  - lxml
+  - regex
+  - requests
+  - click>=7.0
+  - numpy
+  - pillow==6.1
+  - scipy
+  - protobuf>=3.0
+  - jinja2
+  - torchvision=0.4.0
+  - pytorch=1.2.0='cuda92*'
+  - cudatoolkit<=9.2
+  - jsonschema
+  - scikit-image>=0.17.0
+  - shapely
+  - pyvips
+  - imagemagick<7.0.9
+  - coremltools>=3.3
+  - pip:
+    - git+https://github.com/mittagessen/kraken.git@master
