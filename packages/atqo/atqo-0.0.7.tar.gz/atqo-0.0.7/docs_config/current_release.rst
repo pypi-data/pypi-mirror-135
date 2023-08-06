@@ -1,0 +1,2 @@
+- accomodate input extending result producing
+- bump v
