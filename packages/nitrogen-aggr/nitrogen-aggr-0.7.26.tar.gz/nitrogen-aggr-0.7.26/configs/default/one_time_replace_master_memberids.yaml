@@ -1,0 +1,26 @@
+debug: false
+
+#    """
+#    one_time_fix_master_memberids.yaml
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  master_memberids:
+    type: parquet
+    location: "{project_root_path}/{client}/tmp_Master_MemberIDS/"
+
+    # Note: Load tables have to be same as Extract tables.
+Load:
+  master_memberids:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/Master_MemberIDS'
+      mode: overwrite

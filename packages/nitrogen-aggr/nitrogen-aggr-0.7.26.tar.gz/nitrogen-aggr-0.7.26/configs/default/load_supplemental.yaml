@@ -1,0 +1,430 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the supplemental sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for supplemental
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  supplemental_history:
+    type: parquet
+    location: "{aggr_location}/supplemental_history/"
+  RAFi_in_Supplemental:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_in_Supplemental/"
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: true
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+    create_local_job_id: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by hash_value order by job_id desc) as r
+#         FROM supplemental_history)
+#      SELECT
+#       hash_value,
+#       job_id
+#      FROM allrows
+#      WHERE  r=1
+#    cache: true
+
+  # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         hash_value,
+         job_id
+      FROM supplemental_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  supplemental:
+    sql: >-
+      SELECT
+       Health_Plan_Name AS health_plan_name,
+       MRN AS mrn,
+       Member_Health_Plan_ID AS member_health_plan_id,
+       Member_Last_Name AS member_last_name,
+       Member_First_Name AS member_first_name,
+       left(Member_Middle_Name,1) AS member_middle_initial,
+       Member_Address_Line_1 AS member_address_line_1,
+       Member_Address_Line_2 AS member_address_line_2,
+       Member_City AS member_address_city,
+       Member_State AS member_address_state,
+       Member_Zip AS member_address_zip,
+       DOB AS dob,
+       Gender AS gender,
+       HICN AS hicn,
+       Encounter_Id AS encounter_id,
+       DOS_From AS dos_from,
+       DOS_To AS dos_to,
+       ICD_Indicator AS icd_indicator,
+       Dx_Code AS dx_code,
+       Place_Of_Service AS place_of_service,
+       Claim_Type AS claim_type,
+       CPT_Code AS cpt_code,
+       CPT_Code_Modifier AS cpt_code_modifier,
+       CPT_Code_Dx_Indicator AS cpt_code_dx_indicator,
+       Billing_Provider_Id AS billing_provider_id,
+       Billing_Provider_NPI AS billing_provider_npi,
+       Billing_Provider_Tax_Id AS billing_provider_tax_id,
+       Billing_Provider_License AS billing_provider_license,
+       Billing_Provider_First_Name AS billing_provider_first_name,
+       Billing_Provider_Last_Name AS billing_provider_last_name,
+       Billing_Provider_Address_Line_1 AS billing_provider_address_line_1,
+       Billing_Provider_Address_Line_2 AS billing_provider_address_line_2,
+       Billing_Provider_City AS billing_provider_address_city,
+       Billing_Provider_State AS billing_provider_address_state,
+       Billing_Provider_Zip AS billing_provider_address_zip,
+       Billing_Provider_Phone AS billing_provider_phone,
+       Billing_Provider_Fax AS billing_provider_fax,
+       Rendering_Provider_Id AS rendering_provider_id,
+       Rendering_Provider_NPI AS rendering_provider_npi,
+       Rendering_Provider_Tax_Id AS rendering_provider_tax_id,
+       Rendering_Provider_License AS rendering_provider_license,
+       Rendering_Provider_First_Name AS rendering_provider_first_name,
+       Rendering_Provider_Last_Name AS rendering_provider_last_name,
+       Rendering_Provider_CMS_Specialty_Code AS rendering_provider_cms_specialty_code,
+       Rendering_Provider_CMS_Specialty_Description AS rendering_provider_cms_specialty_description,
+       Rendering_Provider_Address_Line_1 AS rendering_provider_address_line_1,
+       Rendering_Provider_Address_Line_2 AS rendering_provider_address_line_2,
+       Rendering_Provider_City AS rendering_provider_address_city,
+       Rendering_Provider_State AS rendering_provider_address_state,
+       Rendering_Provider_Zip AS rendering_provider_address_zip,
+       Rendering_Provider_Phone AS rendering_provider_phone,
+       Rendering_Provider_Fax AS rendering_provider_fax,
+       Member_Phone AS member_phone,
+       Risk_Assessment_Code AS risk_assessment_code,
+       Bill_Type AS bill_type,
+       Revenue_Code AS revenue_code,
+       Source_Type AS source_type,
+       Entry_Date AS entry_date,
+       program
+      FROM RAFi_in_Supplemental
+
+
+
+  supplemental_full:
+    sql: >-
+      SELECT
+       health_plan_name,
+       mrn,
+       member_health_plan_id,
+       member_last_name,
+       member_first_name,
+       member_middle_initial,
+       member_address_line_1,
+       member_address_line_2,
+       member_address_city,
+       member_address_state,
+       member_address_zip,
+       dob,
+       gender,
+       hicn,
+       encounter_id,
+       dos_from,
+       dos_to,
+       icd_indicator,
+       dx_code,
+       place_of_service,
+       claim_type,
+       cpt_code,
+       cpt_code_modifier,
+       cpt_code_dx_indicator,
+       billing_provider_id,
+       billing_provider_npi,
+       billing_provider_tax_id,
+       billing_provider_license,
+       billing_provider_first_name,
+       billing_provider_last_name,
+       billing_provider_address_line_1,
+       billing_provider_address_line_2,
+       billing_provider_address_city,
+       billing_provider_address_state,
+       billing_provider_address_zip,
+       billing_provider_phone,
+       billing_provider_fax,
+       rendering_provider_id,
+       rendering_provider_npi,
+       rendering_provider_tax_id,
+       rendering_provider_license,
+       rendering_provider_first_name,
+       rendering_provider_last_name,
+       rendering_provider_cms_specialty_code,
+       rendering_provider_cms_specialty_description,
+       rendering_provider_address_line_1,
+       rendering_provider_address_line_2,
+       rendering_provider_address_city,
+       rendering_provider_address_state,
+       rendering_provider_address_zip,
+       rendering_provider_phone,
+       rendering_provider_fax,
+       member_phone,
+       risk_assessment_code,
+       bill_type,
+       revenue_code,
+       source_type,
+       entry_date,
+       program,
+      hash(
+       health_plan_name,
+       mrn,
+       member_health_plan_id,
+       member_last_name,
+       member_first_name,
+       member_middle_initial,
+       member_address_line_1,
+       member_address_line_2,
+       member_address_city,
+       member_address_state,
+       member_address_zip,
+       dob,
+       gender,
+       hicn,
+       encounter_id,
+       dos_from,
+       dos_to,
+       icd_indicator,
+       dx_code,
+       place_of_service,
+       claim_type,
+       cpt_code,
+       cpt_code_modifier,
+       cpt_code_dx_indicator,
+       billing_provider_id,
+       billing_provider_npi,
+       billing_provider_tax_id,
+       billing_provider_license,
+       billing_provider_first_name,
+       billing_provider_last_name,
+       billing_provider_address_line_1,
+       billing_provider_address_line_2,
+       billing_provider_address_city,
+       billing_provider_address_state,
+       billing_provider_address_zip,
+       billing_provider_phone,
+       billing_provider_fax,
+       rendering_provider_id,
+       rendering_provider_npi,
+       rendering_provider_tax_id,
+       rendering_provider_license,
+       rendering_provider_first_name,
+       rendering_provider_last_name,
+       rendering_provider_cms_specialty_code,
+       rendering_provider_cms_specialty_description,
+       rendering_provider_address_line_1,
+       rendering_provider_address_line_2,
+       rendering_provider_address_city,
+       rendering_provider_address_state,
+       rendering_provider_address_zip,
+       rendering_provider_phone,
+       rendering_provider_fax,
+       member_phone,
+       risk_assessment_code,
+       bill_type,
+       revenue_code,
+       source_type,
+       entry_date,
+       program
+        ) AS hash_value,
+        ( select cad_job_id from cad_job )  AS job_id
+      FROM supplemental
+
+    cache: true
+
+  supplemental_incremental:
+    sql: >-
+      WITH new_rows AS (
+           SELECT
+            a.hash_value,
+            'INSERT' AS operation,
+            a.job_id,
+            a.health_plan_name,
+            a.mrn,
+            a.member_health_plan_id,
+            a.member_last_name,
+            a.member_first_name,
+            a.member_middle_initial,
+            a.member_address_line_1,
+            a.member_address_line_2,
+            a.member_address_city,
+            a.member_address_state,
+            a.member_address_zip,
+            a.dob,
+            a.gender,
+            a.hicn,
+            a.encounter_id,
+            a.dos_from,
+            a.dos_to,
+            a.icd_indicator,
+            a.dx_code,
+            a.place_of_service,
+            a.claim_type,
+            a.cpt_code,
+            a.cpt_code_modifier,
+            a.cpt_code_dx_indicator,
+            a.billing_provider_id,
+            a.billing_provider_npi,
+            a.billing_provider_tax_id,
+            a.billing_provider_license,
+            a.billing_provider_first_name,
+            a.billing_provider_last_name,
+            a.billing_provider_address_line_1,
+            a.billing_provider_address_line_2,
+            a.billing_provider_address_city,
+            a.billing_provider_address_state,
+            a.billing_provider_address_zip,
+            a.billing_provider_phone,
+            a.billing_provider_fax,
+            a.rendering_provider_id,
+            a.rendering_provider_npi,
+            a.rendering_provider_tax_id,
+            a.rendering_provider_license,
+            a.rendering_provider_first_name,
+            a.rendering_provider_last_name,
+            a.rendering_provider_cms_specialty_code,
+            a.rendering_provider_cms_specialty_description,
+            a.rendering_provider_address_line_1,
+            a.rendering_provider_address_line_2,
+            a.rendering_provider_address_city,
+            a.rendering_provider_address_state,
+            a.rendering_provider_address_zip,
+            a.rendering_provider_phone,
+            a.rendering_provider_fax,
+            a.member_phone,
+            a.risk_assessment_code,
+            a.bill_type,
+            a.revenue_code,
+            a.source_type,
+            a.entry_date,
+            a.program
+           FROM supplemental_full a
+           LEFT JOIN previous_load b
+           ON a.hash_value = b.hash_value
+           WHERE b.hash_value IS NULL),
+      delete_rows AS (
+           SELECT
+            a.hash_value,
+            'DELETE' AS operation,
+            a.job_id,
+            CAST(NULL AS STRING) AS health_plan_name,
+            CAST(NULL AS STRING) AS mrn,
+            CAST(NULL AS STRING) AS member_health_plan_id,
+            CAST(NULL AS STRING) AS member_last_name,
+            CAST(NULL AS STRING) AS member_first_name,
+            CAST(NULL AS STRING) AS member_middle_initial,
+            CAST(NULL AS STRING) AS member_address_line_1,
+            CAST(NULL AS STRING) AS member_address_line_2,
+            CAST(NULL AS STRING) AS member_address_city,
+            CAST(NULL AS STRING) AS member_address_state,
+            CAST(NULL AS STRING) AS member_address_zip,
+            CAST(NULL AS DATE) AS dob,
+            CAST(NULL AS STRING) AS gender,
+            CAST(NULL AS STRING) AS hicn,
+            CAST(NULL AS STRING) AS encounter_id,
+            CAST(NULL AS DATE) AS dos_from,
+            CAST(NULL AS DATE) AS dos_to,
+            CAST(NULL AS STRING) AS icd_indicator,
+            CAST(NULL AS STRING) AS dx_code,
+            CAST(NULL AS STRING) AS place_of_service,
+            CAST(NULL AS STRING) AS claim_type,
+            CAST(NULL AS STRING) AS cpt_code,
+            CAST(NULL AS STRING) AS cpt_code_modifier,
+            CAST(NULL AS STRING) AS cpt_code_dx_indicator,
+            CAST(NULL AS STRING) AS billing_provider_id,
+            CAST(NULL AS STRING) AS billing_provider_npi,
+            CAST(NULL AS STRING) AS billing_provider_tax_id,
+            CAST(NULL AS STRING) AS billing_provider_license,
+            CAST(NULL AS STRING) AS billing_provider_first_name,
+            CAST(NULL AS STRING) AS billing_provider_last_name,
+            CAST(NULL AS STRING) AS billing_provider_address_line_1,
+            CAST(NULL AS STRING) AS billing_provider_address_line_2,
+            CAST(NULL AS STRING) AS billing_provider_address_city,
+            CAST(NULL AS STRING) AS billing_provider_address_state,
+            CAST(NULL AS STRING) AS billing_provider_address_zip,
+            CAST(NULL AS STRING) AS billing_provider_phone,
+            CAST(NULL AS STRING) AS billing_provider_fax,
+            CAST(NULL AS STRING) AS rendering_provider_id,
+            CAST(NULL AS STRING) AS rendering_provider_npi,
+            CAST(NULL AS STRING) AS rendering_provider_tax_id,
+            CAST(NULL AS STRING) AS rendering_provider_license,
+            CAST(NULL AS STRING) AS rendering_provider_first_name,
+            CAST(NULL AS STRING) AS rendering_provider_last_name,
+            CAST(NULL AS STRING) AS rendering_provider_cms_specialty_code,
+            CAST(NULL AS STRING) AS rendering_provider_cms_specialty_description,
+            CAST(NULL AS STRING) AS rendering_provider_address_line_1,
+            CAST(NULL AS STRING) AS rendering_provider_address_line_2,
+            CAST(NULL AS STRING) AS rendering_provider_address_city,
+            CAST(NULL AS STRING) AS rendering_provider_address_state,
+            CAST(NULL AS STRING) AS rendering_provider_address_zip,
+            CAST(NULL AS STRING) AS rendering_provider_phone,
+            CAST(NULL AS STRING) AS rendering_provider_fax,
+            CAST(NULL AS STRING) AS member_phone,
+            CAST(NULL AS STRING) AS risk_assessment_code,
+            CAST(NULL AS STRING) AS bill_type,
+            CAST(NULL AS STRING) AS revenue_code,
+            CAST(NULL AS STRING) AS source_type,
+            CAST(NULL AS DATE) AS entry_date,
+            CAST(NULL AS STRING) AS program
+           FROM previous_load a
+           LEFT JOIN supplemental_full b
+           ON a.hash_value = b.hash_value
+           WHERE b.hash_value IS NULL)
+      SELECT * FROM new_rows
+      UNION
+      SELECT * FROM delete_rows
+
+    cache: true
+
+### Note: Load tables have to be same as Extract tables.
+Load:
+  supplemental_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/supplemental_full'
+      mode: overwrite
+
+  supplemental_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/supplemental_incremental'
+      mode: overwrite
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_supplemental
+      mode: overwrite
