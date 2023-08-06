@@ -1,0 +1,159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Example &#8212; moke 1.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Conventions" href="conventions.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conventions.html" title="Conventions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">moke 1.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="example">
+<h1>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="stand-alone-command-line-apps">
+<h2>Stand-alone command line apps<a class="headerlink" href="#stand-alone-command-line-apps" title="Permalink to this headline">¶</a></h2>
+<p>If for some reason you do not want call <code class="docutils literal"><span class="pre">moke</span></code> to execute your mokefile it
+is possible to rename it and call it directly.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">mokefile</span><span class="o">.</span><span class="n">py</span>
+<span class="n">mv</span> <span class="n">mokefile</span><span class="o">.</span><span class="n">py</span> <span class="n">myapp</span><span class="o">.</span><span class="n">py</span>
+<span class="o">./</span><span class="n">myapp</span><span class="o">.</span><span class="n">py</span> <span class="o">&lt;</span><span class="n">task</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This requires shebang line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+</pre></div>
+</div>
+<p>If your <code class="docutils literal"><span class="pre">mokefile.py</span></code> contains only a single task call the function <code class="docutils literal"><span class="pre">main</span></code>
+and you will be able to omit <code class="docutils literal"><span class="pre">&lt;task&gt;</span></code> from the call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">myapp</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The tiny <code class="docutils literal"><span class="pre">grop.py</span></code> example included in the test-suite is a tiny replacement
+for <code class="docutils literal"><span class="pre">grep</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">from</span> <span class="nn">moke</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">only_matching</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;grop is not grep.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">i</span> <span class="k">as</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">sre</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">only_matching</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">task</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Example usage (in the <code class="docutils literal"><span class="pre">test</span></code> directory):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">data</span><span class="o">/</span><span class="n">grop</span><span class="o">.</span><span class="n">inp</span> <span class="o">|</span> <span class="n">scripts</span><span class="o">/</span><span class="n">grop</span><span class="o">.</span><span class="n">py</span> <span class="s2">&quot;.*\(\d</span><span class="si">{2}</span><span class="s2">\).*&quot;</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example</a><ul>
+<li><a class="reference internal" href="#stand-alone-command-line-apps">Stand-alone command line apps</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="conventions.html"
+                        title="previous chapter">Conventions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conventions.html" title="Conventions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">moke 1.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Marcin Cieslik.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

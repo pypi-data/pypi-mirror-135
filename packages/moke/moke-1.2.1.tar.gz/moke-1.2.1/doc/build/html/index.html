@@ -1,0 +1,938 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>moke is not like make &#8212; moke 1.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Conventions" href="conventions.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conventions.html" title="Conventions"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">moke 1.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="moke-is-not-like-make">
+<h1><code class="docutils literal"><span class="pre">moke</span></code> is not like <code class="docutils literal"><span class="pre">make</span></code><a class="headerlink" href="#moke-is-not-like-make" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal"><span class="pre">moke</span></code> makes writing command line applications easy and fast.</p>
+<p>A command line application that greets exactly two persons. (put the following
+into a file called <code class="docutils literal"><span class="pre">mokefile.py</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">moke</span> <span class="k">import</span> <span class="n">task</span><span class="p">,</span> <span class="n">log</span>
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">who</span><span class="p">,</span> <span class="n">shout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends greetings from moke.</span>
+
+<span class="sd">     - who(str2) two persons to greet</span>
+<span class="sd">     - shout(switch) triggers CAPS</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">greetings</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Hello </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">who</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">who</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">times</span>
+    <span class="k">if</span> <span class="n">shout</span><span class="p">:</span>
+        <span class="n">greetings</span> <span class="o">=</span> <span class="n">greetings</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="n">greetings</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;greeted: </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">who</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">who</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">INFO</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;main&quot;</span><span class="p">:</span>
+    <span class="n">task</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Execute the mokefile by calling <code class="docutils literal"><span class="pre">moke</span></code></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>moke greet --shout -times <span class="m">2</span> Mary Kate
+</pre></div>
+</div>
+<p>this returns:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>2011-09-30 14:12:52,815 moke (version 1.0.0)
+2011-09-30 14:12:52,815 cwd: &quot;/home/.../moke/test/scripts&quot;
+2011-09-30 14:12:52,815 mokefile: &quot;/home/.../moke/test/scripts/mokefile.py&quot;
+2011-09-30 14:12:52,815 task: greet
+2011-09-30 14:12:52,815 params: (&#39;who&#39;, [&#39;Mary&#39;, &#39;Kate&#39;]) (&#39;shout&#39;, True) (&#39;times&#39;, 2)
+HELLO MARY AND KATE!
+HELLO MARY AND KATE!
+</pre></div>
+</div>
+<p>If you forgot what your <code class="docutils literal"><span class="pre">mokefile.py</span></code> does, just ask for help:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">moke</span> <span class="o">--</span><span class="n">help</span>
+
+<span class="n">usage</span><span class="p">:</span> <span class="n">mokefile</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ls</span> <span class="n">LS</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ll</span> <span class="p">{</span><span class="n">info</span><span class="p">,</span><span class="n">warn</span><span class="p">,</span><span class="n">error</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">lf</span> <span class="p">{</span><span class="n">tab</span><span class="p">}]</span>
+  <span class="p">{</span><span class="n">greet</span><span class="p">}</span> <span class="o">...</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="p">{</span><span class="n">greet</span><span class="p">}</span>
+    <span class="n">greet</span>               <span class="n">Sends</span> <span class="n">greetings</span> <span class="kn">from</span> <span class="nn">moke.</span>
+
+<span class="n">optional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">ls</span> <span class="n">LS</span>                <span class="p">(</span><span class="n">file_a</span><span class="p">)</span> <span class="p">[</span><span class="n">default</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">stderr</span><span class="o">&gt;</span><span class="p">]</span> <span class="n">logging</span> <span class="n">stream</span>
+  <span class="o">-</span><span class="n">ll</span> <span class="p">{</span><span class="n">info</span><span class="p">,</span><span class="n">warn</span><span class="p">,</span><span class="n">error</span><span class="p">}</span>
+                        <span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="p">[</span><span class="n">default</span><span class="p">:</span> <span class="n">info</span><span class="p">]</span> <span class="n">logging</span> <span class="n">level</span>
+  <span class="o">-</span><span class="n">lf</span> <span class="p">{</span><span class="n">tab</span><span class="p">}</span>             <span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="p">[</span><span class="n">default</span><span class="p">:</span> <span class="n">tab</span><span class="p">]</span> <span class="n">logging</span> <span class="nb">format</span>
+</pre></div>
+</div>
+<p>Sub-command specific help is also generated:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">moke</span> <span class="n">greet</span> <span class="o">--</span><span class="n">help</span>
+
+<span class="n">usage</span><span class="p">:</span> <span class="n">mokefile</span><span class="o">.</span><span class="n">py</span> <span class="n">greet</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">shout</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">times</span> <span class="n">TIMES</span><span class="p">]</span> <span class="n">who</span> <span class="n">who</span>
+
+<span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="n">who</span>           <span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="n">two</span> <span class="n">persons</span> <span class="n">to</span> <span class="n">greet</span>
+
+<span class="n">optional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>    <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">--</span><span class="n">shout</span>       <span class="p">(</span><span class="n">switch</span><span class="p">)</span> <span class="n">triggers</span> <span class="n">CAPS</span>
+  <span class="o">-</span><span class="n">times</span> <span class="n">TIMES</span>  <span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="p">[</span><span class="n">default</span><span class="p">:</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Have fun!</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#stand-alone-command-line-apps">Stand-alone command line apps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first"><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p>
+<span class="target" id="module-moke"></span><div class="section" id="moke">
+<h2><a class="reference internal" href="#module-moke" title="moke"><code class="xref py py-mod docutils literal"><span class="pre">moke</span></code></a><a class="headerlink" href="#moke" title="Permalink to this headline">¶</a></h2>
+<p>Moke is not like <code class="docutils literal"><span class="pre">make</span></code>. See the documentation.</p>
+</div>
+<span class="target" id="module-moke.core"></span><div class="section" id="moke-core">
+<h2><a class="reference internal" href="#module-moke.core" title="moke.core"><code class="xref py py-mod docutils literal"><span class="pre">moke.core</span></code></a><a class="headerlink" href="#moke-core" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">moke</span></code> is not like <code class="docutils literal"><span class="pre">make</span></code>. The core package provides the <code class="docutils literal"><span class="pre">task</span></code> the
+<code class="docutils literal"><span class="pre">task</span></code> all in one decorator.</p>
+<dl class="exception">
+<dt id="moke.core.MokeError">
+<em class="property">exception </em><code class="descclassname">moke.core.</code><code class="descname">MokeError</code><a class="headerlink" href="#moke.core.MokeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>General moke exception.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="moke.core.task">
+<em class="property">class </em><code class="descclassname">moke.core.</code><code class="descname">task</code><span class="sig-paren">(</span><em>func=None</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.core.task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that creates an argparse subcommand from a function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.core.num">
+<code class="descclassname">moke.core.</code><code class="descname">num</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.core.num" title="Permalink to this definition">¶</a></dt>
+<dd><p>(internal) check if value is a number.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.core.doc">
+<code class="descclassname">moke.core.</code><code class="descname">doc</code><span class="sig-paren">(</span><em>docstring</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.core.doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that attaches a docstring to a function.</p>
+<ul class="simple">
+<li>docstring(<code class="docutils literal"><span class="pre">str</span></code>) some documentation</li>
+</ul>
+</dd></dl>
+
+</div>
+<span class="target" id="module-moke.util"></span><div class="section" id="moke-util">
+<h2><a class="reference internal" href="#module-moke.util" title="moke.util"><code class="xref py py-mod docutils literal"><span class="pre">moke.util</span></code></a><a class="headerlink" href="#moke-util" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for creating and interacting with command-line applications.</p>
+<dl class="function">
+<dt id="moke.util.chk_exit">
+<code class="descclassname">moke.util.</code><code class="descname">chk_exit</code><span class="sig-paren">(</span><em>status</em>, <em>cargo=None</em>, <em>always=False</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.chk_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kills Python with a status and error message.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>status(<code class="docutils literal"><span class="pre">int</span></code>) Exist status.</li>
+<li>cargo(<code class="docutils literal"><span class="pre">str</span></code>) Error message [default: <code class="docutils literal"><span class="pre">None</span></code>].</li>
+<li>always(<code class="docutils literal"><span class="pre">bool</span></code>) Exit even if status is <code class="docutils literal"><span class="pre">0</span></code> [default: <code class="docutils literal"><span class="pre">True</span></code>].</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.util.log">
+<code class="descclassname">moke.util.</code><code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=None</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Universal logging function.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>msg(<code class="docutils literal"><span class="pre">str</span></code>) message to log.</li>
+<li>level(<code class="docutils literal"><span class="pre">int</span></code>) logging level [default: INFO].</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.util.mkdir">
+<code class="descclassname">moke.util.</code><code class="descname">mkdir</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.mkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a directory and is silent if it already exists.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>path(<code class="docutils literal"><span class="pre">path</span></code>) A path object.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="moke.util.path">
+<em class="property">class </em><code class="descclassname">moke.util.</code><code class="descname">path</code><a class="headerlink" href="#moke.util.path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a filesystem path.</p>
+<p>For documentation on individual methods, consult their
+counterparts in os.path.</p>
+<dl class="method">
+<dt id="moke.util.path.access">
+<code class="descname">access</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if current user has access to this path.</p>
+<p>mode - One of the constants os.F_OK, os.R_OK, os.W_OK, os.X_OK</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.atime">
+<code class="descname">atime</code><a class="headerlink" href="#moke.util.path.atime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last access time of the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.bytes">
+<code class="descname">bytes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file, read all bytes, return them as a string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>*</em>, <em>follow_symlinks=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data and mode bits (“cp src dst”). Return the file’s destination.</p>
+<p>The destination may be a directory.</p>
+<p>If follow_symlinks is false, symlinks won’t be followed. This
+resembles GNU’s “cp -P src dst”.</p>
+<p>If source and destination are the same file, a SameFileError will be
+raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copy2">
+<code class="descname">copy2</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>*</em>, <em>follow_symlinks=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copy2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data and metadata. Return the file’s destination.</p>
+<p>Metadata is copied with copystat(). Please see the copystat function
+for more information.</p>
+<p>The destination may be a directory.</p>
+<p>If follow_symlinks is false, symlinks won’t be followed. This
+resembles GNU’s “cp -P src dst”.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copyfile">
+<code class="descname">copyfile</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>*</em>, <em>follow_symlinks=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copyfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy data from src to dst.</p>
+<p>If follow_symlinks is not set and src is a symbolic link, a new
+symlink will be created instead of copying the file it points to.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copymode">
+<code class="descname">copymode</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>*</em>, <em>follow_symlinks=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copymode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy mode bits from src to dst.</p>
+<p>If follow_symlinks is not set, symlinks aren’t followed if and only
+if both <cite>src</cite> and <cite>dst</cite> are symlinks.  If <cite>lchmod</cite> isn’t available
+(e.g. Linux) this method does nothing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copystat">
+<code class="descname">copystat</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>*</em>, <em>follow_symlinks=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copystat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy file metadata</p>
+<p>Copy the permission bits, last access time, last modification time, and
+flags from <cite>src</cite> to <cite>dst</cite>. On Linux, copystat() also copies the “extended
+attributes” where possible. The file contents, owner, and group are
+unaffected. <cite>src</cite> and <cite>dst</cite> are path names given as strings.</p>
+<p>If the optional flag <cite>follow_symlinks</cite> is not set, symlinks aren’t
+followed if and only if both <cite>src</cite> and <cite>dst</cite> are symlinks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.copytree">
+<code class="descname">copytree</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>symlinks=False</em>, <em>ignore=None</em>, <em>copy_function=&lt;function copy2&gt;</em>, <em>ignore_dangling_symlinks=False</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.copytree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively copy a directory tree.</p>
+<p>The destination directory must not already exist.
+If exception(s) occur, an Error is raised with a list of reasons.</p>
+<p>If the optional symlinks flag is true, symbolic links in the
+source tree result in symbolic links in the destination tree; if
+it is false, the contents of the files pointed to by symbolic
+links are copied. If the file pointed by the symlink doesn’t
+exist, an exception will be added in the list of errors raised in
+an Error exception at the end of the copy process.</p>
+<p>You can set the optional ignore_dangling_symlinks flag to true if you
+want to silence this exception. Notice that this has no effect on
+platforms that don’t support os.symlink.</p>
+<p>The optional ignore argument is a callable. If given, it
+is called with the <cite>src</cite> parameter, which is the directory
+being visited by copytree(), and <cite>names</cite> which is the list of
+<cite>src</cite> contents, as returned by os.listdir():</p>
+<blockquote>
+<div><p>callable(src, names) -&gt; ignored_names</p>
+</div></blockquote>
+<p>Since copytree() is called recursively, the callable will be
+called once for each directory that is copied. It returns a
+list of names relative to the <cite>src</cite> directory that should
+not be copied.</p>
+<p>The optional copy_function argument is a callable that will be used
+to copy each file. It will be called with the source path and the
+destination path as arguments. By default, copy2() is used, but any
+function that supports the same signature (like copy()) can be used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.ctime">
+<code class="descname">ctime</code><a class="headerlink" href="#moke.util.path.ctime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creation time of the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.dirs">
+<code class="descname">dirs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List of this directory's subdirectories.<a class="headerlink" href="#moke.util.path.dirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements of the list are path objects.
+This does not walk recursively into subdirectories
+(but see path.walkdirs).</p>
+<p>With the optional ‘pattern’ argument, this only lists
+directories whose names match the given pattern.  For
+example, d.dirs(‘build-<a href="#id1"><span class="problematic" id="id2">*</span></a>’).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.drive">
+<code class="descname">drive</code><a class="headerlink" href="#moke.util.path.drive" title="Permalink to this definition">¶</a></dt>
+<dd><p>The drive specifier, for example ‘C:’.
+This is always empty on systems that don’t use drive specifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.expand">
+<code class="descname">expand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean up a filename by calling expandvars(),
+expanduser(), and normpath() on it.</p>
+<p>This is commonly everything needed to clean up a filename
+read from a configuration file, for example.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.ext">
+<code class="descname">ext</code><a class="headerlink" href="#moke.util.path.ext" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file extension, for example ‘.py’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.files">
+<code class="descname">files</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List of the files in this directory.<a class="headerlink" href="#moke.util.path.files" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements of the list are path objects.
+This does not walk into subdirectories (see path.walkfiles).</p>
+<p>With the optional ‘pattern’ argument, this only lists files
+whose names match the given pattern.  For example,
+d.files(‘<a href="#id3"><span class="problematic" id="id4">*</span></a>.pyc’).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.fnmatch">
+<code class="descname">fnmatch</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.fnmatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if self.name matches the given pattern.</p>
+<dl class="docutils">
+<dt>pattern - A filename pattern with wildcards,</dt>
+<dd><p class="first last">for example ‘<a href="#id5"><span class="problematic" id="id6">*</span></a>.py’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.get_owner">
+<code class="descname">get_owner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.get_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the owner of this file or directory.</p>
+<p>This follows symbolic links.</p>
+<p>On Windows, this returns a name of the form ur’DOMAINUser Name’.
+On Windows, a group can own a file or directory.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="moke.util.path.getcwd">
+<em class="property">classmethod </em><code class="descname">getcwd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.getcwd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current working directory as a path object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.glob">
+<code class="descname">glob</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of path objects that match the pattern.</p>
+<p>pattern - a path relative to this directory, with wildcards.</p>
+<p>For example, path(‘/users’).glob(‘<em>/bin/</em>’) returns a list
+of all the files users have in their bin directories.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.joinpath">
+<code class="descname">joinpath</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.joinpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join two or more path components, adding a separator
+character (os.sep) if needed.  Returns a new path
+object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.lines">
+<code class="descname">lines</code><span class="sig-paren">(</span><em>encoding=None</em>, <em>errors='strict'</em>, <em>retain=True</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file, read all lines, return them in a list.</p>
+<dl class="docutils">
+<dt>Optional arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>encoding - The Unicode encoding (or character set) of</dt>
+<dd><p class="first last">the file.  The default is None, meaning the content
+of the file is read as 8-bit characters and returned
+as a list of (non-Unicode) str objects.</p>
+</dd>
+<dt>errors - How to handle Unicode errors; see help(str.decode)</dt>
+<dd><p class="first last">for the options.  Default is ‘strict’</p>
+</dd>
+<dt>retain - If true, retain newline characters; but all newline</dt>
+<dd><p class="first last">character combinations (‘r’, ‘n’, ‘rn’) are
+translated to ‘n’.  If false, newline characters are
+stripped off.  Default is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>This uses ‘U’ mode in Python 2.3 and later.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.link">
+<code class="descname">link</code><span class="sig-paren">(</span><em>newpath</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a hard link at ‘newpath’, pointing to this file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.listdir">
+<code class="descname">listdir</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List of items in this directory.<a class="headerlink" href="#moke.util.path.listdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use D.files() or D.dirs() instead if you want a listing
+of just files or just subdirectories.</p>
+<p>The elements of the list are path objects.</p>
+<p>With the optional ‘pattern’ argument, this only lists
+items whose names match the given pattern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.lstat">
+<code class="descname">lstat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.lstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like path.stat(), but do not follow symbolic links.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.move">
+<code class="descname">move</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em>, <em>copy_function=&lt;function copy2&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively move a file or directory to another location. This is
+similar to the Unix “mv” command. Return the file or directory’s
+destination.</p>
+<p>If the destination is a directory or a symlink to a directory, the source
+is moved inside the directory. The destination path must not already
+exist.</p>
+<p>If the destination already exists but is not a directory, it may be
+overwritten depending on os.rename() semantics.</p>
+<p>If the destination is on our current filesystem, then rename() is used.
+Otherwise, src is copied to the destination and then removed. Symlinks are
+recreated under the new name if os.rename() fails because of cross
+filesystem renames.</p>
+<p>The optional <cite>copy_function</cite> argument is a callable that will be used
+to copy the source or it will be delegated to <cite>copytree</cite>.
+By default, copy2() is used, but any function that supports the same
+signature (like copy()) can be used.</p>
+<p>A lot more could be done here…  A look at a mv.c shows a lot of
+the issues this implementation glosses over.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.mtime">
+<code class="descname">mtime</code><a class="headerlink" href="#moke.util.path.mtime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last-modified time of the file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.name">
+<code class="descname">name</code><a class="headerlink" href="#moke.util.path.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of this file or directory without the full path.</p>
+<p>For example, path(‘/usr/local/lib/libpython.so’).name == ‘libpython.so’</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.namebase">
+<code class="descname">namebase</code><a class="headerlink" href="#moke.util.path.namebase" title="Permalink to this definition">¶</a></dt>
+<dd><p>The same as path.name, but with one file extension stripped off.</p>
+<p>For example, path(‘/home/guido/python.tar.gz’).name     == ‘python.tar.gz’,
+but          path(‘/home/guido/python.tar.gz’).namebase == ‘python.tar’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>mode='r'</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file.  Return a file object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.owner">
+<code class="descname">owner</code><a class="headerlink" href="#moke.util.path.owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the owner of this file or directory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.parent">
+<code class="descname">parent</code><a class="headerlink" href="#moke.util.path.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>This path’s parent directory, as a new path object.</p>
+<p>For example, path(‘/usr/local/lib/libpython.so’).parent == path(‘/usr/local/lib’)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.read_hash">
+<code class="descname">read_hash</code><span class="sig-paren">(</span><em>hash_name</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.read_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate given hash for this file.</p>
+<p>List of supported hashes can be obtained from hashlib package. This
+reads the entire file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.read_hexhash">
+<code class="descname">read_hexhash</code><span class="sig-paren">(</span><em>hash_name</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.read_hexhash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate given hash for this file, returning hexdigest.</p>
+<p>List of supported hashes can be obtained from hashlib package. This
+reads the entire file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.read_md5">
+<code class="descname">read_md5</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.read_md5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the md5 hash for this file.</p>
+<p>This reads through the entire file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.readlink">
+<code class="descname">readlink</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.readlink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the path to which this symbolic link points.</p>
+<p>The result may be an absolute or a relative path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.readlinkabs">
+<code class="descname">readlinkabs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.readlinkabs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the path to which this symbolic link points.</p>
+<p>The result is always an absolute path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.relpath">
+<code class="descname">relpath</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.relpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return this path as a relative path,
+based from the current working directory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.relpathto">
+<code class="descname">relpathto</code><span class="sig-paren">(</span><em>dest</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.relpathto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a relative path from self to dest.</p>
+<p>If there is no relative path from self to dest, for example if
+they reside on different drives in Windows, then this returns
+dest.abspath().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.rmtree">
+<code class="descname">rmtree</code><span class="sig-paren">(</span><em>path</em>, <em>ignore_errors=False</em>, <em>onerror=None</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.rmtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively delete a directory tree.</p>
+<p>If ignore_errors is set, errors are ignored; otherwise, if onerror
+is set, it is called to handle the error with arguments (func,
+path, exc_info) where func is platform and implementation dependent;
+path is the argument to that function that caused it to fail; and
+exc_info is a tuple returned by sys.exc_info().  If ignore_errors
+is false and onerror is None, an exception is raised.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="moke.util.path.size">
+<code class="descname">size</code><a class="headerlink" href="#moke.util.path.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the file, in bytes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.splitall">
+<code class="descname">splitall</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.splitall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the path components in this path.</p>
+<p>The first item in the list will be a path.  Its value will be
+either os.curdir, os.pardir, empty, or the root directory of
+this path (for example, ‘/’ or ‘C:').  The other items in
+the list will be strings.</p>
+<p>path.path.joinpath(<a href="#id7"><span class="problematic" id="id8">*</span></a>result) will yield the original path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.splitdrive">
+<code class="descname">splitdrive</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Return (p.drive, &lt;the rest of p&gt;).<a class="headerlink" href="#moke.util.path.splitdrive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the drive specifier from this path.  If there is
+no drive specifier, p.drive is empty, so the return value
+is simply (path(‘’), p).  This is always the case on Unix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.splitext">
+<code class="descname">splitext</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Return (p.stripext(), p.ext).<a class="headerlink" href="#moke.util.path.splitext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the filename extension from this path and return
+the two parts.  Either part may be empty.</p>
+<p>The extension is everything from ‘.’ to the end of the
+last path segment.  This has the property that if
+(a, b) == p.splitext(), then a + b == p.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.splitpath">
+<code class="descname">splitpath</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Return (p.parent, p.name).<a class="headerlink" href="#moke.util.path.splitpath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.stat">
+<code class="descname">stat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a stat() system call on this path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.statvfs">
+<code class="descname">statvfs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.statvfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a statvfs() system call on this path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.stripext">
+<code class="descname">stripext</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Remove one file extension from the path.<a class="headerlink" href="#moke.util.path.stripext" title="Permalink to this definition">¶</a></dt>
+<dd><p>For example, path(‘/home/guido/python.tar.gz’).stripext()
+returns path(‘/home/guido/python.tar’).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.symlink">
+<code class="descname">symlink</code><span class="sig-paren">(</span><em>newlink</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.symlink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a symbolic link at ‘newlink’, pointing here.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.text">
+<code class="descname">text</code><span class="sig-paren">(</span><em>encoding=None</em>, <em>errors='strict'</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file, read it in, return the content as a string.</p>
+<p>This uses ‘U’ mode in Python 2.3 and later, so ‘rn’ and ‘r’
+are automatically translated to ‘n’.</p>
+<p>Optional arguments:</p>
+<dl class="docutils">
+<dt>encoding - The Unicode encoding (or character set) of</dt>
+<dd><p class="first last">the file.  If present, the content of the file is
+decoded and returned as a unicode object; otherwise
+it is returned as an 8-bit str.</p>
+</dd>
+<dt>errors - How to handle Unicode errors; see help(str.decode)</dt>
+<dd><p class="first last">for the options.  Default is ‘strict’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.touch">
+<code class="descname">touch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.touch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the access/modified times of this file to the current time.
+Create the file if it does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.utime">
+<code class="descname">utime</code><span class="sig-paren">(</span><em>times</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.utime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the access and modified times of this file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.walk">
+<code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; iterator over files and subdirs, recursively.<a class="headerlink" href="#moke.util.path.walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>The iterator yields path objects naming each child item of
+this directory and its descendants.  This requires that
+D.isdir().</p>
+<p>This performs a depth-first traversal of the directory tree.
+Each directory is returned just before all its children.</p>
+<p>The errors= keyword argument controls behavior when an
+error occurs.  The default is ‘strict’, which causes an
+exception.  The other allowed values are ‘warn’, which
+reports the error via warnings.warn(), and ‘ignore’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.walkdirs">
+<code class="descname">walkdirs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; iterator over subdirs, recursively.<a class="headerlink" href="#moke.util.path.walkdirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>With the optional ‘pattern’ argument, this yields only
+directories whose names match the given pattern.  For
+example, mydir.walkdirs(‘<a href="#id9"><span class="problematic" id="id10">*</span></a>test’) yields only directories
+with names ending in ‘test’.</p>
+<p>The errors= keyword argument controls behavior when an
+error occurs.  The default is ‘strict’, which causes an
+exception.  The other allowed values are ‘warn’, which
+reports the error via warnings.warn(), and ‘ignore’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.walkfiles">
+<code class="descname">walkfiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; iterator over files in D, recursively.<a class="headerlink" href="#moke.util.path.walkfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>The optional argument, pattern, limits the results to files
+with names that match the pattern.  For example,
+mydir.walkfiles(‘<a href="#id11"><span class="problematic" id="id12">*</span></a>.tmp’) yields only files with the .tmp
+extension.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.write_bytes">
+<code class="descname">write_bytes</code><span class="sig-paren">(</span><em>bytes</em>, <em>append=False</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.write_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open this file and write the given bytes to it.</p>
+<p>Default behavior is to overwrite any existing file.
+Call p.write_bytes(bytes, append=True) to append instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.write_lines">
+<code class="descname">write_lines</code><span class="sig-paren">(</span><em>lines</em>, <em>encoding=None</em>, <em>errors='strict'</em>, <em>linesep='\n'</em>, <em>append=False</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.write_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the given lines of text to this file.</p>
+<p>By default this overwrites any existing file at this path.</p>
+<p>This puts a platform-specific newline sequence on every line.
+See ‘linesep’ below.</p>
+<p>lines - A list of strings.</p>
+<dl class="docutils">
+<dt>encoding - A Unicode encoding to use.  This applies only if</dt>
+<dd><p class="first last">‘lines’ contains any Unicode strings.</p>
+</dd>
+<dt>errors - How to handle errors in Unicode encoding.  This</dt>
+<dd><p class="first last">also applies only to Unicode strings.</p>
+</dd>
+<dt>linesep - The desired line-ending.  This line-ending is</dt>
+<dd><p class="first last">applied to every line.  If a line already has any
+standard line ending (‘r’, ‘n’, ‘rn’, u’x85’,
+u’rx85’, u’u2028’), that will be stripped off and
+this will be used instead.  The default is os.linesep,
+which is platform-dependent (‘rn’ on Windows, ‘n’ on
+Unix, etc.)  Specify None to write the lines as-is,
+like file.writelines().</p>
+</dd>
+</dl>
+<p>Use the keyword argument append=True to append lines to the
+file.  The default is to overwrite the file.  Warning:
+When you use this with Unicode data, if the encoding of the
+existing data in the file is different from the encoding
+you specify with the encoding= parameter, the result is
+mixed-encoding data, which can really confuse someone trying
+to read the file later.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="moke.util.path.write_text">
+<code class="descname">write_text</code><span class="sig-paren">(</span><em>text</em>, <em>encoding=None</em>, <em>errors='strict'</em>, <em>linesep='\n'</em>, <em>append=False</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.path.write_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the given text to this file.</p>
+<p>The default behavior is to overwrite any existing file;
+to append instead, use the ‘append=True’ keyword argument.</p>
+<p>There are two differences between path.write_text() and
+path.write_bytes(): newline handling and Unicode handling.
+See below.</p>
+<p>Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li>text - str/unicode - The text to be written.</li>
+<li>encoding - str - The Unicode encoding that will be used.
+This is ignored if ‘text’ isn’t a Unicode string.</li>
+<li>errors - str - How to handle Unicode encoding errors.
+Default is ‘strict’.  See help(unicode.encode) for the
+options.  This is ignored if ‘text’ isn’t a Unicode
+string.</li>
+<li>linesep - keyword argument - str/unicode - The sequence of
+characters to be used to mark end-of-line.  The default is
+os.linesep.  You can also specify None; this means to
+leave all newlines as they are in ‘text’.</li>
+<li>append - keyword argument - bool - Specifies what to do if
+the file already exists (True: append to the end of it;
+False: overwrite it.)  The default is False.</li>
+</ul>
+</div></blockquote>
+<p>— Newline handling.</p>
+<p>write_text() converts all standard end-of-line sequences
+(‘n’, ‘r’, and ‘rn’) to your platform’s default end-of-line
+sequence (see os.linesep; on Windows, for example, the
+end-of-line marker is ‘rn’).</p>
+<p>If you don’t like your platform’s default, you can override it
+using the ‘linesep=’ keyword argument.  If you specifically want
+write_text() to preserve the newlines as-is, use ‘linesep=None’.</p>
+<p>This applies to Unicode text the same as to 8-bit text, except
+there are three additional standard Unicode end-of-line sequences:
+u’x85’, u’rx85’, and u’u2028’.</p>
+<p>(This is slightly different from when you open a file for
+writing with fopen(filename, “w”) in C or file(filename, ‘w’)
+in Python.)</p>
+<p>— Unicode</p>
+<p>If ‘text’ isn’t Unicode, then apart from newline handling, the
+bytes are written verbatim to the file.  The ‘encoding’ and
+‘errors’ arguments are not used and must be omitted.</p>
+<p>If ‘text’ is Unicode, it is first converted to bytes using the
+specified ‘encoding’ (or the default encoding if ‘encoding’
+isn’t specified).  The ‘errors’ argument applies only to this
+conversion.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.util.run_app">
+<code class="descclassname">moke.util.</code><code class="descname">run_app</code><span class="sig-paren">(</span><em>cmd</em>, <em>args=None</em>, <em>stdin=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.run_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple wrapper around <code class="docutils literal"><span class="pre">subprocess.Popen</span></code> executes a command-line
+application with the given arguments and returns a 3-tuple of
+<code class="docutils literal"><span class="pre">(returncode,</span> <span class="pre">stdout,</span> <span class="pre">stderr)</span></code>.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>app (<code class="docutils literal"><span class="pre">str</span></code>) The name of the application to run.</li>
+<li>args (<code class="docutils literal"><span class="pre">sequence</span></code>) [default: <code class="docutils literal"><span class="pre">None</span></code>] A sequence of arguments to the
+program.</li>
+<li>stdin (<code class="docutils literal"><span class="pre">file</span></code>) A file-like object open for reading.</li>
+</ul>
+</div></blockquote>
+<p>Additional keyworded arguments are passed to the <code class="docutils literal"><span class="pre">subprocess.Popen</span></code>
+constructor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.util.sh">
+<code class="descclassname">moke.util.</code><code class="descname">sh</code><span class="sig-paren">(</span><em>command</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.sh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes command-line in the shell. No <code class="docutils literal"><span class="pre">stdin</span></code>, <code class="docutils literal"><span class="pre">stdout</span></code> and <code class="docutils literal"><span class="pre">stderr</span></code>
+go to <code class="docutils literal"><span class="pre">/dev/null</span></code> and the command is executed via the default shell.
+Additional keyworded arguments are passed to <code class="docutils literal"><span class="pre">Popen</span></code>.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>command(<code class="docutils literal"><span class="pre">str</span></code> or sequence of <code class="docutils literal"><span class="pre">str</span></code>) This command line will be executed.
+See the documentation for “args” in <code class="docutils literal"><span class="pre">subprocess.Popen</span></code>.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="moke.util.tmp_file">
+<code class="descclassname">moke.util.</code><code class="descname">tmp_file</code><span class="sig-paren">(</span><em>filepath=None</em>, <em>overwrite=False</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="headerlink" href="#moke.util.tmp_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a temporary file and returns a file handle. If “filepath” is given
+it will be created or overwritten if overwrite is <code class="docutils literal"><span class="pre">True</span></code>, else a temporary
+file will be created. The name of the file is accessible from the “name”
+attribute of the file handle, the file ceases to exist if it is closed or
+eventually disappears if the handle garbage collected.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li>filepath(<code class="docutils literal"><span class="pre">str</span></code>) [default: <code class="docutils literal"><span class="pre">None</span></code>] Path to the file.</li>
+<li>overwrite(<code class="docutils literal"><span class="pre">bool</span></code>) [default: <code class="docutils literal"><span class="pre">False</span></code>] Should the destination be
+overwritten if it exists? (ignored if “filepath” is <code class="docutils literal"><span class="pre">None</span></code>)</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+</div>
+</li>
+<li><p class="first"><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">moke</span></code> is not like <code class="docutils literal"><span class="pre">make</span></code></a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="conventions.html"
+                        title="next chapter">Conventions</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="conventions.html" title="Conventions"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">moke 1.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, Marcin Cieslik.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>
