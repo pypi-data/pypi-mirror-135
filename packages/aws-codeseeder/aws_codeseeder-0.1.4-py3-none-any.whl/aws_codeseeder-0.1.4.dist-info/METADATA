@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: aws-codeseeder
+Version: 0.1.4
+Summary: A framework utilizing AWS CodeBuild to manage remote code execution.
+Home-page: https://github.com/awslabs/aws-codeseeder
+Author: AWS Professional Services
+Author-email: aws-proserve-opensource@amazon.com
+License: Apache License 2.0
+Project-URL: Org Site, https://aws.amazon.com/professional-services/
+Keywords: aws,cdk
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Typing :: Typed
+Requires-Python: >=3.7, <3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: VERSION
+Requires-Dist: boto3 (>=1.19.0)
+Requires-Dist: pyyaml (>=5.4)
+Requires-Dist: click (>=7.1.0)
+Requires-Dist: cfn-flip (>=1.2.3)
+Requires-Dist: mypy-extensions (>=0.4.3)
+Provides-Extra: modules
+Requires-Dist: awscli (>=1.19.0) ; extra == 'modules'
+Requires-Dist: wheel (>=0.36.0) ; extra == 'modules'
+Requires-Dist: twine (>=3.3.0) ; extra == 'modules'
+
+# aws-codeseeder
+
+The `aws-codeseeder` project enables builders to easily "seed" python code to AWS CodeBuild for execution in their cloud environments.
+
+The library and its CLI utility are typically used to simplify development and deployment of complex __Infrastructure as Code__ projects. These projects may have many dependencies and require mutiple CLI utilities to orchestrate their deployments. For example, a project that deploys networking resources with the __AWS CDK__, an Amazon EKS Cluster with the `eskctl` CLI utility, and Kubernetes applications with `kubectl` and `helm` CLI utilities.
+
+The `aws-codeseeder` elminates the need to install and configure libraries and utilities locally or on a build system (i.e. Jenkins). Instead the library enables builders to easily execute an AWS CodeBuild instance with the utilities they require then seed local python code to, and execute it within, the CodeBuild instance. By bundling and executing local python code in AWS CodeBuild, `aws-codeseeder` can enable GitOps type deployments of complex, mixed technology projects.
+
+## Usage
+
+See the [Example project](example/) for basic usage info and the documentation for more advanced usage.
+
+
