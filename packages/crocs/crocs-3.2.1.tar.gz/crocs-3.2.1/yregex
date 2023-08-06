@@ -1,0 +1,25 @@
+#! /usr/bin/env python
+
+from crocs.xparser import xmake
+from eacc.lexer import LexError
+from eacc.eacc import EaccError
+from traceback import print_exc
+
+def regexbuilder():
+    regstr  = input('>>> ')
+    regtree = xmake(regstr)
+
+    print('# Regex Details.\n')
+    regtree.test()
+    regtree.hits()
+
+    print('\n# Yregex/Code:\n')
+    code = regtree.mkcode()
+    print(code)
+
+if __name__ == '__main__':
+    while True:
+        try:
+            regexbuilder()
+        except Exception as e:
+            print_exc()
