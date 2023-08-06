@@ -1,0 +1,41 @@
+# SPDX-FileCopyrightText: Mintlab B.V.
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+[tool.pytest.ini_options]
+spec_header_format = "{path}: {test_case} ({class_name})"
+testpaths = ["tests"]
+addopts = ["--spec"]
+
+filterwarnings = ["error"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 79
+src_paths = ["minty_pyramid", "tests"]
+no_sections = true
+
+[tool.black]
+line-length = 79
+target-version = ['py39']
+
+[tool.mypy]
+python_version = "3.9"
+show_column_numbers = true
+
+strict_equality = true
+
+follow_imports = "normal"
+
+[[tool.mypy.overrides]]
+module = [
+    "jinja2",
+    "jose.*",
+    "jsonpath_ng.*",
+    "pyramid.*",
+    "statsd",
+]
+ignore_missing_imports = true
+
+# Future: make mypy more strict
