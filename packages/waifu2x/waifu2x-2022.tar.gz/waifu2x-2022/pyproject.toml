@@ -1,0 +1,78 @@
+[tool.poetry]
+name = "waifu2x"
+version = "2022"
+license = "mit"
+description = "Chainer implementation of waifu2x"
+authors = ["FredHappyface"]
+classifiers = [
+	"Environment :: Console",
+	"Environment :: MacOS X",
+	"Environment :: Win32 (MS Windows)",
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Developers",
+	"Intended Audience :: Education",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Utilities"
+]
+homepage = "https://github.com/FHPythonUtils/waifu2x"
+repository = "https://github.com/FHPythonUtils/waifu2x"
+documentation = "https://github.com/FHPythonUtils/waifu2x/blob/master/README.md"
+readme = "README.md"
+
+[tool.poetry.scripts]
+waifu2x = 'waifu2x:main'
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+numpy = "<2,>=1.22.1"
+chainer = "<8,>=7.8.1"
+Pillow = "<10,>=9.0.0"
+Wand = "<2,>=0.6.7"
+
+[tool.poetry.dev-dependencies]
+imgcompare = "^2.0.1"
+pytest = "^6.2.5"
+
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+indent = "Tab"
+
+[tool.pydocstyle]
+convention = "google"
+ignore = "D205,D415"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.basic]
+attr-naming-style = "snake_case"
+function-naming-style = "snake_case"
+method-naming-style = "snake_case"
+variable-rgx = "(([a-z0-9]*_?[a-z0-9]*)*)" #snake_case but allows x, y etc
+argument-rgx = "(([a-z0-9]*_?[a-z0-9]*)*)"
+
+[tool.pylint.format]
+indent-string = "\t"
+
+[tool.pylint.master]
+ignore-patterns = "test_.*?py"
+
+[tool.pylint.messages_control]
+enable = ["F", "E", "W", "R", "C"]
+disable = [
+	"pointless-string-statement",
+	"superfluous-parens",
+	"bad-continuation",
+	# Need to be removed eventually
+	"missing-function-docstring",
+	"missing-module-docstring",
+	"missing-class-docstring",
+]
