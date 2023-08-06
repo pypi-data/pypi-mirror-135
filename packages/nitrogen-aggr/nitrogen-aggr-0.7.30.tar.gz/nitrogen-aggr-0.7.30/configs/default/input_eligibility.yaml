@@ -1,0 +1,42 @@
+debug: true
+
+#    """
+#    DE-1021 correct snapshot partition
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  input_elig:
+    type: csv
+    location: "{project_root_path}/{client}/input/VMD MA_Eligibility_JY edit.csv"
+
+Transform:
+  elig:
+    sql: >-
+        select
+          string(member_id) as member_id,
+        date(concat( right(Eligibility_Start,4), '-', left(Eligibility_Start, (instr(Eligibility_Start, '/') - 1) ), '-01')) as Eligibility_Start,
+        case when int(left(Eligibility_End, (instr(Eligibility_End, '/') - 1) ))  + 1 = 13
+        THEN date(concat( right(Eligibility_End,4), '-12-31'))
+        else date_sub( date(concat( right(Eligibility_End,4), '-', string(int(left(Eligibility_End, (instr(Eligibility_End, '/') - 1) )) + 1), '-01')) , 1 )
+        end as  Eligibility_End,
+          string(Health_plan_name) as  Health_plan_name,
+          string(Program) as Program,
+          string (Member_health_plan_id) as Member_health_plan_id
+          from input_elig
+    cache: false
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  elig:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/input/eligibility'
+      mode: overwrite

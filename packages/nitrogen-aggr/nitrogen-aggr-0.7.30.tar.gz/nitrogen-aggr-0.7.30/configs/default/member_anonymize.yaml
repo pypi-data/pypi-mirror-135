@@ -1,0 +1,328 @@
+debug: true
+
+#    """
+#    Logic:
+#        1- This etl will replace the first name, last name , street, city, state and mbi of 3 sync tables.
+#        This will allow to reuse the data from one client into another client. Only for demo purposes.
+#         This also allows to use client data from production and anonymize it before it is being sent to PG
+#        2. It uses a set of tables that contain randowm first names, last names, cities, states and streets
+#        3. The client2 parameter contain the client where the source data comes from.
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - client2 = {config.client2}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  firstnames:
+    type: parquet
+    location: "{project_root_path}/{client2}/firstnames/"
+
+  lastnames:
+    type: parquet
+    location: "{project_root_path}/{client2}/lastnames/"
+
+  cities:
+    type: parquet
+    location: "{project_root_path}/{client2}/cities/"
+
+  states:
+    type: parquet
+    location: "{project_root_path}/{client2}/states/"
+
+  streets:
+    type: parquet
+    location: "{project_root_path}/{client2}/streets/"
+
+  EA_Members:
+    type: parquet
+    location: "{project_root_path}/{client2}/EA_Members/"
+
+  MemberIDS:
+    type: parquet
+    location: "{project_root_path}/{client2}/MemberIDS/"
+
+  new_EA_Members_Snapshot:
+    type: parquet
+    location: "{project_root_path}/{client2}/new_EA_Members_Snapshot/"
+
+Transform:
+#Tested with client sss
+#    WHERE member_id in (
+#      '584090977A',
+#      '583167585A',
+#      '584469226B',
+#      '137283822A',
+#      '583290250A',
+#      '582348840A',
+#      'E19501106RJM823394',
+#      '584428818A',
+#      '581701487A',
+#      '580828777A')
+
+  m_rank_index:
+    sql: >-
+      WITH m_rank as
+      ( SELECT
+          member_id,
+          row_number() over (order by Last_Name) as o_last,
+          row_number() over (order by First_Name) as o_first,
+          row_number() over (order by Address_1) as o_street
+          FROM ea_members
+       )
+       SELECT
+          member_id,
+          case when (o_last % 5000) > 0 then  (o_last % 5000) else 5000 end  as l_index,
+          case when (o_first % 5000) > 0 then   (o_first % 5000)  else 5000 end as f_index,
+          case when (o_street % 5000) > 0  then (o_street % 5000) else 5000 end as st_index,
+          case when (o_last % 475) > 0 then  (o_last % 475) else 475 end as c_index,
+          case when (o_street % 67) > 0 then  (o_street % 67) else 67 end  as s_index
+          FROM m_rank
+    cache: true
+
+  rank_firstnames:
+    sql: >-
+      SELECT
+       * ,  row_number() OVER (order by first_name) as r_first
+      FROM firstnames
+    cache: true
+
+  rank_lastnames:
+    sql: >-
+      SELECT
+      * ,  row_number() OVER (order by last_name) as r_last
+      FROM lastnames
+    cache: true
+
+  rank_cities:
+    sql: >-
+      SELECT
+      * ,  row_number() OVER (order by cityName) as r_city
+      FROM cities
+    cache: true
+
+  rank_streets:
+    sql: >-
+      SELECT
+      * ,  row_number() OVER (order by street) as r_street
+      FROM streets
+    cache: true
+
+  rank_states:
+    sql: >-
+      SELECT
+      * ,  row_number() OVER (order by state) as r_state
+      FROM states
+    cache: true
+
+#Tested with client sss
+#    WHERE m.member_id in (
+#      '584090977A',
+#      '583167585A',
+#      '584469226B',
+#      '137283822A',
+#      '583290250A',
+#      '582348840A',
+#      'E19501106RJM823394',
+#      '584428818A',
+#      '581701487A',
+#      '580828777A')
+  anonymized_Load_EA_Members:
+    sql: >-
+       SELECT
+             cast(NULL as int) as dbid,
+             0 as client_dbid,
+             cast(NULL as int) as pcp_dbid,
+             m.MEMBER_ID as member_id,
+             PCP_Id as pcp_id,
+             HICN as hicn,
+             CASE
+                 WHEN l.Last_Name = '' Or l.Last_Name is NULL THEN f.First_Name
+                 ELSE CONCAT(l.Last_Name, ', ', f.First_Name)
+             END as full_name,
+             f.First_Name as first_name,
+             l.Last_Name as last_name,
+             cast(Date_Of_Birth as date) as date_of_birth,
+             cast(NULL as double) as age,
+             Gender as gender,
+             st.street as address_line_1,
+             Address_2 as address_line_2,
+             c.CityName as city,
+             s.State as state,
+             Zip as zip,
+             cast(Phone as String) as phone,
+             cast(NULL as double) as captured_dxcodes,
+             cast(NULL as String) as client_id,
+             cast(Current_DOS_Count as double) as current_dos_count,
+             cast(Current_HCC_Captured as double) as current_hcc_captured,
+             cast(Current_HCC_Suspects_All as double) as current_hcc_suspects_all,
+             cast(Current_HCC_Suspects_Clinical as double) as current_hcc_suspects_clin,
+             cast(Current_HCC_Suspects_YOY as double) as current_hcc_suspects_yoy,
+             cast(Current_HCC_Suspects_Unacceptable as double) as current_hcc_unaccpt,
+             Current_Is_Eligible as current_is_eligible,
+             cast(Current_Opportunity as double) as current_opportunity,
+             cast(Current_PCP_DOS_Count as double) as current_pcp_dos_count,
+             cast(Current_RAF_Captured as double) as current_raf_captured,
+             cast(Current_RAF_Demographic as double) as current_raf_demo,
+             cast(Current_RAF_Projected as double) as current_raf_projected,
+             Current_Recap_Opp_Count as current_recap_opp_count,
+             cast(Eligibility_Date as date) as eligibility_date,
+             cast(Eligibility_End_Date as date) as eligibility_end_date,
+             Health_Plan_Id as health_plan_member_id,
+             Health_Plan_Name as health_plan_name,
+             cast(Any_Last_Encounter as date) as last_encounter,
+             cast(NULL as double) as num_of_dos,
+             cast(PCP_Last_Encounter as date) as pcp_last_encounter,
+             cast(NULL as String) as pcp_name,
+             PCP_Id as pcp_provider_id,
+             cast(Prior2_DOS_Count as double) as prior2_dos_count,
+             cast(Prior2_HCC_Captured as double) as prior2_hcc_captured,
+             cast(Prior2_HCC_Suspects_All as double) as prior2_hcc_suspects_all,
+             cast(Prior2_HCC_Suspects_Clinical as double) as prior2_hcc_suspects_clin,
+             cast(Prior2_HCC_Suspects_YOY as double) as prior2_hcc_suspects_yoy,
+             cast(Prior2_HCC_Suspects_Unacceptable as double) as prior2_hcc_unaccpt,
+             Prior2_Is_Eligible as prior2_is_eligible,
+             cast(Prior2_Opportunity as double) as prior2_opportunity,
+             cast(Prior2_RAF_Captured as double) as prior2_raf_captured,
+             cast(Prior2_RAF_Demographic as double) as prior2_raf_demo,
+             cast(Prior2_RAF_Projected as double) as prior2_raf_projected,
+             Prior3_Is_Eligible as prior3_is_eligible,
+             cast(Prior_DOS_Count as double) as prior_dos_count,
+             cast(Prior_HCC_Captured as double) as prior_hcc_captured,
+             cast(Prior_HCC_Suspects_All as double) as prior_hcc_suspects_all,
+             cast(Prior_HCC_Suspects_Clinical as double) as prior_hcc_suspects_clin,
+             cast(Prior_HCC_Suspects_YOY as double) as prior_hcc_suspects_yoy,
+             cast(Prior_HCC_Suspects_Unacceptable as double) as prior_hcc_unaccpt,
+             Prior_Is_Eligible as prior_is_eligible,
+             cast(Prior_Opportunity as double) as prior_opportunity,
+             cast(Prior_PCP_DOS_Count as double) as prior_pcp_dos_count,
+             cast(Prior_RAF_Captured as double) as prior_raf_captured,
+             cast(Prior_RAF_Demographic as double) as prior_raf_demo,
+             cast(Prior_RAF_Projected as double) as prior_raf_projected,
+             Prior_Recap_Opp_Count as prior_recap_opp_count,
+             Program as program,
+             current_months_eligible as current_months_eligible,
+             prior_months_eligible as prior_months_eligible,
+             prior2_months_eligible as prior2_months_eligible,
+             cast(Prior_Eligibility_Date as date) as prior_eligibility_date,
+             cast(Prior_Eligibility_End_Date as date) as prior_eligibility_end_date,
+             cast(Prior2_Eligibility_Date as date) as prior2_eligibility_date,
+             cast(Prior2_Eligibility_End_Date as date) as prior2_eligibility_end_date,
+             cast(Current_HCC_Suspects_ASR as double) as current_hcc_suspects_asr,
+             cast(Prior_HCC_Suspects_ASR as double) as prior_hcc_suspects_asr,
+             cast(Prior2_HCC_Suspects_ASR as double) as prior2_hcc_suspects_asr,
+             Current_Medicaid as current_medicaid,
+             Prior_Medicaid as prior_medicaid,
+             Prior2_Medicaid as prior2_medicaid,
+             Prior3_Medicaid as prior3_medicaid,
+             cast(PartA_RAMRA_PA as double) as PartA_RAMRA_PA,
+             cast(PartB_RAMRA_PA as double) as PartB_RAMRA_PA,
+             round(current_raf_profitability, 2) as current_raf_profitability,
+             round(current_dual_opp_score, 4) as current_dual_opp_score,
+             ROUND(CAST(current_raf_captured_cf AS DOUBLE), 3) AS current_raf_captured_cf,
+             ROUND(CAST(current_cf_profitability AS DOUBLE), 2) AS current_cf_profitability,
+             ROUND(CAST(current_raf_dual_boost AS DOUBLE), 3) AS current_raf_dual_boost
+         FROM EA_Members m
+         INNER JOIN  m_rank_index x on m.member_id = x.member_id
+         INNER JOIN rank_firstnames f on x.f_index = f.r_first
+         INNER JOIN rank_lastnames l on x.l_index = l.r_last
+         INNER JOIN rank_streets st on x.st_index = st.r_street
+         INNER JOIN rank_cities c on x.c_index = c.r_city
+         INNER JOIN rank_states s on x.s_index = s.r_state
+
+#Tested with client sss
+#    WHERE member_id in (
+#      '584090977A',
+#      '583167585A',
+#      '584469226B',
+#      '137283822A',
+#      '583290250A',
+#      '582348840A',
+#      'E19501106RJM823394',
+#      '584428818A',
+#      '581701487A',
+#      '580828777A')
+  anonymized_Load_Member_Ids:
+    sql: >-
+      SELECT
+             0 as client_dbid,
+             trim(MEMBER_ID) as member_id,
+             case when length(trim(mbi)) > 0 then replace(mbi, substr(trim(mbi), 2,1), 'S') else trim(mbi) end as mbi,
+             case when length(trim(hicno)) > 0 then replace(hicno, substr(trim(hicno), 1,1), '0') else trim(hicno) end as hicn,
+             external_member_id
+      FROM
+             MemberIDS
+
+#Tested with client sss
+#    WHERE m.member_id in (
+#      '584090977A',
+#      '583167585A',
+#      '584469226B',
+#      '137283822A',
+#      '583290250A',
+#      '582348840A',
+#      'E19501106RJM823394',
+#      '584428818A',
+#      '581701487A',
+#      '580828777A')
+
+  anonymized_new_EA_Members_Snapshot:
+    sql: >-
+      SELECT
+        load_year,
+        load_month,
+        load_timestamp,
+        m.member_id,
+        hicn,
+        mbi,
+        external_member_id,
+        f.First_Name as first_name,
+        l.Last_Name as last_name,
+        gender,
+        date_of_birth ,
+        health_plan_member_id,
+        health_plan_name,
+        st.street as address_1,
+        address_2,
+        c.CityName as city,
+        zip,
+        s.State as state,
+        phone,
+        program,
+        pcp_id,
+        chart_delivered_count,
+        hash_value,
+        partitionkey
+      FROM new_EA_Members_Snapshot m
+      INNER JOIN  m_rank_index x on m.member_id = x.member_id
+      INNER JOIN rank_firstnames f on x.f_index = f.r_first
+      INNER JOIN rank_lastnames l on x.l_index = l.r_last
+      INNER JOIN rank_streets st on x.st_index = st.r_street
+      INNER JOIN rank_cities c on x.c_index = c.r_city
+      INNER JOIN rank_states s on x.s_index = s.r_state
+
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  anonymized_Load_EA_Members:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/anonymized_Load_EA_Members'
+      mode: overwrite
+
+  anonymized_Load_Member_Ids:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/anonymized_Load_Member_Ids'
+      mode: overwrite
+
+  anonymized_new_EA_Members_Snapshot:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/anonymized_new_EA_Members_Snapshot'
+      mode: overwrite

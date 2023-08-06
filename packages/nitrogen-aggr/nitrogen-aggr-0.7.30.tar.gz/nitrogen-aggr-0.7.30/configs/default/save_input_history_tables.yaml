@@ -1,0 +1,139 @@
+debug: false
+
+#    """
+#    This yaml adds a new partition to each of the sync history tables. This new partition will include the whole  "full" table
+##    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - input_location = '{project_root_path}{client}/input'
+  - input_history_location = '{project_root_path}{client}/input_history'
+  - client_location = '{project_root_path}{client}'
+  - debug = False
+
+# Yaml anchors
+definitions:
+  load_parquet_by_id:
+    load1: &load_parquet_by_id
+      type: parquet
+      partitions:
+        - job_id
+
+Extract:
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+  claims:
+    type: parquet
+    location: "{input_location}/claims/"
+
+  cpts:
+    type: parquet
+    location: "{input_location}/cpts/"
+
+  member_pcp:
+    type: parquet
+    location: "{input_location}/member_pcp/"
+
+  members:
+    type: parquet
+    location: "{input_location}/members/"
+
+  providers:
+    type: parquet
+    location: "{input_location}/providers/"
+
+  Master_MemberIDS:
+    type: parquet
+    location: "{client_location}/Master_MemberIDS/"
+
+  MemberIDS:
+    type: parquet
+    location: "{client_location}/MemberIDS/"
+
+Transform:
+  cad_job:
+    sql: >-
+      SELECT max(j.id) as job_id
+      FROM job j
+      WHERE status = 'OPEN' and client_name ='{client}'
+    cache: true
+
+  claims_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM claims a
+
+  cpts_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM cpts a
+
+  member_pcp_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM member_pcp a
+
+  members_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM members a
+
+  providers_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM providers a
+
+  Master_MemberIDS_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM Master_MemberIDS a
+
+  MemberIDS_history:
+    sql: >-
+      SELECT a.*, (SELECT job_id FROM cad_job) AS job_id
+      FROM MemberIDS a
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+
+  claims_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/claims_history'
+
+  cpts_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/cpts_history'
+
+  member_pcp_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/member_pcp_history'
+
+  members_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/members_history'
+
+  providers_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/providers_history'
+
+  Master_MemberIDS_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/Master_MemberIDS_history'
+
+  MemberIDS_history:
+    load1:
+      <<: *load_parquet_by_id
+      location: '{input_history_location}/MemberIDS_history'
+
