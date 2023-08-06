@@ -1,0 +1,53 @@
+{%- set join_keys_list = join_keys|join(", ")  %}
+{%- set slide_interval = aggregation.slide_interval.ToSeconds() %}
+{%- set all_join_keys_list = (join_keys + [timestamp_key])|join(", ") %}
+{%- set separator = "__"  %}
+
+{%- macro final_select_name(name, replace_null, with_comma) %}
+{%- if replace_null %}
+ZEROIFNULL({{ name|upper }}) AS {{ name|upper }}
+{%- else %}
+{{ name|upper }}
+{%- endif -%}
+{%- if with_comma %},{% endif -%}
+{%- endmacro %}
+
+{%- macro aggregation_function(function, input_feature_name, output_feature_name) %}
+{%- if function == "AVG" %}
+SUM(MEAN_{{ input_feature_name }} * COUNT_{{ input_feature_name }}) / SUM(COUNT_{{ input_feature_name }}) AS {{ output_feature_name }}
+{%- else %}
+{{ function }}({{ function }}_{{ input_feature_name }}) AS {{ output_feature_name }}
+{%- endif -%}
+{%- endmacro %}
+
+WITH _PARTIAL_AGGREGATION_TABLE AS (
+    SELECT *,
+    DATE_PART(EPOCH_SECOND, {{ timestamp_key }}) AS _ANCHOR_TIME
+    FROM ({{ source }})
+),
+{%- for feature in aggregation.features %}
+{{ feature.output_feature_name|upper }}_TABLE AS (
+    SELECT
+        {{ all_join_keys_list }},
+        {{ aggregation_function(feature.function|snowflake_function|upper, feature.input_feature_name|upper, feature.output_feature_name|upper) }}
+    FROM _PARTIAL_AGGREGATION_TABLE
+    INNER JOIN _PARTIAL_AGGREGATION_TABLE _PARTIAL_AGGREGATION_TABLE_2 USING({{ join_keys_list }})
+    WHERE DATE_PART(EPOCH_SECOND, _PARTIAL_AGGREGATION_TABLE.{{ timestamp_key }})
+        BETWEEN _PARTIAL_AGGREGATION_TABLE_2._ANCHOR_TIME - {{ feature.window.ToSeconds() }} + 1
+        AND     _PARTIAL_AGGREGATION_TABLE_2._ANCHOR_TIME
+    GROUP BY {{ all_join_keys_list }}
+){%- if not loop.last %}, {% endif -%}
+{%- endfor -%}
+{# Band join all the feature tables at the end, select individual columns and replace null if needed #}
+SELECT
+    {{ join_keys_list }},
+    {# Tiles use the tile start time as the timestamp, for full aggregation we want the next tile start time as the timestamp value. #}
+    TO_TIMESTAMP(DATE_PART(EPOCH_SECOND, {{ timestamp_key }}) + {{ slide_interval }}) AS {{ timestamp_key }},
+    {%- for feature in aggregation.features %}
+    {{- final_select_name(feature.output_feature_name, feature.function|snowflake_function == "count", not loop.last) | indent }}
+    {%- endfor -%}
+    {# For each feature, do a band join against the rounded-off spine timestamp #}
+FROM _PARTIAL_AGGREGATION_TABLE
+{%- for feature in aggregation.features %}
+    LEFT JOIN {{ feature.output_feature_name|upper }}_TABLE USING ({{ all_join_keys_list }})
+{%- endfor -%}
