@@ -1,0 +1,60 @@
+# configure
+image: python:latest
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"  # cache on project level
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+# common to all scripts
+before_script:
+  - apt update --yes
+  - apt install libgl1-mesa-glx --yes
+  - python -V
+  - pip install -U virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -U flit
+  - pip install -U pytest
+  - pip install -U pyside2
+  - pip install -U qtpy
+  - pip install -U pint
+  - pip install -U yaq_traits
+  - pip install . --no-build-isolation
+
+# test stage
+.pytest: &pytest
+  stage: test
+  script:
+    - cd tests
+    - pytest --junitxml=report.xml
+  artifacts:
+    reports:
+      junit: tests/report.xml
+pytest-latest:
+  image: python:latest
+  <<: *pytest
+pytest-3.10:
+  image: python:3.10
+  <<: *pytest
+pytest-3.9:
+  image: python:3.9
+  <<: *pytest
+pytest-3.8:
+  image: python:3.8
+  <<: *pytest
+pytest-3.7:
+  image: python:3.7
+  <<: *pytest
+
+# deploy stage
+flit:
+  stage: deploy
+  script:
+    - flit publish
+  artifacts:
+    paths:
+      - dist/*
+  only:
+    - tags
