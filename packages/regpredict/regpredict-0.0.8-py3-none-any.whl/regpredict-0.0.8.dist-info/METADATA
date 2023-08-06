@@ -1,0 +1,35 @@
+Metadata-Version: 2.1
+Name: regpredict
+Version: 0.0.8
+Summary: A package for predicting buy and sell signals
+Home-page: https://nkrtech.com
+Author: Nicolus Rotich
+Author-email: nicholas.rotich@gmail.com
+License: MIT
+Download-URL: https://github.com/moinonin/evxpredictor/archive/refs/heads/main.zip
+Project-URL: Bug Tracker, https://github.com/pypa/regpredict/issues
+Platform: any
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: setuptools (>=57)
+Requires-Dist: wheel
+Requires-Dist: h5py (>=3.6.0)
+Requires-Dist: fire
+
+# Evx predictor mlbot
+
+This is a simple package used to generate buy and sell signals for crypto and conventional stock markets based on the excess volume index(EVX)  
+You can read more about EVX in the whitepaper [here](https://www.researchgate.net/publication/345313655_DeFiPaper)
+
+# Usage
+
+In your python script simply import the module and use as follows  
+from regpredict import regbot
+
+print(regbot.signal(20,65,120))
+
+The above methods take an assets opening, closing, and volume of the asset based on the time interval you have chosen. A zero classification output would instruct the user not to buy or sell the asset if it is registerd in the database, while one output means buy the asset.
+
+
