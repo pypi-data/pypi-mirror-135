@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "fastack"
+version = "4.0.0"
+description = "fastack is an intuitive framework based on FastAPI"
+authors = ["aprilahijriyan <37798612+aprilahijriyan@users.noreply.github.com>"]
+license = "MIT"
+maintainers = ["aprilahijriyan <37798612+aprilahijriyan@users.noreply.github.com>"]
+readme = "README.md"
+homepage = "https://github.com/fastack-dev/fastack"
+repository = "https://github.com/fastack-dev/fastack"
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Topic :: Internet",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.10"
+fastapi = "^0.72.0"
+typer = "^0.4.0"
+uvicorn = {extras = ["standard"], version = "^0.16.0"}
+asgi-lifespan = "^1.0.1"
+cookiecutter = "^1.7.3"
+Werkzeug = "^2.0.2"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^21.12b0", allow-prereleases = true}
+pre-commit = "^2.16.0"
+ipython = "^7.30.1"
+mkdocs-material = "^8.1.3"
+mkdocs-git-revision-date-plugin = "^0.3.1"
+mkdocs-git-revision-date-localized-plugin = "^0.11.1"
+pytest = "^6.2.5"
+tox = "^3.24.5"
+mypy = "^0.931"
+mkdocstrings = "^0.17.0"
+mkdocs-include-dir-to-nav = "^1.1.0"
+pytest-cov = "^3.0.0"
+
+[tool.poetry.scripts]
+
+fastack = "fastack.__main__:fastack"
+
+[tool.poetry.urls]
+
+"Bug Tracker" = "https://github.com/fastack-dev/fastack/issues"
+
+[build-system]
+requires = ["poetry-core>=1.0.7"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
