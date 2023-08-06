@@ -1,0 +1,73 @@
+Metadata-Version: 2.1
+Name: my-dev-env
+Version: 0.7.0
+Summary: This is a meta package which can be installed to download and install other dependencies used for development in python.
+Home-page: https://github.com/shenek/my-dev-env
+Author: Stepan Henek
+Author-email: stepan@henek.name
+License: BSD
+Keywords: virtualenv dev
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Software Development
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: flake8
+Requires-Dist: black
+Requires-Dist: ipython
+Requires-Dist: ipdb
+Requires-Dist: isort
+Requires-Dist: mypy
+Requires-Dist: python-lsp-server[all]
+Requires-Dist: pre-commit
+Requires-Dist: bandit
+Requires-Dist: safety
+Requires-Dist: neovim
+Provides-Extra: django
+Requires-Dist: my-dev-env[node] ; extra == 'django'
+Requires-Dist: django-extensions ; extra == 'django'
+Requires-Dist: django-debug-toolbar ; extra == 'django'
+Requires-Dist: django-stubs ; extra == 'django'
+Provides-Extra: node
+Requires-Dist: nodeenv ; extra == 'node'
+Provides-Extra: release
+Requires-Dist: twine ; extra == 'release'
+
+# My Dev Env
+
+This is a meta package which can be installed to download and install other dependencies
+used for development in python. It is a kind of collection of development packages used
+for various configurations.
+
+
+## Installation
+
+It is prefered to install this package into your virtual environment after the initialization of the environment. So you can used the development tools right from the start.
+
+To install it, you can simply run:
+
+```bash
+pip install my-dev-env
+```
+
+
+This will install just a basic set of packages. You can also install wider range of packages:
+
+```bash
+pip install my-dev-env[django]
+```
+
+
+Currently you can install packages from these extra collections:
+
+* `node`
+* `django`
+* `release`
+
+
