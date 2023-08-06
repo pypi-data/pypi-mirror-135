@@ -1,0 +1,135 @@
+Metadata-Version: 2.1
+Name: mangadex-downloader
+Version: 0.1.1
+Summary: Download manga from Mangadex through Python
+Home-page: https://github.com/mansuf/mangadex-downloader
+Author: Rahman Yusuf
+Author-email: danipart4@gmail.com
+License: The Unlicense
+Download-URL: https://github.com/mansuf/mangadex-downloader/archive/0.1.1.tar.gz
+Keywords: mangadex
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: The Unlicense (Unlicense)
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.5
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: bs4
+Requires-Dist: requests[socks]
+Requires-Dist: tqdm
+Requires-Dist: aiohttp
+Requires-Dist: pathvalidate
+
+[![pypi-total-downloads](https://img.shields.io/pypi/dm/mangadex-downloader?label=DOWNLOADS&style=for-the-badge)](https://pypi.org/project/mangadex-downloader)
+[![python-ver](https://img.shields.io/pypi/pyversions/mangadex-downloader?style=for-the-badge)](https://pypi.org/project/mangadex-downloader)
+[![pypi-release-ver](https://img.shields.io/pypi/v/mangadex-downloader?style=for-the-badge)](https://pypi.org/project/mangadex-downloader)
+
+
+# mangadex-downloader
+
+Download manga from Mangadex through Python
+
+## Key Features
+
+- Download manga directly with python from mangadex
+- [Tachiyomi](https://github.com/tachiyomiorg/tachiyomi) support (Local files support)
+
+## Installation
+
+### From PyPI
+
+```shell
+# For Windows
+py -3 -m install mangadex-downloader
+
+# For Linux / Mac OS
+python3 -m pip install mangadex-downloader
+```
+
+### From Git 
+
+**NOTE:** You must have git installed. If you don't have it, install it from here https://git-scm.com/.
+
+```shell
+# For Windows
+py -3 -m pip install git+https://github.com/mansuf/mangadex-downloader.git@v0.1.1
+
+# For Linux / Mac OS
+python3 -m pip install git+https://github.com/mansuf/mangadex-downloader.git@v0.1.1
+```
+
+## Usage
+
+**NOTE:** This app will download manga in english language only. Other languages will be implemented soon.
+
+### Command Line Interface (CLI)
+
+Options
+
+```
+positional arguments:
+  URL                   MangaDex URL
+
+options:
+  -h, --help            show this help message and exit
+  --folder FOLDER       Store manga in given folder
+  --proxy SOCKS / HTTP Proxy
+                        Set http/socks proxy
+  --proxy-env           use http/proxy from environments
+  --verbose             Enable verbose output
+```
+
+Usage
+
+```shell
+
+mangadex-dl "insert MangaDex URL here" 
+# or
+mangadex-downloader "insert MangaDex URL here" 
+
+# Use this if "mangadex-dl" or "mangadex-downloader" didn't work
+
+# For Windows
+py -3 -m mangadex-downloader "insert MangaDex URL here" 
+
+# For Linux / Mac OS
+python3 -m mangadex-downloader "insert MangaDex URL here" 
+```
+
+### Embedding (API)
+
+```python
+from mangadex_downloader import download
+
+# The parameters are:
+# - url: str
+# - folder: str (default: None)
+
+download("insert MangaDex URL here")
+```
+
+## Minimum Python version
+```
+Python 3.5.x
+```
+
+## Issues
+
+You can open a issue [here](https://github.com/mansuf/mangadex-downloader/issues), if its related to Mangadex.
+<br>
+For more information, click [here](https://github.com/mansuf/mangadex-downloader/blob/main/CONTRIBUTING.md#Issues)
+
+## Contributing
+
+You can check the guidelines [here](https://github.com/mansuf/mangadex-downloader/blob/main/CONTRIBUTING.md)
+
+
