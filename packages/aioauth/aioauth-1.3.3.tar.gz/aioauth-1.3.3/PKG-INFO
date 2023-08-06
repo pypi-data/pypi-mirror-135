@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: aioauth
+Version: 1.3.3
+Summary: Asynchronous OAuth 2.0 framework for Python 3.
+Home-page: https://github.com/aliev/aioauth
+Author: Ali Aliyev
+Author-email: ali@aliev.me
+License: The MIT License (MIT)
+Project-URL: Source, https://github.com/aliev/aioauth
+Description: ## Asynchronous OAuth 2.0 framework for Python 3
+        
+        [![Build Status](https://github.com/aliev/aioauth/workflows/CI/badge.svg?branch=master)](https://github.com/aliev/aioauth/actions/workflows/ci.yml?query=branch%3Amaster)
+        [![Coverage](https://badgen.net/codecov/c/github/aliev/aioauth)](https://app.codecov.io/gh/aliev/aioauth)
+        [![License](https://img.shields.io/github/license/aliev/aioauth)](https://github.com/aliev/aioauth/blob/master/LICENSE)
+        [![PyPi](https://badgen.net/pypi/v/aioauth)](https://pypi.org/project/aioauth/)
+        [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+        
+        `aioauth` implements [OAuth 2.0 protocol](https://tools.ietf.org/html/rfc6749) and can be used in asynchronous frameworks like [FastAPI / Starlette](https://github.com/tiangolo/fastapi), [aiohttp](https://github.com/aio-libs/aiohttp). It can work with any databases like `MongoDB`, `PostgreSQL`, `MySQL` and ORMs like [gino](https://python-gino.org/), [sqlalchemy](https://www.sqlalchemy.org/) or [databases](https://pypi.org/project/databases/) over simple [BaseStorage](aioauth/storage.py) interface.
+        
+        ## Why this project exists?
+        
+        There are few great OAuth frameworks for Python like [oauthlib](https://github.com/oauthlib/oauthlib) and [authlib](https://github.com/lepture/authlib), but they do not support asyncio and rewriting these libraries to asyncio is a significant challenge (see issues [here](https://github.com/lepture/authlib/issues/63) and [here](https://github.com/oauthlib/oauthlib/issues/415)).
+        
+        ## Supported RFCs
+        
+        - [x] [The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
+        - [X] [OAuth 2.0 Token Introspection](https://tools.ietf.org/html/rfc7662)
+        - [X] [Proof Key for Code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636)
+        - [x] OpenID support
+        
+        ## Installation
+        
+        ```
+        python -m pip install aioauth
+        ```
+        
+        ## FastAPI
+        
+        FastAPI integration stored on separated [aioauth-fastapi](https://github.com/aliev/aioauth-fastapi) repository and can be installed via the command:
+        
+        ```
+        python -m pip install aioauth[fastapi]
+        ```
+        
+        [aioauth-fastapi](https://github.com/aliev/aioauth-fastapi) repository contains demo example which I recommend to look.
+        
+        ## [API Reference and User Guide](https://aliev.me/aioauth/)
+        
+Keywords: asyncio oauth2 oauth
+Platform: UNKNOWN
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development
+Classifier: Typing :: Typed
+Classifier: Development Status :: 1 - Planning
+Classifier: Environment :: Web Environment
+Classifier: Framework :: AsyncIO
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Internet :: WWW/HTTP :: HTTP Servers
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires-Python: >=3.6.0
+Description-Content-Type: text/markdown
+Provides-Extra: fastapi
+Provides-Extra: dev
+Provides-Extra: docs
