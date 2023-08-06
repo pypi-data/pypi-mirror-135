@@ -1,0 +1,18 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+  <body>
+
+  <h1>...</h1>
+  <form id="wspay-form" action="{{ submit_url }}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form }}
+  </form>
+
+  </body>
+  <script type="text/javascript">
+    document.getElementById("wspay-form").submit()
+  </script>
+</html>
