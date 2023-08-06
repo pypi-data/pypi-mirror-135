@@ -1,0 +1,215 @@
+Metadata-Version: 2.1
+Name: eth-ape
+Version: 0.1.0b4
+Summary: Ape Ethereum Framework
+Home-page: https://github.com/ApeWorX/ape
+Author: ApeWorX Ltd.
+Author-email: admin@apeworx.io
+License: Apache-2.0
+Keywords: ethereum
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.7,<3.11
+Description-Content-Type: text/markdown
+Requires-Dist: click (>=8.0.0)
+Requires-Dist: dataclassy (==0.10.4)
+Requires-Dist: eth-account (<0.6.0,>=0.5.6)
+Requires-Dist: ethpm-types (>=0.1.0b2)
+Requires-Dist: pluggy (<1.0,>=0.13.1)
+Requires-Dist: PyGithub (<2.0,>=1.54)
+Requires-Dist: pyyaml (>=0.2.5)
+Requires-Dist: py-geth (>=3.6.0)
+Requires-Dist: requests (<3.0,>=2.25.1)
+Requires-Dist: importlib-metadata
+Requires-Dist: IPython (>=7.25)
+Requires-Dist: pytest (<7.0,>=6.0)
+Requires-Dist: rich (<11,>=10.14)
+Requires-Dist: tqdm (<5.0,>=4.62.3)
+Requires-Dist: web3[tester] (<6.0.0,>=5.25.0)
+Requires-Dist: backports.cached-property ; python_version < "3.8"
+Requires-Dist: singledispatchmethod ; python_version < "3.8"
+Requires-Dist: typing-extensions ; python_version < "3.8"
+Provides-Extra: dev
+Requires-Dist: pytest-xdist ; extra == 'dev'
+Requires-Dist: pytest-cov ; extra == 'dev'
+Requires-Dist: pytest-mock ; extra == 'dev'
+Requires-Dist: hypothesis (<7.0,>=6.2.0) ; extra == 'dev'
+Requires-Dist: hypothesis-jsonschema (==0.19.0) ; extra == 'dev'
+Requires-Dist: black (<22.0,>=21.10b0) ; extra == 'dev'
+Requires-Dist: mypy (<1.0,>=0.910) ; extra == 'dev'
+Requires-Dist: types-PyYAML ; extra == 'dev'
+Requires-Dist: types-requests ; extra == 'dev'
+Requires-Dist: flake8 (<4.0,>=3.9.2) ; extra == 'dev'
+Requires-Dist: flake8-breakpoint (<2.0.0,>=1.1.0) ; extra == 'dev'
+Requires-Dist: flake8-print (<5.0.0,>=4.0.0) ; extra == 'dev'
+Requires-Dist: isort (<6.0,>=5.9.3) ; extra == 'dev'
+Requires-Dist: myst-parser (==0.16.0) ; extra == 'dev'
+Requires-Dist: sphinx-click (<4.0,>=3.0.0) ; extra == 'dev'
+Requires-Dist: Sphinx (<4,>=3.4.3) ; extra == 'dev'
+Requires-Dist: sphinx-click (>=3.0.0) ; extra == 'dev'
+Requires-Dist: sphinx-rtd-theme (<1,>=0.1.9) ; extra == 'dev'
+Requires-Dist: sphinxcontrib-napoleon (>=0.7) ; extra == 'dev'
+Requires-Dist: setuptools ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+Requires-Dist: commitizen (<2.20,>=2.19) ; extra == 'dev'
+Requires-Dist: pre-commit ; extra == 'dev'
+Requires-Dist: pytest-watch ; extra == 'dev'
+Requires-Dist: ipdb ; extra == 'dev'
+Provides-Extra: doc
+Requires-Dist: myst-parser (==0.16.0) ; extra == 'doc'
+Requires-Dist: sphinx-click (<4.0,>=3.0.0) ; extra == 'doc'
+Requires-Dist: Sphinx (<4,>=3.4.3) ; extra == 'doc'
+Requires-Dist: sphinx-click (>=3.0.0) ; extra == 'doc'
+Requires-Dist: sphinx-rtd-theme (<1,>=0.1.9) ; extra == 'doc'
+Requires-Dist: sphinxcontrib-napoleon (>=0.7) ; extra == 'doc'
+Provides-Extra: lint
+Requires-Dist: black (<22.0,>=21.10b0) ; extra == 'lint'
+Requires-Dist: mypy (<1.0,>=0.910) ; extra == 'lint'
+Requires-Dist: types-PyYAML ; extra == 'lint'
+Requires-Dist: types-requests ; extra == 'lint'
+Requires-Dist: flake8 (<4.0,>=3.9.2) ; extra == 'lint'
+Requires-Dist: flake8-breakpoint (<2.0.0,>=1.1.0) ; extra == 'lint'
+Requires-Dist: flake8-print (<5.0.0,>=4.0.0) ; extra == 'lint'
+Requires-Dist: isort (<6.0,>=5.9.3) ; extra == 'lint'
+Provides-Extra: release
+Requires-Dist: setuptools ; extra == 'release'
+Requires-Dist: wheel ; extra == 'release'
+Requires-Dist: twine ; extra == 'release'
+Provides-Extra: test
+Requires-Dist: pytest-xdist ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: pytest-mock ; extra == 'test'
+Requires-Dist: hypothesis (<7.0,>=6.2.0) ; extra == 'test'
+Requires-Dist: hypothesis-jsonschema (==0.19.0) ; extra == 'test'
+
+# Ape Framework
+
+Ape is a framework for Web3 Python applications and smart contracts, with advanced functionality for testing, deployment, and on-chain interactions.
+
+See [website](https://apeworx.io/) and [documentation](https://docs.apeworx.io/ape).
+
+## Dependencies
+
+* [python3](https://www.python.org/downloads) version 3.7 or greater, python3-dev
+
+## Installation
+
+### via `pip`
+
+You can install the latest release via [`pip`](https://pypi.org/project/pip/):
+
+```bash
+pip install eth-ape
+```
+
+### via `setuptools`
+
+You can clone the repository and use [`setuptools`](https://github.com/pypa/setuptools) for the most up-to-date version:
+
+```bash
+git clone https://github.com/ApeWorX/ape.git
+cd ape
+python3 setup.py install
+```
+
+### via `docker`
+
+Please visit our [Dockerhub](https://hub.docker.com/repository/docker/apeworx/ape) for more details on using Ape with Docker.
+
+example commands:  
+
+compiling:
+```
+docker run \
+--volume $HOME/.ape:/root/.ape \
+--volume $HOME/.vvm:/root/.vvm \
+--volume $HOME/.solcx:/root/.solcx \
+--volume $PWD:/root/project \
+--workdir /root/project \
+apeworx/ape compile
+```
+
+running the ape console:
+```
+docker run -it \
+--volume $HOME/.ape:/root/.ape \
+--volume $HOME/.vvm:/root/.vvm \
+--volume $HOME/.solcx:/root/.solcx \
+--volume $PWD:/root/project \
+--workdir /root/project \
+apeworx/ape console
+```
+
+## Quick Usage
+
+Ape is primarily meant to be used as a command line tool. Here are some things you can use ape to do:
+
+```bash
+# Work with your accounts
+$ ape accounts list
+
+# Compile your project's smart contracts
+$ ape compile --size
+
+# Run your tests with pytest
+$ ape test -k test_only_one_thing --coverage --gas
+
+# Connect an IPython session through your favorite provider
+$ ape console --network ethereum:mainnet:infura
+
+# Add new plugins to ape
+$ ape plugins add plugin-name
+```
+
+Ape also works as a package. You can use the same networks, accounts, and projects from the ape package as you can in the cli:
+
+```python
+# Work with registered networks, providers, and blockchain ecosystems (like Ethereum)
+from ape import networks
+with networks.ethereum.mainnet.use_provider("infura"):
+    ...  # Work with the infura provider here
+
+# Work with test accounts, local accounts, and (WIP) popular hardware wallets
+from ape import accounts
+a = accounts[0]  # Load by index
+a = accounts["example.eth"]  # or load by ENS/address
+a = accounts.load("alias") # or load by alias
+
+# Work with contract types
+from ape import project
+c = a.deploy(project.MyContract, ...)
+c.viewThis()  # Make Web3 calls
+c.doThat(sender=a)  # Make Web3 transactions
+assert c.MyEvent[-1].caller == a  # Search through Web3 events
+```
+
+## Development
+
+This project is in development and should be considered a beta.
+Things might not be in their final state and breaking changes may occur.
+Comments, questions, criticisms and pull requests are welcomed.
+
+## Documentation
+
+To build docs:
+
+```bash
+python build_docs.py
+```
+
+## License
+
+This project is licensed under the [Apache 2.0](LICENSE).
+
+
