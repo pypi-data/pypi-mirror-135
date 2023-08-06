@@ -1,0 +1,305 @@
+from __future__ import annotations
+
+import logging
+from contextlib import aclosing, asynccontextmanager
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncContextManager,
+    AsyncIterable,
+    Optional,
+    Type,
+    cast,
+)
+
+import anyio
+from anyio import CancelScope, ClosedResourceError, EndOfStream, Event, Lock
+from anyio.lowlevel import checkpoint
+
+from serena.exc import (
+    AMQPStateError,
+    InvalidPayloadTypeError,
+    MessageReturnedError,
+    UnexpectedCloseError,
+)
+from serena.frame import BodyFrame, Frame
+from serena.message import AMQPEnvelope, AMQPMessage
+from serena.mixin import _PAYLOAD, ChannelLike
+from serena.payloads.header import BasicHeader, ContentHeaderFrame, ContentHeaderPayload
+from serena.payloads.method import (
+    BasicAckPayload,
+    BasicCancelPayload,
+    BasicConsumeOkPayload,
+    BasicConsumePayload,
+    BasicDeliverPayload,
+    BasicGetEmptyPayload,
+    BasicGetOkPayload,
+    BasicGetPayload,
+    BasicNackPayload,
+    BasicPublishPayload,
+    BasicRejectPayload,
+    BasicReturnPayload,
+    ChannelClosePayload,
+    ChannelOpenOkPayload,
+    MethodFrame,
+    MethodPayload,
+)
+
+if TYPE_CHECKING:
+    from serena.connection import AMQPConnection
+
+logger = logging.getLogger()
+
+
+# noinspection PyProtectedMember
+class Channel(ChannelLike):
+    """
+    A wrapper around an AMQP channel.
+    """
+
+    def __init__(self, channel_id: int, connection: AMQPConnection, stream_buffer_size: int):
+        """
+        :param channel_id: The ID of this channel.
+        :param connection: The AMQP connection object to send data on.
+        :param stream_buffer_size: The buffer size for the streams.
+        """
+
+        self._connection = connection
+        self._channel_id = channel_id
+
+        # Why is there both an `_open` and a `_closed`?
+        # `_open` is True between ChannelOpenOk, and ChannelCloseOk, and is mostly just used for
+        #  internal bookkeeping.
+        # `_closed` is False when the ``async with`` block exits.
+
+        self._open = False
+        self._closed = False
+        self._close_event = Event()
+
+        # no buffer as these are for events that should return immediately
+        self._send, self._receive = anyio.create_memory_object_stream(0)
+
+        self._delivery_send, self._delivery_receive = anyio.create_memory_object_stream(
+            max_buffer_size=stream_buffer_size
+        )
+
+        self._close_info: Optional[ChannelClosePayload] = None
+        self._lock = Lock()
+
+        self._is_consuming = False
+
+        # internal state used by the connection
+        # server requested a flow stop
+        self._server_flow_stopped = False
+
+        # used to count acks
+        self._message_counter = 0
+
+    def __str__(self):
+        return f"<Channel id={self.id} buffered={self.current_buffer_size}>"
+
+    __repr__ = __str__
+
+    @property
+    def id(self) -> int:
+        """
+        Returns the ID of this channel.
+        """
+
+        return self._channel_id
+
+    @property
+    def open(self) -> bool:
+        """
+        Returns if this channel is open or not.
+        """
+
+        return self._open and not self._closed
+
+    @property
+    def max_buffer_size(self) -> int:
+        """
+        Returns the maximum number of frames buffered in this channel. Used internally.
+        """
+
+        return int(self._delivery_send.statistics().max_buffer_size)
+
+    @property
+    def current_buffer_size(self) -> int:
+        """
+        Returns the current number of frames buffered in this channel. Used internally.
+        """
+
+        return self._delivery_send.statistics().current_buffer_used
+
+    def _check_closed(self):
+        """
+        Checks if the channel is closed.
+        """
+
+        if self._closed:
+            # todo: switch to our own exception?
+            raise ClosedResourceError("This channel is closed")
+
+    async def _close(self, payload: ChannelClosePayload):
+        """
+        Closes this channel.
+        """
+
+        self._close_info = payload
+        await self._send.aclose()
+        await self._delivery_send.aclose()
+        self._closed = True
+
+        # noinspection PyAsyncCall
+        self._close_event.set()
+
+        # aclose doesn't seem to checkpoint...
+        await checkpoint()
+
+    async def _enqueue_regular(self, frame: MethodFrame):
+        """
+        Enqueues a regular method frame.
+        """
+
+        await self._send.send(frame)
+
+    async def _enqueue_delivery(self, frame: Frame):
+        """
+        Enqueues a delivery frame.
+        """
+
+        await self._delivery_send.send(frame)
+
+    async def _receive_delivery_message(self):
+        """
+        Receives a single delivery message. This will reassemble a full message into its constituent
+        frames.
+        """
+
+        method = None
+        headers = None
+        body = b""
+
+        while True:
+            # check for successful reassembly first
+            if headers is not None and len(body) >= headers.payload.full_size:
+                await checkpoint()
+                # hehe payload.payload
+                return AMQPMessage(
+                    channel=self,
+                    envelope=AMQPEnvelope.of(method.payload),
+                    header=headers.payload.payload,
+                    body=body,
+                )
+
+            try:
+                next_frame = await self._delivery_receive.receive()
+            except EndOfStream:
+                if self._close_info is None:
+                    raise AMQPStateError("Channel was closed improperly")
+
+                raise UnexpectedCloseError.of(self._close_info) from None
+
+            if method is None:
+                if not isinstance(next_frame, MethodFrame):
+                    raise AMQPStateError(f"Expected a method frame, got {next_frame} instead")
+
+                if isinstance(next_frame.payload, (BasicGetOkPayload, BasicDeliverPayload)):
+                    method = next_frame
+
+                elif isinstance(next_frame.payload, BasicGetEmptyPayload):
+                    return None
+
+                else:
+                    raise AMQPStateError(
+                        f"Expected Basic.Deliver or Basic.Get-Ok, got {next_frame.payload} instead"
+                    )
+
+            elif headers is None:
+                if not isinstance(next_frame, ContentHeaderFrame):
+                    raise AMQPStateError(f"Expected a header frame, got {next_frame} instead")
+
+                # explicit type hint as pycharm incorrectly infers based on the previous if check
+                payload: ContentHeaderPayload = next_frame.payload  # type: ignore
+                if payload.class_id != method.payload.klass:
+                    raise AMQPStateError(
+                        f"Class mismatch ({payload.class_id} != {method.payload.klass})"
+                    )
+
+                headers = next_frame
+
+            else:
+                if not isinstance(next_frame, BodyFrame):
+                    raise AMQPStateError(f"Expected a body frame, got {next_frame} instead")
+
+                body += next_frame.data
+
+    async def _receive_frame(self) -> MethodFrame:
+        """
+        Receives a single frame from the channel.
+        """
+
+        self._check_closed()
+
+        try:
+            frame = await self._receive.receive()
+        except EndOfStream:
+            if self._close_info is None:
+                raise AMQPStateError("Channel was closed improperly")
+
+            raise UnexpectedCloseError.of(self._close_info) from None
+
+        # notify connection code that we received an event so it can unblock the channel
+        # noinspection PyAsyncCall
+        return frame
+
+    async def _wait_until_open(self):
+        """
+        Waits until the channel is open.
+        """
+
+        frame = await self._receive.receive()
+        if not isinstance(frame, MethodFrame):
+            raise AMQPStateError(f"Expected MethodFrame, got {frame}")
+
+        if not isinstance(frame.payload, ChannelOpenOkPayload):
+            raise InvalidPayloadTypeError(ChannelOpenOkPayload, frame.payload)
+
+        self._open = True
+
+    async def _send_single_frame(self, payload: MethodPayload):
+        """
+        Sends a single frame to the connection. This won't wait for a response.
+        """
+
+        async with self._lock:
+            await self._connection._send_method_frame(self._channel_id, payload)
+
+    async def _send_and_receive_frame(
+        self, payload: MethodPayload, type: Type[_PAYLOAD] = None
+    ) -> MethodFrame[_PAYLOAD]:
+        """
+        Sends and receives a method payload.
+
+        :param payload: The :class:`.MethodPayload` to send.
+        :param type: The type of the expected payload to return.
+        :return: A :class:`.kMethodFrame` that was returned as a result.
+        """
+
+        async with self._lock:
+            await self._connection._send_method_frame(self._channel_id, payload)
+            result = await self._receive_frame()
+            if type is not None and not isinstance(result.payload, type):
+                raise InvalidPayloadTypeError(type, result.payload)
+
+            return cast(MethodFrame[type], result)
+
+    async def wait_until_closed(self):
+        """
+        Waits until the channel is closed.
+        """
+
+        await self._close_event.wait()
+
+    ## METHODS ##
