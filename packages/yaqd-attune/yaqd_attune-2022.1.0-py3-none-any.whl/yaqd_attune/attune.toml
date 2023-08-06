@@ -1,0 +1,159 @@
+protocol = "attune"
+doc="yaq daemon representing an attune instrument"
+traits=["has-limits", "is-homeable", "is-daemon"]
+
+[links]
+source = "https://gitlab.com/yaq/yaqd-attune"
+bugtracker = "https://gitlab.com/yaq/yaqd-attune/-/issues"
+
+[installation]
+PyPI = "https://pypi.org/project/yaqd-attune"
+
+[[types]]
+type="record"
+name="Transition"
+fields=[{name="type", type="string"}]
+
+[[types]]
+type="record"
+name="Setable"
+fields=[{name="name", type="string"}]
+
+[[types]]
+type="record"
+name="Tune"
+[[types.fields]]
+name="independent"
+type={type="array", items="double"}
+[[types.fields]]
+name="dependent"
+type={type="array", items="double"}
+
+[[types]]
+type="record"
+name="DiscreteTune"
+[[types.fields]]
+name="ranges"
+type={type="map", values={type="array", items="double"}}
+[[types.fields]]
+name="default"
+type = ["null", "string"]
+
+[[types]]
+type="record"
+name="Arrangement"
+[[types.fields]]
+name="name"
+type="string"
+[[types.fields]]
+name="tunes"
+type={type="map", values=["Tune", "DiscreteTune"]}
+
+[[types]]
+type="record"
+name="Instrument"
+[[types.fields]]
+name="name"
+type="string"
+[[types.fields]]
+name="arrangements"
+type={type="map", values="Arrangement"}
+[[types.fields]]
+name="setables"
+type={type="map", values="Setable"}
+[[types.fields]]
+name="transition"
+type="Transition"
+
+[config]
+setables.type = "map"
+setables.values = ["int", "string"]
+setables.doc = "mapping of setable names (must be a superset of those in the instrument) to yaq ports"
+
+delays.type = "map"
+delays.values = ["int", "string"]
+delays.doc = "mapping of delay names to yaq ports. Delays will be informed when position or arrangement changes"
+delays.default = {}
+
+[state]
+arrangement.type=["null", "string"]
+arrangement.default="__null__"
+arrangement.doc = "Currently selected arrangement. If null, use whichever arrangment fits the requested position, and error if there are multiple"
+
+[messages]
+
+[messages.get_instrument]
+response = "Instrument"
+doc = "Get the currently in use instrument object"
+
+[messages.set_instrument]
+request = [{name="instrument", type="Instrument"}]
+doc = "Set the currently in use instrument object. Also triggers a restart"
+
+[messages.get_arrangement]
+response = ["null", "string"]
+doc = "Get the currently in use arrangement name"
+
+[messages.get_all_arrangements]
+response = {type="array", items="string"}
+doc = "Get all currently valid arrangement names"
+
+[messages.set_arrangement]
+request = [{name="arrangement", type=["null", "string"]}]
+doc = "Get the currently in use arrangement name"
+
+[messages.set_position_except]
+doc = "Set the position, but ignore some setables"
+[[messages.set_position_except.request]]
+name="position"
+type="double"
+[[messages.set_position_except.request]]
+name="exceptions"
+type={type="array", items="string"}
+
+[messages.get_setable_yaq_params]
+response = {type="map", values=["int", "string"]}
+doc = "Get the ports for setables."
+
+[messages.get_setable_names]
+response = {type="array", items="string"}
+doc = "Get list of setables"
+
+[messages.get_delay_yaq_params]
+response = {type="map", values=["int", "string"]}
+doc = "Get the ports for delays."
+
+[messages.get_delay_names]
+response = {type="array", items="string"}
+doc = "Get list of delays"
+
+[messages.set_setable_positions]
+doc = "Set underlying setables, accepts a mapping of names to positions, in native units."
+[[messages.set_setable_positions.request]]
+name="setables"
+type={type="map", values=["double", "string"]}
+
+
+[messages.get_setable_positions]
+response = {type="map", values=["double", "string"]}
+doc = "Get underlying setables, provides a mapping of names to positions, in native units."
+
+[messages.home_setables]
+doc = "Home underlying setables, accepts a list of names to home."
+[[messages.home_setables.request]]
+name = "setables"
+type = {type="array", items="string"}
+
+[messages.get_dependent_hardware]
+response = {type="map", values="string"}
+doc = "Get mapping of name to host:port string. 'localhost' should be replaced on the client side with the host for this daemon."
+
+[properties]
+
+[properties.arrangement]
+getter = "get_arrangement"
+setter = "set_arrangement"
+options_getter = "get_all_arrangements"
+control_kind = "hinted"
+record_kind = "metadata"
+type = "string"
