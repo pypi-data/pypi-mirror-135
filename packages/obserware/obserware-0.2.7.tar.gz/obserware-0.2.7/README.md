@@ -1,0 +1,127 @@
+# Obserware
+
+An advanced system monitor utility written in Python and Qt
+
+## About
+
+Obserware makes monitoring of advanced metrics accessible with the use of interactive graphs and charts. It is built on free and open-source technologies such as Python, Psutil, PyCPUinfo, Distro and Qt5. With the use of the utility, you can monitor
+
+- Advanced overview of the system health by monitoring CPU usage, memory utilization and swapping rate
+- Granular counts of context switches, system calls and interrupts of both natures, software and hardware
+- Per-core/per-thread CPU utilization, measured in both stress percentage and active clock speeds
+- Per-core/per-thread CPU state times, measured in both occupancy percentage and duration in seconds
+- Usage/availability information, measured in both occupancy percentage and active size in megabytes
+- Storage counters, measured in unit counts, size in bytes, duration in seconds, merge counts and busy time in seconds
+- Global network statistics gathered from all network interface cards, measured in packet count rate and size rate
+- Statistics of uploads and downloads made since boot, measured in packet counts and size in bytes
+- Per-NIC activity, transfer rate in packet counts and bytes, total transmission, dropped transfers and more
+- Per-unit metrics in both, occupancy percentage and active size of physical and logical partitions
+- Static information about mount location, file system, unit name and much more of physical and logical partitions
+- Dynamic listing of processes in process IDs, names, terminal, usernames, states, CPU and memory usage and thread counts
+- Per-process information with process IDs, CPU and memory usage, CPU/thread counts, context switches and more
+- Per-process control with options to kill, resume, terminate or suspend those on demand
+- Static software information on operating system and kernel as well as dependency versions for the application
+- Static hardware information on CPU name, vendor, frequency, available feature flags and more
+- While adapting to the global system-wide theming options on Qt-based desktop environments like KDE Plasma or LXQt
+
+## Find it on
+
+1. [**PyPI**](https://pypi.org/project/obserware/)  
+   [![PyPI version](https://img.shields.io/pypi/v/obserware?style=flat-square)](https://pypi.org/project/obserware/)  
+2. [**Fedora COPR**](https://copr.fedorainfracloud.org/coprs/t0xic0der/obserware/)  
+   [![Copr build status](https://copr.fedorainfracloud.org/coprs/t0xic0der/obserware/package/obserware/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/t0xic0der/obserware/package/obserware/)  
+3. [**Product Hunt**](https://www.producthunt.com/posts/obserware)  
+   1. [Vote](https://www.producthunt.com/posts/obserware?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-obserware)  
+      [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=321452&theme=dark)](https://www.producthunt.com/posts/obserware?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-obserware)  
+   2. [Review](https://www.producthunt.com/posts/obserware?utm_source=badge-review&utm_medium=badge&utm_souce=badge-obserware#discussion-body)  
+      [![](https://api.producthunt.com/widgets/embed-image/v1/review.svg?post_id=321452&theme=dark)](https://www.producthunt.com/posts/obserware?utm_source=badge-review&utm_medium=badge&utm_souce=badge-obserware#discussion-body)  
+
+## Installation
+
+### For development
+
+#### Using Poetry
+
+1. `sudo dnf install python3-poetry`
+2. `git clone https://gitlab.com/t0xic0der/obserware.git`
+3. `cd obserware`
+4. `virtualenv venv`
+5. `source venv/bin/activate`
+6. `poetry install`
+7. `deactivate`
+
+### For consumption
+
+#### From Fedora COPR
+
+1. `sudo dnf install dnf-plugins-core -y`
+2. `sudo dnf copr enable t0xic0der/obserware -y`
+3. `sudo dnf install obserware -y`
+
+#### From PyPI
+
+1. `virtualenv venv`
+2. `source venv/bin/activate`
+3. `pip3 install obserware`
+4. `deactivate`
+
+## Usage
+
+### For development
+
+#### If installed via Poetry
+
+1. `source venv/bin/activate`
+2. `obserware`
+3. `deactivate`
+
+### For consumption
+
+#### If installed from Fedora COPR
+
+1. Either, run `obserware` in a terminal
+2. Or, invoke the created desktop entry
+
+#### If installed from PyPI
+
+1. `source venv/bin/activate`
+2. `obserware`
+3. `deactivate`
+
+## Screenshots
+
+1. **Windows**  
+   1. _Performance tabscreen_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_mainperf.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainperf.png)  
+   2. _Processes tabscreen_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_mainproc.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainproc.png)  
+   3. _Connections tabscreen_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_mainproc.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainntwk.png)  
+   4. _Information tabscreen_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_maininfo.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_maininfo.png)  
+   5. _Contribute tabscreen_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_maincntb.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_maincntb.png)  
+2. **Dialogs**  
+   1. _CPU cycles dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_cyclwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_cyclwind.png)  
+   2. _CPU times dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_cputwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_cputwind.png)  
+   3. _Storage counters dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_sostwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_sostwind.png)  
+   4. _Physical partitions dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_phptwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_phptwind.png)  
+   5. _Logical partitions dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_lgptwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_lgptwind.png)  
+   6. _Process information dialog_  
+      Find here https://gitlab.com/t0xic0der/obserware/-/blob/main/screenshots/obsr_procwind.png  
+      ![](https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_procwind.png)  

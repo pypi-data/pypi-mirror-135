@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2021 Akashdeep Dhar <t0xic0der@fedoraproject.org> -->
+<component type="desktop">
+  <id>org.t0xic0der.obserware</id>
+  <metadata_license>CC-BY-SA-3.0</metadata_license>
+  <project_license>LGPL-3.0+ AND GPL-3.0+</project_license>
+  <name>Obserware</name>
+  <summary>An advanced system monitor utility written in Python and Qt</summary>
+  <description>
+    <p>
+      Obserware makes monitoring of advanced metrics accessible with the use of interactive graphs and charts. It is built on free and open-source technologies such as Python, Psutil, PyCPUinfo, Distro and Qt5. With the use of the utility, you can monitor
+    </p>
+    <ul>
+      <li>Advanced overview of the system health by monitoring CPU usage, memory utilization and swapping rate</li>
+      <li>Granular counts of context switches, system calls and interrupts of both natures, software and hardware</li>
+      <li>Per-core/per-thread CPU utilization, measured in both stress percentage and active clock speeds</li>
+      <li>Per-core/per-thread CPU state times, measured in both occupancy percentage and duration in seconds</li>
+      <li>Usage/availability information, measured in both occupancy percentage and active size in megabytes</li>
+      <li>Storage counters, measured in unit counts, size in bytes, duration in seconds, merge counts and busy time in seconds</li>
+      <li>Global network statistics gathered from all network interface cards, measured in packet count rate and size rate</li>
+      <li>Statistics of uploads and downloads made since boot, measured in packet counts and size in bytes</li>
+      <li>Per-NIC activity, transfer rate in packet counts and bytes, total transmission, dropped transfers and more</li>
+      <li>Per-unit metrics in both, occupancy percentage and active size of physical and logical partitions</li>
+      <li>Static information about mount location, file system, unit name and much more of physical and logical partitions</li>
+      <li>Dynamic listing of processes in process IDs, names, terminal, usernames, states, CPU and memory usage and thread counts</li>
+      <li>Per-process information with process IDs, CPU and memory usage, CPU/thread counts, context switches and more</li>
+      <li>Per-process control with options to kill, resume, terminate or suspend those on demand</li>
+      <li>Static software information on operating system and kernel as well as dependency versions for the application</li>
+      <li>Static hardware information on CPU name, vendor, frequency, available feature flags and more</li>
+      <li>While adapting to the global system-wide theming options on Qt-based desktop environments like KDE Plasma or LXQt</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">org.t0xic0der.obserware.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image width="1090" height="699">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainperf.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="1090" height="699">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainproc.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="1090" height="699">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_mainntwk.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="1090" height="699">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_maininfo.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="1090" height="699">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_maincntb.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="610" height="559">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_cyclwind.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="730" height="639">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_cputwind.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="610" height="424">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_sostwind.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="610" height="559">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_phptwind.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="610" height="559">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_lgptwind.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image width="450" height="639">https://gitlab.com/t0xic0der/obserware/-/raw/main/screenshots/obsr_procwind.png</image>
+    </screenshot>
+  </screenshots>
+  <update_contact>t0xic0der@fedoraproject.org</update_contact>
+  <developer_name>Akashdeep Dhar</developer_name>
+  <url type="homepage">https://gitlab.com/t0xic0der/obserware</url>
+  <url type="bugtracker">https://gitlab.com/t0xic0der/obserware/-/issues</url>
+  <url type="help">https://pypi.org/project/obserware</url>
+  <content_rating type="oars-1.0"/>
+  <releases>
+    <release version="0.2.7" date="2022-01-20">
+      <description>
+        <p>v0.2.7 - Released on January 20th, 2022</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.7</p>
+        <ul>
+          <li>Switched fontface for header/statistic elements from JetBrains Mono to Barlow Sans</li>
+          <li>Phased out default colours in favour of a better support for the global system-wide theming</li>
+          <li>Iconified the activity state of the per-NIC listing item for better graphical representation</li>
+          <li>Reduced the sizes of the dialog boxes and widget items to save space on changed fontface</li>
+          <li>Added a new CI test directive to check for the validity of the Qt UI files</li>
+          <li>Set application style to `Fusion` for graphical consistency across desktop environments</li>
+          <li>Fixed crashes from `ZeroDivisionError` on environments where no swap partitions are present</li>
+          <li>Fixed graphical artifacts for the icon elements on the widget display of network statistics</li>
+          <li>Modularized size formatting function for use in physical and logical partitions and network readers</li>
+          <li>Added size formatting in the physical and virtual memory display of the main screen</li>
+          <li>Added size formatting in the CPU frequency listing display of the CPU Cycles dialog box</li>
+          <li>Added size formatting in the times display of the CPU Times dialog box</li>
+          <li>Added size formatting in the statistics display of the Storage Statistics dialog box</li>
+          <li>Included support for Python 3.8, 3.9, 3.10 and 3.11 by adding the respective trove classifiers</li>
+          <li>Updated the documentation with newer screenshots for the recent release</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.6" date="2022-01-07">
+      <description>
+        <p>v0.2.6 - Released on January 07th, 2022</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.6</p>
+        <ul>
+          <li>Added Font Awesome 5 fontface assets to the project</li>
+          <li>Added tabscreen view for the network statistics with widget listing</li>
+          <li>Added combined reader for the network statistics tabscreen view</li>
+          <li>Removed dialog box for the network statistics with tabular view</li>
+          <li>Removed standalone reader for the network statistics dialog box</li>
+          <li>Fixed highlight color for the `QListWidget` elements on the information tabscreen</li>
+          <li>Fixed highlight color for the `QTableWidget` rows on the process tabscreen</li>
+          <li>Stepped down the Python version requirement from Python 3.10 to Python 3.8</li>
+          <li>Moved icon imports from static image assets to Font Awesome 5 fontface assets</li>
+          <li>Removed useless static image assets, resource bytecodes and XML references</li>
+          <li>Restored list item highlighting according to the application theme</li>
+          <li>Added GitLab CI pipeline configuration file for checking code quality and build state</li>
+          <li>Formatted the source code and sorted the dependency imports</li>
+          <li>Removed border radius from frames, progress bars and buttons</li>
+          <li>Set the vertical scrollbars for the dialog boxes to be always visible</li>
+          <li>Used `PyQt5.QtCore.qVersion` instead of `PyQt5.Qt.PYQT_VERSION_STR`</li>
+          <li>Updated the documentation with newer screenshots for the recent release</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.5" date="2021-12-30">
+      <description>
+        <p>v0.2.5 - Released on December 30th, 2021</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.5</p>
+        <ul>
+          <li>Restructured the source code into a cascading layout</li>
+          <li>Removed tabular listing of logical partitions in the logical partitions dialog box</li>
+          <li>Added a widget-wise listing of the logical partitions in the logical partitions dialog box</li>
+          <li>Included storage occupancy display with the use of `QProgressBar` element for each partition</li>
+          <li>Added permalink of the screenshots on the project documentation</li>
+          <li>Fixed variable names of the widget subclass of the physical partitions dialog box</li>
+          <li>Transferred UI assets like fonts, images, UI files and resources to the parent directory</li>
+          <li>Updated the documentation with newer screenshots for the recent release</li>
+          <li>Worked on the distribution of Obserware as a standard desktop application</li>
+          <li>Fixed the relative location of Logical Partitions widget UI file on the project storage</li>
+          <li>Made the application available for installation/usage on Fedora COPR and Flathub</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.4" date="2021-12-26">
+      <description>
+        <p>v0.2.4 - Released on December 26th, 2021, 9:47 PM</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.4</p>
+        <ul>
+          <li>Increased project visibility by adding a featured section to README.md</li>
+          <li>Corrected maximum dimensions of the CPU Cycles dialog box</li>
+          <li>Removed tabular listing of physical partitions in the physical partitions dialog box</li>
+          <li>Added a widget-wise listing of the physical partitions in the physical partitions dialog box</li>
+          <li>Included storage occupancy display with the use of `QProgressBar` element for each partition</li>
+          <li>Reworked main window to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked CPU Cycles dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked CPU Times dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked Storage Counters dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked Network Statistics dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked Process Statistics dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked Physical Partitions dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Reworked Logical Partitions dialog box to comply with the global system colour scheme in Qt-based desktop environments</li>
+          <li>Fixed the physical partitions dialog header to be in title-case</li>
+          <li>Updated the documentation with newer screenshots for the recent release</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.3" date="2021-12-15">
+      <description>
+        <p>v0.2.3 - Released on December 15th, 2021, 10:15 AM</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.3</p>
+        <ul>
+          <li>Redesigned CPU times dialog box to better describe the purpose</li>
+          <li>Added widget block and widget list interfaces for CPU times</li>
+          <li>Restructured provider module schema to be more semantic</li>
+          <li>Made the window to be initialized on center of the screen</li>
+          <li>Updated documentation to mark recent release of the current version</li>
+          <li>Hard-coded font styles to make it agnostic to system font styling in UI assets</li>
+          <li>Hard-coded font styles to make it agnostic to system font styling in interface modules</li>
+          <li>Set uniform row heights on `QTableWidget` elements used to display network devices listing</li>
+          <li>Set uniform row heights on `QTableWidget` elements used to display physical partitions listing</li>
+          <li>Set uniform row heights on `QTableWidget` elements used to display logical partitions listing</li>
+          <li>Allowed for uniform scaling in accordance with the global scaling factor</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.2" date="2021-12-04">
+      <description>
+        <p>v0.2.2 - Released on December 4th, 2021, 12:03 AM</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.2</p>
+        <ul>
+          <li>Added detailed graphical view for per-core CPU usage and frequency statistics</li>
+          <li>Nested CPU times dialog box inside of CPU cycles dialog box</li>
+          <li>Added Gitignore file configured for Python projects</li>
+          <li>Updated documentation to mark recent release of the current version</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.1" date="2021-12-03">
+      <description>
+        <p>v0.2.1 - Released on December 3rd, 2021, 10:15 PM</p>
+        <p>Find the release here - https://gitlab.com/t0xic0der/obserware/-/releases/v0.2.1</p>
+        <ul>
+          <li>Initialized the project</li>
+          <li>Added interactive quick-access bottombar for easy statistics</li>
+          <li>Added graphical landing view for CPU, memory and swap statistics in the Performance section</li>
+          <li>Added tabular process listing view in the Processes section</li>
+          <li>Added CPU times tabular view in the CPU times dialog box</li>
+          <li>Added storage counter view in the storage counter dialog box</li>
+          <li>Fixed naming on the header for storage counters dialog box</li>
+          <li>Fixed CPU count display information from the provider</li>
+          <li>Added tabular partition listing view in the physical and logical partitions dialog boxes</li>
+          <li>Added per-process statistics view in the per-process dialog box</li>
+          <li>Had project licensed under GPL 3.0 or later</li>
+          <li>Added network statistics view in the network statistics dialog box</li>
+          <li>Fixed height of the storage counters dialog box</li>
+          <li>Added static information view for software and specifications in the Information section</li>
+          <li>Fixed retrieval of useless static data for the landing view</li>
+          <li>Fixed time format in the per-process statistics view dialog box</li>
+          <li>Mutated all child windows to dialog boxes</li>
+          <li>Fixed inheritance in dialog boxes for automatically centering them</li>
+          <li>Fixed action references to non-existent processes</li>
+          <li>Added warning level logging for operations on process interaction</li>
+          <li>Added contributing view for attributions and license information</li>
+          <li>Extended project documentation with screenshots and usage information</li>
+          <li>Fixed additional rows on table views for CPU times, logical partitions, physical partitions, network statistics and process listing</li>
+          <li>Marked first public release for current release and updated documentation</li>
+          <li>Fixed broken references to included fonts in the application</li>
+          <li>Fixed addition of font resources asset and performed version bump</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>
