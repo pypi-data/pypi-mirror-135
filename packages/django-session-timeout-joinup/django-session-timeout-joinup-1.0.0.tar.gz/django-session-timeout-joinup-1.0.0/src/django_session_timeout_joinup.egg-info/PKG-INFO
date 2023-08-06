@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: django-session-timeout-joinup
+Version: 1.0.0
+Summary: Middleware to expire sessions after specific amount of time
+Home-page: https://github.com/we-are-Joinup/django-session-timeout
+Author: Joinup
+Author-email: desarrollo@joinup.es
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.0
+Classifier: Framework :: Django :: 2.1
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+Provides-Extra: docs
+Provides-Extra: test
+License-File: LICENSE
+
+
+# django-session-timeout
+
+Add timestamp to sessions to expire them independently
+
+## Installation
+
+```shell
+pip install django-session-timeout-joinup
+```
+
+## Usage
+
+Update your settings to add the SessionTimeoutMiddleware:
+
+```python
+MIDDLEWARE_CLASSES = [
+    # ...
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
+    # ...
+]
+```
+
+And also add the ``SESSION_EXPIRE_MAXIMUM_SECONDS``:
+
+```python
+SESSION_EXPIRE_MAXIMUM_SECONDS = 28800  # 8 hours
+```
+
+By default, the session will expire X seconds since the user do login.
+
+```python
+SESSION_EXPIRE_SECONDS = 3600  # 1 hour
+```
+
+The session will expire X seconds after the start of the session or renew it.
+To renew the session X seconds after expire, use the following setting:
+
+```python
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY_GRACE_PERIOD = 1800  # 30 minutes
+```
+
+To redirect to a custom URL define the following setting:
+
+```python
+SESSION_TIMEOUT_REDIRECT = 'your_redirect_url_here/'
+```
+
+
