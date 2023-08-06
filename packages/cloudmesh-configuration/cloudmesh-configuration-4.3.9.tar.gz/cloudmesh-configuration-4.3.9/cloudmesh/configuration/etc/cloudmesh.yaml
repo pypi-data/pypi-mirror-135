@@ -1,0 +1,494 @@
+cloudmesh:
+  version: 4.3.9
+  profile:
+    firstname: TBD
+    lastname: TBD
+    email: TBD@sample.edu
+    user: TBD
+    github: TBD
+    publickey: ~/.ssh/id_rsa.pub
+  security:
+    encryption: false
+    publickey: ~/.ssh/id_rsa.pub
+    privatekey: ~/.ssh/id_rsa
+    secpath: ~/.cloudmesh/security
+    secrets: []
+    exceptions: []
+  iu:
+    user: TBD
+    host: r-003
+    gpu: 0
+    port: TBD
+    reservation: lijguo_11
+  default:
+    group: cloudmesh
+    experiment: base
+    cloud: chameleon
+    cluster: clustera
+    trace: true
+    debug: true
+    timer: false
+  cloud:
+    azure:
+      cm:
+        active: true
+        heading: Azure
+        host: azure.microsoft.com
+        label: Azure
+        kind: azure
+        version: latest
+        service: compute
+      default:
+        image: Canonical:UbuntuServer:16.04.0-LTS:latest
+        size: Basic_A0
+        group: cloudmesh
+        storage_account: cmdrive
+        network: cmnetwork
+        subnet: cmsubnet
+        blob_container: vhds
+        AZURE_VM_IP_CONFIG: cloudmesh-ip-config
+        AZURE_VM_NIC: cloudmesh-nic
+        AZURE_VM_DISK_NAME: cloudmesh-os-disk
+        AZURE_VM_USER: TBD
+        AZURE_VM_PASSWORD: TBD
+        AZURE_VM_NAME: cloudmeshVM
+      credentials:
+        AZURE_TENANT_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_SUBSCRIPTION_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_APPLICATION_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_SECRET_KEY: TBD
+        AZURE_REGION: eastus
+    aws:
+      cm:
+        active: true
+        heading: AWS
+        host: aws.amazon.com
+        label: aws
+        kind: aws
+        version: TBD
+        service: compute
+      default:
+        image: ami-0c929bde1796e1484
+        size: t2.medium
+        username: ec2-user
+      credentials:
+        region: us-east-2
+        EC2_SECURITY_GROUP: cloudmesh
+        EC2_ACCESS_ID: TBD
+        EC2_SECRET_KEY: TBD
+        EC2_PRIVATE_KEY_FILE_PATH: ~/.cloudmesh/aws_cert.pem
+        EC2_PRIVATE_KEY_FILE_NAME: aws_cert
+    google:
+      cm:
+        active: true
+        heading: google
+        host: google.cloud.com
+        label: google
+        kind: google
+        version: TBD
+        service: compute
+      default:
+        image: ubuntu-2004-lts
+        size: n1-standard-4
+      credentials:
+        datacenter: us-central1-a
+        client_email: TBD.serviceaccount.iam.gserviceaccount.com
+        project: TBD
+        path_to_json_file: ~/.cloudmesh/TBD
+    chameleon:
+      cm:
+        active: true
+        heading: Chameleon
+        host: chameleoncloud.org
+        label: chameleon
+        kind: openstack
+        version: train
+        service: compute
+      credentials:
+        auth:
+          username: TBD
+          password: TBD
+          auth_url: "https://kvm.tacc.chameleoncloud.org:5000/v3"
+          project_id: 7767f9aac3c143de8b1f0e6acc70f159
+          project_name: cloudmesh
+          user_domain_name: "Default"
+        region_name: "KVM@TACC"
+        interface: "public"
+        identity_api_version: "3"
+        key_path: ~/.ssh/id_rsa.pub
+      default:
+        size: m1.medium
+        image: CC-Ubuntu18.04
+        username: cc
+        network: e01ee12e-fd22-4b21-a050-d3e015f42bb1
+    jetstream:
+      cm:
+        active: true
+        heading: Jetstream
+        host: http://jetstream-cloud.org/
+        label: jetstream
+        kind: openstack
+        version: kilo
+        service: compute
+      credentials:
+        OS_PROJECT_DOMAIN_NAME: tacc
+        OS_USER_DOMAIN_NAME: tacc
+        OS_PROJECT_ID: 7bfa792867a141e6855fdaaa2a960a4e
+        OS_PROJECT_NAME: TG-CIE170003
+        OS_TENANT_NAME: TG-CIE170003
+        OS_USERNAME: TBD
+        OS_PASSWORD: TBD
+        OS_AUTH_URL: https://tacc.jetstream-cloud.org:5000
+        OS_IDENTITY_API_VERSION: 3
+        OS_INTERFACE: public
+        OS_REGION_NAME: RegionOne
+      default:
+        size: m1.small
+        image: Ubuntu-Server-14.04-LTS
+    docker:
+      cm:
+        active: true
+        heading: Docker
+        host: localhost
+        label: docker
+        kind: docker
+        version: 18.09.2
+        service: compute
+      default:
+        os: ubuntu
+        version: '18.04'
+      credentials:
+        key: ~/.ssh/id_rsa
+  storage:
+    local:
+      cm:
+        active: true
+        blobactive: true
+        heading: local storage
+        host: localhost
+        kind: local
+        label: local_storage
+        version: 0.1
+        service: storage
+      default:
+        directory: ~/.cloudmesh/storage
+      credentials:
+        userid: None
+        password: None
+        directory: ~/.cloudmesh/storage
+    storage_a:
+      cm:
+        active: false
+        heading: Storage A
+        host: localhost
+        label: local
+        kind: local
+        version: TBD
+        service: storage
+      default:
+        directory: ~/a
+      credentials:
+        name: TBD
+        key: ~/.ssh/id_rsa.pub
+    storage_b:
+      cm:
+        active: false
+        heading: Storage B
+        host: localhost
+        label: local
+        kind: local
+        version: TBD
+        service: storage
+      default:
+        directory: ~/b
+      credentials:
+        name: TBD
+        key: ~/.ssh/id_rsa.pub
+    box:
+      cm:
+        active: false
+        heading: Box
+        host: box.com
+        label: box
+        kind: box
+        version: TBD
+        service: storage
+      default:
+        directory: /
+      credentials:
+        config_path: TBD
+    aws:
+      cm:
+        active: false
+        heading: homedir
+        host: aws.com
+        label: home-dir
+        kind: awss3
+        version: TBD
+        service: storage
+      default:
+        directory: TBD
+      credentials:
+        name: TBD
+        bucket: home
+        container: TBD
+        access_key_id: TBD
+        secret_access_key: TBD
+        region: TBD
+    gdrive:
+      cm:
+        active: false
+        heading: GDrive
+        host: dgrive.google.com
+        label: gdrive
+        kind: gdrive
+        version: TBD
+        service: storage
+      default:
+        directory: TBD
+      credentials:
+        client_id: TBD
+        project_id: TBD
+        auth_uri: https://accounts.google.com/o/oauth2/auth
+        token_uri: TBD
+        client_secret: TBD
+        auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+        redirect_uris:
+          - urn:ietf:wg:oauth:2.0:oob
+          - http://localhost
+    azure:
+      cm:
+        active: false
+        heading: AWS
+        host: azure.mocrosoft.com
+        label: azure_blob
+        kind: azureblob
+        version: TBD
+        service: storage
+      default:
+        group: cloudmesh
+        location: TBD
+      credentials:
+        account_name: TBD
+        account_key: TBD
+        container: TBD
+        AZURE_TENANT_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_SUBSCRIPTION_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_APPLICATION_ID: xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        AZURE_SECRET_KEY: TBD
+        AZURE_REGION: northcentralus
+    google:
+      cm:
+        active: false
+        heading: GCP
+        host: https://console.cloud.google.com/storage
+        label: gcp
+        kind: google
+        version: TBD
+        service: storage
+      default:
+        directory: cloudmesh_gcp
+        Location_type: Region
+        Location: us-east1
+        Default_storage_class: Standard
+        Access_control: Uniform
+        Encryption: Google-managed
+        Link_URL: https://console.cloud.google.com/storage/browser/cloudmesh_gcp
+        Link_for_gsutil: gs://cloudmesh_gcp
+      credentials:
+        type: service_account
+        project_id: imposing-coast-257700
+        private_key_id: xxxxxxxx
+        private_key: xxxxxx.....
+        client_id: xxxxxxxxx
+        auth_uri: https://accounts.google.com/o/oauth2/auth
+        token_uri: https://oauth2.googleapis.com/token
+        auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+        client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/TBD%40imposing-coast-257700.iam.gserviceaccount.com
+    oracle:
+      cm:
+        active: true
+        heading: Oracle
+        host: cloud.oracle.com
+        label: oracle
+        kind: oracle
+        version: TBD
+        service: storage
+      default:
+        directory: TBD
+        bucket: home
+      credentials:
+        user: TBD
+        fingerprint: TBD
+        key_file: ~/.oci/oci_api_key.pem
+        pass_phrase: TBD
+        tenancy: TBD
+        compartment_id: TBD
+        region: us-ashburn-1
+  volume:
+    aws:
+        cm:
+          active: true
+          heading: AWS
+          host: aws.com
+          label: VAWAS1
+          kind: aws
+          version: TBD
+          service: volume
+        default:
+          volume_type: gp2
+          size: TBD
+          encrypted: False
+          region_name: TBD
+          region: TBD
+          snapshot: "None"
+        credentials:
+          EC2_SECURITY_GROUP: default
+          EC2_ACCESS_ID: TBD
+          EC2_SECRET_KEY: TBD
+          EC2_PRIVATE_KEY_FILE_PATH: TBD
+          EC2_PRIVATE_KEY_FILE_NAME: TBD
+    multipass:
+        cm:
+          active: true
+          heading: multipass
+          host: TBD
+          kind: multipass
+          version: TBD
+          service: volume
+        default:
+          path: TBD
+    aws-2:
+      cm:
+        active: true
+        heading: AWS
+        host: TBD
+        label: VAWAS1
+        kind: aws
+        version: TBD
+        service: volume
+      default:
+        volume_type: "gp2"
+        size: 2
+        iops: 1000
+        encrypted: False
+        multi_attach_enabled: True
+      credentials:
+        region: us-east-2
+        EC2_SECURITY_GROUP: cloudmesh
+        EC2_ACCESS_ID: TBD
+        EC2_SECRET_KEY: TBD
+        EC2_PRIVATE_KEY_FILE_PATH: ~/.cloudmesh/aws_cert.pem
+        EC2_PRIVATE_KEY_FILE_NAME: aws_cert
+  database:
+    aws:
+      cm:
+        active: false
+        heading: homedir
+        host: aws.com
+        label: home-dir
+        kind: awssql
+        version: TBD
+        service: database
+      default:
+        directory: TBD
+      credentials:
+        server: TBD.us-east-2.rds.amazonaws.com
+        database: TBD
+        username: TBD
+        password: TBD
+        driver: '{ODBC Driver 17 for SQL Server}'
+        name: TBD
+    azure:
+      cm:
+        active: False
+        heading: homedir
+        host: azure.microsoft.com
+        label: home-dir
+        kind: azuresql
+        version: TBD
+        service: database
+      default:
+        directory: TBD
+      credentials:
+        server: TBD.database.windows.net
+        database: TBD
+        username: TBD
+        password: TBD
+        driver: '{ODBC Driver 17 for SQL Server}'
+        name: TBD
+  data:
+    bug:
+      comment: this type is not supported use storage instead
+    default:
+      db: local
+      service: local
+    db:
+      local:
+        CMDATA_DB_FOLDER: ~/cloudmesh/cloud/test/data/db
+    service:
+      local:
+        CMDATA_STORAGE_FOLDER: ~/cloudmesh/cloud/test/data/storage
+      azure:
+        container: cmdata
+        credentials:
+          AZURE_STORAGE_ACCOUNT: ''
+          AZURE_STORAGE_KEY: ''
+      google:
+        credentials:
+          GOOGLE_STORAGE_KEY: ''
+          GOOGLE_STORAGE_SECRET: ''
+    mongo:
+      MONGO_AUTOINSTALL: false
+      MONGO_BREWINSTALL: false
+      LOCAL: ~/local
+      MODE: native
+      MONGO_DBNAME: cloudmesh
+      MONGO_HOST: 127.0.0.1
+      MONGO_PORT: '27017'
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: TBD
+      MONGO_DOWNLOAD:
+        docker:
+          version: latest
+          MONGO_PATH: ~/.cloudmesh/mongodb
+          MONGO_LOG: ~/.cloudmesh/mongodb/log
+        darwin:
+          url: https://fastdl.mongodb.org/osx/mongodb-macos-x86_64-4.2.3.tgz
+#         url: https://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.10.tgz
+#         url: https://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.12.tgz
+          MONGO_PATH: ~/.cloudmesh/mongodb
+          MONGO_LOG: ~/.cloudmesh/mongodb/log
+          MONGO_HOME: ~/local/mongo
+        linux:
+#         url: https://repo.mongodb.org/apt/ubuntu/dists/bionic/mongodb-org/4.2/multiverse/binary-amd64/mongodb-org-server_4.2.3_amd64.deb
+#         url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-4.0.10.tgz
+          url: https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-4.0.16.tgz
+          MONGO_PATH: ~/.cloudmesh/mongodb
+          MONGO_LOG: ~/.cloudmesh/mongodb/log
+          MONGO_HOME: ~/local/mongo
+        win32:
+          url: https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi
+#         url: https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-4.0.10-signed.msi
+#         url: https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2008plus-ssl-4.0.16-signed.msi
+          MONGO_PATH: ~\.cloudmesh\mongodb-data
+          MONGO_LOG: ~\.cloudmesh\mongodb-data\log
+          MONGO_HOME: ~\.cloudmesh\mongo
+        redhat:
+          url: https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.2/x86_64/RPMS/mongodb-org-server-4.2.3-1.el7.x86_64.rpm
+#         url: https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.16-1.el7.x86_64.rpm
+          MONGO_PATH: ~/.cloudmesh/mongodb
+          MONGO_LOG: ~/.cloudmesh/mongodb/log
+          MONGO_HOME: ~/local/mongo
+  registry:
+    microservice:
+      cm:
+        active: true
+        heading: microservice registry
+        host: TBD
+        label: microservice
+        kind: registry
+        version: latest
+        service: registry
+      default:
+        protocol: pickle
