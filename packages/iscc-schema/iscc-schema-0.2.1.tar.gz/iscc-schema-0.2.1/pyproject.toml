@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "iscc-schema"
+version = "0.2.1"
+description = "OpenAPI representation of the ISCC data model"
+authors = ["Titusz <tp@py7.de>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/iscc/iscc-schema"
+keywords=["iscc", "identifier", "media", "content", "hash", "blockchain", "similarity"]
+
+[tool.poetry.dependencies]
+python = ">=3.6.1,<4.0.0"
+pydantic = "^1.9"
+jcs = "^0.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+datamodel-code-generator = "*"
+poethepoet = "*"
+black = { version = "*", allow-prereleases = true }
+mkdocs-material = "*"
+PyLD = "*"
+
+[tool.black]
+skip-string-normalization = false
+line-length = 100
+target-version = ['py36']
+
+[tool.datamodel-codegen]
+field-constraints = true
+aliases = "iscc_schema/aliases.json"
+input = "iscc_schema/models/iscc-all.yaml"
+output = "iscc_schema/schema.py"
+field-extra-keys = ["x-iscc-context"]
+use-default = true
+use-schema-description = true
+wrap-string-literal = true
+use-annotated = false
+class-name = "ISCC"
+disable-timestamp = true
+target-python-version = "3.6"
+validation = true
+endocing = "utf-8"
+
+
+[tool.poe.tasks]
+update = { cmd = "poetry update", help = "Update project dependencies"}
+fromatyaml = { script = "tools.format_yaml:reformat", help = "Reformat yaml files"}
+buildpydantic = { cmd = "datamodel-codegen", help = "Build pydantic model"}
+formatcode = { cmd = "black .", help = "Code style formating with black" }
+buildterms = { script = "tools.build_terms:build", help = "Build markdown for terms" }
+buildschema = { script = "tools.build_json_schema:build", help = "Generate JSON Schema" }
+buildcontext = { script = "tools.build_json_ld_context:build", help = "Generate JSON-LD Context" }
+builddocs = { script = "tools.build_docs:build", help = "Copy README.md to docs/index.md" }
+test = { cmd = "pytest", help = "Run tests"}
+build = ["fromatyaml", "buildpydantic", "formatcode", "buildterms", "buildschema", "buildcontext", "builddocs", "test"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
