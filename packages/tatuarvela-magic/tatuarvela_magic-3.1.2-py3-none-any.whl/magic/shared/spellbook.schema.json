@@ -1,0 +1,44 @@
+{
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/spell"
+  },
+  "definitions": {
+    "spell": {
+      "type": "object",
+      "required": [
+        "description",
+        "magicWords",
+        "commands"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "magicWords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "argumentCount": {
+          "type": "number"
+        },
+        "showMessage": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "showSuccessMessage": {
+          "type": "boolean",
+          "default": "true"
+        }
+      }
+    }
+  }
+}
