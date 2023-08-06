@@ -1,0 +1,338 @@
+from collections.abc import Sequence
+
+from coconut.__coconut__ import consume as coc_consume  # type: ignore
+from coconut.constants import (
+    IPY,
+    PY2,
+    PY34,
+    PY35,
+    WINDOWS,
+    PYPY,
+)  # type: ignore
+from coconut.exceptions import (
+    CoconutSyntaxError,
+    CoconutStyleError,
+    CoconutTargetError,
+    CoconutParseError,
+)  # type: ignore
+from coconut.convenience import (
+    CoconutException,
+    cmd,
+    version,
+    setup,
+    parse,
+    coconut_eval,
+)
+
+if IPY and not WINDOWS:
+    if PY35:
+        import asyncio  # type: ignore
+    from coconut.icoconut import CoconutKernel  # type: ignore
+else:
+    CoconutKernel = None  # type: ignore
+
+
+def assert_raises(c, exc, not_exc=None, err_has=None):
+    """Test whether callable c raises an exception of type exc."""
+    if not_exc is None and exc is CoconutSyntaxError:
+        not_exc = CoconutParseError
+    try:
+        c()
+    except exc as err:
+        if not_exc is not None:
+            assert not isinstance(err, not_exc), f"{err} instance of {not_exc}"
+        if err_has is not None:
+            assert err_has in str(err), f"{err_has!r} not in {str(err)!r}"
+    except BaseException as err:
+        raise AssertionError(f"got wrong exception {err} (expected {exc})")
+    else:
+        raise AssertionError(f"{c} failed to raise exception {exc}")
+
+
+def unwrap_future(event_loop, maybe_future):
+    """
+    If the passed value looks like a Future, return its result, otherwise return the value unchanged.
+
+    This is needed for the CoconutKernel test to be compatible with ipykernel version 5 and newer,
+    where IPyKernel.do_execute is a coroutine.
+    """
+    if hasattr(maybe_future, 'result'):
+        return maybe_future.result()
+    elif event_loop is not None:
+        return event_loop.run_until_complete(maybe_future)
+    else:
+        return maybe_future
+
+
+def test_setup_none() -> bool:
+    assert consume(range(10), keep_last=1)[0] == 9 == coc_consume(range(10), keep_last=1)[0]
+    assert version() == version("num")
+    assert version("name")
+    assert version("spec")
+    assert version("tag")
+    assert version("-v")
+    assert_raises(-> version("other"), CoconutException)
+    assert_raises(def -> raise CoconutException("derp").syntax_err(), SyntaxError)
+    assert coconut_eval("x -> x + 1")(2) == 3
+    assert coconut_eval("addpattern")
+
+    assert parse("abc") == parse("abc", "sys")
+    assert parse("abc", "file")
+    assert parse("abc", "package")
+    assert parse("abc", "block") == "abc\n" == parse("abc", "single")
+    assert parse("abc", "eval") == "abc" == parse(" abc", "eval")
+    assert parse("abc", "lenient") == "abc" == parse(" abc", "lenient")
+    assert parse("x |> map$(f)", "lenient") == "(map)(f, x)"
+    assert "_coconut" not in parse("a |> .b |> .m() |> f$(x) |> .[0]", "block")
+    assert "_coconut" not in parse("a |>= f$(x)", "block")
+    assert parse("abc # derp", "lenient") == "abc  # derp"
+    assert parse("def f(x):\n \t pass")
+    assert parse("lambda x: x")
+    assert parse("u''")
+    assert parse("def f(x):\\\n pass")
+    assert parse("abc ")
+    assert parse("abc # derp", "lenient") == "abc  # derp"
+    assert "==" not in parse("None = None")
+    assert parse("(1\f+\f2)", "lenient") == "(1 + 2)" == parse("(1\f+\f2)", "eval")
+
+    assert_raises(-> parse("(a := b)"), CoconutTargetError)
+    assert_raises(-> parse("async def f() = 1"), CoconutTargetError)
+
+    assert_raises(-> parse(" abc", "file"), CoconutSyntaxError)
+    assert_raises(-> parse("'"), CoconutSyntaxError)
+    assert_raises(-> parse("("), CoconutSyntaxError)
+    assert_raises(-> parse("\\("), CoconutSyntaxError)
+    assert_raises(-> parse("if a:\n  b\n c"), CoconutSyntaxError)
+    assert_raises(-> parse("_coconut"), CoconutSyntaxError)
+    assert_raises(-> parse("[;]"), CoconutSyntaxError)
+    assert_raises(-> parse("[; ;; ;]"), CoconutSyntaxError)
+    assert_raises(-> parse("f$()"), CoconutSyntaxError)
+    assert_raises(-> parse("f(**x, y)"), CoconutSyntaxError)
+    assert_raises(-> parse("def f(x) = return x"), CoconutSyntaxError)
+    assert_raises(-> parse("def f(x) =\n return x"), CoconutSyntaxError)
+    assert_raises(-> parse('f"Black holes {*all_black_holes} and revelations"'), CoconutSyntaxError, err_has="format string")
+
+    assert_raises(-> parse("$"), CoconutParseError, err_has=" ^")
+    assert_raises(-> parse("range(1,10) |> reduce$(*, initializer = 1000) |> print"), CoconutParseError, err_has=" ~~~~~~~~~~~~~~~~~~~~~~~~^")
+    assert_raises(-> parse("a := b"), CoconutParseError, err_has=" ~~^")
+    assert_raises(-> parse("1 + return"), CoconutParseError, err_has=" ~~~~~^")
+    assert_raises(-> parse("""
+def f() =
+    assert 1
+    assert 2
+    """.strip()), CoconutParseError, err_has="""
+  assert 2
+          ^
+    """.strip())
+    assert_raises(-> parse('b"abc" "def"'), CoconutParseError, err_has=" ~~~~~~~^")
+    assert_raises(-> parse('"abc" b"def"'), CoconutParseError, err_has=" ~~~~~~^")
+
+    assert_raises(-> parse("return = 1"), CoconutParseError, err_has="invalid use of the keyword")
+    assert_raises(-> parse("if a = b: pass"), CoconutParseError, err_has="misplaced assignment")
+    assert_raises(-> parse("while a == b"), CoconutParseError, err_has="misplaced newline")
+
+    try:
+        parse("""
+def gam_eps_rate(bitarr) = (
+    bitarr
+    |*> zip
+    |> map$(map$(int))
+    |> map$(sum)
+    |> map$(.>len(bitarr)//2)
+    |> lift(,)(ident, map$(not))
+    |> map$(map$(int))
+    |> map$(map$(str))
+    |> map$("".join)
+    |> map$(int(?, 2))
+    |*> (*)
+)
+        """.strip())
+    except CoconutParseError as err:
+        err_str = str(err)
+        assert "misplaced '?'" in err_str
+        assert """
+  |> map$(int(?, 2))
+         ~~~~~^""" in err_str
+    else:
+        assert False
+
+    assert parse("def f(x):\n ${var}", "xonsh") == "def f(x):\n    ${var}\n"
+    assert "data ABC" not in parse("data ABC:\n ${var}", "xonsh")
+
+    assert parse('"abc" "xyz"', "lenient") == "'abcxyz'"
+
+    return True
+
+
+def test_convenience() -> bool:
+    if IPY:
+        import coconut.highlighter  # type: ignore
+
+    assert_raises(-> cmd("-f"), SystemExit)
+    assert_raises(-> cmd("-pa ."), SystemExit)
+    assert_raises(-> cmd("-n . ."), SystemExit)
+
+    setup(line_numbers=True)
+    assert parse("abc", "lenient") == "abc  #1 (line num in coconut source)"
+    setup(keep_lines=True)
+    assert parse("abc", "lenient") == "abc  # abc"
+    setup(line_numbers=True, keep_lines=True)
+    assert parse("abc", "lenient") == "abc  #1: abc"
+
+    setup()
+    assert "Deprecated feature 'prepattern' disabled by --strict compilation" not in parse("\n", mode="file")
+    assert "Deprecated feature 'datamaker' disabled by --strict compilation" not in parse("\n", mode="file")
+
+    setup(strict=True)
+    assert "Deprecated feature 'prepattern' disabled by --strict compilation" in parse("\n", mode="file")
+    assert "Deprecated feature 'datamaker' disabled by --strict compilation" in parse("\n", mode="file")
+
+    assert_raises(-> parse("def f(x):\n \t pass"), CoconutStyleError)
+    assert_raises(-> parse("lambda x: x"), CoconutStyleError)
+    assert_raises(-> parse("u''"), CoconutStyleError)
+    assert_raises(-> parse("def f(x):\\\n pass"), CoconutStyleError)
+    assert_raises(-> parse("abc "), CoconutStyleError, err_has="\n     ^")
+    assert_raises(-> parse("abc", "file"), CoconutStyleError)
+    assert_raises(-> parse("a=1;"), CoconutStyleError, err_has="\n     ^")
+    assert_raises(-> parse("class derp(object)"), CoconutStyleError)
+    assert_raises(-> parse("def f(a.b) = True"), CoconutStyleError, err_has="\n        ^")
+    assert_raises(-> parse("match def kwd_only_x_is_int_def_0(*, x is int = 0) = x"), CoconutStyleError, err_has="\n       ^")
+    try:
+        parse("""
+try:
+    x is int is str = x
+except MatchError:
+    pass
+else:
+    assert False
+        """.strip())
+    except CoconutStyleError as err:
+        assert str(err) == """found deprecated isinstance-checking 'x is int is str' pattern; use 'x `isinstance` int and x `isinstance` str' instead (remove --strict to dismiss) (line 2)
+  x is int is str = x"""
+
+    setup(target="2.7")
+    assert parse("from io import BytesIO", mode="lenient") == "from io import BytesIO"
+    assert_raises(-> parse("def f(*, x=None) = x"), CoconutTargetError, err_has="\n        ^")
+
+    setup(target="3")
+    assert parse("""
+async def async_map_test() =
+    for async_map in (async_map_0, async_map_1, async_map_2, async_map_3, async_map_4):
+        assert (await ((pow$(2), range(5)) |> async_map)) |> tuple == (1, 2, 4, 8, 16)
+    True
+    """.strip())
+
+    setup(target="3.3")
+    gen_func_def = """def f(x):
+    yield x
+    return x"""
+    gen_func_def_outs = (
+        gen_func_def,
+"""def f(x):
+    yield x
+    return (x)""",
+    )
+    assert parse(gen_func_def, mode="lenient") in gen_func_def_outs
+
+    setup(target="3.2")
+    assert parse(gen_func_def, mode="lenient") not in gen_func_def_outs
+
+    setup(target="3.5")
+    assert_raises(-> parse("async def f(): yield 1"), CoconutTargetError)
+
+    setup(target="3.6")
+    assert parse("def f(*, x=None) = x")
+    assert parse("async def f(): yield 1")
+
+    setup(target="3.8")
+    assert parse("(a := b)")
+    assert parse("print(a := 1, b := 2)")
+    assert parse("def f(a, /, b) = a, b")
+    assert "(b)(a)" in b"a |> b".decode("coconut")
+
+    setup(minify=True)
+    assert parse("123  # derp", "lenient") == "123# derp"
+
+    return True
+
+
+def test_kernel() -> bool:
+    if PY35:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    else:
+        loop = None  # type: ignore
+    k = CoconutKernel()
+    exec_result = k.do_execute("derp = pow$(?, 2)", False, True, {"two": "(+)(1, 1)"}, True) |> unwrap_future$(loop)
+    assert exec_result["status"] == "ok"
+    assert exec_result["user_expressions"]["two"]["data"]["text/plain"] == "2"
+    assert k.do_is_complete("if abc:")["status"] == "incomplete"
+    assert k.do_is_complete("f(")["status"] == "incomplete"
+    assert k.do_is_complete("abc")["status"] == "complete"
+    inspect_result = k.do_inspect("derp", 4, 0)
+    assert inspect_result["status"] == "ok"
+    assert inspect_result["found"]
+    assert inspect_result["data"]["text/plain"]
+    complete_result = k.do_complete("der", 1)
+    assert complete_result["status"] == "ok"
+    assert "derp" in complete_result["matches"]
+    assert complete_result["cursor_start"] == 0
+    assert complete_result["cursor_end"] == 1
+    keyword_complete_result = k.do_complete("ma", 1)
+    assert keyword_complete_result["status"] == "ok"
+    assert "match" in keyword_complete_result["matches"]
+    assert "map" in keyword_complete_result["matches"]
+    assert keyword_complete_result["cursor_start"] == 0
+    assert keyword_complete_result["cursor_end"] == 1
+    return True
+
+
+def test_numpy() -> bool:
+    import numpy as np
+    assert isinstance(np.array([1, 2]) |> fmap$(.+1), np.ndarray)
+    assert np.all(fmap(-> _ + 1, np.arange(3)) == np.array([1, 2, 3]))  # type: ignore
+    assert np.array([1, 2;; 3, 4]).shape == (2, 2)
+    assert [
+        1, 2 ;;
+        np.array([3, 4]) ;;
+    ].shape == (2, 2)  # type: ignore
+    assert [
+        np.array([1, 2;; 3, 4]) ;;;
+        np.array([5, 6;; 7, 8]) ;;;
+    ] `np.array_equal` np.array([1,2,3,4,5,6,7,8]).reshape((2, 2, 2))
+    assert np.array([1, 2]) `isinstance` Sequence
+    [1, two] = np.array([1, 2])
+    assert two == 2
+    [] = np.array([])  # type: ignore
+    assert [1,2 ;;; 3,4] |> np.array |> .shape == (2, 1, 2)
+    assert [1;2 ;;; 3;4] |> np.array |> .shape == (2, 1, 2)
+    assert [1;2 ;;;; 3;4] |> np.array |> .shape == (2, 1, 1, 2)
+    assert [1,2 ;;;; 3,4] |> np.array |> .shape == (2, 1, 1, 2)
+    assert np.array([1,2 ;; 3,4]) `np.array_equal` np.array([[1,2],[3,4]])
+    a = np.array([1,2 ;; 3,4])
+    assert [a ; a] `np.array_equal` np.array([1,2,1,2 ;; 3,4,3,4])
+    assert [a ;; a] `np.array_equal` np.array([1,2;; 3,4;; 1,2;; 3,4])
+    assert [a ;;; a].shape == (2, 2, 2)  # type: ignore
+    return True
+
+
+def test_extras() -> bool:
+    if not PYPY and (PY2 or PY34):
+        assert test_numpy() is True
+    if CoconutKernel is not None:
+        assert test_kernel() is True
+    assert test_setup_none() is True
+    assert test_convenience() is True
+    return True
+
+
+def main() -> bool:
+    print("Expect Coconut errors below from running extras:")
+    print("(but make sure you get a <success> after them)")
+    assert test_extras() is True
+    print("<success>")
+    return True
+
+
+if __name__ == "__main__":
+    main()
