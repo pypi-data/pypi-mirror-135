@@ -1,0 +1,77 @@
+# Poetry pyproject.toml: https://python-poetry.org/docs/pyproject/
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry]
+name = "lindemann"
+version = "0.4.1"
+description = "lindemann is a python package to calculate the Lindemann index  of a lammps trajectory as well as the progression of the Lindemann index per frame of temperature ramps  for phase transition analysis."
+readme = "README.md"
+authors = [
+  "N720720 <s.thurm@protonmail.com>"
+]
+license = "GPL-3.0-or-later"
+repository = "https://github.com/N720720/lindemann"
+homepage = "https://github.com/N720720/lindemann"
+
+# Keywords description https://python-poetry.org/docs/pyproject/#keywords
+keywords = []  # Update me
+
+# Pypi classifiers: https://pypi.org/classifiers/
+classifiers = [  # Update me
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.scripts]
+# Entry points for the package https://python-poetry.org/docs/pyproject/#scripts
+lindemann = "lindemann.main:app"
+
+[tool.poetry.dependencies]
+python = ">=3.7.3,<3.11"
+importlib_metadata = {version = ">=1.6,<5.0", python = ">=3.7.3,<3.9"}
+typer = {extras = ["all"], version = "^0.3.0"}
+rich = ">=3.3.2,<11.0.0"
+pre-commit = "^2.6.0"
+ovito = "^3.1.1"
+matplotlib = "^3.2.2"
+numba = ">=0.52"
+numpy = ">=1.18, <1.22"
+pathlib = "^1.0.1"
+icc-rt = "^2020.0.133"
+
+[tool.poetry.dev-dependencies]
+darglint = "^1.8.0"
+isort = {extras = ["pyproject"], version = "^4.3.21"}
+pyupgrade = "^2.20.0"
+black = "^19.10b0"
+mypy = "^0.812"
+bandit = "^1.6.2"
+safety = "^1.9.0"
+pytest = "^6.2.4"
+pylint = "^2.7.4"
+pydocstyle = "^6.0.0"
+docker = "^5.0.0"
+typer-cli = "^0.0.12"
+Jinja2 = "^3.0.3"
+memory-profiler = "^0.60.0"
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 99
+target-version = ["py37"]
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/
+known_typing = "typing,types,typing_extensions,mypy,mypy_extensions"
+sections = "FUTURE,TYPING,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+include_trailing_comma = true
+default_section = "FIRSTPARTY"
+multi_line_output = 3
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 99
