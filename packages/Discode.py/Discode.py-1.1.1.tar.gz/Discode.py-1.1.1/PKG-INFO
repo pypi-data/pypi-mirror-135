@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: Discode.py
+Version: 1.1.1
+Summary: Asynchronous Python API wrapper for the Discord Gateway API and Discord REST API.
+Home-page: https://github.com/thefargg/discode
+Author: TheFarGG
+Maintainer: TheFarGG
+License: MIT
+Description: # Discode
+        Discode is an asynchronous Python API wrapper for the Discord REST and Gateway API. This project was inspired by [Discord.py](https://github.com/rapptz/discord.py) and may contain similar functioning.
+        
+        ### Basic Example Usage
+        ```py
+        import discode
+        
+        client = discode.Client()
+        
+        # the coroutine under the decorator
+        # can have any name you wish to use
+        @client.on_event("ready")
+        async def ready():
+            print(f"{client.user} is ready!")
+        
+        @client.on_event("message")
+        async def message(message: discode.Message):
+            content = message.content
+            if content.startswith("?hi"):
+                await message.channel.send("Hiii!!!")
+        
+        client.start("YOUR-TOKEN-HERE")
+        ```
+Keywords: Discode,discode,Discord,discord
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Internet
+Classifier: Topic :: Utilities
+Requires-Python: >=3.7.0
+Description-Content-Type: text/markdown
+Provides-Extra: docs
