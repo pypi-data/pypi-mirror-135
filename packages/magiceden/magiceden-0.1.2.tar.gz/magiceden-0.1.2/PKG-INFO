@@ -1,0 +1,38 @@
+Metadata-Version: 2.1
+Name: magiceden
+Version: 0.1.2
+Summary: A scraper based API for Magic Eden, a Solana based NFT marketplace.
+Author: Sumer Malhotra
+Author-email: sumermalhotra1998@gmail.com
+Requires-Python: >=3.7,<4
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: beautifulsoup4 (>=4.10.0,<5.0.0)
+Requires-Dist: selenium (>=4.1.0,<5.0.0)
+Requires-Dist: webdriver-manager (>=3.5.2,<4.0.0)
+Description-Content-Type: text/markdown
+
+# Installation
+
+```
+pip install magiceden
+```
+
+# Usage
+
+Find the slug of the NFT collection you're interested in by referencing the suffix of the collection URL.
+
+Example: https://magiceden.io/marketplace/solana_monkey_business
+
+```
+from magiceden import MagicEdenScraper
+
+client = MagicEdenScraper()
+
+print(client.get_floor_price('solana_monkey_business'))
+print(client.get_total_volume('solana_monkey_business'))
+print(client.get_avg_price('solana_monkey_business'))
+```
