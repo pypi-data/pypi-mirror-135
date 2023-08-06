@@ -1,0 +1,2 @@
+class WebhookAuthenticateException(Exception):
+    pass
