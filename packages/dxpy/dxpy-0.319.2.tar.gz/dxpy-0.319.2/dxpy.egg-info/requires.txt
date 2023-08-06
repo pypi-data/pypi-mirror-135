@@ -1,0 +1,30 @@
+argcomplete>=1.9.4
+websocket-client==0.57.0
+python-dateutil>=2.5
+psutil>=3.3.0
+requests<=2.26.0,>=2.8.0
+backports.ssl_match_hostname==3.5.0.1
+
+[:python_version < "3"]
+cryptography==3.3.2
+
+[:python_version == "2.7"]
+futures>=3.2
+
+[:python_version > "3" and python_version < "3.6"]
+cryptography==3.2.1
+
+[:python_version > "3.5"]
+cryptography<=35.0.0,>=3.4.2
+
+[:sys_platform == "darwin" and python_version < "3.9" and platform_machine == "x86_64"]
+gnureadline==8.0.0
+
+[:sys_platform == "win32"]
+pyreadline==2.1
+colorama==0.4.4
+
+[xattr]
+
+[xattr:sys_platform == "linux2" or sys_platform == "linux"]
+xattr==0.9.6
