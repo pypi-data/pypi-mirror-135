@@ -1,0 +1,8 @@
+id,Field,Description
+MaxMissedCalls,Max. missed calls,"The number of missed calls (incoming, outgoing normal and predictive dialed) *during* which the agent automatically logs off.
+
+* positive number
+* 0 - do not log out, only if the distribution fails (defective phone, etc.)
+* NULL - never log out. Used where agents are logged in / out by their supervisor.
+
+The missed call counter is in the ``Agent.LastCallMissed`` column and works even when set to 0 or NULL. A reset occurs each time you log in, and if the agent handles the call again before attempts are exhausted (``LastCallMissed> = MaxMissedCalls``)."
