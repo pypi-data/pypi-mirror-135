@@ -1,0 +1,139 @@
+Metadata-Version: 2.1
+Name: cloudcomponents.cdk-stripe-webhook
+Version: 1.50.0
+Summary: Create, update and delete stripe webhooks with your app deployment
+Home-page: https://github.com/cloudcomponents/cdk-constructs
+Author: hupe1980
+License: MIT
+Project-URL: Source, https://github.com/cloudcomponents/cdk-constructs.git
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Typing :: Typed
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: aws-cdk.aws-apigateway (<2.0.0,>=1.140.0)
+Requires-Dist: aws-cdk.aws-events (<2.0.0,>=1.140.0)
+Requires-Dist: aws-cdk.aws-iam (<2.0.0,>=1.140.0)
+Requires-Dist: aws-cdk.aws-lambda (<2.0.0,>=1.140.0)
+Requires-Dist: aws-cdk.core (<2.0.0,>=1.140.0)
+Requires-Dist: cloudcomponents.cdk-secret-key (<2.0.0,>=1.15.0)
+Requires-Dist: constructs (<4.0.0,>=3.2.0)
+Requires-Dist: jsii (<2.0.0,>=1.52.1)
+Requires-Dist: publication (>=0.0.3)
+
+[![cloudcomponents Logo](https://raw.githubusercontent.com/cloudcomponents/cdk-constructs/master/logo.png)](https://github.com/cloudcomponents/cdk-constructs)
+
+# @cloudcomponents/cdk-stripe-webhook
+
+[![Build Status](https://github.com/cloudcomponents/cdk-constructs/workflows/Build/badge.svg)](https://github.com/cloudcomponents/cdk-constructs/actions?query=workflow=Build)
+[![cdkdx](https://img.shields.io/badge/buildtool-cdkdx-blue.svg)](https://github.com/hupe1980/cdkdx)
+[![typescript](https://img.shields.io/badge/jsii-typescript-blueviolet.svg)](https://www.npmjs.com/package/@cloudcomponents/cdk-stripe-webhook)
+[![python](https://img.shields.io/badge/jsii-python-blueviolet.svg)](https://pypi.org/project/cloudcomponents.cdk-stripe-webhook/)
+
+> Create, update and delete stripe webhooks with your app deployment
+
+## Install
+
+TypeScript/JavaScript:
+
+```bash
+npm i @cloudcomponents/cdk-stripe-webhook
+```
+
+Python:
+
+```bash
+pip install cloudcomponents.cdk-stripe-webhook
+```
+
+## How to use
+
+### EventBus Producer
+
+```python
+import { StringParameter } from '@aws-cdk/aws-ssm';
+import { Construct, Stack, StackProps } from '@aws-cdk/core';
+import { SecretKey, SecretKeyStore } from '@cloudcomponents/cdk-secret-key';
+import { StripeWebhook, StripeEventBusProducer } from '@cloudcomponents/cdk-stripe-webhook';
+
+export class StripeWebhookStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const secretKey = SecretKey.fromPlainText(process.env.SECRET_KEY as string);
+
+    const endpointSecretParameter = StringParameter.fromSecureStringParameterAttributes(this, 'Param', {
+      parameterName: 'stripe',
+      version: 1,
+    });
+
+    const producer = new StripeEventBusProducer(this, 'Producer', {
+      secretKey,
+      endpointSecret: SecretKey.fromSSMParameter(endpointSecretParameter),
+    });
+
+    const events = ['charge.failed', 'charge.succeeded'];
+
+    const endpointSecretStore = SecretKeyStore.fromSSMParameter(endpointSecretParameter);
+
+    new StripeWebhook(this, 'StripeWebhook', {
+      secretKey,
+      url: producer.url,
+      events,
+      logLevel: 'debug',
+      endpointSecretStore,
+    });
+  }
+}
+```
+
+### Custom Handler
+
+```python
+import { RestApi } from '@aws-cdk/aws-apigateway';
+import { Construct, Stack, StackProps } from '@aws-cdk/core';
+import { SecretKey } from '@cloudcomponents/cdk-secret-key';
+import { StripeWebhook } from '@cloudcomponents/cdk-stripe-webhook';
+export class StripeWebhookStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const api = new RestApi(this, 'Endpoint');
+    api.root.addMethod('POST');
+
+    const secretKey = SecretKey.fromPlainText(process.env.SECRET_KEY as string);
+
+    const events = ['charge.failed', 'charge.succeeded'];
+
+    new StripeWebhook(this, 'StripeWebhook', {
+      secretKey,
+      url: api.url,
+      events,
+      logLevel: 'debug',
+    });
+  }
+}
+```
+
+## API Reference
+
+See [API.md](https://github.com/cloudcomponents/cdk-constructs/tree/master/packages/cdk-stripe-webhook/API.md).
+
+## Example
+
+See more complete [examples](https://github.com/cloudcomponents/cdk-constructs/tree/master/examples).
+
+## License
+
+[MIT](https://github.com/cloudcomponents/cdk-constructs/tree/master/packages/cdk-stripe-webhook/LICENSE)
+
+
