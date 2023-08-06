@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:css="http://namespaces.plone.org/diazo/css">
+    <rules if-not="$isinminisitemode">
+        <replace css:content-children="#portal-header">
+            <xsl:copy-of select="./*[@id='messagesviewlet']"/>
+            <div id="top-logo-slogan-actions">
+              <div class="minisite-collapsable">
+                <div id="top-logo-slogan-actions-inner">
+                    <div id="top-logo-slogan">
+                        <div id="top-logo">
+                            <div id="top-logo-inner">
+                                <xsl:copy-of select="./*[@id='portal-logo']"/>
+                            </div>
+                        </div>
+                        <div id="top-slogan">
+                            <div id="top-slogan-inner">
+                                <xsl:copy-of select="//*[@id='cpskin-slogan']/*" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="top-actions">
+                        <div id="top-actions-inner">
+                            <div id="top-actions-wrapper">
+                                <div id="top-actions-actions">
+                                    <xsl:copy-of select="//*[@id='top-menu-actions']" />
+                                    <xsl:copy-of select="./*[@id='portal-personaltools-wrapper']" />
+                                    <xsl:copy-of select="//*[@id='portal-siteactions']" />
+                                    <div id="top-languages">
+                                        <xsl:apply-templates select="./*[@id='portal-languageselector']" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="search-wrapper">
+                      <div id="hidden-search" class="portal-search-hidden">
+                        <xsl:copy-of select="./*[@id='portal-searchbox']"/>
+                      </div>
+                      <div id="btn-search">
+                        <a href="#"  class="btn-search">
+                        </a>
+                      </div>
+                    </div> 
+                  </div>
+                  <div id="nav-wrapper">
+                      <xsl:copy-of  select="./*[@id='portal-globalnav']"/>
+                      <xsl:apply-templates select="./*[not(@id) or (@id!='portal-personaltools-wrapper'
+                                                                and @id!='portal-logo'
+                                                                and @id!='portal-searchbox'
+                                                                and @id!='portal-languageselector'
+                                                                and @id!='top-menu-actions'
+                                                                and @id!='portal-globalnav')]"/>
+                  </div>
+                </div>
+                <xsl:if test="$ms_horizontal_navigation_any_mode">
+                  <div class="container-minisite-globalnav-logo">
+                    <xsl:copy-of select="//*[@id='minisite-actions']"/>
+                    <div id="minisite-navigation-inner">
+                      <div id="minisite-logo-nav">
+                          <xsl:copy-of select="//*[@id='minisite-logo']" />
+                          <xsl:copy-of select="//*[@id='minisite-globalnav']" />
+                          <xsl:copy-of select="//*[@class='minisite-dropdown-menu']" />
+                      </div> 
+                  </div>
+                  </div>
+                </xsl:if>
+                <div id="top-banner">
+                  <div id="top-description">
+                      <xsl:copy-of select="//*[@id='cpskin-slogan']/*" />
+                  </div>
+                  <xsl:copy-of select="//*[@id='cpskin-banner']/img" />
+                </div>
+                <xsl:copy-of select="//*[@id='portal-breadcrumbs']" />
+            </div>
+        </replace>
+
+        <drop css:content="#messagesviewlet" />
+        <drop css:content="#cpskin-banner" />
+        <drop css:content="#minisite-search" />
+        <drop css:content="#portal-breadcrumbs"/>
+        <drop css:content="#cpskin-slogan" />
+        <drop css:content="#container-minisite-globalnav" />
+        <drop css:content="#minisite-logo" />
+        <drop css:content="#minisite-actions" />
+    </rules>
+    
+    <!-- Is mini site -->
+    <rules if="$isinminisitemode">
+        <replace css:content-children="#portal-header">
+            <xsl:copy-of select="./*[@id='messagesviewlet']"/>
+            <xsl:if test="not($ms_horizontal_navigation_any_mode)">
+              <div id="top-actions">
+              <div id="top-actions-inner">
+                  <div id="top-actions-wrapper">
+                      <div id="top-actions-actions">
+                          <div id="top-languages">
+                              <xsl:copy-of select="//*[@id='portal-languageselector']" />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              </div>
+            </xsl:if>
+            <div id="top-logo-slogan-actions">
+                <div id="top-logo-slogan-actions-inner">
+                    <div id="search-wrapper">
+                      <div id="hidden-search" class="portal-search-hidden">
+                        <xsl:copy-of select="./*[@id='portal-searchbox']"/>
+                      </div>
+                      <div id="btn-search">
+                        <a href="#"  class="btn-search">
+                        </a>
+                      </div>
+                  </div> 
+              </div>
+                <xsl:if test="$ms_horizontal_navigation_any_mode">
+                  <div class="container-minisite-globalnav-logo">
+                    <xsl:copy-of select="//*[@id='minisite-actions']"/>
+                    <div id="top-actions">
+                    <div id="top-actions-inner">
+                      <div id="top-actions-wrapper">
+                            <div id="top-actions-actions">
+                                <div id="top-languages">
+                                    <xsl:copy-of select="//*[@id='portal-languageselector']" />
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="minisite-navigation-inner">
+                      <div id="minisite-logo-nav">
+                          <xsl:copy-of select="//*[@id='minisite-logo']" />
+                          <xsl:copy-of select="//*[@id='minisite-globalnav']" />
+                          <xsl:copy-of select="//*[@class='minisite-dropdown-menu']" />
+                      </div> 
+                  </div>
+                  </div>
+                </xsl:if>
+                <div id="top-banner">
+                  <xsl:copy-of select="//*[@id='cpskin-banner']/img" />
+                </div>
+                <xsl:copy-of select="//*[@id='portal-breadcrumbs']" />
+            </div>
+        </replace>
+
+        <drop css:content="#messagesviewlet" />
+        <drop css:content="#cpskin-banner" />
+        <drop css:content="#minisite-search" />
+        <drop css:content="#portal-breadcrumbs"/>
+        <drop css:content="#cpskin-slogan" />
+        <drop css:content="#container-minisite-globalnav" />
+        <drop css:content="#viewlet-minisite"/>
+    </rules>
+</rules>

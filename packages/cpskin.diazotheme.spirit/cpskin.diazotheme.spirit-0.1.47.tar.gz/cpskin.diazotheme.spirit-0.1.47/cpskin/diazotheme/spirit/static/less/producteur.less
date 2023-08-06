@@ -1,0 +1,621 @@
+.subsection-commerce-alimentation-locale{
+    //HEADER
+    #top-banner{
+        display: none;
+    }
+    //NAVIGATION
+    .container-minisite-globalnav-logo {
+        background: #000;
+        margin: 0;
+        display: inline-block;
+        width: 100%;
+    }
+    #minisite-navigation-inner{
+        background: #000;
+        padding: 0;
+    }
+    #minisite-globalnav li a{
+        border-bottom: 2px solid transparent;
+    }
+    #minisite-globalnav li a:hover,
+    #minisite-globalnav .selected a {
+        color: #fff;
+    }
+    #minisite-logo{
+        display: inline-block;
+        float: none;
+        vertical-align: middle;
+    }
+    #minisite-globalnav{
+        display: inline-block;
+        float: none;
+        margin: 0;
+        vertical-align: middle;
+    }
+    #minisite-globalnav a{
+        color: #fff;
+    }
+    h2,
+    h3{
+        color: @theme;
+    }
+    #content .card-index a[href*=".pdf"]{
+        padding-right: 0;
+    }
+    #content .card-index a[href*=".pdf"]::after{
+        content: none;
+        margin-left: 0;
+    }
+    .faceted-widget.faceted-text-widget .widget-fieldset .searchButton{
+        border: none !important;
+    }
+    .faceted-widget.faceted-layout-widget.section-affichage label[title="Vue liste"]::before {
+        content: "\f00a";
+        font-family: fontello;
+        margin-right: 0.75em;
+    }
+    //ALIMENTATION LOCALE
+    //
+    //CREAFARM
+    //navigation
+    #portaltab-creafarm a:hover{
+        border-bottom: 2px dashed @theme-creafarm;
+    }
+    #portaltab-creafarm.selected a {
+        border-bottom: 2px dashed @theme-creafarm;
+    }
+    //POTAGER
+    //navigation
+    #portaltab-potager a:hover{
+        border-bottom: 2px dashed @theme-potager;
+    }
+    #portaltab-potager.selected a {
+        border-bottom: 2px dashed @theme-potager;
+    }
+    //ACHETER LOCAL
+    //navigation
+    #portaltab-acheter-local a:hover{
+        border-bottom: 2px dashed @theme-acheter-local;
+    }
+    #portaltab-acheter-local.selected a {
+        border-bottom: 2px dashed @theme-acheter-local;
+    }
+    //PROFESSIONNEL
+    //navigation
+    #portaltab-professionnels a:hover{
+        border-bottom: 2px dashed @theme-professionnel;
+    }
+    #portaltab-professionnels.selected a {
+        border-bottom: 2px dashed @theme-professionnel;
+    }
+
+    // Fix rows and column grid for ie9, ie10 browser:
+    .rows-facet(@rows, @min-range, @max-range) when(@min-range =< @max-range) {
+        .item_@{min-range}{
+            grid-row: @rows;
+            -ms-grid-row: @rows;
+        }
+        .rows-facet(@rows, @min-range + 1, @max-range);
+    }
+    .columns-facet(@index, @column) {
+        .item_@{index}{
+            grid-column: @column;
+            -ms-grid-column: @column;
+        }
+    }
+    .set-columns(@columns, @column) when(@column > @columns){
+        @column: 1;
+    }
+    .facet(@index, @columns, @column) when(@index < 50) {
+        .rows-facet(@index, (@index * @columns) - (@columns - 1), @index * @columns);
+        .set-columns(@columns, @column);
+        .columns-facet(@index, @column);
+        .facet(@index + 1, @columns, @column + 1);
+    }
+    #facet_view{
+        @columns: 4;
+        .facet(1, @columns, 1);
+
+        display: grid;
+        display: -ms-grid;
+        width: 100%;
+        -ms-grid-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 1em;
+        margin: 4em 0;
+        box-sizing: border-box;
+
+        .project{
+            border: 1px solid #ddd;
+            display: block;
+            width: 97%;
+
+            .date_project{
+                padding: 0.1em 0.5em;
+                color: gray;
+            }
+
+            .title {
+                color: #333;
+                font-size: 0.8em;
+                font-weight: normal;
+            }
+
+            .image {
+                width: 100%;
+                padding-bottom: 50%;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-image: url(https://www.gettyimages.ca/gi-resources/images/Homepage/Hero/UK/CMS_Creative_164657191_Kingfisher.jpg);
+            }
+            .description {
+                font-family: open sans;
+                font-size: 0.8em;
+                font-weight: bold;
+                padding: 0.3em 0;
+                line-height: 1.2em;
+                color: #000;
+            }
+            .text{
+                padding: 0.5em;
+            }
+        }
+        &.columns-2{
+            -ms-grid-columns: 50% 50%;
+            grid-template-columns: 50% 50%;
+            @columns: 2;
+            .facet(1, @columns, 1);
+        }
+        &.vertical{
+            .image {
+                width: 50%;
+                padding-bottom: 50%;
+                float: left;
+            }
+            .text{
+                width: 50%;
+                box-sizing: border-box;
+                float: left;
+                display: flex;
+                flex-flow: column;
+                height: 100%;
+            }
+            h3 {
+                font-family: Abel;
+            }
+            .text > div{
+                margin: auto;
+                width: 100%;
+                text-align: left;
+            }
+        }
+    }
+}
+//CREAFARM
+.subsection-commerce-alimentation-locale-creafarm{
+    .portletNavigationTree .portletHeader {
+        background: @theme-creafarm;
+    }
+    dl.portlet ul.navTree .navTreeCurrentItem,
+    dl.portlet ul.navTree a:hover{
+        color: @theme-creafarm !important;
+    }
+    //CONTENT
+    #content a.bouton{
+        background: @theme-creafarm !important;
+    }
+    #content h2,
+    #content h3{
+        color: @theme-creafarm;
+    }
+    #visual-portal-wrapper #other-actions [class^="icon-"]::before {
+        background: @theme-creafarm;
+    }
+    #visual-portal-wrapper #right-actions-viewlet #other-actions #social-share::after{
+        background: @theme-creafarm;
+    }
+    #content .card-index .download::before {
+        background: @theme-creafarm;
+    }
+    #content .card-index {
+        border-color: @theme-creafarm;
+    }
+    #content .card-index .detail{
+        color: @theme-creafarm;
+    }
+    #text_with_button ul {
+        margin-left: 0;
+    }
+    #text_with_button ul li {
+        list-style: none;
+        position: relative;
+        padding: 0 1em;
+        position: relative;
+    }
+    #text_with_button .button.current {
+        background: @theme-creafarm;
+        color: #fff;
+    }
+    #text_with_button .button::before {
+        content: "";
+        background: @theme-creafarm;
+        height: 100%;
+        width: 10px;
+        position: absolute;
+        left: 0;
+    }
+    #text_with_button .text {
+        display: none;
+    }
+    #text_with_button .text.current {
+        margin-bottom: 2em;
+        display: block;
+    }
+}
+//POTAGER
+.subsection-commerce-alimentation-locale-potager{
+    .portletNavigationTree .portletHeader {
+        background: @theme-potager;
+    }
+    dl.portlet ul.navTree .navTreeCurrentItem,
+    dl.portlet ul.navTree a:hover{
+        color: @theme-potager !important;
+    }
+    //CONTENT
+    #content a.bouton{
+        background: @theme-potager !important;
+    }
+    #content h2,
+    #content h3{
+        color: @theme-potager;
+    }
+    #visual-portal-wrapper #other-actions [class^="icon-"]::before {
+        background: @theme-potager;
+    }
+    #visual-portal-wrapper #right-actions-viewlet #other-actions #social-share::after{
+        background: @theme-potager;
+    }
+    #content .card-index .download::before {
+        background: @theme-potager;
+    }
+    #content .card-index {
+        border-color: @theme-potager;
+    }
+    #content .card-index .detail{
+        color: @theme-potager;
+    }
+    .button {
+        background: @theme-potager;
+        color: #fff;
+        padding: 0 0.5em;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+}
+//Acheter local
+.subsection-commerce-alimentation-locale-acheter-local{
+    .portletNavigationTree .portletHeader {
+        background: @theme-acheter-local;
+    }
+    dl.portlet ul.navTree .navTreeCurrentItem,
+    dl.portlet ul.navTree a:hover{
+        color: @theme-acheter-local !important;
+    }
+    //CONTENT
+    #content a.bouton{
+        background: @theme-acheter-local !important;
+    }
+    #content h2,
+    #content h3{
+        color: @theme-acheter-local;
+    }
+    #visual-portal-wrapper #other-actions [class^="icon-"]::before {
+        background: @theme-acheter-local;
+    }
+    #visual-portal-wrapper #right-actions-viewlet #other-actions #social-share::after{
+        background: @theme-acheter-local;
+    }
+    #content .card-index .download::before {
+        background: @theme-acheter-local;
+    }
+    #content .card-index {
+        border-color: @theme-acheter-local;
+    }
+    #content .card-index .detail{
+        color: @theme-acheter-local;
+    }
+}
+//PROFESSIONEL
+.subsection-commerce-alimentation-locale-professionnels{
+    .portletNavigationTree .portletHeader {
+        background: @theme-professionnel;
+    }
+    dl.portlet ul.navTree .navTreeCurrentItem,
+    dl.portlet ul.navTree a:hover{
+        color: @theme-professionnel !important;
+    }
+    //CONTENT
+    #content a.bouton{
+        background: @theme-professionnel !important;
+    }
+    #content h2,
+    #content h3{
+        color: @theme-professionnel;
+    }
+    #visual-portal-wrapper #other-actions [class^="icon-"]::before {
+        background: @theme-professionnel;
+    }
+    #visual-portal-wrapper #right-actions-viewlet #other-actions #social-share::after{
+        background: @theme-professionnel;
+    }
+    #content .card-index .download::before {
+        background: @theme-professionnel;
+    }
+    #content .card-index {
+        border-color: @theme-professionnel;
+    }
+    #content .card-index .detail{
+        color: @theme-professionnel;
+    }
+}
+//CARD-INDEX
+.card-index {
+    border: 1px solid;
+    box-sizing: border-box;
+    margin: 2em 0;
+    padding: 1em;
+}
+.card-index.no-border {
+    border: none;
+}
+#content .card-index ol {
+    display: inline-block;
+    margin: 0 0em 0 1em;
+    width: 30%;
+}
+#content .card-index.columns-2 ol {
+    width: 47%;
+}
+#content .card-index.columns-1 ol {
+    width: 100%;
+}
+#content .card-index ol.columns-3 li{
+    width: 30%;
+    display: inline-block;
+    vertical-align: top;
+}
+.card-index ol li {
+    list-style: none;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+#content .card-index li{
+    margin-bottom: 0.75em;
+}
+.card-index span {
+    font-family: "Abel";
+    color: #000;
+    font-weight: bold;
+}
+.card-index .detail {
+    display: block;
+}
+#content .card-index .download {
+    color: #000000;
+    font-family: "Abel";
+    font-weight: bold;
+    padding: 1em 0 0 2.5em;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+#content .card-index .download::before {
+    content: "\E83A";
+    color: #fff;
+    font-family: fontello;
+    margin: 0 0.5em 0 0;
+    padding: 0.5em;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#visual-portal-wrapper .creafarm h2{
+    color: @theme-creafarm;
+}
+#content .card-index-image {
+    margin: 2em 0;
+    width: 100%;
+    font-size: 0;
+}
+#content .card-index-image > * {
+    font-size: 1rem;
+}
+#content .card-index-image a.image-overlay {
+    display: inline-block;
+    width: calc(100% / 3);
+    box-sizing: border-box;
+    padding-bottom: 0.5rem;
+}
+#content .card-index-image a.image-overlay:nth-child(3n+1) {
+    padding-right: 0.1rem;
+    text-align: left;
+}
+#content .card-index-image a.image-overlay:nth-child(3n+2) {
+    padding-right: 0.05rem;
+    padding-left: 0.05rem;
+    text-align: center;
+}
+#content .card-index-image a.image-overlay:nth-child(3n+3) {
+    padding-left: 0.1rem;
+    text-align: right;
+}
+#content .card-index-image .content-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#content .card-index-image .hidden {
+    display: none;
+}
+#content .card-index-image .overlay-action{
+    display: flex;
+    margin-bottom: 0.5rem;
+    & > div {
+        display: inline-block;
+        color: #ffffff;
+        background-color: #fd9864;
+        width: 3rem;
+        height: 3rem;
+        text-align: center;
+        line-height: 3rem;
+        font-size: 0;
+        cursor: pointer;
+        &::after{
+            font-family: fontello;
+            font-size: 1.5rem;
+        }
+        &.overlay-close::after{
+            content: "\e810";
+        }
+        &.overlay-previous::after{
+            content: "\e845";
+        }
+        &.overlay-next::after{
+            content: "\e846";
+        }
+    }
+}
+#content .card-index-image .invisible {
+    pointer-events: none;
+    &::after{
+        color: transparent !important;
+    }
+}
+#content .card-index-image .overlay-image-active {
+    width: 80vw;
+    text-align: center;
+    height: 70vh;
+    .image-overlay-active {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+}
+#content .card-index-image.columns-4 a {
+    width: 25%;
+}
+div.overlay {
+    text-align: center;
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    div.close{
+        position: relative;
+        transform: translateY(100%);
+    }
+    img.pb-image{
+        box-shadow: none;
+        object-fit: contain;
+        width: 70vw;
+        height: 80vh;
+        background-color: transparent;
+        border: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #facet_view{
+        -ms-grid-columns: 1fr 1fr !important;
+        grid-template-columns: 1fr 1fr !important;
+        @columns: 2;
+        .facet(1, @columns, 1);
+    }
+    .image-dummy {
+        text-align: center;
+        max-width: 40vw;
+        margin: auto;
+    }
+    #content #accueil .bloc-collection .bloc-item{
+        min-height: auto;
+        width: 50%;
+        margin: 0;
+        padding: 0.5rem;
+        .newsImage{
+            width: 100%;
+            height: auto;
+            max-width: none;
+        }
+    }
+    .in-minisite-out-portal{
+        #top-logo-slogan-actions-inner{
+            display: none;
+        }
+        #minisite-logo-nav {
+            display: flex;
+            justify-content: space-between;
+            #minisite-logo{
+                max-height: 3rem;
+                width: auto;
+                img{
+                    padding: 0;
+                }
+            }
+            #minisite-globalnav{
+                display: flex;
+                flex-direction: column;
+                flex: 0;
+                padding: 0.5rem;
+                margin-left: auto;
+            }
+            #minisite-globalnav.hidden{
+                display: none;
+            }
+            .menu-button::before{
+                content: "☰";
+                display: inline-block;
+                font-size: 3rem;
+                line-height: 2rem;
+                height: 3rem;
+                cursor: pointer;
+            }
+        }
+    }
+}
+@media screen and (max-width: 600px) {
+    #facet_view{
+        -ms-grid-columns: 1fr !important;
+        grid-template-columns: 1fr !important;
+        @columns: 1;
+        .facet(1, @columns, 1);
+    }
+    #top-logo-slogan-actions-inner{
+        min-height: 130px;
+    }
+}
+.in-minisite-out-portal.subsection-commerce-alimentation-locale #footer-sitemap {
+    display: none;
+}
+.in-minisite-out-portal.subsection-commerce-alimentation-locale #portal-footer-wrapper .row {
+    background: transparent;
+}
