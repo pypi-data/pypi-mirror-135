@@ -1,0 +1,22 @@
+#!/usr/env/bin/python
+
+import shutil
+import argparse
+from pathlib import Path
+
+from pdp_kafka_reader.conf import SPARK_AVRO_JAR_PATH
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-p",
+    "--path",
+    type=Path,
+    required=False,
+    default=Path("./"),
+    help="Path to output directory",
+)
+args = parser.parse_args()
+
+dest = args.path / SPARK_AVRO_JAR_PATH.name
+shutil.copy(SPARK_AVRO_JAR_PATH, dest, follow_symlinks=True)

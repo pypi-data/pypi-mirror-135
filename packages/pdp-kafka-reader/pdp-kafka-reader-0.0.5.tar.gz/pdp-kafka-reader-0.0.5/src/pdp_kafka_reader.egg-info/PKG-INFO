@@ -1,0 +1,67 @@
+Metadata-Version: 2.1
+Name: pdp-kafka-reader
+Version: 0.0.5
+Summary: PDP Kafka package
+Home-page: UNKNOWN
+Author: Filip Beć
+Author-email: filip.bec@porsche.digital
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# PDP Kafka Reader
+
+## Requirements
+
+* git
+* python 3.6+
+* pip
+
+Also, you need access to the git repository. Generate and use ssh keys in Skyway Bitbucket.
+
+## Install
+
+```bash
+pip install pdp_kafka_reader
+```
+
+## Usage
+
+### CLI
+
+You can use `kafka-reader` CLI tool to extract data into from a specific topic. An example of usage:
+
+```bash
+kafka-reader export-avro -k kafka-options.json -s schema.json -t my_kafka_topic -o out.parquet
+```
+
+Check all options with `kafka-reader -h`.
+
+### Python KafkaReader
+
+```python
+import json
+
+from pdp_kafka_reader.kafka_reader import KafkaAvroReader
+
+kafka_options = {
+    "kafka.bootstrap.servers": "my-kafka-server:9092",
+    "subscribe": "test_avro"
+}
+
+avro_schema = open("schema.json").read()
+
+reader = KafkaAvroReader(spark)
+df = reader.read_avro(kafka_options, avro_schema, "my_kafka_topic")
+df.show()
+```
+
+## Testing
+
+Testing environment in defined in `docker-compose.yml`. Start docker containers and run `tox`.
+

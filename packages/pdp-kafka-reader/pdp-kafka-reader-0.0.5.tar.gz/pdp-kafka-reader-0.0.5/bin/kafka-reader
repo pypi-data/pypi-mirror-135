@@ -1,0 +1,44 @@
+#!/usr/env/bin/python
+
+import logging
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+from importlib_resources import files
+from pdp_kafka_reader.conf import SPARK_AVRO_JAR_PATH
+from pdp_kafka_reader.argparser import parse_args
+
+PYTHON_EXE = sys.executable
+KAFKA_READER: Path = files("pdp_kafka_reader").joinpath("kafka_reader.py")
+
+
+args = parse_args()
+
+cmd = [
+    "spark-submit",
+    "--jars",
+    str(SPARK_AVRO_JAR_PATH),
+    str(KAFKA_READER),
+] + sys.argv[1:]
+
+env = dict(
+    PYSPARK_DRIVER_PYTHON=PYTHON_EXE,
+    PYSPARK_PYTHON=PYTHON_EXE,
+    **os.environ,
+)
+
+subprocess.run(cmd, check=True, env=env)
+
+try:
+    logging.info("Copying output file from HDFS to local filesystem")
+    subprocess.run(["hdfs", "dfs", "-copyToLocal", args.output, args.output], check=True)
+except FileNotFoundError as e:
+    logging.warn(f"Failed to copy from HDFS: {e}")
+finally:
+    try:
+        logging.info("Removing output file from HDFS")
+        subprocess.run(["hdfs", "dfs", "-rm", "-r", "-f", args.output], check=True)
+    except FileNotFoundError as e:
+        logging.warn(f"Could not remove the file from HDFS: {e}.\nPlease clean it manually.")
