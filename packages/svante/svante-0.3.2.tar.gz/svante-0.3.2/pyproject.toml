@@ -1,0 +1,145 @@
+[tool.poetry]
+name = "svante"
+version = "0.3.2"
+description = "Configurable Arrhenius plots with uncertainties and ratios"
+authors = ["Joel Berendzen <joel@generisbio.com>"]
+license = "BSD-3-Clause"
+readme = "README.rst"
+homepage = "https://github.com/hydrationdynamics/svante"
+repository = "https://github.com/hydrationdynamics/svante"
+documentation = "https://svante.readthedocs.io"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Chemistry"
+]
+keywords = [
+    "science",
+    "chemistry",
+    "physical chemistry",
+    "kinetics",
+    "rate coefficients",
+    "temperature dependence"
+]
+
+[tool.poetry.urls]
+Changelog = "https://github.com/joelb123/svante/releases"
+
+[tool.poetry.dependencies]
+python = "^3.8.0,<3.11"
+typer = "*"
+pandas = "*"
+matplotlib = "*"
+numpy = "*"
+scipy = "*"
+pydove = "*"
+Pint = "*"
+uncertainties = "*"
+shellingham = "*"
+colorama = "*"
+tabulate = "*"
+loguru = "*"
+schema = "*"
+toml = "*"
+attrs = "*"
+statsdict = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+coverage = {extras = ["toml"], version = "*"}
+safety = "*"
+mypy = "*"
+typeguard = "*"
+xdoctest = {extras = ["colors"], version = "*"}
+sphinx-autobuild = "*"
+pre-commit = "*"
+flake8 = "*"
+flake8-bandit = "*"
+flake8-bugbear = "*"
+flake8-docstrings = "*"
+pep8-naming = "*"
+darglint = "*"
+reorder-python-imports = "*"
+pre-commit-hooks = "*"
+sphinx-rtd-theme = "*"
+Pygments = "*"
+pytest-datadir-mgr = "*"
+flynt = "*"
+isort = "*"
+sh = "*"
+nox-poetry = "*"
+pytest-cov = "*"
+black = "*"
+flake8-rst-docstrings = "*"
+icecream = "*"
+pandas-stubs = "*"
+Sphinx = "*"
+sphinx-click = "*"
+types-toml = "^0.10.3"
+
+[tool.poetry.scripts]
+svante = "svante.__main__:main"
+
+[tool.black]
+line-length = 79
+target-version = ['py38', 'py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+  \.git
+  | \.mypy
+  _cache
+  | \.nox
+  | \.idea
+  | \.pytest-cache
+  | _build
+  | build
+  | dist
+  | tests/
+)/
+'''
+
+[tool.coverage.paths]
+source = ["svante", "*site-packages/svante"]
+
+[tool.coverage.report]
+show_missing = true
+ignore_errors = true
+exclude_lines = [
+    "if self.debug:",
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:"
+    ]
+
+[tool.isort]
+atomic = true
+force_single_line = true
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 79
+import_heading_stdlib = "standard library imports"
+import_heading_thirdparty = "third-party imports"
+import_heading_firstparty = "first-party imports"
+import_heading_localfolder = "module imports"
+known_standard_library = "pkg_resources"
+
+[tool.poetry-dynamic-versioning]
+enable = false
+style = "semver"
+
+[tool.pytest.ini_options]
+addopts = "-x"
+
+[build-system]
+requires = ["poetry-core>=1.1.0"]
+build-backend = "poetry.core.masonry.api"
