@@ -1,0 +1,50 @@
+Metadata-Version: 2.1
+Name: project-manager-pro
+Version: 2022.1.20.1
+Summary: Manage projects
+Home-page: UNKNOWN
+Author: FullDungeon
+Author-email: ddd.dungeon@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENCE
+Requires-Dist: colorama
+
+# Project Manage Pro
+## Использование
+Данный пакет предназначен для открытия проектов в любой IDE прямо из терминала, и отображения списка проектов в удобном виде с указанием полезной информации о них.
+
+Настроить и подготовить к работе менеджер можно всего за три шага:
+1. Создать в своих проектах файл _z.json_ с содержимым:
+```
+{
+"name": "Project name",
+"type": "Application",
+"state": "active",
+"description": "Long full description",
+"tags": ["Python", "Pip"]
+}
+```
+
+2. Произвести поиск проектов на диске с сохранением информации о них:
+```
+pmp find -p ./projects/
+```
+
+3. Добавить в конфигурацию пакета способы запуска проектов (символ $ заменяется путем к проекту):
+```
+pmp command -a code "code $"
+```
+
+Теперь все проекты, которые были найдены, можно запускать с помощью команды:
+```
+pmp alias project
+```
+где _alias_ псевдоним команды (_code_ в примере выше), а _project_ - хеш или название проекта.
+
+
