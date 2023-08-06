@@ -1,0 +1,50 @@
+/*
+ * Definitions for libfwps
+ *
+ * Copyright (C) 2013-2022, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBFWPS_DEFINITIONS_H )
+#define _LIBFWPS_DEFINITIONS_H
+
+#include <libfwps/types.h>
+
+#define LIBFWPS_VERSION			20220122
+
+/* The version string
+ */
+#define LIBFWPS_VERSION_STRING		"20220122"
+
+/* The byte order definitions
+ */
+enum LIBFWPS_ENDIAN
+{
+	LIBFWPS_ENDIAN_BIG		= (int) 'b',
+	LIBFWPS_ENDIAN_LITTLE		= (int) 'l'
+};
+
+/* The property value types
+ */
+enum LIBFWPS_VALUE_TYPES
+{
+	LIBFWPS_VALUE_TYPE_NAMED	= 1,
+	LIBFWPS_VALUE_TYPE_NUMERIC	= 2
+};
+
+#endif /* !defined( _LIBFWPS_DEFINITIONS_H ) */
+
