@@ -1,0 +1,354 @@
+{
+  "actions": {
+    "DescribeEvents": {
+      "document": "This API is used to query CloudAudit logs.",
+      "input": "DescribeEventsRequest",
+      "name": "Queries CloudAudit logs",
+      "output": "DescribeEventsResponse"
+    }
+  },
+  "metadata": {
+    "apiVersion": "2019-03-19",
+    "serviceNameCN": "云审计",
+    "serviceShortName": "cloudaudit"
+  },
+  "objects": {
+    "DescribeEventsRequest": {
+      "document": "DescribeEvents request structure.",
+      "members": [
+        {
+          "default": "",
+          "document": "Start timestamp in seconds (cannot be 90 days after the current time).",
+          "example": "1612171581",
+          "member": "uint64",
+          "name": "StartTime",
+          "required": true,
+          "type": "int"
+        },
+        {
+          "default": "",
+          "document": "End timestamp in seconds (the time range for query is less than 30 days).",
+          "example": "1612173581",
+          "member": "uint64",
+          "name": "EndTime",
+          "required": true,
+          "type": "int"
+        },
+        {
+          "default": "",
+          "document": "Credential for viewing more logs.",
+          "example": "123213213312313",
+          "member": "uint64",
+          "name": "NextToken",
+          "required": false,
+          "type": "int"
+        },
+        {
+          "default": "",
+          "document": "Max number of returned logs (up to 50).",
+          "example": "10",
+          "member": "uint64",
+          "name": "MaxResults",
+          "required": false,
+          "type": "int"
+        },
+        {
+          "default": "",
+          "document": "Search criterion. Valid values: RequestId, EventName, ActionType (write/read), PrincipalId (sub-account), ResourceType, ResourceName, AccessKeyId, SensitiveAction, ApiErrorCode, and CamErrorCode.",
+          "example": "[{\"AttributeKey:XX,\"AttributeValue\":xx}]",
+          "member": "LookupAttribute",
+          "name": "LookupAttributes",
+          "required": false,
+          "type": "list"
+        },
+        {
+          "default": "",
+          "document": "Whether to return the IP location. `1`: yes, `0`: no.",
+          "example": "1",
+          "member": "uint64",
+          "name": "IsReturnLocation",
+          "required": false,
+          "type": "int"
+        }
+      ],
+      "type": "object"
+    },
+    "DescribeEventsResponse": {
+      "document": "DescribeEvents response structure.",
+      "members": [
+        {
+          "document": "Whether the logset ends.",
+          "example": "False",
+          "member": "bool",
+          "name": "ListOver",
+          "required": true,
+          "type": "bool",
+          "value_allowed_null": false
+        },
+        {
+          "document": "Credential for viewing more logs.",
+          "example": "123123213",
+          "member": "uint64",
+          "name": "NextToken",
+          "required": true,
+          "type": "int",
+          "value_allowed_null": false
+        },
+        {
+          "document": "Logset.\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "*",
+          "member": "Event",
+          "name": "Events",
+          "required": true,
+          "type": "list",
+          "value_allowed_null": true
+        },
+        {
+          "document": "Total number of events.\nNote: this field may return `null`, indicating that no valid values can be obtained.",
+          "example": "1",
+          "member": "uint64",
+          "name": "TotalCount",
+          "required": true,
+          "type": "int",
+          "value_allowed_null": true
+        },
+        {
+          "document": "The unique request ID, which is returned for each request. RequestId is required for locating a problem.",
+          "member": "string",
+          "name": "RequestId",
+          "type": "string"
+        }
+      ],
+      "type": "object"
+    },
+    "Event": {
+      "document": "Log details",
+      "members": [
+        {
+          "default": "",
+          "document": "Log ID",
+          "example": "xx",
+          "member": "string",
+          "name": "EventId",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Username",
+          "example": "xx",
+          "member": "string",
+          "name": "Username",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Event Time",
+          "example": "xx",
+          "member": "string",
+          "name": "EventTime",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Log details",
+          "example": "xx",
+          "member": "string",
+          "name": "CloudAuditEvent",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Description of resource type in Chinese (please use this field as required; if you are using other languages, ignore this field)",
+          "example": "xx",
+          "member": "string",
+          "name": "ResourceTypeCn",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Authentication error code",
+          "example": "1",
+          "member": "int64",
+          "name": "ErrorCode",
+          "required": false,
+          "type": "int",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Event name",
+          "example": "xx",
+          "member": "string",
+          "name": "EventName",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Certificate ID\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "xx",
+          "member": "string",
+          "name": "SecretId",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": true
+        },
+        {
+          "default": "",
+          "document": "Request source",
+          "example": "xx",
+          "member": "string",
+          "name": "EventSource",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Request ID",
+          "example": "xx",
+          "member": "string",
+          "name": "RequestID",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Resource region",
+          "example": "xx",
+          "member": "string",
+          "name": "ResourceRegion",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Root account ID",
+          "example": "1",
+          "member": "int64",
+          "name": "AccountID",
+          "required": false,
+          "type": "int",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Source IP\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "xx",
+          "member": "string",
+          "name": "SourceIPAddress",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": true
+        },
+        {
+          "default": "",
+          "document": "Description of event name in Chinese (please use this field as required; if you are using other languages, ignore this field)",
+          "example": "xx",
+          "member": "string",
+          "name": "EventNameCn",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Resource pair",
+          "example": "xx",
+          "member": "Resource",
+          "name": "Resources",
+          "required": false,
+          "type": "object",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Event region",
+          "example": "xx",
+          "member": "string",
+          "name": "EventRegion",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "IP location",
+          "example": "中国 江苏省 南京市 腾讯网络",
+          "member": "string",
+          "name": "Location",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        }
+      ],
+      "usage": "both"
+    },
+    "LookupAttribute": {
+      "document": "Search criterion",
+      "members": [
+        {
+          "default": "",
+          "document": "Valid values: RequestId, EventName, ReadOnly, Username, ResourceType, ResourceName, AccessKeyId, and EventId\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "xx",
+          "member": "string",
+          "name": "AttributeKey",
+          "required": true,
+          "type": "string",
+          "value_allowed_null": true
+        },
+        {
+          "default": "",
+          "document": "Value of `AttributeValue`\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "xx",
+          "member": "string",
+          "name": "AttributeValue",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": true
+        }
+      ],
+      "usage": "in"
+    },
+    "Resource": {
+      "document": "Resource type",
+      "members": [
+        {
+          "default": "",
+          "document": "Resource type",
+          "example": "xx",
+          "member": "string",
+          "name": "ResourceType",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": false
+        },
+        {
+          "default": "",
+          "document": "Resource name\nNote: `null` may be returned for this field, indicating that no valid values can be obtained.",
+          "example": "xx",
+          "member": "string",
+          "name": "ResourceName",
+          "required": false,
+          "type": "string",
+          "value_allowed_null": true
+        }
+      ],
+      "usage": "in"
+    }
+  },
+  "version": "1.0"
+}
