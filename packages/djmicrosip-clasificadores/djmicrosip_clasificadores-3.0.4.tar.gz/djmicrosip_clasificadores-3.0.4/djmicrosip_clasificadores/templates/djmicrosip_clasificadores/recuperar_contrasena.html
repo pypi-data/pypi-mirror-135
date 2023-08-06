@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}
+Recuperar contraseña
+{% endblock %}
+{% block style_css %}
+{% endblock %}
+{% block js_code %}
+<script type="text/javascript">
+
+	$("#validar").click(function(){
+	  var nombre_cliente=$("#nombre_cliente").val();
+	  console.log(nombre_cliente);
+		$.ajax({
+			url: '/pedidos_web/find_user/',
+			type: 'get',
+			data: {
+				'nombre_cliente': nombre_cliente,
+			},
+			success: function (data) {
+				if(data.mensaje=="Si")
+				{
+					$("#alerta").removeClass("alert-danger");
+					$("#alerta").addClass("alert-success");
+					$("#alerta").removeClass("hidden");
+					$("strong#mensaje").text("Usuario correcto");
+					$("span#alerts").removeClass("glyphicon-remove");
+					$("span#alerts").addClass("glyphicon glyphicon-ok");
+					$("#enviar").removeClass("hidden");
+					$("#id_usuario").val(data.id_usuario);
+
+				}
+				else
+				{
+					$("#alerta").removeClass("hidden");
+					$("#alerta").addClass("alert-danger");
+					$("#alerta").removeClass("alert-success");
+					$("span#alerts").addClass("glyphicon-remove");
+					$("span#alerts").removeClass("glyphicon-ok");
+
+				}
+			}
+		});
+	});
+
+	$('.dropdown').addClass('hidden');
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-3"></div>
+
+<div class="col-md-3"></div>
+</div>	
+<div class="row">
+<div class="col-md-3 col-md-offset-4">
+<div class="col-md-12">
+	{% if mensaje == 'Reenvio correcto'%}
+	 <p class="alert alert-success">{{mensaje}}</p>
+	{% elif mensaje == 'Ocurrio un error al enviar la contraseña, intentelo mas tarde o contacte con el administrador' %}
+	 <p class="alert alert-error">{{mensaje}}</p>
+	{% endif %}
+</div>
+<div class="col-md-12"><label style="width: 100%;">Ingresar usuario para validar</label><input style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();" type="text" class="form-control" id="nombre_cliente">
+<button style="float: right;" id="validar" class="btn btn-primary">Validar</button>
+<br>
+</div>
+<div class="alert alert-danger hidden col-md-12" id="alerta" role="alert">
+  <span id="alerts" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  <strong id="mensaje">Usuario no existe</strong> 
+  <br>
+</div>
+<div id="enviar" class="hidden col-md-12" >
+<form method="post" class="form-horizontal" action=""  enctype='multipart/form-data'>
+  {% csrf_token %}
+<div><button style="float: right;" class="btn btn-success enviar_inf_usuario" name="enviar">Recuperar contraseña</button></div>
+<input type="text" class="hidden" id="id_usuario" name="id_usuario">	
+</form>
+<div><p class="alert alert-info">El correo se enviara al email dado de alta en su usuario</p></div>
+</div>
+</div>
+</div>
+{% endblock %}

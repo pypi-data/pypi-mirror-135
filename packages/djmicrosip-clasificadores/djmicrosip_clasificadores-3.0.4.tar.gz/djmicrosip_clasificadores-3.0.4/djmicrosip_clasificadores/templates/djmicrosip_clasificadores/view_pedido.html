@@ -1,0 +1,55 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% load humanize %}
+{% block title %}
+Pedidos Web
+{% endblock %}
+{% block style_css %}
+{% endblock %}
+{% block js_code %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		{% if cantidad_pedido > 0 %}
+		<table class="table">
+			<thead>
+				<th>Cantidad</th>
+				<th>Articulo</th>
+				<th style="text-align: right;">Precio Unitario</th>
+				<th style="text-align: right;">Precio Neto</th>
+				<th align="center">Eliminar</th>
+			</thead>
+			<tbody>
+				{% for detalle in detalle_venta%}
+				<tr>
+					<td>{{detalle.cantidad}}</td>
+					<td>{{detalle.articulo.nombre}}</td>
+					<td style="text-align: right;">{{detalle.precio|floatformat:2|intcomma}}</td>
+					<td style="text-align: right;">{{detalle.precio_neto|floatformat:2|intcomma}}</td>
+					<td align="center"><a href="/pedidos_web/eliminar_detalle/{{detalle.id}}/{{venta.id}}/" class="glyphicon glyphicon-trash"></a></td>
+				</tr>
+				{%endfor%}
+				<tr>
+					<td></td>
+					<td></td>
+					<td style="text-align: right; font-weight: bold;">Total</td>
+					<td style="text-align: right;">{{total|floatformat:2|intcomma}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<form method="post" class="form" action="" id="myForm"  enctype='multipart/form-data' style="float: right;">
+				{% csrf_token %}
+				<button class="btn btn-primary" name="guardar">Guardar</button>
+				<button class="btn btn-danger" name="eliminar">Eliminar</button>
+		</form>
+		{% else %}
+		<h1 style="text-align: center;">No hay articulos</h1>
+		{% endif %}	
+	</div>
+	<div class="col-md-2"></div>
+</div>
+{% endblock %}

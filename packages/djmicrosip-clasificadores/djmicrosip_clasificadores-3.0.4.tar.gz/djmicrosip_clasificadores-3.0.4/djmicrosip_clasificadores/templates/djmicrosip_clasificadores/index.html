@@ -1,0 +1,1366 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% load humanize %}
+{% block title %}
+Pedidos Web
+{% endblock %}
+{% block style_css %}
+<style type="text/css"> 
+/*carrousel*/
+#carrousel {
+	width:auto;
+	
+	margin: 0 auto;
+	position:relative;
+	overflow:hidden;	
+}
+
+.slide {
+	/*position:absolute;*/
+	top:0px;
+	left:0px;
+	width:auto;
+	
+}
+
+.carrousel-picto{
+	position:absolute;
+	left:45%;
+	bottom:50px;
+	padding:0px;
+	margin:0px;
+}
+
+.carrousel-picto li{
+	display:inline-block;
+	background-color:#ffffff;
+	border-radius:50%;
+	width:10px;
+	height:10px;
+	margin:6px;
+	cursor:pointer;
+	
+}
+.carrousel-picto span{display: block;color: transparent;}
+.carrousel-picto li:hover, .carrousel-picto li.active{background-color:#2980b9;}
+
+#carrousel-nav .prev{
+
+	top:45%;
+	left: 10%;
+    position: absolute;
+	cursor:pointer;
+	opacity:0.4;
+	 width: 0; 
+     height: 0; 
+     border-right: 20px solid #000000;
+     border-top: 20px solid transparent;
+     border-bottom: 20px solid transparent; 
+
+}
+#carrousel-nav .next{
+
+	top:45%;
+	right: 10%;
+    position: absolute;
+	cursor:pointer;
+	opacity:0.4;
+	 width: 0; 
+     height: 0; 
+     border-left: 20px solid #000000;
+     border-top: 20px solid transparent;
+     border-bottom: 20px solid transparent; 
+}
+
+#carrousel-nav .prev:hover,#carrousel-nav .next:hover {opacity: 1;}
+
+
+.input-group {
+    position: relative;
+    display: flex;
+    border-collapse: separate;
+    padding-left: 8.5vw;
+
+}
+.btn_{
+	padding: 0;
+	float: right;
+	color: #c1c1c1;
+}
+.modal-dialog {
+    width: 25vw;
+    margin: 35vh auto;
+}
+.modal-dialog.compatibilidad {
+    width: 70vw;
+    margin: 35vh auto;
+}
+.secundario2{
+	text-align: right;
+}
+.secundario3{
+	text-align: right;
+}
+.table>tbody>tr>td{
+	padding: 0px;
+}
+.fullscreen-modal .modal-dialog {
+  margin: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+
+@media screen and (max-width: 600px) {
+    table.table-responsive thead {
+        display: none;
+    }
+
+    table.table-responsive tr {
+        padding: 5px;
+        display: block;
+        margin: .5rem 0 1rem;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+    }
+
+    table.table-responsive td {
+        display: block;
+        text-align: right;
+        border-bottom: 1px dotted #ccc;
+    }
+
+    table.table-responsive td:last-child {
+        border-bottom: 0;
+    }
+
+    table.table-responsive td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+	label {
+	    display: inline-block;
+	    max-width: 100%;
+	    margin-bottom: 5px;
+	    font-weight: 700;
+	}
+}
+@media (min-width: 768px) {
+  .fullscreen-modal .modal-dialog {
+    width: 750px;
+  }
+}
+</style>
+{% endblock %}
+{% block js_code %}
+<script src='{{STATIC_URL}}djmicrosip_clasificadores/js/bootstrap-input-spinner.js?v=1.0.1'></script>
+
+<script>
+/*var carrousel = {
+		
+		nbSlide : 0,
+		nbCurrent : 1,
+		elemCurrent : null,
+		elem : null,
+		timer : null,
+			
+		init : function(elem,id){
+			
+			//console.log(id)
+			this.nbSlide = elem.find(".slide").length;
+
+
+			//creation pagination
+			elem.append('<div class="carrousel-picto"></div>');
+			for(var i=1;i<=this.nbSlide;i++){
+				elem.find(".carrousel-picto").append("<li><span>"+i+"</span></li>");
+			}
+			
+			// au click goto slide correspondant
+			elem.find(".carrousel-picto span").click(function(){
+				carrousel.gotoSlide($(this).text());
+			});
+			
+			//au click prev
+			elem.find("#carrousel-nav #"+id+".prev").click(function(){
+				carrousel.prev();
+			});
+			
+			//au click next
+			elem.find("#carrousel-nav #"+id+".next").click(function(){
+				carrousel.next();
+			});
+
+			//initialisation du carrousel
+			this.elem = elem;
+			elem.find(".slide").hide();
+			elem.find(".slide:first").show();
+			this.elemCurrent = elem.find(".slide:first");
+			this.elem.find(".carrousel-picto li:first").addClass("active");
+			
+			//créer timer
+			carrousel.play();	
+
+			//arret au survol du carrousel
+			elem.mouseover(carrousel.stop);
+			elem.mouseout(carrousel.play);
+
+		},
+		
+		gotoSlide : function(num){
+		
+			if(num == this.nbCurrent){return false;}
+
+			/*Animation en slide
+			var sens = 1;
+				if(num<this.nbCurrent){sens = -1;}
+			var cssDepart = {"left":sens*this.elem.width()};
+			var cssFin = {"left":sens*-this.elem.width()};
+			this.elem.find("#slide"+num).show().css(cssDepart);
+			
+			this.elem.find("#slide"+num).animate({"top":0,"left":0},500);
+			this.elemCurrent.animate(cssFin,500);
+
+			this.elem.find(".carrousel-picto li").removeClass("active");
+			this.elem.find(".carrousel-picto li:eq("+(num-1)+")").addClass("active");
+			this.nbCurrent = num;
+			this.elemCurrent = this.elem.find("#slide"+num);
+		},
+		
+		next : function(){
+			console.log(this)
+			var num = this.nbCurrent+1;
+			if(num > this.nbSlide){
+				num = 1;
+			}
+			this.gotoSlide(num);
+		},
+		prev : function(){
+			var num = this.nbCurrent-1;
+			if(num <1){
+				num = this.nbSlide;
+			}
+			this.gotoSlide(num);
+		},
+		stop :function(){
+			window.clearInterval(carrousel.timer);
+		},
+		play : function(){
+			window.clearInterval(carrousel.timer);
+			carrousel.timer = window.setInterval("carrousel.next()",5000);
+		}
+		
+	}
+
+			$( "[id*='carrousel']" ).each(function() {
+			
+			var id_art=this.className;
+				if(id_art)
+				{
+				$(function(){
+					
+					carrousel.init($("#carrousel."+id_art),id_art);
+				});
+				}
+
+			});*/
+
+
+
+
+	
+	$("input[type='number']").inputSpinner();
+	$(document).ready(function(){
+
+		
+		var mensaje=$("#mensaje").val()
+		if (mensaje)
+		{alert(mensaje);
+		 location.href="/pedidos_web/";}
+		
+		$('input[name="clasificador_val"]').click(function(){
+			list_ids();
+		});
+		function list_ids() {
+			var lista_id = [];
+			$( 'input[name="clasificador_val"]' ).each(function() {
+				var id= parseInt($(this).attr("id"));
+				var clase=$(this).attr("class");
+				if($(this).prop("checked") == true){
+					lista_id.push(id);
+				}
+
+			});
+			if (lista_id != [])
+			{
+
+				location.href = "?{%if articulos.has_previous %}page={{ articulos.previous_page_number }}&{%endif%}{%if clasificador_padre_valor %}clasificador_padre_valor={{ clasificador_padre_valor }}&{%endif%}clas_val="+JSON.stringify(lista_id)+"";
+				console.log(lista_id)
+			}
+		}
+
+			$( "[id*='id_imagen_art']" ).each(function() {
+			
+			var number=$(this).parent().attr("id");
+			var valor=$(this).attr("id")
+			document.getElementById(valor).id = valor+number
+
+			});
+
+			$( "[id*='id_pedm_art']" ).each(function() {
+			
+			var number=$(this).parent().attr("id");
+			var valor=$(this).attr("id")
+			document.getElementById(valor).id = valor+number
+
+			});
+	});
+	function ready(callback){
+	    // in case the document is already rendered
+	    if (document.readyState!='loading') callback();
+	    // modern browsers
+	    else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
+	    // IE <= 8
+	    else document.attachEvent('onreadystatechange', function(){
+	        if (document.readyState=='complete') callback();
+	    });
+	}
+
+	ready(function(){
+
+		$( '.lista-clasificadores' ).each(function() {
+			var id=$(this).attr("id");
+			// var content=document.getElementById(id);
+		  	let arry =$(this).children();
+		  	console.log(arry.length)
+		  	if(arry.length <= 0)
+		  	{
+		  		$('li#'+id+'.contenedor-clasificador').addClass("hidden");
+			}
+		});
+	});
+	function printImg(url) {
+	  var win = window.open('');
+	  win.document.write('<img src="' + url + '" onload="window.print();window.close()" />');
+	  win.focus();
+	}
+	function handleClick(myRadio) {
+
+		location.href = "?{%if articulos.has_previous %}page={{ articulos.previous_page_number }}&{%endif%}clasificador_padre_valor="+ myRadio.id+"";
+
+	}
+	$( ".clasificador" ).click(function() {
+		var id=$(this).attr("id");
+		console.log(id)
+		if($("ul#"+id).hasClass( "hidden" ))
+		{
+			$("ul#"+id).removeClass("hidden");
+			$("a#"+id+" i").removeClass("glyphicon-plus");
+			$("a#"+id+" i").addClass("glyphicon-minus");
+		}
+		else
+		{
+			$("ul#"+id).addClass("hidden");
+			$("a#"+id+" i").removeClass("glyphicon-minus");
+			$("a#"+id+" i").addClass("glyphicon-plus");
+		}
+
+	});
+	$(document).on('click','.input-group-append',function(){
+	  get_cantidad();
+
+	});
+	$(document).on('touchstart','.input-group-append',function(){
+	  get_cantidad();
+
+	});
+	$(document).on('click','.input-group-prepend',function(){
+	  get_cantidad();
+
+	});
+	$(document).on('touchstart','.input-group-prepend',function(){
+	  get_cantidad();
+
+	});
+	function get_cantidad() {        	
+		var lista_articulos=[];
+		var pedido_id=$("#pedido_id").val();
+		$( 'input[type="number"]' ).each(function() {
+			var id= parseInt($(this).attr("id"));
+			console.log(id)
+			var obj = new Object();
+			var val=parseInt($(this).val());
+			var precio=parseFloat(($('#'+id+'.precio_unitario').text()).replace(/,/g, ''));
+			var clave=$('#'+id+'.clave_articulo').text();
+			if(val > 0)
+			{
+				obj.id = id;
+				obj.cantidad  = val;
+				obj.precio=precio
+				obj.clave=clave
+				lista_articulos.push(obj);
+			}
+
+		});
+		console.log(JSON.stringify(lista_articulos));
+		$.ajax({
+			url: '/pedidos_web/crear_pedido_temporal/',
+			type: 'get',
+			data: {
+				'lista_articulos': JSON.stringify(lista_articulos),
+				'pedido_id':pedido_id,
+			},
+			success: function (data) {
+
+			}
+		});
+	}
+
+	$( ".det_progreso" ).click(function() {
+		var id_articulo=$(this).attr("id");
+
+		$.ajax({
+			url: '/pedidos_web/get_todos_almacenes/',
+			type: 'get',
+			data: {
+				'id_articulo': id_articulo,
+			},
+			success: function (data) {
+				var contenedor = document.getElementById("tableExistencia"+id_articulo+"");
+				var child = contenedor.lastElementChild;  
+				while (child) { 
+					contenedor.removeChild(child); 
+					child = contenedor.lastElementChild; 
+				} 
+				for (var i = 0; i < data.length; i++) {
+					var principal = document.createElement("div"); 
+					var secundario1 = document.createElement("div");
+					var secundario2 = document.createElement("div");
+					principal.className="col-md-12";
+					secundario1.className="col-md-6 secundario1"
+					secundario1.innerHTML=data[i]["almacen"];
+					secundario2.innerHTML=data[i]["existencia"];
+					secundario2.className="col-md-6 secundario2"
+					principal.appendChild(secundario1)
+					principal.appendChild(secundario2)
+					contenedor.appendChild(principal)
+					console.log("tableExistencia"+id_articulo+"");
+				}
+
+			}
+		});
+	});
+    $("[id*='id_imagen_art']").change(function() {
+
+        var length = this.files.length;
+        console.log(length)
+        if (!length) {
+            return false;
+        }
+
+        useImage(this,"#imagen_art");
+    });
+    
+    $("[id*='inputFile']").change(function() {
+    	
+        var length = this.files.length;
+        console.log(length)
+        if (!length) {
+            return false;
+        }
+
+        mostrarImagen(this.id);
+    });
+
+	function mostrarImagen(id) {
+		var id_img=id.replace("inputFile","")
+		
+	  var file = event.target.files[0];
+	  var reader = new FileReader();
+	  var canvas = document.getElementById('img'+id_img);
+	  reader.onload = function(event) {
+	    var img = document.getElementById('img'+id_img);
+	    img.src= event.target.result;
+	  }
+	  reader.readAsDataURL(file);
+	}
+    
+
+	function useImage(img,txt) {
+
+	        var file = img.files[0];
+	        
+	        var imagefile = file.type;
+	        var match = ["image/jpeg", "image/png", "image/jpg"];
+	        if (!((imagefile == match[0]) || (imagefile == match[1]) || (imagefile == match[2]))) {
+	            alert("Invalid File Extension");
+	        } else {
+	        	console.log("OK")
+	            var reader = new FileReader();
+	            reader.onload = imageIsLoaded;
+	            reader.readAsDataURL(img.files[0]);
+	        }
+
+	        function imageIsLoaded(e) {
+	        	console.log("img")
+	        	console.log(e.target.result)
+	        	$(""+txt+img.parentNode.id+"").text(e.target.result);
+	            
+
+	        }
+	    }
+	$( "[class*='prev']" ).click(function() {
+
+		var id_slide=$('.slide.'+this.id+'.active').attr('id');
+		var num=id_slide.replace("slide","");
+
+		if(num>0)
+		{
+			var newnum=parseInt(num)-1;
+			if($( "#slide"+newnum+'.slide.'+this.id ).length)
+			{
+				$( "#slide"+num+'.slide.'+this.id ).addClass('hidden');
+				$( "#slide"+num+'.slide.'+this.id ).removeClass('active');	
+				$( "#slide"+newnum+'.slide.'+this.id ).removeClass('hidden');
+				$( "#slide"+newnum+'.slide.'+this.id ).addClass('active');
+			}
+		}
+		console.log('prev'+num);
+
+
+	});   
+	$( "[class*='next']" ).click(function() {
+		
+		var id_slide=$('.slide.'+this.id+'.active').attr('id')
+		var num=id_slide.replace("slide","");
+		if(num>0)
+		{
+			var newnum=parseInt(num)+1;
+			if($( "#slide"+newnum +'.slide.'+this.id).length)
+			{
+				$( "#slide"+num+'.slide.'+this.id ).addClass('hidden');
+				$( "#slide"+num+'.slide.'+this.id ).removeClass('active');	
+				$( "#slide"+newnum+'.slide.'+this.id ).removeClass('hidden');
+				$( "#slide"+newnum+'.slide.'+this.id ).addClass('active');
+			}
+		}
+		console.log('next'+num);
+	});    
+	$( "[id*='guardarImg']" ).click(function() {
+		
+		var child=this;
+		var articulo_id=child.parentNode.id;
+		var img_art_data= document.getElementById("img"+articulo_id+"").getAttribute("src");
+		var pedm_art_data= "";
+
+
+
+	/*	img_art=img_art.replace("C:\\fakepath\\","")
+		pedm_art=pedm_art.replace("C:\\fakepath\\","")*/
+		console.log(img_art_data)
+		console.log(pedm_art_data)
+		$.ajax({
+			url: '/pedidos_web/save_img/',
+			type: 'get',
+			data: {
+				'articulo_id': articulo_id,				
+				'pedm_art_data':pedm_art_data,
+				'img_art_data':img_art_data,
+			},
+			success: function (data) {
+					alert(data.mensaje);
+					location.reload();
+			}
+		});
+	});
+	$( ".compatibilidades" ).click(function() {
+		var id_articulo=$(this).attr("id");
+		
+		var id_pedido=$("#pedido_id").val();
+		$.ajax({
+			url: '/pedidos_web/compatibilidad_articulo/',
+			type: 'get',
+			data: {
+				'id_articulo': id_articulo,
+				'id_pedido': id_pedido,
+			},
+			success: function (data) {
+				var contenedor = document.getElementById("tableCompatibilidad"+id_articulo+"");
+				var child = contenedor.lastElementChild;  
+				while (child) { 
+					contenedor.removeChild(child); 
+					child = contenedor.lastElementChild; 
+				} 
+				for (var i = 0; i < data.length; i++) {
+					var principal = document.createElement("div"); 
+					var secundario0 = document.createElement("div");
+					var secundario1 = document.createElement("div");
+					var secundario2 = document.createElement("div");
+					var secundario3 = document.createElement("div");
+					var secundario4 = document.createElement("div");
+					principal.className="col-md-12";
+					secundario0.className="col-md-2 secundario0"
+					secundario0.innerHTML=data[i]["clave"];
+					secundario1.className="col-md-4 secundario1"
+					secundario1.innerHTML=data[i]["articulo"];
+					secundario2.innerHTML=data[i]["existencia"];
+					secundario2.className="col-md-2 secundario2"
+					secundario3.innerHTML=data[i]["precio"];
+					secundario3.className="col-md-2 secundario3";
+					secundario4.innerHTML='<input type="number" value="'+data[i]["cantidad"]+'" min="0" id="'+data[i]["id"]+'" max="'+data[i]["existencia"]+'" class="cantidad '+data[i]["id"]+'">'
+					secundario4.className="col-md-2 secundario4";
+					$(secundario4.children[0]).inputSpinner();
+					principal.appendChild(secundario0);
+					principal.appendChild(secundario1);
+					principal.appendChild(secundario2);
+					principal.appendChild(secundario3);
+					principal.appendChild(secundario4);
+					contenedor.appendChild(principal);
+				}
+				
+			}
+		});
+	});
+	$('#id_sin_existencia').change(function() {
+	$('.form').submit();
+});
+		$('#id_tipo_art').change(function() {
+	$('.form').submit();
+});
+</script>
+{% endblock %}
+{% block content %}
+
+<div class="row">
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8" align="center">
+			<div class="pagination">
+			    <span class="step-links">
+			        {% if articulos.has_previous %}
+			        	
+			            <a href="?page={{ articulos.previous_page_number }}{%if clasificadores%}&clas_val={{clasificadores}}{%endif%}{%if busqueda%}&busqueda={{busqueda}}{%endif%}{%if clasificador_padre_valor %}&clasificador_padre_valor={{clasificador_padre_valor}}{%endif%}&existencia={{existencia}}" class="glyphicon glyphicon-triangle-left"></a>
+			        	
+			        {% endif %}
+
+			        <span class="current">
+			            Page {{ articulos.number }} of {{ articulos.paginator.num_pages }}.
+			        </span>
+
+			        {% if articulos.has_next %}
+			            <a href="?page={{ articulos.next_page_number }}{%if clasificadores%}&clas_val={{clasificadores}}{%endif%}{%if busqueda%}&busqueda={{busqueda}}{%endif%}{%if clasificador_padre_valor %}&clasificador_padre_valor={{clasificador_padre_valor}}{%endif%}&existencia={{existencia}}" class="glyphicon glyphicon-triangle-right"></a>
+			        {% endif %}
+			    </span>
+			</div>
+
+		</div>
+		<div class="col-md-2">
+			{%if venta%}
+			<a style="font-size: 14px; color:#000;" href="/pedidos_web/view_pedido/{{carrito.id}}/" class="glyphicon glyphicon-shopping-cart">({{cantidad_pedido}})</a>
+			{%endif%}
+			{%if mensaje%}
+			<input type="text" id="mensaje" value="{{mensaje}}" name="">
+			{%endif%}
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="col-md-2">
+			<input type="text" class="hidden" id="pedido_id" value="{{carrito.id}}" name="">
+			{% if not venta %}
+			<ul style="list-style: none; padding: 0;">
+				<li style="list-style: none; background: #ff00004d; padding: 0;">Facturado</li>
+				<li style="list-style: none; background: #ffa50070; padding: 0;">Remisionado</li>
+				<li style="list-style: none; background: #ffff004d; padding: 0;">Pedido</li>
+				<li style="list-style: none; background: #0080004d; padding: 0;">En existencia</li>
+			</ul>
+			{%endif%}
+			<form method="post" class="form" action="" id="myForm"  enctype='multipart/form-data'>
+				{% csrf_token %}
+				  {% if not venta %}
+					<label>Tipo</label>
+				  {{form_busqueda.tipo_art}}
+				  {%endif%}
+					<label>Busqueda</label>
+				  {{form_busqueda.busqueda}}
+					<label>Sin existencia</label>
+				  {{form_busqueda.sin_existencia}}
+
+				  <li style="list-style: none;">
+				  	<label ><span>{{clasificador_padre}}</span></label>
+			      	<ul style="list-style: none; padding: 0 10px;" id="{{clasificador_padre}}">
+					    <fieldset id="group1">
+				        {% for clas_val in clasificadores_padre %}
+					      		<li>
+									<label ><input class="clasificador_valor_padre" id="{{clas_val.valor_clasif_id}}" onclick="handleClick(this);"  type="radio" value="{{clas_val}}" {%if clas_val.valor_clasif_id == clasificador_padre_valor %}checked{%endif%} name="group1"> 
+										{{clas_val}}
+									</label>
+					      		</li>
+						{% endfor %}
+						</fieldset>
+					</ul>
+				  </li> 
+				  <div class="{%if not clasificador_padre_valor %}hidden{%endif%}" id="otros_clasificadores">
+			      {% for clas in clas_all %}
+			      <li style="list-style: none;" id="{{clas}}" class="contenedor-clasificador">
+			      	<label ><span>{{clas}}</span> <a class="btn_ btn btn-light clasificador" id="{{clas}}"><i class="glyphicon glyphicon-plus"></i></a></label>
+			      	<ul style="list-style: none; padding: 0 10px;" id="{{clas}}" class="{% if not clas.clasificador_id in valores %}hidden{% endif %} lista-clasificadores">
+			        {% for clas_val in clas_val_all %}
+				      	{% if clas == clas_val.clasificador %}
+				      		<li>
+								<label ><input class="clasificador_valor" id="{{clas_val.valor_clasif_id}}" name="clasificador_val"  type="checkbox" value="{{clas_val}}" {%if clas_val.valor_clasif_id in clasificadores %}checked{%endif%} > 
+									{{clas_val}}
+								</label>
+				      		</li>
+						{% endif %}
+					{% endfor %}
+					</ul>
+				  </li>
+			      {% endfor %}
+			      </div>
+					
+					<input type="submit" class="btn btn-success hidden" value="Buscar"  id="guardar" />
+			</form>		
+		</div>
+
+		<div class="col-md-10" title="{{imagenes}}" >
+			{%if not imagenes%}
+
+			
+			<table id="report_#REGION_STATIC_ID#" class="table table-responsive" #REPORT_ATTRIBUTES#>
+				<thead>
+					<th>No.</th>
+					<th>Nombre</th>
+					<th style="text-align: right;">Existencia </th>
+					{% if not venta %}
+					<th style="text-align: right;">No. Serie</th>
+					<th style="text-align: right;">Fecha Compra</th>
+					<th style="text-align: right;">Costo</th>
+					<th style="text-align: right;">Refaccion</th>
+					<th style="text-align: right;">Flete</th>
+					{%endif%}					
+					<th style="text-align: right;">Precio</th>
+				</thead>
+				<tbody>
+					{% for item in articulos%}
+					{% if existencia == 'True' %}
+
+					<tr style="background: {{item.color}};">
+						<td headers="#COLUMN_HEADER_NAME#" data-label="No" id="{{item.id}}" class="clave_articulo" #ALIGNMENT#>{{item.clave}}</td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Nombre" #ALIGNMENT#>
+							<a id="{{item.id}}" class="hidden-print det_progreso" href="#" data-toggle="modal" data-target="#myModal{{item.id}}">{{item.nombre}}</a>
+							{% if compatible%}
+							<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#Modal{{item.id}}" style="color: #fff;">Compatibile</a></sup>
+							{%endif%}
+							{%if request.user.is_staff %}<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#ModalImg{{item.id}}" style="color: #fff;">Img</a></sup>{%endif%}
+						    
+						    <div class="modal fade {{item.id}} fullscreen-modal" id="Modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+						      <div class="modal-dialog compatibilidad">
+						        <div class="modal-content">
+						          <div class="modal-header">
+						            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						            <h4 class="modal-title" id="ModalLabel">Articulos Compatibles</h4>
+						          </div>
+						          <div class="modal-body  ">						         	
+									<div>
+										<div class="row" id="header">
+											<div class="col-md-12">
+												<div class="col-md-2"><strong>Clave</strong></div>
+												<div class="col-md-4"><strong>Articulo</strong></div>
+												<div class="col-md-2" style="text-align: right;"><strong>Existencias</strong></div>
+
+												<div class="col-md-2" style="text-align: right;"><strong>Precio</strong></div>
+												<div class="col-md-2" ><strong></strong></div>
+											</div>
+										</div>
+										<div class="row" id="tableCompatibilidad{{item.id}}">
+											
+										</div>
+									</div>
+						          </div>
+						          <div class="modal-footer">
+						            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+						          </div> 
+						        </div>
+						     </div>
+						    </div>
+
+						    <div class="modal fade {{item.id}} fullscreen-modal" id="ModalImg{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								      <div class="modal-dialog">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div class="row">
+												
+													 <div class="col-md-12" id="{{item.id}}">
+														<label>Imagen articulo </label>	
+														{{form.imagen_art}}
+														<input type="text" class="hidden" name="" id="imagen_art{{item.id}}" value="">
+														<div id="carousel1" class="carousel slide" data-ride="carousel">
+														  <!– Indicatodores –>
+														  <ol class="carousel-indicators">
+														  	{% for img in item.img %}
+														  	{%if forloop.counter == 1 %}
+														    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}" class="active"></li>
+														    {%else%}
+														    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}"></li>
+														    {%endif%}
+														    {% endfor %}
+														  </ol>
+
+														  <div class="carousel-inner" role="listbox">
+																{% for img in item.img %}
+																	{%if forloop.counter == 1 %}
+																	    <div class="item active">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.imagen_art}}')">Print</button> </div>
+																	    </div>															
+																	{%else%}
+																	    <div class="item">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.imagen_art}}')">Print</button> </div>
+																	    </div>
+																	{%endif%}
+																{% endfor %}
+														  </div>
+
+														  
+														  <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev">
+														    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+														    <span class="sr-only">Anterior</span>
+														  </a>
+														  <a class="right carousel-control" href="#carousel1" role="button" data-slide="next">
+														    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+														    <span class="sr-only">Siguiente</span>
+														  </a>
+
+														</div>
+
+
+														
+													 </div>
+													 <div class="col-md-12 " id="{{item.id}}">
+														<label>Imagen pedimento</label>	
+														{{form.pedm_art}}
+														<input type="text" class="hidden" name="" id="pedm_art{{item.id}}" value="">
+														<div id="carousel2" class="carousel slide" data-ride="carousel">
+														  <!– Indicatodores –>
+														  <ol class="carousel-indicators">
+														  	{% for img in item.pedm %}
+															  	{%if forloop.counter == 1 %}
+															    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}" class="active"></li>
+															    {%else%}
+															    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}"></li>
+															    {%endif%}
+														    {% endfor %}
+														  </ol>
+
+														  <div class="carousel-inner" role="listbox">
+																{% for img in item.pedm %}
+																	{%if forloop.counter == 1 %}
+																	    <div class="item active">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.pedm_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.pedm_art}}')">Print</button> </div>
+																	    </div>															
+																	{%else%}
+																	    <div class="item">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.pedm_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.pedm_art}}')">Print</button> </div>
+																	    </div>
+																	{%endif%}
+																{% endfor %}
+														  </div>
+
+														  
+														  <a class="left carousel-control" href="#carousel2" role="button" data-slide="prev">
+														    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+														    <span class="sr-only">Anterior</span>
+														  </a>
+														  <a class="right carousel-control" href="#carousel2" role="button" data-slide="next">
+														    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+														    <span class="sr-only">Siguiente</span>
+														  </a>
+
+														</div>
+														
+
+													 </div>
+											 	
+											</div>
+												
+								          </div>
+								          <div class="modal-footer" id="{{item.id}}">
+								            <button type="button" class="btn btn-default" id="guardarImg">Guardar</button>
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div>
+								        </div>
+								     </div>
+								    </div>	
+
+						    <div class="modal fade {{item.id}} fullscreen-modal" id="myModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						      <div class="modal-dialog">
+						        <div class="modal-content">
+						          <div class="modal-header">
+						            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+						          </div>
+						          <div class="modal-body  ">						         	
+									<div>
+										<div class="row" id="header">
+											<div class="col-md-12">
+												<div class="col-md-6"><strong>Almacen</strong></div>
+												<div class="col-md-6" style="text-align: right;"><strong>Existencias</strong></div>
+											</div>
+										</div>
+										<div class="row" id="tableExistencia{{item.id}}">
+											
+										</div>
+									</div>
+						          </div>
+						          <div class="modal-footer">
+						            <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+						            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+						          </div>
+						        </div>
+						     </div>
+						    </div>
+						</td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Existencia" style="text-align: right;" #ALIGNMENT#><label>{{item.existencia}}</label></td>
+						{% if not venta %}							
+						<td headers="#COLUMN_HEADER_NAME#" data-label="No. Serie" style="text-align: right;" #ALIGNMENT#><label>{{item.no_serie}}</label></td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Fecha Compra" style="text-align: right;" #ALIGNMENT#><label>{{item.fecha_compra|date:"d/M/Y"}}</label></td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Costo" style="text-align: right;" #ALIGNMENT#><label>{{item.costo|floatformat:2|intcomma}}</label></td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Refaccion" style="text-align: right;" #ALIGNMENT#><label>{{item.refaccion|floatformat:2|intcomma}}</label></td>
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Flete" style="text-align: right;" #ALIGNMENT#><label>{{item.flete|floatformat:2|intcomma}}</label></td>
+						{%endif%}
+						<td headers="#COLUMN_HEADER_NAME#" data-label="Precio" style="text-align: right;" #ALIGNMENT#><label id="{{item.id}}" class="precio_unitario">{{item.precio|floatformat:2|intcomma}}</label></td>
+						{%if venta%}<td headers="#COLUMN_HEADER_NAME#" data-label="" #ALIGNMENT#><input type="number" value="{%if item.cantidad %}{{item.cantidad}}{%else%}0{%endif%}" min="0" id="{{item.id}}" max="{%if limite_existencia == 'True' %}{{item.existencia}}{%else%}10000{%endif%}" class="cantidad {{item.id}}"></td>{%endif%}
+					</tr>
+					{%else%}
+						{% if item.existencia > 0 %}
+							<tr style="background: {{item.color}};">
+								<td headers="#COLUMN_HEADER_NAME#" data-label="No" id="{{item.id}}" class="clave_articulo" #ALIGNMENT#>{{item.clave}}</td>
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Nombre "#ALIGNMENT#>
+									<a id="{{item.id}}" class="hidden-print det_progreso" href="#" data-toggle="modal" data-target="#myModal{{item.id}}">{{item.nombre}}</a>
+									{%if compatible%}<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#Modal{{item.id}}" style="color: #fff;">Compatibile</a></sup>{%endif%}
+									{%if request.user.is_staff %}<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#ModalImg{{item.id}}" style="color: #fff;">Img</a></sup>{%endif%}
+
+								</td>
+									<div class="modal fade {{item.id}} fullscreen-modal" id="ModalImg{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								      <div class="modal-dialog">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div class="row">
+												
+													 <div class="col-md-12" id="{{item.id}}">
+														<label>Imagen articulo {{item.img}}</label>	
+														{{form.imagen_art}}
+														<input type="text" class="hidden" name="" id="imagen_art{{item.id}}" value="">
+														<div id="carousel1" class="carousel slide" data-ride="carousel">
+														  <!– Indicatodores –>
+														  <ol class="carousel-indicators">
+														  	{% for img in item.img %}
+														  	{%if forloop.counter == 1 %}
+														    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}" class="active"></li>
+														    {%else%}
+														    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}"></li>
+														    {%endif%}
+														    {% endfor %}
+														  </ol>
+
+														  <div class="carousel-inner" role="listbox">
+																{% for img in item.img %}
+																	{%if forloop.counter == 1 %}
+																	    <div class="item active">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.imagen_art}}')">Print</button> </div>
+																	    </div>															
+																	{%else%}
+																	    <div class="item">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.imagen_art}}')">Print</button> </div>
+																	    </div>
+																	{%endif%}
+																{% endfor %}
+														  </div>
+
+														  
+														  <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev">
+														    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+														    <span class="sr-only">Anterior</span>
+														  </a>
+														  <a class="right carousel-control" href="#carousel1" role="button" data-slide="next">
+														    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+														    <span class="sr-only">Siguiente</span>
+														  </a>
+
+														</div>
+
+
+														
+													 </div>
+													 <div class="col-md-12 " id="{{item.id}}">
+														<label>Imagen pedimento</label>	
+														{{form.pedm_art}}
+														<input type="text" class="hidden" name="" id="pedm_art{{item.id}}" value="">
+														<div id="carousel2" class="carousel slide" data-ride="carousel">
+														  <!– Indicatodores –>
+														  <ol class="carousel-indicators">
+														  	{% for img in item.pedm %}
+															  	{%if forloop.counter == 1 %}
+															    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}" class="active"></li>
+															    {%else%}
+															    <li data-target="#carousel1" data-slide-to="{{forloop.counter}}"></li>
+															    {%endif%}
+														    {% endfor %}
+														  </ol>
+
+														  <div class="carousel-inner" role="listbox">
+																{% for img in item.pedm %}
+																	{%if forloop.counter == 1 %}
+																	    <div class="item active">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.pedm_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.pedm_art}}')">Print</button> </div>
+																	    </div>															
+																	{%else%}
+																	    <div class="item">
+																	    	<img id="firma_image" src="{{MEDIA_URL}}{{img.pedm_art}}" alt="No Imagen" style="width: 100%; height:auto">																			
+																	     	<div class="carousel-caption"> <button type="button" class="btn btn-default" id="{{item.id}}" onclick="printImg('{{MEDIA_URL}}{{img.pedm_art}}')">Print</button> </div>
+																	    </div>
+																	{%endif%}
+																{% endfor %}
+														  </div>
+
+														  
+														  <a class="left carousel-control" href="#carousel2" role="button" data-slide="prev">
+														    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+														    <span class="sr-only">Anterior</span>
+														  </a>
+														  <a class="right carousel-control" href="#carousel2" role="button" data-slide="next">
+														    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+														    <span class="sr-only">Siguiente</span>
+														  </a>
+
+														</div>
+														
+
+													 </div>
+											 	
+											</div>
+												
+				  								
+											
+								          </div>
+								          <div class="modal-footer" id="{{item.id}}">													 <button type="success"  id="guardarImg{{item.id}}" class="btn btn-default" >Guardar</button>
+								            
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div>
+								        </div>
+								     </div>
+								    </div>	
+								    <div class="modal fade {{item.id}} fullscreen-modal" id="Modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+								      <div class="modal-dialog compatibilidad">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="ModalLabel">Articulos Compatibles</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div>
+												<div class="row" id="header">
+													<div class="col-md-12">
+														<div class="col-md-2"><strong>Clave</strong></div>
+														<div class="col-md-4"><strong>Articulo</strong></div>
+														<div class="col-md-2" style="text-align: right;"><strong>Existencias</strong></div>
+														<div class="col-md-2" style="text-align: right;"><strong>Precio</strong></div>
+														<div class="col-md-2" ><strong></strong></div>
+													</div>
+												</div>
+												<div class="row" id="tableCompatibilidad{{item.id}}">
+													
+												</div>
+											</div>
+								          </div>
+								          <div class="modal-footer">
+								            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div> 
+								        </div>
+								     </div>
+								    </div>
+
+								
+								    <div class="modal fade {{item.id}} fullscreen-modal" id="myModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								      <div class="modal-dialog">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div>
+												<div class="row" id="header">
+													<div class="col-md-12">
+														<div class="col-md-6"><strong>Almacen</strong></div>
+														<div class="col-md-6" style="text-align: right;"><strong>Existencias</strong></div>
+													</div>
+												</div>
+												<div class="row" id="tableExistencia{{item.id}}">
+													
+												</div>
+											</div>
+								          </div>
+								          <div class="modal-footer">
+								            <button type="button"  class="btn btn-default" data-dismiss="modal" >Ok</button>
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div>
+								        </div>
+								     </div>
+								    </div>
+								    							    
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Existencia" style="text-align: right;" #ALIGNMENT#><label>{{item.existencia}}</label></td>
+								{% if not venta %}
+								<td headers="#COLUMN_HEADER_NAME#" data-label="No. Serie" style="text-align: right;" #ALIGNMENT#><label>{{item.no_serie}}</label></td>
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Fecha Compra" style="text-align: right;" #ALIGNMENT#><label>{{item.fecha_compra|date:"d/M/Y"}}</label></td>
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Costo" style="text-align: right;" #ALIGNMENT#><label>{{item.costo|floatformat:2|intcomma}}</label></td>
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Refaccion" style="text-align: right;" #ALIGNMENT#><label>
+								{{item.refaccion|floatformat:2|intcomma}}</label></td>
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Flete" style="text-align: right;" #ALIGNMENT#><label>{{item.flete|floatformat:2|intcomma}}</label></td>
+								{%endif%}									
+								<td headers="#COLUMN_HEADER_NAME#" data-label="Precio" style="text-align: right;" #ALIGNMENT#><label id="{{item.id}}" class="precio_unitario">{{item.precio|floatformat:2|intcomma}}</label></td>
+								{%if venta%}
+								<td headers="#COLUMN_HEADER_NAME#" data-label="" #ALIGNMENT#><input type="number" value="{%if item.cantidad %}{{item.cantidad}}{%else%}0{%endif%}" min="0" id="{{item.id}}" max="{%if limite_existencia == 'True' %}{{item.existencia}}{%else%}10000{%endif%}" class="cantidad {{item.id}}"></td>{%endif%}
+							</tr>
+						{% endif %}
+					{% endif %}
+					{% endfor %}
+				</tbody>
+			</table>
+			{%else%}
+
+			{% for item in articulos%}
+			{% if existencia == 'True' %}
+						<div class="col-md-6 col-sm-6 col-xs-12 col-lg-4">
+								<div class="modal fade {{item.id}} fullscreen-modal" id="myModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								      <div class="modal-dialog">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div>
+												<div class="row" id="header">
+													<div class="col-md-12">
+														<div class="col-md-6"><strong>Almacen</strong></div>
+														<div class="col-md-6" style="text-align: right;"><strong>Existencias</strong></div>
+													</div>
+												</div>
+												<div class="row" id="tableExistencia{{item.id}}">
+													
+												</div>
+											</div>
+								          </div>
+								          <div class="modal-footer">
+								            <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div>
+								        </div>
+								     </div>
+								    </div>
+
+											<div class="modal fade {{item.id}} fullscreen-modal" id="ModalImg{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										      <div class="modal-dialog">
+										        <div class="modal-content">
+										          <div class="modal-header">
+										            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+										          </div>
+										          <div class="modal-body  ">						         	
+													<div class="row">
+														
+															 <div class="col-md-12" id="{{item.id}}">
+																<label>Imagen articulo </label>	
+																<img style="width: auto; height:250px" id="img{{item.id}}"><br/>														
+																<input id="inputFile{{item.id}}" type="file">
+																<input type="text" class="hidden" name="" id="imagen_art{{item.id}}" value="">
+																													
+															 </div>
+													 	
+													</div>
+														
+						  								
+													
+										          </div>
+										          <div class="modal-footer" id="{{item.id}}">													 <button type="success"  id="guardarImg{{item.id}}" class="btn btn-default" >Guardar</button>
+										            
+										            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+										          </div>
+										        </div>
+										     </div>
+										    </div>					
+							{%if request.user.is_staff %}<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#ModalImg{{item.id}}" style="color: #fff;">Img</a></sup>{%endif%}
+							<div class="row" style="text-align:center;">			
+								
+								<!-- <img style="width:auto; height:250px" src="{{MEDIA_URL}}{{item.img.0.imagen_art}}"> -->
+
+								<div id="carrousel" class="{{item.id}}" align="center">
+													{%if item.img %}
+													{%for img in item.img %}
+													{%if forloop.counter == 1%}
+													<div align="center" id="slide{{forloop.counter}}" class="slide {{item.id}} active" >
+								            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="Slide{{forloop.counter}}"></div>                
+								            		</div>
+								            		{%else%}
+								            		<div id="slide{{forloop.counter}}" class="slide {{item.id}} hidden" >
+								            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="Slide{{forloop.counter}}"></div>                
+								            		</div>
+								            		{%endif%}
+								            		{%endfor%}
+								            		{%else%}
+									            		<div id="slide1" class="slide 1" >
+									            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}imagenes_articulos/no_imagen.jpg" alt="Slide1"></div>                
+									            		</div>								            		
+								            		{%endif%}
+
+									{%if item.img.count > 1 %}			
+									  <div id="carrousel-nav">
+									    <div class="prev" id="{{item.id}}"></div>
+									    <div class="next" id="{{item.id}}"></div>
+									  </div>
+								  	{%endif%}
+								  
+								</div>
+
+								<label><a id="{{item.id}}" class="hidden-print det_progreso" href="#" data-toggle="modal" data-target="#myModal{{item.id}}">{{item.nombre}}</a></label>
+								<br>
+								<label id="{{item.id}}" class="precio_unitario" style="font-size: 18px; font-weight: bold;">{{item.precio|floatformat:2|intcomma}}</label>
+						
+								<input style="text-align:center;" type="number" value="{%if item.cantidad %}{{item.cantidad}}{%else%}0{%endif%}" min="0" id="{{item.id}}" max="{%if limite_existencia == 'True' %}{{item.existencia}}{%else%}10000{%endif%}" class="cantidad {{item.id}}">
+
+							</div>
+						<br><br><br>
+						</div>
+			{%else%}
+						{% if item.existencia > 0 %}
+						
+						<div class="col-md-6 col-sm-6 col-xs-12 col-lg-4">
+								<div class="modal fade {{item.id}} fullscreen-modal" id="myModal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								      <div class="modal-dialog">
+								        <div class="modal-content">
+								          <div class="modal-header">
+								            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+								          </div>
+								          <div class="modal-body  ">						         	
+											<div>
+												<div class="row" id="header">
+													<div class="col-md-12">
+														<div class="col-md-6"><strong>Almacen</strong></div>
+														<div class="col-md-6" style="text-align: right;"><strong>Existencias</strong></div>
+													</div>
+												</div>
+												<div class="row" id="tableExistencia{{item.id}}">
+													
+												</div>
+											</div>
+								          </div>
+								          <div class="modal-footer">
+								            <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+								            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+								          </div>
+								        </div>
+								     </div>
+								    </div>
+
+											<div class="modal fade {{item.id}} fullscreen-modal" id="ModalImg{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										      <div class="modal-dialog">
+										        <div class="modal-content">
+										          <div class="modal-header">
+										            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										            <h4 class="modal-title" id="myModalLabel">{{item.nombre}}</h4>
+										          </div>
+										          <div class="modal-body  ">						         	
+													<div class="row">
+														
+															 <div class="col-md-12" id="{{item.id}}">
+																<label>Imagen articulo </label>	
+																<img style="width: auto; height:250px" id="img{{item.id}}"><br/>														
+																<input id="inputFile{{item.id}}" type="file">
+																<input type="text" class="hidden" name="" id="imagen_art{{item.id}}" value="">
+																													
+															 </div>
+													 	
+													</div>
+														
+						  								
+													
+										          </div>
+										          <div class="modal-footer" id="{{item.id}}">													 <button type="success"  id="guardarImg{{item.id}}" class="btn btn-default" >Guardar</button>
+										            
+										            <!-- <button type="button" class="btn btn-primary">OK</button> -->
+										          </div>
+										        </div>
+										     </div>
+										    </div>					
+							{%if request.user.is_staff %}<sup style="border: 1px solid #000; border-radius: 20px; background-color: #000;"><a id="{{item.id}}" class="hidden-print compatibilidades" href="#" data-toggle="modal" data-target="#ModalImg{{item.id}}" style="color: #fff;">Img</a></sup>{%endif%}
+							<div class="row" style="text-align:center;">			
+								
+								<!-- <img style="width:auto; height:250px" src="{{MEDIA_URL}}{{item.img.0.imagen_art}}"> -->
+
+								<div id="carrousel" class="{{item.id}}" align="center">
+													{%if item.img %}
+													{%for img in item.img %}
+													{%if forloop.counter == 1%}
+													<div align="center" id="slide{{forloop.counter}}" class="slide {{item.id}} active" >
+								            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="Slide{{forloop.counter}}"></div>                
+								            		</div>
+								            		{%else%}
+								            		<div id="slide{{forloop.counter}}" class="slide {{item.id}} hidden" >
+								            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}{{img.imagen_art}}" alt="Slide{{forloop.counter}}"></div>                
+								            		</div>
+								            		{%endif%}
+								            		{%endfor%}
+								            		{%else%}
+									            		<div id="slide1" class="slide 1" >
+									            		<div  class="visu"><img  style="width:auto; height:250px" src="{{MEDIA_URL}}imagenes_articulos/no_imagen.jpg" alt="Slide1"></div>                
+									            		</div>								            		
+								            		{%endif%}
+
+									{%if item.img.count > 1 %}			
+									  <div id="carrousel-nav">
+									    <div class="prev" id="{{item.id}}"></div>
+									    <div class="next" id="{{item.id}}"></div>
+									  </div>
+								  	{%endif%}
+								  
+								</div>
+
+								<label><a id="{{item.id}}" class="hidden-print det_progreso" href="#" data-toggle="modal" data-target="#myModal{{item.id}}">{{item.nombre}}</a></label>
+								<br>
+								<label id="{{item.id}}" class="precio_unitario" style="font-size: 18px; font-weight: bold;">{{item.precio|floatformat:2|intcomma}}</label>
+						
+								<input style="text-align:center;" type="number" value="{%if item.cantidad %}{{item.cantidad}}{%else%}0{%endif%}" min="0" id="{{item.id}}" max="{%if limite_existencia == 'True' %}{{item.existencia}}{%else%}10000{%endif%}" class="cantidad {{item.id}}">
+
+							</div>
+						<br><br><br>
+						</div>
+						{% endif %}
+			{% endif %}
+
+			{%endfor%}
+			
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

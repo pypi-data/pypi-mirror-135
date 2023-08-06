@@ -1,0 +1,50 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% load humanize %}
+{% block title %}
+Pedidos Web
+{% endblock %}
+{% block style_css %}
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-md-12" align="center">
+	<div class="pagination">
+		<span class="step-links">
+			{% if articulos.has_previous %}
+
+			<a href="?page={{ articulos.previous_page_number }}{% if busqueda %}&busqueda={{busqueda}}{%endif%}" class="glyphicon glyphicon-triangle-left"></a>
+
+			{% endif %}
+
+			<span class="current">
+				Page {{ articulos.number }} of {{ articulos.paginator.num_pages }}.
+			</span>
+
+			{% if articulos.has_next %}
+			<a href="?page={{ articulos.next_page_number }}{% if busqueda %}&busqueda={{busqueda}}{%endif%}" class="glyphicon glyphicon-triangle-right"></a>
+			{% endif %}
+		</span>
+	</div>
+</div>
+<div class="col-md-12" align="center">
+
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<form method="post" class="form" action="" id="myForm"  enctype='multipart/form-data'>
+		{% csrf_token %}
+		{{form.busqueda}}
+		</form>	
+	<br><br>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+{% for articulo  in articulos%}
+<div class="col-md-12">
+	<div class="col-md-3"></div>
+	<div class="col-md-2">{{articulo.clave}}</div>
+	<div class="col-md-4"><a href="/pedidos_web/asignar_compatibilidad_articulos/{{articulo.id}}">{{articulo.nombre}}</a></div>
+	<div class="col-md-3"></div>
+</div>
+{%endfor%}
+</div>
+{% endblock %}

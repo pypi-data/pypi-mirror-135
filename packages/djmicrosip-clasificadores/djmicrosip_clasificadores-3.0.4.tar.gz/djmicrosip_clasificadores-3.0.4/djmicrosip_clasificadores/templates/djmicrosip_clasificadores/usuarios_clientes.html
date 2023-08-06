@@ -1,0 +1,110 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% load humanize %}
+{% block title %}
+Pedidos Web
+{% endblock %}
+{% block style_css %}
+{% endblock %}
+{% block js_code %}
+<script type="text/javascript">
+	$( ".crear_usuario" ).click(function() {
+		var cliente_id=$(this).attr("id");
+
+		$.ajax({
+			url: '/pedidos_web/crear_usuarios_clientes/',
+			type: 'get',
+			data: {
+				'cliente_id': cliente_id,
+			},
+			success: function (data) {
+				if(data.password!="")
+				{
+					$('a#'+cliente_id+'.crear_usuario').addClass("hidden");
+					$('div#'+cliente_id+'.div-inf').removeClass("hidden");
+					$('p#'+cliente_id+'.password').text(data.password);
+
+				}
+
+			}
+		});
+	});
+	$( ".enviar_inf_usuario" ).click(function() {
+		var cliente_id=$(this).attr("id");
+
+		$.ajax({
+			url: '/pedidos_web/enviar_contrasena/'+cliente_id+'/',
+			type: 'post',
+			success: function (data) {
+				alert(data.mensaje)
+
+			}
+		});
+	});
+</script>
+{% endblock %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8" align="center">
+			<div class="pagination">
+			    <span class="step-links">
+			        {% if clientes.has_previous %}			        	
+			            <a href="?page={{ clientes.previous_page_number }}" class="glyphicon glyphicon-triangle-left"></a>		        	
+			        {% endif %}
+			        <span class="current">
+			            Page {{ clientes.number }} of {{ clientes.paginator.num_pages }}.
+			        </span>
+			        {% if clientes.has_next %}
+			            <a href="?page={{ clientes.next_page_number }}" class="glyphicon glyphicon-triangle-right"></a>
+			        {% endif %}
+			    </span>
+			</div>
+
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+<div class="row">
+<div class="col-md-3"></div>
+<div class="col-md-6">
+	<form method="post" class="form" action="" id="myForm"  enctype='multipart/form-data'>
+		{% csrf_token %}
+		{{form_busqueda.busqueda}}
+	</form>
+</div>
+<div class="col-md-3"></div>
+</div>	
+<div class="row">
+<div class="col-md-2"></div>
+<div class="col-md-8">
+<table class="table">
+	<thead>
+		<tr>
+			<th>Cliente</th>
+			<th>Usuario</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for cliente in clientes%}
+		<tr>
+			<td>{{cliente.nombre}}</td>
+			<td>
+				{% if cliente.usuario %}
+					{{cliente.usuario}}
+					<a class="btn btn-link enviar_inf_usuario" id="{{cliente.id}}">Enviar a cliente</a>
+				{% else %}
+				<a class="btn btn-default crear_usuario" id="{{cliente.id}}">Crear usuario</a>
+				<div class="hidden div-inf" id="{{cliente.id}}">
+					<p id="{{cliente.id}}" class="password"></p>
+					<a class="btn btn-link enviar_inf_usuario" id="{{cliente.id}}">Enviar a cliente</a>
+				</div>
+				{%endif%}
+				
+			</td>
+		</tr>
+		{%endfor%}
+	</tbody>
+</table>
+</div>
+<div class="col-md-2"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% block title %}
+Pedidos Web
+{% endblock %}
+<!-- CSS Code -->
+{% block style_css %}{% endblock %}
+{% block modulestyle_css %}
+{% endblock %}
+<!-- JavaScript Code -->
+{% block js_code %}
+<script type="text/javascript">
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+	cambio_modulo($('#id_modulo').val());
+	var lista = new Object();
+	var lista_clasificadores=[];
+	function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  console.log(ev.target)
+  ev.dataTransfer.setData("text", ev.target.id);
+
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  // console.log(data)
+ var list_id=[]
+  var id_content=ev.target.id
+  lista.id_content=data
+  var label=document.getElementById(data);
+  var cln = label.cloneNode(true);
+  var content=document.getElementById(ev.target.id);
+  let arry =content.children;
+  cln.classList.add("cln-det");
+  cln.setAttribute("draggable", "false");
+  // console.log(label)
+  // console.log(arry)
+  if (arry.length == 0)
+  {ev.target.appendChild(cln);}
+  for (var i=0; i <= arry.length - 1; i++) {list_id.push(arry[i].id)}
+
+  var idx = list_id.indexOf(label.id);
+  console.log(idx)
+  if(idx == -1)
+  {ev.target.appendChild(cln);}
+
+  lista_clasificadores.push(lista);
+  // console.log(lista_clasificadores)
+}
+
+$( "#Guardar" ).click(function() {
+	$( '.dragg-in' ).each(function() {
+		var id=$(this).attr("id");
+		var id_padre=$("#id_clasificador_padre").val();
+	  	console.log(id)
+		var list_id=[]
+		var content=document.getElementById(id);
+	  	let arry =content.children;
+	  	for (var i=0; i <= arry.length - 1; i++) {list_id.push(arry[i].id)}
+	  		sleep(1000);
+	  		$.ajax({
+			url: '/pedidos_web/clasificador_asignacion/',
+			type: 'get',
+			data: {
+			'lista_clasificadores': JSON.stringify(list_id),
+			'clasificador_padre_valor':id,
+			'clasificador_padre':id_padre,
+			},
+			success: function (data) {
+				location.reload();
+			}
+			
+			});
+
+	});		
+});
+$( ".cln-det" ).dblclick(function() {
+	var id=$(this).attr("id");
+	$('label#'+id+'.cln-det').remove();
+});
+$( "#id_modulo" ).change(function() {
+	var value=$(this).attr("value");
+	cambio_modulo(value);
+
+});
+function cambio_modulo(value) {
+  	if(value == "PV")
+  	{
+  		console.log(value);
+  		$('div#pv').removeClass("hidden");
+  		$('div#v').addClass("hidden");
+  	}
+  	if(value == "V")
+  	{
+  		console.log(value);
+  		$('div#pv').addClass("hidden");
+  		$('div#v').removeClass("hidden");
+  	}
+}
+</script>
+{% endblock %}
+{% block selected_module %} Microsip {% endblock %}
+{% block breadcrumb %}
+{{ block.super }}
+<li><a>PREFERENCIAS</a></li>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<br>
+<div class="col-lg-12">	
+<form method="post" class="form-horizontal" action=""  enctype='multipart/form-data'>
+  {% csrf_token %}
+    {{ form.errors }}
+
+		    <div class="row">
+		    	<div class="col-md-3"><label>Cliente</label>{{form.cliente}}</div>
+		    	<div class="col-md-3"><label>Tiempo Espera</label>{{form.tiempo_espera}}</div>
+		    	<div class="col-md-3"><label>Clasificador principal{% if form.clasificador_padre %}<a id="" class="hidden-print det_progreso" href="#" data-toggle="modal" data-target="#myModal"> Ver</a>{% endif %}</label>{{form.clasificador_padre}}</div>
+		    	<div class="col-md-1"><label>Limite Existencia</label>{{form.limite_existencia}} </div>
+		    	<div class="col-md-1"><label>Venta</label><br>{{form.venta}} </div>
+		    	<div class="col-md-1"><label>Compatible</label>{{form.compatible}} </div>
+		    	<div class="col-md-1"><label>Imagenes</label>{{form.imagenes}} </div>
+		    	
+		    </div>
+		    <br>	
+		    <br>    
+		    <div class="row">
+		    	<div class="col-md-3"><label>Modulo</label>{{form.modulo}}</div>
+		    	<div class="col-md-3 hidden" id="pv"><label>Cajero</label>{{form.cajero}} </div>
+		    	<div class="col-md-3 hidden" id="pv"><label>Caja</label>{{form.caja}} </div>
+		    	<div class="col-md-3 hidden" id="v"><label>Tipo Documento</label>{{form.tipo_documento}}</div>
+		    	<div class="col-md-3"><label>Base de datos automatica</label>{{form.base_datos_automatica}}</div>
+		    	
+		    </div>
+		    <br>	
+		    <br>   
+		    <div class="row">
+		    	<div class="col-md-3"><label>Email</label>{{form.email}}</div>
+		    	<div class="col-md-3"><label>Contraseña</label>{{form.password}} </div>
+		    	<div class="col-md-3"><label>Servidor</label>{{form.servidor_correo}} </div>
+		    	<div class="col-md-3"><label>Puerto</label>{{form.puerto}}</div>
+		    	
+		    </div>
+		    <br>
+		    <div class="row">
+		    	<div class="col-md-3"><label>Descripcion correo</label>{{form.descripcion_correo}}</div>
+		    	<div class="col-md-3"><label>Linea Principal</label>{{form.linea}}</div>
+		    	<div class="col-md-3"><label></label></div>
+			 	<div class="col-md-3" style="float: right;"><input type="submit" class="btn btn-primary" value="Guardar"  id="guardar" /></div>
+			</div> 
+			<br>	    
+		    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		    	<div class="modal-dialog">
+		    		<div class="load-wrapp">
+			            <div class="load-3">
+			                <p>Loading 3</p>
+			                <div class="line"></div>
+			                <div class="line"></div>
+			                <div class="line"></div>
+			            </div>
+			        </div>
+		    		<div class="modal-content">
+		    			<div class="modal-header">
+		    				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    				<h4 class="modal-title" id="myModalLabel">Clasificadores</h4>
+		    			</div>
+		    			<div class="modal-body  ">
+		    				<div class="row">
+		    					<div class="col-md-12">
+		    					{% for valor in all_valores%}
+		    					<label style="padding: 2px; border:solid 1px #000; border-radius: 20px;" ondragstart="drag(event)" draggable="true" id="{{valor.valor_clasif_id}}">{{valor}}</label>
+								{% endfor %}
+								</div>
+		    				</div>
+		    				<div class="row">						         	
+			    					{% for valor in valores_calsificador_padre%}
+			    					<div class="col-md-3">
+			    						{{valor}}
+			    						<div style="min-height: 100px; border:solid 1px #000;" class="dragg-in" id="{{valor.valor_clasif_id}}" ondrop="drop(event)" ondragover="allowDrop(event)">
+			    							{% for valor_clas in todos_clasificadores %}
+			    								{% if valor.valor_clasif_id == valor_clas.valor_padre%}
+			    								<label style="padding: 2px; border:solid 1px #000; border-radius: 20px;" ondragstart="" draggable="false" id="{{valor_clas.valor_clasif_id}}" class="cln-det">{{valor_clas}}</label>
+			    								{% endif %}
+											{% endfor %}
+			    						</div>
+			    					</div>
+			    					{% endfor %}
+		    				</div>
+		    			</div>
+		    			<div class="modal-footer">
+		    				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		    				<button type="button" class="btn btn-primary" id="Guardar">Guardar</button>
+		    			</div>
+		    		</div>
+		    	</div>
+		    </div>
+
+  </div>
+</form>
+</div>
+</div>
+
+{% endblock %}

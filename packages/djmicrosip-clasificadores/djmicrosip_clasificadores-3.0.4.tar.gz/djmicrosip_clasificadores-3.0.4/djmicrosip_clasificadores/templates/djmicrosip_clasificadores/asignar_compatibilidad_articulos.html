@@ -1,0 +1,139 @@
+{% extends 'djmicrosip_clasificadores/base.html' %}
+{% load humanize %}
+{% block title %}
+Clasificadores
+{% endblock %}
+{% block breadcrumb %}
+{{ block.super }}
+<li><a href="/pedidos_web/compatibilidad_articulos/">Compatibilidad</a></li>
+{% endblock %}
+{% block style_css %}
+{% endblock %}
+{% block js_code %}
+<script type="text/javascript">
+	$(document).ready(function() {
+        $('.input-all-articulos').change(function() {
+        	var value=$(this).attr("checked");
+			console.log(value);
+			if (value)
+			{
+				$( '.input-articulo' ).each(function() {
+            		$(this).prop("checked", true);
+				});
+			}
+			else
+			{
+				$( '.input-articulo' ).each(function() {
+                	$(this).prop("checked", false);
+				});
+			}
+        });
+		$('#btn-asignar').click(function() {
+			var lista_articulos=[];
+			var list_id=[];
+			
+			$( '.input-articulo' ).each(function() {
+				var value=$(this).prop("checked");
+				var id=$(this).attr("id");
+				var div = document.createElement("div");
+				var a = document.createElement("a");
+				var content=document.getElementById("container-asign");
+				$(div).attr("id", id)
+				$(div).attr("class", "div-articulo")
+				$(a).attr("id", id)
+				$(a).attr("class", "glyphicon glyphicon-remove btn-eliminar")
+				if(value)
+				{
+					let arry =content.children;
+					for (var i=0; i <= arry.length - 1; i++) {list_id.push(arry[i].id)}
+					var idx = list_id.indexOf(div.id);
+					if(idx == -1)
+					{
+						$( "#"+id+".articulo-nombre" ).clone().appendTo( div );
+						$(a).appendTo(div);						
+						$("#container-asign").append( div );						
+					}
+
+				}
+			});
+		}); 
+
+		$('#btn-guardar').click(function() {
+			// alert("guardar")
+			var list_id=[];
+			var articulo_id=$("#articulo_id").val();
+			$( '.div-articulo' ).each(function() {
+				var id=$(this).attr("id");
+			  	list_id.push(id)
+
+			});	
+				console.log(list_id)
+			  	if(list_id.length > 0)
+			  	{
+			  		$.ajax({
+					url: '/pedidos_web/guardar_articulos_compatibles/',
+					type: 'get',
+					data: {
+					'lista_articulos': JSON.stringify(list_id),
+					'articulo_id':articulo_id,
+					},
+					success: function (data) {
+						location.reload();
+					}
+					
+					});
+			  	}
+		});       
+    });
+
+$(document).on('click','.btn-eliminar',function(){
+	var id=$(this).attr("id");
+	console.log("ss",id)
+	$('div#'+id+'.div-articulo').remove();
+});
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<h1 align="center">{{articulo}}</h1>
+	<input type="text" class="hidden" value="{{articulo.id}}" id="articulo_id" name="">
+</div>
+<div class="row">
+<div class="col-md-5">
+	<div class="col-md-12">
+		<form method="post" class="form" action="" id="myForm"  enctype='multipart/form-data'>
+			{% csrf_token %}
+			{{form}}
+			<br>
+			<button  style="float: right;" class="btn btn-primary" type="submit">Buscar</button>
+			<br>
+		</form>
+		<br>
+	</div>
+	<div class="col-md-12" style="border:solid 1px #000;  height: 250px; overflow: scroll;">
+		{% if articulos %}<div class="col-md-12"><input type="checkbox" class="input-all-articulos" name="">Seleccionar todos<br></div>{%endif%}
+
+		{%for articulo in articulos %}
+		<div class="col-md-12" style="border-bottom:solid 1px #000;">
+			<input type="checkbox" id={{articulo.id}} class="input-articulo" name="">
+			<strong id={{articulo.id}} class="articulo-nombre">{{articulo}}</strong>
+		</div>
+		{% endfor %}
+		<br>
+	</div>
+	<div class="col-md-12"><a style="float: right;" class="btn btn-success" id="btn-asignar">Asignar</a><br></div>
+</div>
+<div class="col-md-1">
+</div>
+<div class="col-md-6">
+	<h1 align="center">Articulos Compatibles</h1>
+	<div class="col-md-12" id="container-asign" style="border:solid 1px #000; height: 250px; overflow: scroll;">
+		{%for articulo in articulos_compatibilidad %}
+		<div id="{{articulo.id}}" class="div-articulo"><strong>{{articulo.nombre}}</strong><a id="{{articulo.id}}" class="glyphicon glyphicon-remove btn-eliminar"></a></div>
+		{% endfor %}	
+	</div>
+	<div class="col-md-12"><a style="float: right;" class="btn btn-success" id="btn-guardar">Guardar</a><br></div>
+
+</div>
+</div>
+{% endblock %}
