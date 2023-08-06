@@ -1,0 +1,66 @@
+Metadata-Version: 2.1
+Name: classy-config
+Version: 0.1.5
+Summary: Inject your config variables into methods, so they are as close to usage as possible.
+Home-page: https://github.com/GDWR/classy-config
+License: MIT
+Author: GDWR
+Author-email: gregory.dwr@gmail.com
+Requires-Python: >=3.6.1,<4.0.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: pydantic (>=1.9.0,<2.0.0)
+Requires-Dist: typing-inspect (>=0.7.1,<0.8.0)
+Project-URL: Repository, https://github.com/GDWR/classy-config
+Description-Content-Type: text/markdown
+
+# ClassyConfig
+
+Inject your config variables into methods, so they are as close to usage as possible.
+
+
+```py
+
+from classy_config import BaseModel, ClassyConfig, ConfigParam
+
+# Create your global config manager (example test-config.json below)
+config = ClassyConfig(config_file="test-config.json")
+
+# Resolve default values based on your config
+def print_current_version(version: str = ConfigParam("version", str)) -> None:
+    print(version)
+
+# Use Pydantic Models for your config
+class Author(BaseModel):
+    username: str
+    email: str
+    lucky_number: int
+
+# Resolve default values based on your config
+def print_author(author: Author = ConfigParam("author", Author)) -> None:
+    print(author)
+    
+# Allows for nested values
+def print_value(value: int = ConfigParam("nested.value", int)) -> None:
+    print(value)
+```
+```json
+{
+  "version": "0.0.1",
+  
+  "author": {
+    "username": "GDWR",
+    "email": "gregory.dwr@gmail.com",
+    "lucky_number": 17
+  },
+
+  "nested": {
+    "value": 10
+  }
+}
+```
+
