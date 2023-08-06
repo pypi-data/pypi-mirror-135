@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title itemprop="name">Configuration</title>
+    <meta name="generator" content="Logya">
+<meta name="author" content="Ramiro Gómez">    <link rel="canonical" itemprop="url" href="https://ramiro.org/logya/docs/configuration/">
+    <link rel="shortcut icon" href="https://ramiro.org/logya/docs/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="https://ramiro.org/logya/docs/rss.xml" title="RSS feed">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic@7.1.0/picnic.min.css">
+    <link rel="stylesheet" href="https://ramiro.org/logya/docs/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="https://ramiro.org/logya/docs/"><img class="logo" src="https://ramiro.org/logya/docs/img/logya-small.png" alt="Logya Documentation Home"></a>
+        <!-- responsive-->
+        <input id="bmenub" type="checkbox" class="show">
+        <label for="bmenub" class="burger pseudo button">menu</label>
+        <div class="menu">
+            <a class="button pseudo" href="https://github.com/yaph/logya/">GitHub</a>
+            <a class="button pseudo" href="https://pypi.org/project/logya/">PyPI Package</a>
+            <a class="button warning" href="https://ramiro.org/logya/docs/rss.xml">RSS Feed</a>
+        </div>
+    </nav>
+    <section>
+<div class="flex two-800">
+    <div class="four-fifth">
+        <h1>Configuration</h1>
+        <p>Below you find an explanation of the sections and settings in the <code>site.yaml</code> configuration file.</p>
+<h2 id="site">site</h2>
+<p>The settings in the <code>site</code> section will be available in all templates. Documents can override settings by using corresponding attributes. For example you could set a default <code>author</code> in the <code>site</code> section, that can be overridden in documents with a <code>author</code> attribute.</p>
+<h2 id="collections">collections</h2>
+<p>This section allows to define collections for categorizing content via corresponding attributes. The default site defines a <code>tags</code> collection.</p>
+<h2 id="extensions">extensions</h2>
+<p>In this section you can set Markdown and Jinja extensions to be used when the document <code>body</code> is converted to HTML and the page is rendered.</p>
+<h2 id="languages">languages</h2>
+<p>The languages section is optional and exists to enable additional features for multilingual sites. Please see <a href="https://ramiro.org/logya/docs/i18n/">I18N</a> for more information.</p>
+<h2 id="example-configuration">Example Configuration</h2>
+<p>To give a real world example, this site's configuration is shown below.</p>
+<pre><code class="language-yaml"># General settings that will be available in templates.
+site:
+    base_url: https://ramiro.org/logya/docs
+    author: Ramiro Gómez
+    name: Logya Documentation
+
+
+# Settings that affect collections in the document index. Top-level keys of
+# collections can be used as document attributes for grouping it in the
+# corresponding collection.
+collections:
+    tags:
+        path: tags
+        template: index.html
+
+
+extensions:
+    jinja:  # https://jinja.palletsprojects.com/extensions/
+        - &#39;jinja2.ext.do&#39;
+        - &#39;jinja2.ext.loopcontrols&#39;
+    markdown:  # https://python-markdown.github.io/extensions/
+        - &#39;attr_list&#39;
+        - &#39;def_list&#39;
+        - &#39;fenced_code&#39;
+        - &#39;toc&#39;
+</code></pre>
+    </div>
+    <div class="fifth">
+        <h3>Table of Contents</h3>
+        <ul>
+    <li><a href="https://ramiro.org/logya/docs/installation/">Installation</a></li>
+    <li><a href="https://ramiro.org/logya/docs/gettingstarted/">Getting Started</a></li>
+    <li><a href="https://ramiro.org/logya/docs/create/">Create a Site</a></li>
+    <li><a href="https://ramiro.org/logya/docs/documentstructure/">Document Structure</a></li>
+    <li><a href="https://ramiro.org/logya/docs/templates/">Templates</a></li>
+    <li><a href="https://ramiro.org/logya/docs/configuration/">Configuration</a></li>
+    <li><a href="https://ramiro.org/logya/docs/i18n/">I18N</a></li>
+    <li><a href="https://ramiro.org/logya/docs/recipes/">Recipes</a></li>
+    <li><a href="https://ramiro.org/logya/docs/changes/">Changelog</a></li>
+</ul>
+
+    </div>
+</div>
+    </section>
+    <section class="footer">
+        © <script>document.write(new Date().getFullYear())</script> <a href="https://ramiro.org/">Ramiro Gómez</a>.
+    </section>
+</body>
+</html>

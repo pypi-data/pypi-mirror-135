@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title itemprop="name">Templates</title>
+    <meta name="generator" content="Logya">
+<meta name="author" content="Ramiro Gómez">    <link rel="canonical" itemprop="url" href="https://ramiro.org/logya/docs/templates/">
+    <link rel="shortcut icon" href="https://ramiro.org/logya/docs/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="https://ramiro.org/logya/docs/rss.xml" title="RSS feed">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic@7.1.0/picnic.min.css">
+    <link rel="stylesheet" href="https://ramiro.org/logya/docs/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="https://ramiro.org/logya/docs/"><img class="logo" src="https://ramiro.org/logya/docs/img/logya-small.png" alt="Logya Documentation Home"></a>
+        <!-- responsive-->
+        <input id="bmenub" type="checkbox" class="show">
+        <label for="bmenub" class="burger pseudo button">menu</label>
+        <div class="menu">
+            <a class="button pseudo" href="https://github.com/yaph/logya/">GitHub</a>
+            <a class="button pseudo" href="https://pypi.org/project/logya/">PyPI Package</a>
+            <a class="button warning" href="https://ramiro.org/logya/docs/rss.xml">RSS Feed</a>
+        </div>
+    </nav>
+    <section>
+<div class="flex two-800">
+    <div class="four-fifth">
+        <h1>Templates</h1>
+        <p>The template engine that comes with Logya is <a href="http://jinja.pocoo.org/">Jinja2</a>. In addition to the many functions and filters Jinja2 provides you can use the following filters and global functions.</p>
+<h2 id="filters">Filters</h2>
+<h3 id="alpha_index">alpha_index</h3>
+<p>This filter returns an alphabetical index for a list of dictionaries. The <code>sort_attr</code> argument specifies what value to use for sorting, it defaults to <code>title</code>. You can set <code>non_ascii_key</code> to group items, where the value does not start with an ASCII letter. The default <code>sort_order</code> is <code>ascending</code>.</p>
+<p>An example of <code>alpha_index</code> in use can be seen on <a href="https://ukealong.com/chords/">this page</a>. The template code looks as follows:</p>
+<pre><code>{% set index = get_collection('chords).index.values()|alpha_index() %}
+</code></pre>
+<p>It gets the list of documents in the <code>chords</code> collection index and applies the filter on this list.</p>
+<h3 id="attr_contains">attr_contains</h3>
+<p>The <code>attr_contains</code> filter returns a list of documents that have the given attribute and its value contains the given test value. Consider the following <a href="https://ukealong.com/video/zwC4bGMOkzk/">real world usage example</a>:</p>
+<pre><code>{% set related = get_docs('/video/')|attr_contains('songs', songs[0]) %}
+</code></pre>
+<p>This template snippet first gets documents with a URL that start with <code>/video/</code> and then applies the <code>attr_contains</code> filter. In this example <code>songs</code> is a list and the first item is the song played in the video. You can also check whether a value is <code>in</code> other Python sequence types, such as strings.</p>
+<h2 id="functions">Functions</h2>
+<h3 id="filesource">filesource</h3>
+<p>You can use the <code>filesource</code> function to include the text of an external file on a page. The optional <code>limit</code> parameter specifies how many lines to include. If not provided the whole file will be included. The file content is escaped by default, so that you can display HTML or other source code. The example below is taken from the <a href="http://d3-geomap.github.io/">d3.geomap documentation</a>.</p>
+<pre><code>{{ filesource('static/html/d3.geomap.html') }}
+{{ filesource('static/js/maps/world-plain.js') }}
+</code></pre>
+<p>The file is located relative to the site's root directory. This function is mainly intended for documentation purposes as it allows you to include the same source code that is used to render an example visible on the current page. Restricting the number of lines works as follows.</p>
+<pre><code>{{ filesource('path/to/file', lines=6) }}
+</code></pre>
+<p>To not escape the content, you can set raw to True.</p>
+<pre><code>{{ filesource(data, raw=True) }}
+</code></pre>
+<p>This can be used for example to inline SVG code when using SVG sprites.</p>
+<h3 id="get_collection">get_collection</h3>
+<p>Call this function with a collection name as defined in your settings to get a dictionary representing that collection. The <code>index</code> of a collection is a mapping of URLs to the corresponding collection's meta data and the list of documents contained within it, accessible via the <code>docs</code> attribute.</p>
+<h3 id="get_doc">get_doc</h3>
+<p>You can use the <code>get_doc</code> function to get a document object via its URL, which allows you to create links between documents. Say document A has a <code>link</code> property set to the URL of document B. You can then get an object representing B and link to it from within A's template like so:</p>
+<pre><code>{% set B = get_doc(link) %}
+&lt;a href="{{ B.url }}"&gt;{{ B.title }}&lt;/a&gt;
+</code></pre>
+<h3 id="get_docs">get_docs</h3>
+<p>Use <code>get_docs</code> to retrieve a list of documents. If you specify a <code>url</code> only documents are included, that start with a URL that starts with the given value. By default documents are sorted by the <code>created</code> datetime in <code>descending</code> order. YOu can change that behavior via the <code>sort_attr</code> and <code>sort_attr</code> keyword arguments.</p>
+    </div>
+    <div class="fifth">
+        <h3>Table of Contents</h3>
+        <ul>
+    <li><a href="https://ramiro.org/logya/docs/installation/">Installation</a></li>
+    <li><a href="https://ramiro.org/logya/docs/gettingstarted/">Getting Started</a></li>
+    <li><a href="https://ramiro.org/logya/docs/create/">Create a Site</a></li>
+    <li><a href="https://ramiro.org/logya/docs/documentstructure/">Document Structure</a></li>
+    <li><a href="https://ramiro.org/logya/docs/templates/">Templates</a></li>
+    <li><a href="https://ramiro.org/logya/docs/configuration/">Configuration</a></li>
+    <li><a href="https://ramiro.org/logya/docs/i18n/">I18N</a></li>
+    <li><a href="https://ramiro.org/logya/docs/recipes/">Recipes</a></li>
+    <li><a href="https://ramiro.org/logya/docs/changes/">Changelog</a></li>
+</ul>
+
+    </div>
+</div>
+    </section>
+    <section class="footer">
+        © <script>document.write(new Date().getFullYear())</script> <a href="https://ramiro.org/">Ramiro Gómez</a>.
+    </section>
+</body>
+</html>

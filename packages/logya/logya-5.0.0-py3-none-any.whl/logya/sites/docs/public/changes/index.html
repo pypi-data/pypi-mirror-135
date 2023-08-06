@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title itemprop="name">Changelog</title>
+    <meta name="generator" content="Logya">
+<meta name="author" content="Ramiro Gómez">    <link rel="canonical" itemprop="url" href="https://ramiro.org/logya/docs/changes/">
+    <link rel="shortcut icon" href="https://ramiro.org/logya/docs/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="https://ramiro.org/logya/docs/rss.xml" title="RSS feed">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic@7.1.0/picnic.min.css">
+    <link rel="stylesheet" href="https://ramiro.org/logya/docs/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="https://ramiro.org/logya/docs/"><img class="logo" src="https://ramiro.org/logya/docs/img/logya-small.png" alt="Logya Documentation Home"></a>
+        <!-- responsive-->
+        <input id="bmenub" type="checkbox" class="show">
+        <label for="bmenub" class="burger pseudo button">menu</label>
+        <div class="menu">
+            <a class="button pseudo" href="https://github.com/yaph/logya/">GitHub</a>
+            <a class="button pseudo" href="https://pypi.org/project/logya/">PyPI Package</a>
+            <a class="button warning" href="https://ramiro.org/logya/docs/rss.xml">RSS Feed</a>
+        </div>
+    </nav>
+    <section>
+<div class="flex two-800">
+    <div class="four-fifth">
+        <h1>Changelog</h1>
+        <h2 id="500">5.0.0</h2>
+<p>This release includes several backwards incompatible changes, most notably it requires Python 3.8 or higher.</p>
+<ul>
+<li>Rename the <code>deploy</code> directory to <code>public</code> and the attribute <code>dir_deploy</code> to <code>dir_public</code>.</li>
+<li>Only rebuilt the index in serve mode when a requested URL is not in the index.</li>
+<li>Load site settings once during initialization. Changes to <code>site.yaml</code> are visible only after restarting the server.</li>
+<li>The template to use for a file in content must be specified as the header attribute <code>template</code>.</li>
+<li>Markdown extensions are configurable in site.yaml. By default no extensions will be used.</li>
+<li>Pre-render content attributes on demand by setting the <code>pre_render</code> document attribute to a list of attribute names.</li>
+<li>Removed <code>canonical</code> template variable.</li>
+<li>The <code>languages</code> setting for multilingual sites and the auto-prefixing of collection URLs with language codes changed.</li>
+</ul>
+<h2 id="472">4.7.2</h2>
+<ul>
+<li>Allow for header attribute values to contain <code>---</code> without breaking the parser.</li>
+</ul>
+<h2 id="471">4.7.1</h2>
+<ul>
+<li>Only build index for directory and HTML page requests on serve mode.</li>
+</ul>
+<h2 id="470">4.7.0</h2>
+<p>The last release in the 4.x series that adds new features.</p>
+<ul>
+<li>Call strip on given path first in <code>slugify</code>.</li>
+<li>Add <code>doc_index</code> function in <code>template.py</code>.</li>
+<li>Add <code>collection_index</code> function in <code>template.py</code>.</li>
+</ul>
+<h2 id="460">4.6.0</h2>
+<ul>
+<li>Make collections available to templates as lists of path, value tuples.</li>
+<li>Convert <code>created</code> and <code>updated</code> document attributes to datetime objects if they are strings.</li>
+</ul>
+<h2 id="450">4.5.0</h2>
+<ul>
+<li>Add support for multilingual indexes and add sample <code>i18n</code> site.</li>
+<li>Remove support for Python 3.4 as latest Markdown requires at least Python 3.5.</li>
+</ul>
+<h2 id="440">4.4.0</h2>
+<ul>
+<li>Add <code>build</code> and <code>write</code> methods to Generate class, so subclasses can easily overwrite the build and write steps.</li>
+<li>Handle UnicodeDecodeError in filesource when reading binary files.</li>
+<li>Make <code>slugify</code> function from path module available in templates.</li>
+</ul>
+<h2 id="430">4.3.0</h2>
+<ul>
+<li>Add <code>--site</code> option to choose the base site to use when creating a new one.</li>
+<li>Add <code>bare</code> base site with minimal markup and files.</li>
+</ul>
+<h2 id="420">4.2.0</h2>
+<ul>
+<li>Add attr_contains template filter to enable filtering docs with an attribute containing a given value.</li>
+<li>URL unquote file names so special characters can be used in URLs.</li>
+</ul>
+<h2 id="410">4.1.0</h2>
+<ul>
+<li>Enable expression-statement extension that adds the do tag.</li>
+<li>Added raw keyword argument to filesource function, which defaults to False.</li>
+<li>Added keep option for <code>generate</code> command, which does not remove an existing deploy directory.</li>
+<li>Load newer versions of bootstrap, fontawesome and jquery via CDN.</li>
+<li>Set meta noindex,follow for index pages in starter site.</li>
+<li>Don't write <strong>index</strong> dir and docs to deploy directory.</li>
+<li>Enable with statement for nested variable scopes in templates.</li>
+<li>Added get_index_template method to core.</li>
+<li>Don't allow for duplicate docs in collections.</li>
+<li>Added parent_paths to path module.</li>
+<li>Renamed collection_paths to collection_index.</li>
+<li>Renamed path.list_dirs_from_url to path.parent_dirs.</li>
+<li>Removed useless list calls.</li>
+<li>Bugfix: don't use str.format to avoid UnicodeEncodeException in Python 2.7.</li>
+</ul>
+<h2 id="400">4.0.0</h2>
+<p>The 4.0.0 release includes several backwards incompatible changes, that affect external scripts that access Logya attributes, as well as RSS and index templates.</p>
+<ul>
+<li>Removed server.log file, log to default stream instead.</li>
+<li>Added option to trim whitespace in templates.</li>
+<li>Set canonical meta tag for index pages.</li>
+<li>Converted allowed_exts from tuple to set.</li>
+<li>Enable attr_list, def_list and fenced_code markdown extensions.</li>
+<li>Enable break and continue in templates.</li>
+<li>Better error message when reading files fails</li>
+<li>Added encode_content function in writer module.</li>
+<li>Renamed docs_parsed to docs.</li>
+<li>Enable configuration of index templates.</li>
+<li>Restructured site configuration.</li>
+<li>Renamed indexes to index/docs/collections.</li>
+<li>Removed all_vars and doc_vars from Template.</li>
+<li>Removed Config class, the config module now consists of load and search_dict_list functions.</li>
+<li>More structured data markup in starter site.</li>
+<li>More comprehensive and updated documentation.</li>
+<li>Removed run command, import Logya in custom scripts instead.</li>
+<li>Removed automatic execution of scripts in bin directory.</li>
+<li>Renamed logya.dir_current to logya.dir_site.</li>
+<li>Renamed logya.dir_dst to logya.dir_deploy.</li>
+<li>Removed FileWriter class entirely.</li>
+<li>Moved canonical_filename to path module.</li>
+<li>Set feed limit in rss template so user can set this to a preferred value.</li>
+<li>Updated dependencies.</li>
+</ul>
+<h2 id="330">3.3.0</h2>
+<ul>
+<li>More pythonic and readable code.</li>
+<li>Use tox for running tests against different python versions.</li>
+<li>Issue #58: header attribute url is now optional and will be set from file name if not present.</li>
+<li>Added path module and tests for it.</li>
+<li>Made logya run Python3 compatible.</li>
+<li>Fixed #52: Removed ext and test.py and code that referenced them.</li>
+<li>Fixed #48: Use .htaccess from HTML5 Boilerplate.</li>
+<li>New style string formatting.</li>
+<li>Added tests for docparser and docreader modules.</li>
+<li>More appropriate function names.</li>
+<li>Use fontawesome icons for reddit and stumbleupon.</li>
+<li>Fixed #39: added sample video macro.</li>
+<li>Updated bootstrap.</li>
+<li>Better documentation of filesource template function.</li>
+<li>Write count of generated documents and indexes in verbose mode of generate command, not individual index file names.</li>
+<li>Added default robots.txt to starter site.</li>
+<li>Added datePublished and dateModified schema markup to post and postinfo templates.</li>
+</ul>
+<h2 id="322">3.2.2</h2>
+<ul>
+<li>Updated bootstrap, jquery and fontawesome.</li>
+<li>Use updated property for lastmod in xml sitemap.</li>
+<li>Added postinfo template and sample post that displays it.</li>
+<li>Added author setting to site.yaml.</li>
+<li>Added updated property to document header, if not set by author.</li>
+</ul>
+<h2 id="321">3.2.1</h2>
+<ul>
+<li>Allow for non-existing body so a doc can only consist of header values.</li>
+</ul>
+<h2 id="320">3.2.0</h2>
+<ul>
+<li>Use yaml's CLoader if available. For complex data structures performance gains are huge.</li>
+<li>Added run command.</li>
+</ul>
+<h2 id="310">3.1.0</h2>
+<ul>
+<li>Added get_doc template function.</li>
+</ul>
+<h2 id="30">3.0</h2>
+<p>Logya version 3.0 is not backwards compatible due to changed configuration.</p>
+<ul>
+<li>YAML based site configuration.</li>
+<li>Python 3 compatibility.</li>
+<li>RSS is generated using template that is now included from create command.</li>
+</ul>
+    </div>
+    <div class="fifth">
+        <h3>Table of Contents</h3>
+        <ul>
+    <li><a href="https://ramiro.org/logya/docs/installation/">Installation</a></li>
+    <li><a href="https://ramiro.org/logya/docs/gettingstarted/">Getting Started</a></li>
+    <li><a href="https://ramiro.org/logya/docs/create/">Create a Site</a></li>
+    <li><a href="https://ramiro.org/logya/docs/documentstructure/">Document Structure</a></li>
+    <li><a href="https://ramiro.org/logya/docs/templates/">Templates</a></li>
+    <li><a href="https://ramiro.org/logya/docs/configuration/">Configuration</a></li>
+    <li><a href="https://ramiro.org/logya/docs/i18n/">I18N</a></li>
+    <li><a href="https://ramiro.org/logya/docs/recipes/">Recipes</a></li>
+    <li><a href="https://ramiro.org/logya/docs/changes/">Changelog</a></li>
+</ul>
+
+    </div>
+</div>
+    </section>
+    <section class="footer">
+        © <script>document.write(new Date().getFullYear())</script> <a href="https://ramiro.org/">Ramiro Gómez</a>.
+    </section>
+</body>
+</html>

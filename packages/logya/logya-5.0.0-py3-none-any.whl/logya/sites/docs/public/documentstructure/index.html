@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title itemprop="name">Document Structure</title>
+    <meta name="generator" content="Logya">
+<meta name="author" content="Ramiro Gómez">    <link rel="canonical" itemprop="url" href="https://ramiro.org/logya/docs/documentstructure/">
+    <link rel="shortcut icon" href="https://ramiro.org/logya/docs/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="https://ramiro.org/logya/docs/rss.xml" title="RSS feed">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic@7.1.0/picnic.min.css">
+    <link rel="stylesheet" href="https://ramiro.org/logya/docs/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="https://ramiro.org/logya/docs/"><img class="logo" src="https://ramiro.org/logya/docs/img/logya-small.png" alt="Logya Documentation Home"></a>
+        <!-- responsive-->
+        <input id="bmenub" type="checkbox" class="show">
+        <label for="bmenub" class="burger pseudo button">menu</label>
+        <div class="menu">
+            <a class="button pseudo" href="https://github.com/yaph/logya/">GitHub</a>
+            <a class="button pseudo" href="https://pypi.org/project/logya/">PyPI Package</a>
+            <a class="button warning" href="https://ramiro.org/logya/docs/rss.xml">RSS Feed</a>
+        </div>
+    </nav>
+    <section>
+<div class="flex two-800">
+    <div class="four-fifth">
+        <h1>Document Structure</h1>
+        <p>Documents are dived into header and body parts.</p>
+<div class="toc">
+<ul>
+<li><a href="#document-header">Document Header</a><ul>
+<li><a href="#special-attributes">Special Attributes</a><ul>
+<li><a href="#body">body</a></li>
+<li><a href="#template">template</a></li>
+<li><a href="#title">title</a></li>
+<li><a href="#url">url</a></li>
+<li><a href="#created">created</a></li>
+<li><a href="#updated">updated</a></li>
+<li><a href="#pre_render">pre_render</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#collections">Collections</a></li>
+<li><a href="#document-body">Document Body</a></li>
+</ul>
+</div>
+<h2 id="document-header">Document Header</h2>
+<pre><code>---
+title: Logya Documentation
+template: page.html
+created: 2012-03-18 13:59:16
+image: /path/to/image.png
+---
+</code></pre>
+<p>The header is in <a href="https://yaml.org/">YAML</a> format. It starts and ends with 3 dashes. The header is used for setting document attributes, that can be of arbitrary complexity and are accessible in templates. You can set a meta description, the scripts and stylesheets to include and whatever is useful in your scenario. The following attributes are reserved to have special meanings.</p>
+<h3 id="special-attributes">Special Attributes</h3>
+<h4 id="body">body</h4>
+<p>Don't set a <code>body</code> attribute in the document header. It will be set to the body of the document automatically. An existing value will be overwritten.</p>
+<h4 id="template">template</h4>
+<p>This is the only required attribute. Set it to the Jinja2 template to use for rendering the document. The template file name has to be specified relative to the <code>templates</code> directory.</p>
+<h4 id="title">title</h4>
+<p>Setting a document <code>title</code> is highly recommended, but if not present the stem part of the content file name will be set as the document title.</p>
+<h4 id="url">url</h4>
+<p>You can manually set a <code>url</code> attribute, which must be unique and can be used to refer to a document in templates. If you omit the <code>url</code> it will be created from the file name, e. g. the document in <code>content/book/chapter-1.html</code> will get the URL <code>/book/chapter-1/</code> with the file extension removed. File extensions are removed from HTML and Markdown files.</p>
+<h4 id="created">created</h4>
+<p>If you specify a <code>created</code> datetime, you must use the format <code>YYYY-MM-DD HH:MM:SS</code> as shown in the example. Otherwise it will be set to the file modification time. I recommend setting this manually to the date of first publication. When you call the <code>get_docs</code> function in templates, by default documents will be sorted by <code>created</code> in descending order, so newest documents show up first. This is also the order in which documents appear in automatically created collection pages.</p>
+<h4 id="updated">updated</h4>
+<p>The <code>updated</code> datetime works like <code>created</code> and should show when the document was last edited. This can be useful if you want to highlight an edit, but typically the default value is fine.</p>
+<h4 id="pre_render">pre_render</h4>
+<p>Use <code>pre_render</code> to enable the use of Jinja template syntax and documents. A sample use case would be for creating absolute URLs for internal links using the <code>base_url</code> setting.</p>
+<pre><code>&lt;a href="{{ base_url }}/path/to/page/"&gt;Link text&lt;/a&gt;
+</code></pre>
+<p>For this to work you have to set <code>pre_render</code> to a list of attribute names. To pre-render the <code>body</code> add the following line to the document header.</p>
+<pre><code>pre_render: [body]
+</code></pre>
+<h2 id="collections">Collections</h2>
+<p>You can create document collections using content attributes and corresponding settings in <code>site.yaml</code>. An example is to categorize content using a <code>tags</code> attribute.</p>
+<pre><code>tags: [source code, python, programming]
+</code></pre>
+<p>For each value in <code>tags</code> a collection is created, that contains all documents where value appears in the <code>tags</code> attribute. For each tag value a page is automatically created where you can show the documents in that collection. The URL of the collection page is created from the collection <code>path</code> value in <code>site.yaml</code> and the value, e. g. the <code>source code</code> collection URL could be <code>/tag/source-code/</code>.</p>
+<p>For each collection in a document an additional template variable will be available named from the collection name and the suffix <code>_links</code>, e. g. <code>tags_links</code>. This can be used in templates to create a list of links to the collection pages on a content page.</p>
+<pre><code>&lt;ul&gt;
+{% for url, anchor in tags_links %}
+    &lt;li&gt;&lt;a href="{{ url }}"&gt;{{ anchor }}&lt;/a&gt;&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+<p>Only use letters and underscores in the names of collections and set the document attribute to a list of string values.</p>
+<h2 id="document-body">Document Body</h2>
+<p>The part after the second <code>---</code> separator is the document <code>body</code>. Text written in <a href="https://daringfireball.net/projects/markdown/">Markdown</a> will be converted to HTML, if the corresponding file name ends with <code>.md</code> or <code>.markdown</code>.</p>
+    </div>
+    <div class="fifth">
+        <h3>Table of Contents</h3>
+        <ul>
+    <li><a href="https://ramiro.org/logya/docs/installation/">Installation</a></li>
+    <li><a href="https://ramiro.org/logya/docs/gettingstarted/">Getting Started</a></li>
+    <li><a href="https://ramiro.org/logya/docs/create/">Create a Site</a></li>
+    <li><a href="https://ramiro.org/logya/docs/documentstructure/">Document Structure</a></li>
+    <li><a href="https://ramiro.org/logya/docs/templates/">Templates</a></li>
+    <li><a href="https://ramiro.org/logya/docs/configuration/">Configuration</a></li>
+    <li><a href="https://ramiro.org/logya/docs/i18n/">I18N</a></li>
+    <li><a href="https://ramiro.org/logya/docs/recipes/">Recipes</a></li>
+    <li><a href="https://ramiro.org/logya/docs/changes/">Changelog</a></li>
+</ul>
+
+    </div>
+</div>
+    </section>
+    <section class="footer">
+        © <script>document.write(new Date().getFullYear())</script> <a href="https://ramiro.org/">Ramiro Gómez</a>.
+    </section>
+</body>
+</html>
