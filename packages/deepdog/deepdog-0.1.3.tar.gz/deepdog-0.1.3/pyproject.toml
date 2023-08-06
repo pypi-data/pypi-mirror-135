@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "deepdog"
+version = "0.1.3"
+description = ""
+authors = ["Deepak Mallubhotla <dmallubhotla+github@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8,<3.10"
+pdme = "^0.4.1"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=6"
+flake8 = "^4.0.1"
+pytest-cov = "^3.0.0"
+mypy = "^0.931"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--junitxml pytest.xml --cov deepdog --cov-report=xml:coverage.xml --cov-report=html"
+junit_family = "xunit1"
+
+[tool.mypy]
+plugins = "numpy.typing.mypy_plugin"
+
+[[tool.mypy.overrides]]
+module = [
+	"scipy",
+	"scipy.optimize"
+]
+ignore_missing_imports = true
