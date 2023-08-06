@@ -1,0 +1,410 @@
+Metadata-Version: 2.1
+Name: Slash92
+Version: 0.2.3
+Summary: ORM
+Home-page: https://github.com/m-o-d-e-r/Slash
+Author: Telegram: @M_O_D_E_R
+License: GPL-3.0
+Platform: windows
+Platform: linux
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: psycopg2
+
+# Скоро
+  - Операции с объединенными таблицами
+  - Можно будет создавать откат (вот прям скоро)
+
+# Новое
+  - Операции для UnitedTable(test)
+  - fix SQLConditions
+  - Добавлена возможность записи/чтения правил из json-фалов(rules.json)<p>
+     &emsp;Есть два класса которые позволяют это сделать(JsonConverter, WinJsonConverter)<br>
+        `JsonConverter` - под все платформы<br>
+        `WinJsonConverter` - только под винду(так как для линухи .so)<br>
+
+      &emsp;Решил так сделать для эксперимента.
+      А вообще хочу написать какую-то фичу на плюсах и портировать под ORM.<br>
+      Мб какой-то валидатор, или парсер. Ну или сделаю пачку модулей для каких-то расчетов. <a href="#WinJsonConverter">Помощь в сборке WinJsonConverter</a>(сборка под линуху такая же).
+</p>
+
+```Python
+from Slash.Core.core import Connection, Logger, SQLConditions
+from Slash.Core.operations_ import Operations
+from Slash.types_ import (
+    Table, TablesManager, TableMeta,
+    Text, Int, Column
+)
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432,
+    logger=Logger(__name__, __file__, redirect_error=True)
+)
+
+
+class Authors(Table, metaclass=TableMeta):
+    author = Column(Text, None)
+    author_status = Column(Int, None)
+
+
+class Reports(Table, metaclass=TableMeta):
+    author = Column(Text, None)
+    report = Column(Text, None)
+
+
+authors = Authors("authors")
+reports = Reports("reports")
+
+conn.create(authors)
+conn.create(reports)
+
+
+united_table = TablesManager.unite(authors, reports)
+
+Operations(conn).insert(
+    united_table,
+    ("author", "author_status", "report"), 
+    (Text("M_O_D_E_R"), Int(100), Text("Hello world"))
+)
+
+print(
+    Operations(conn).select(
+        united_table,
+        ("author", "author_status", "report"),
+        SQLConditions.where(
+            "author", SQLConditions.EQ, "M_O_D_E_R", SQLConditions.AND, "rowid",  SQLConditions.EQ, 5
+        )
+    ).get_data()
+)
+
+Operations(conn).delete(
+    united_table,
+    SQLConditions.where("rowid", SQLConditions.EQ, 4)
+)
+
+Operations(conn).update(
+    united_table,
+    ("author"),
+    (Text("test_name"))
+)
+
+```
+
+
+# Файлы
+  - `Slash/types_.py` <p>Базовые типы, класс для валидации типов(за правилами)</p>
+  - `Slash/Core/core.py` <p>Создание подключения, классы валидации, расширение SQL-запросов</p>
+  - `Slash/Core/exeptions_.py` <p>Исключения</p>
+  - `Slash/Core/operations_.py` <p>Операции с БД</p>
+
+# Создание подключения
+```Python
+from Slash.Core.core import Connection
+
+conn = Connection("Slash", "postgres", "root", "127.0.0.1", 5432)
+```
+  - `"Slash"` - имя базы данных<br>
+  - `"postgres"` - имя пользователя<br>
+  - `"root"` - пароль<br>
+  - `"127.0.0.1"` - хост<br>
+  - `5432` - порт<br>
+
+### Доспупные параметры
+  - dbname - имя бд
+  - user - имя пользователя
+  - password - пароль
+  - host - хост
+  - port - порт
+  - logger - класс `Logger` (после каждого коммита будет инфо о статусе операции)
+
+# Создать свои правили валидации
+ ```Python
+from Slash.types_ import Rules
+
+class MyRules(Rules):
+   def __init__(self):
+       super().__init__()
+
+# нормально работает валидация для строки и числа, всё остальное будет позже
+myRules = MyRules()
+myRules.new_rules(
+   {
+       "type_int"  : {
+           "min" : 0,
+           "max" : 1000,
+           "valide_foo" : myRules.valid_int
+       },
+       "type_text" : {
+           "length" : 100,
+           "valide_foo" : myRules.valid_text
+       },
+       "type_bool" : {
+           "symbols" : [True, False],
+           "valide_foo" : myRules.valid_bool
+       },
+       "type_date" : {
+           "current" : "{}.{}.{}",
+           "valide_foo" : myRules.valid_date
+       }
+   }
+)
+ ```
+  Данные проходят валидацию нескольких уровней.
+  - проверка на валидность входных строк
+  - проверка данных(за правилом) на валидность
+  - проверка на валидность SQL-запроса
+
+  Если данные не проходят один уровень, будет поднято исключения:
+  - `SlashBadColumnNameError` - Неправильное имя колонки(содержание знаков пунктуации) => Проверка осуществляется в `core.py`
+  - `SlashRulesError` - Несоответствие правилам => Проверка осуществляется в `types_.py`
+  - `SlashPatternMismatch` - Несоответствие шаблонному SQL-запросов => Проверка осуществляется в `core.py`
+
+## Методы
+  - `get_rules` - получение правил по умочанию
+  - `get_user_rules` - получение новых правил
+  - `new_rules`  - создание новых правил (принимает словарь)
+  - `Функции валидации`
+    - valid_bool - проверка белевых значений
+    - valid_date - проверка вормата даты
+    - valid_hidden - проверка защищенного поля
+    - valid_int - проверка целого числа
+    - valid_text - проверка текста
+
+# Операции
+
+## Создать таблицу
+```Python
+from Slash.types_ import (
+    Column, Table, Int, Text,
+    Hidden, Date, Bool
+)
+from Slash.Core.core import Connection, Logger
+
+log = Logger(__name__, __file__", redirect_error=True)
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432,
+    logger=log
+)
+
+table = Table("testdoc1")
+table.set_columns(
+    Column(Date, "born"),
+    Column(Bool, "man"),
+    Column(Int, "age"),
+    Column(Text, "name"),
+    Column(Hidden, "password")
+)
+
+conn.create(table)
+```
+
+&emsp;`Table` принимает один параметр, это имя бд. Она будет создана если не существует.
+
+&emsp;`.set_columns()` может принимать любое кол-во параметров, а именно `Columns()`
+
+&emsp;`Columns` это класс для определения колонки. Принимает два параметра, а именно: тип, имя.
+
+### Определить поля таблицы можно другим способом:
+```Python
+from Slash.types_ import (
+    Column, Table, Int, Text,
+    Hidden, Date, Bool, TableMeta
+)
+from Slash.Core.core import Connection, Logger
+
+log = Logger(__name__, __file__, redirect_error=True)
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432,
+    logger=log
+)
+
+
+class MyTable(Table, metaclass=TableMeta):
+    born = Column(Date, None)
+    man = Column(Bool, None)
+    age = Column(Int, None)
+    mame = Column(Text, None)
+    password = Column(Hidden, None)
+
+table = MyTable("testdoc1")
+
+conn.create(table)
+```
+
+
+
+## Вставка данных
+```Python
+from Slash.types_ import Column, Table, Int, Text, Rules
+from Slash.Core.core import Connection
+from Slash.Core.operations_ import Operations
+
+
+class MyRules(Rules):
+    def __init__(self):
+        super().__init__()
+
+myRules = MyRules()
+myRules.new_rules(
+    {
+        "type_int"  : {
+            "min" : 0,
+            "max" : 2000,
+            "valide_foo" : myRules.valid_int
+        },
+        "type_text" : {
+            "length" : 100,
+            "valide_foo" : myRules.valid_text
+        },
+        "type_bool" : {
+            "symbols" : [True, False],
+            "valide_foo" : myRules.valid_bool
+        },
+        "type_date" : {
+            "current" : "{}.{}.{}",
+            "valide_foo" : myRules.valid_date
+        }
+    }
+)
+
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432
+)
+
+table = Table("test1")
+table.set_columns(Column(Int, "age"), Column(Text, "name"))
+conn.create(table)
+
+operations = Operations(conn)
+
+operations.insert(table, ("age", "name"), (Int(1000), Text("Name2")), rules=myRules)
+# или (но базовые правила сильно ограничены)
+operations.insert(table, ("age", "name"), (Int(1000), Text("Name2"))) # SlashRulesError
+```
+
+&emsp;`Operation`, принимает один параметр и это подключение к бд. `Operation(conn).insert` принимает объект таблицы, имена колонок, данные. Также можно задать свои правила для валидации, передав методу `rules=объект правил`
+
+
+## Обновление данных
+```Python
+from Slash.types_ import AutoField, Column, Table, Int, Text
+from Slash.Core.core import Connection, SQLConditions
+from Slash.Core.operations_ import Operations
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432
+)
+
+table = Table("test1")
+table.set_columns(Column(Int, "age"), Column(Text, "name"))
+conn.create(table)
+
+Operations(conn).update(
+    table,
+    ("name", ),
+    (Text("33"), ),
+    SQLConditions.where(
+        "age", SQLConditions.LE, "3"
+    )
+)
+```
+&emsp;`Operation(conn).update` принимает объект таблицы, имена колонок, новые значения. Для того чтобы задать условие, надо передать `SQLConditions.where`.
+
+
+## Удаление данных
+```Python
+from Slash.Core.core import Connection, SQLConditions
+from Slash.Core.operations_ import Operations
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432
+)
+
+# удаление с условием
+Operations(conn).delete(
+    table, SQLConditions.where(
+        "age", SQLConditions.LE, 100
+    )
+)
+
+# удаление без условий
+Operations(conn).delete(table.name)
+```
+&emsp;`Operation(conn).delet` принимает объект таблицы, и условие `SQLConditions.where`.
+
+## Выборка данных
+```Python
+from Slash.Core.core import Connection, SQLConditions
+from Slash.Core.operations_ import Operations
+
+conn = Connection(
+    "Slash", "postgres", "root", "127.0.0.1", 5432
+)
+
+# выборка даннных за условем из сортировкой
+print(
+    Operations(conn).select(
+        table,
+        ("age", "name"),
+        SQLConditions.where(
+            "age", SQLConditions.EQ, 3,
+            SQLConditions.order_by("age", desc="desc")   
+        )
+    )
+)
+```
+&emsp;`Operation(conn).select` принимает объект таблицы, имена колонок, условие `SQLConditions.where`.
+
+# PyPI
+<a href="https://pypi.org/project/Slash92/0.2.1.0/">0.2.1.0</a><br>
+<a href="https://pypi.org/project/Slash92/0.2.0/">0.2.0</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.9/">0.1.9</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.8/">0.1.8</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.7.0/">0.1.7.0</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.6/">0.1.6</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.5/">0.1.5</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.4/">0.1.4</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.3/">0.1.3</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.2/">0.1.2</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.1/">0.1.1</a><br>
+<a href="https://pypi.org/project/Slash92/0.1.0/">0.1.0</a>
+
+# Собрать .whl
+    python setup.py bdist_wheel
+
+# Установка через .whl
+    pip install Slash92-0.2.1-py3-none-any.whl
+
+# Установка через setup.py
+    python setup.py install
+
+# Собрать WinJsonConverter
+<div id="WinJsonConverter"></div>
+&emsp;Для начала cкопируйте исходник ORM
+
+    git clone https://github.com/m-o-d-e-r/Slash.git
+  &emsp;<s>Если вас у вас не появился синий экран</s> найдите файл `setup_for_cython.py`, он понадобится для сборки нашей динамической либы.
+  Потом с помощью <s>древней</s> команды запустите компиляцию `utils_for_rules.pyx`(этот файл тусит в `Slash/utilities/`, надо чтобы он был в одной папке с `setup_for_cython.py` или изменить путь в `setup_for_cython.py`). В `Slash/utilities/` находится: исходник `WinJsonConverter` и уже скомпилирования его версия, это значит что вы можете не собирать этот модуль заново.
+
+    python setup_for_cython.py build_ext --inplace
+
+  &emsp;<s>Если с вашего монитора ничего не вылезло</s> можете смело перемещать файл с расширением .pyd в `Slash/utilities/`.<br><br><br>
+  <b>!!!Важно!!!</b><br>
+
+|  Можно  |       Нельзя       |
+| ------- | ------------------ |
+| Добавлять что-то новое   | Менять имя файла   |
+| Гладить кота при сборке(+2 к удаче) | Пить томатный сок  |
+
+&emsp;Если есть какие-то трудности в сборке пишите <a href="https://t.me/M_O_D_E_R">сюда</a>.
+
+
+  <b>!!!Не сильно важно, но к сути!!!</b><br>
+  `Windows` - .pyd<br>
+  `Linux` - .so<br>
+&emsp;Под каждую ось свое расширение, но питон всё понимает. + вы не будете импортировать эту либу напрямую, хотя конечно это возможно.
+
+
