@@ -1,0 +1,11 @@
+FROM val314159/lkl
+#ADD 3rd/ /usr/local/lordkelvin/
+RUN make -C /usr/local/lordkelvin 3rd
+RUN pip3 install ipython jupyter gevent-websocket bottle
+RUN npm install -g npm@8.3.0
+RUN npm i -g hardhat
+RUN npm i ethers
+RUN apt-get -y install emacs screen
+RUN rm -fr /root/.cache /root/.npm
+ADD tools/init.el /root/.emacs.d/
+CMD ["bash", "-l"]

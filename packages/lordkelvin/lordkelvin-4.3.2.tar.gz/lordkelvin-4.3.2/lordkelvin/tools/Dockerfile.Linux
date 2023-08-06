@@ -1,0 +1,28 @@
+FROM ubuntu:20.04
+FROM ubuntu:21.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install apt-utils
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install apt-utils
+#RUN apt-get -y install curl xz-utils telnet tree python3-pip npm wget cmake libboost-all-dev sudo
+#RUN apt-get -y install curl telnet tree python3-pip npm wget
+RUN apt-get -y install wget curl telnet tree python3-pip python3-cytoolz
+#RUN npm install -g ganache-cli
+#RUN wget https://github.com/ethereum/solidity/releases/download/v0.7.6/solidity_0.7.6.tar.gz
+#RUN tar -xvzf solidity_0.7.6.tar.gz
+#RUN ./solidity_0.7.6/scripts/build.sh
+#RUN rm -fr solidity_0.7.6*
+#RUN ln -s /usr/local/bin/solc /usr/local/bin/solc-0.7.6
+#RUN curl -L https://github.com/ethereum/solidity/releases/download/v0.8.6/solc-static-linux >bin/solc
+#RUN curl -L https://github.com/ethereum/solidity/releases/download/v0.7.6/solc-static-linux >bin/solc-0.7.6
+#RUN curl -L https://github.com/ethereum/solidity/releases/download/v0.4.25/solc-static-linux >bin/solc-0.4.25
+#RUN chmod +x bin/solc*
+#RUN pip3 install docopt web3==5.24 eth_account
+#RUN pip3 install ipython jupyter gevent-websocket bottle
+#RUN npm i -g hardhat
+#RUN apt-get -y install emacs-nox screen
+WORKDIR /usr/local
+ADD . lordkelvin/
+RUN pip3 install ./lordkelvin
+WORKDIR /root
+ADD tools/aliases /root/.bash_aliases
+EXPOSE 8545 9545 10545 11545 8888 8000 8080 80

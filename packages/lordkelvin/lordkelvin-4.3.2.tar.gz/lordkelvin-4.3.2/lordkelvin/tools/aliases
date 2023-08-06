@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+function launch {
+    /usr/local/bin/launch_ganache.py $PORT $*
+}
+
+function kg {
+    /usr/local/bin/launch_ganache.py -k $*
+}
+
+#alias launch='/usr/local/bin/launch_ganache.py $PORT'
+#alias     kg='/usr/local/bin/launch_ganache.py -k'
+
+alias     cs='solc-0.7.6 --no-color -oout --abi --bin --overwrite --allow-paths=. --optimize'
+
+alias ganache='. /usr/local/bin/env.ganache.sh'
+alias   kovan='. /usr/local/bin/env.kovan.sh'
+
+alias   m="make"
+alias  mt="make tests"
+alias  mc="make clean"
+alias mrc="make realclean"
+
+if [ "" == "$PORT" ]; then
+    export PORT=65456
+fi
+
+if [ "" == "$NETWORK" ]; then
+    export NETWORK=ganache
+fi
+
+#launch
+
+. /usr/local/bin/env.${NETWORK}.sh
+
+set +e

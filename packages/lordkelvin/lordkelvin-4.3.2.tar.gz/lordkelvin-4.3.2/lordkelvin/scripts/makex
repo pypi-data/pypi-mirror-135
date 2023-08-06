@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+import os, sys
+make, Makefile = 'make', 'Makefile'
+while os.path.realpath('.') != '/':
+    if Makefile in os.listdir('.'):
+        raise os.execlp(make[0], *( make + sys.argv[1:] ))
+    os.chdir('..')
+    pass
+raise SystemExit("Error: '%s' Not Found" % Makefile)

@@ -1,0 +1,8 @@
+#-*-Dockerfile-*-
+FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y update && apt-get -y install xz-utils cmake libboost-all-dev
+RUN wget https://github.com/ethereum/solidity/releases/download/v0.7.6/solidity_0.7.6.tar.gz
+RUN tar -xvzf solidity_0.7.6.tar.gz
+RUN ./solidity_0.7.6/scripts/build.sh
+ENTRYPOINT ["solc","--no-color","--abi","--bin","--overwrite","--allow-paths=."]
