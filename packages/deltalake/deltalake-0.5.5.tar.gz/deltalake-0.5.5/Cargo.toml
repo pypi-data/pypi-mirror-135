@@ -1,0 +1,36 @@
+[dependencies]
+chrono = "0"
+env_logger = "0"
+serde_json = "1"
+
+[dependencies.deltalake]
+features = ["s3", "azure", "glue", "gcs"]
+path = "local_dependencies/deltalake"
+version = "0"
+
+[dependencies.pyo3]
+features = ["extension-module", "abi3", "abi3-py36"]
+version = "0.15"
+
+[dependencies.reqwest]
+features = ["native-tls-vendored"]
+version = "*"
+
+[dependencies.tokio]
+features = ["rt-multi-thread"]
+version = "1"
+
+[lib]
+crate-type = ["cdylib"]
+name = "deltalake"
+
+[package]
+authors = ["Qingping Hou <dave2008713@gmail.com>"]
+description = "Native Delta Lake Python binding based on delta-rs with Pandas integration"
+edition = "2021"
+homepage = "https://github.com/delta-io/delta-rs"
+keywords = ["deltalake", "delta", "datalake", "pandas", "arrow"]
+license = "Apache-2.0"
+name = "deltalake-python"
+readme = "README.md"
+version = "0.5.5"
