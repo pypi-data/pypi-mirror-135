@@ -1,0 +1,98 @@
+_comment: Training a chip classifier that classifier NAIP images in to one of 4 classes.
+augmentation: true
+band_ids:
+- Red
+- Green
+- Blue
+- NIR
+batch_size: 20
+dataset_name: DATASET_NAME
+dataset_path: DATASET_PATH
+load: full
+distributed: false
+verbose: true
+num_gpus: 1
+input:
+    heads:
+        '1':
+            sensor: NAIP
+            resolution: 1
+            shape: 
+                D: 1
+                C: 4
+                H: 28
+                W: 28
+            bands: 
+                Red:
+                    min: 0.0
+                    max: 1.0
+                    std: 0.229
+                    mean: 0.485
+                Green:
+                    min: 0.0
+                    max: 1.0
+                    std: 0.224
+                    mean: 0.456
+                Blue:
+                    min: 0.0
+                    max: 1.0
+                    std: 0.225
+                    mean: 0.406
+                NIR:
+                    min: 0.0
+                    max: 1.0
+                    std: 0.248
+                    mean: 0.502
+            transforms:
+                train:
+                    normalize: null
+                    verticalflip:
+                        p: 0.5
+                    horizontalflip:
+                        p: 0.5
+                val:
+                    normalize: null
+output:
+    heads:
+        '1':
+            logits: true
+            num_classes: 10
+            metrics:
+                precision:
+                    average: macro 
+                recall:
+                    average: macro
+            loss:
+                crossentropyloss: null
+input_shape: 
+    - 1
+    - 4
+    - 28
+    - 28
+local_artifacts_path: ../local_artifacts/
+loss: ce
+lr: 0.1
+max_iters: 1000
+frequency: 10
+metrics:
+- recall
+mode: batch
+model: dummy
+nfs_data_path: NFS_DATA_PATH
+num_classes: 4
+num_workers: 8
+optimizer: sgd
+optimizer_args: 
+    lr: 0.1
+scheduler: steplr
+scheduler_args: 
+    step_size: 30
+    gamma: 0.1
+pretrained_checkpoint: null
+project_name: PROJECT_NAME
+resolution: 1
+resume_checkpoint: null
+sensor: NAIP
+val_frequency: 10
+validation_ratio: 0.7
+weight_dir: WEIGHTS_DIR
