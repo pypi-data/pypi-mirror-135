@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "jake"
+version = "1.4.1"
+description = "An OSS Index integration to check for vulnerabilities in your Python environments"
+authors = ["Sonatype Community <community-group@sonatype.com>"]
+maintainers = ["Sonatype Community <community-group@sonatype.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/sonatype-nexus-community/jake"
+repository = "https://github.com/sonatype-nexus-community/jake"
+packages = [
+    { include = "jake" }
+]
+include = [
+    "LICENSE"
+]
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Information Technology',
+    'Intended Audience :: Legal Industry',
+    'Intended Audience :: System Administrators',
+    'Topic :: Security',
+    'Topic :: Software Development',
+    'Topic :: System :: Software Distribution',
+    'License :: OSI Approved :: Apache Software License',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9'
+]
+keywords = [
+    "BOM", "SBOM", "SCA", "OWASP"
+]
+
+[tool.poetry.scripts]
+jake = 'jake.app:main'
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/sonatype-nexus-community/jake/issues"
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+cyclonedx-bom = "^2.0.1"
+ossindex-lib = ">= 0.2.1"
+polling2 = ">= 0.5.0"
+pyfiglet = ">= 0.8.post1"
+requests = "^>= 2.25.1"
+rich = ">= 10.15.2"
+
+[tool.poetry.dev-dependencies]
+tox = "^3.24.3"
+coverage = "^6.2"
+flake8 = "^4.0.1"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+version_variable = [
+    "pyproject.toml:version"
+]
+branch = "main"
+upload_to_pypi = true
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
