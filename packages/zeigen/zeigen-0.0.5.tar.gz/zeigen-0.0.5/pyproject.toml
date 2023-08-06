@@ -1,0 +1,143 @@
+[tool.poetry]
+name = "zeigen"
+version = "0.0.5"
+description = "Find hydrated waters in atomic-resolution crystal structures"
+authors = ["Joel Berendzen <joel@generisbio.com>"]
+license = "BSD-3-Clause"
+readme = "README.rst"
+homepage = "https://github.com/hydrationdynamics/zeigen"
+repository = "https://github.com/hydrationdynamics/zeigen"
+documentation = "https://zeigen.readthedocs.io"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Chemistry"
+]
+keywords = [
+    "science",
+    "chemistry",
+    "physical chemistry",
+    "biology",
+    "structural biology",
+    "hydrated water"
+]
+
+[tool.poetry.urls]
+Changelog = "https://github.com/joelb123/zeigen/releases"
+
+[tool.poetry.dependencies]
+python = "^3.8.1,<3.11"
+typer = "*"
+pandas = "*"
+matplotlib = "*"
+numpy = "*"
+scipy = "*"
+colorama = "*"
+tabulate = "*"
+loguru = "*"
+schema = "*"
+toml = "*"
+attrs = "*"
+Pint = "*"
+uncertainties = "*"
+types-toml = "*"
+types-tabulate = "*"
+gemmi = "*"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+coverage = {extras = ["toml"], version = "*"}
+safety = "*"
+mypy = "*"
+typeguard = "*"
+xdoctest = {extras = ["colors"], version = "*"}
+sphinx = "*"
+sphinx-autobuild = "*"
+pre-commit = "*"
+flake8 = "*"
+flake8-bandit = "*"
+flake8-bugbear = "*"
+flake8-docstrings = "*"
+pep8-naming = "*"
+darglint = "*"
+reorder-python-imports = "*"
+pre-commit-hooks = "*"
+sphinx-rtd-theme = "*"
+Pygments = "*"
+pytest-datadir-mgr = "*"
+flynt = "*"
+isort = "*"
+sh = "*"
+nox-poetry = "*"
+pytest-cov = "*"
+black = "*"
+flake8-rst-docstrings = "*"
+pandas-stubs = "*"
+sphinx-click = "*"
+
+[tool.poetry.scripts]
+zeigen = "zeigen.__main__:main"
+
+[tool.black]
+line-length = 79
+target-version = ['py38', 'py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+  \.git
+  | \.mypy
+  _cache
+  | \.nox
+  | \.idea
+  | \.pytest-cache
+  | _build
+  | build
+  | dist
+  | tests/
+)/
+'''
+
+[tool.coverage.paths]
+source = ["zeigen", "*site-packages/zeigen"]
+
+[tool.coverage.report]
+show_missing = true
+ignore_errors = true
+exclude_lines = [
+    "if self.debug:",
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:"
+    ]
+
+[tool.isort]
+atomic = true
+force_single_line = true
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 79
+import_heading_stdlib = "standard library imports"
+import_heading_thirdparty = "third-party imports"
+import_heading_firstparty = "first-party imports"
+import_heading_localfolder = "module imports"
+known_standard_library = "pkg_resources"
+
+[tool.poetry-dynamic-versioning]
+enable = false
+style = "semver"
+
+[tool.pytest.ini_options]
+addopts = "-x"
+
+[build-system]
+requires = ["poetry-core>=1.1.0"]
+build-backend = "poetry.core.masonry.api"
