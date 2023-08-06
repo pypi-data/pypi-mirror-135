@@ -1,0 +1,228 @@
+#!python
+
+import concurrent.futures
+import glob
+import math
+import multiprocessing
+import os
+import re
+import shutil
+import sys
+import time
+import zipfile
+
+import click
+import requests
+from ksamsok import KSamsok
+
+
+def default_n():
+    return multiprocessing.cpu_count()
+
+n = default_n()
+pool = concurrent.futures.ThreadPoolExecutor(max_workers=n)
+callbacks = []
+results = []
+
+
+def run(f, *args, **kwargs):
+    pool._max_workers = n
+    pool._adjust_thread_count()
+
+    f = pool.submit(f, *args, **kwargs)
+    results.append(f)
+
+    return f
+
+
+def task(f):
+    def do_task(*args, **kwargs):
+        result = run(f, *args, **kwargs)
+
+        for cb in callbacks:
+            result.add_done_callback(cb)
+
+        return result
+    return do_task
+
+
+def callback(f):
+    callbacks.append(f)
+
+    def register_callback():
+        f()
+
+    return register_callback
+
+actions = [
+    'geodata-exists',
+    'all',
+    'institution',
+    'query',
+    'color-exists',
+    'keyword-exists',
+]
+action_help = ', '.join(actions)
+
+bar = None
+
+headers = {
+    'User-Agent': 'SOCH Download CLI',
+}
+
+api_endpoint = 'https://kulturarvsdata.se/'
+
+def build_query(query, hits, start):
+    return '{3}ksamsok/api?method=search&query={0}&hitsPerPage={1}&startRecord={2}'.format(query, hits, start, api_endpoint)
+
+@task
+def fetch(url, start_record, outdir):
+    bar.update(0)
+    filepath = '{}{}.xml'.format(outdir, start_record)
+    # streaming and copying file object to save memory
+    r = requests.get(url, headers=headers, timeout=None, stream=True)
+
+    with open(filepath, 'wb') as f:
+        r.raw.decode_content = True
+        shutil.copyfileobj(r.raw, f)
+
+    bar.update(1)
+
+def pre_fetch(query, n_requests, outdir):
+    global bar
+    with click.progressbar(length=n_requests, label='Downloading...') as bar:
+        # because the progress bar is updated from other threads
+        # we clear it here so it's not duplicated
+        sys.stdout.write('\x1b[2K\x1b[1A')
+
+        count = 0
+        while n_requests > count:
+            start_record = count * 1000
+            fetch(build_query(query, 1000, start_record), start_record, outdir)
+            count += 1
+
+        # the sleep is used for performance reasons
+        while not bar.finished:
+            time.sleep(0.5)
+        click.secho('\nDone!', fg='green', nl=False)
+
+def confirm(query, outdir):
+    click.secho('Fetching query data and calculating requirements...', fg='green')
+
+    target = build_query(query, 1, 0)
+    r = requests.get(target, headers=headers)
+
+    if not valid_http_status(r.status_code):
+        error('SOCH returned an error. \n{}'.format(target))
+        print(target)
+
+    n_results = int(re.search(r'<totalHits>(\d+?)<\/totalHits>', r.text).group(1))
+
+    if n_results == 0:
+        error('SOCH returned zero records. \n{}'.format(target))
+
+    required_n_requests = math.ceil(n_results / 1000)
+
+    click.echo('Found {0} results, they would be split over {1} requests/files'.format(n_results, required_n_requests))
+    click.echo('This program might use all the systems available CPUs({0})!'.format(n))
+    click.echo('Would you like to proceed with the download? y/n')
+    c = click.getchar()
+    if c == 'y':
+        click.secho('Preparing download...', fg='green')
+        return pre_fetch(query, required_n_requests, outdir)
+
+    exit()
+
+def unpack_xml(directory, outdir):
+    if not glob.glob('{}*.xml'.format(directory)):
+        error('No XML files to unpack in the given directory: {}'.format(directory))
+
+    click.secho('Starting unpacking...', fg='green')
+
+    with click.progressbar(glob.glob('{}*.xml'.format(directory)), label='Unpacking') as bar:
+        for xml in bar:
+            save_rdf(xml, outdir)
+
+    time.sleep(1)
+    click.secho('Done!', fg='green')
+    exit()
+
+record_pattern = re.compile(r'<record>((.|\n)+?)<\/record>')
+def save_rdf(inpath, outpath):
+    contents = None
+    n = None
+    with open(inpath, 'r') as f:
+        n = re.search(r'(\d+)', inpath).group(1)
+        contents = f.read()
+
+    for i, find in enumerate(re.finditer(record_pattern, contents)):
+        rdf = find.group(1)
+        rdf = re.sub(r'<rel:score.+$', '', rdf)
+        rdf = '<?xml version="1.0" encoding="UTF-8"?>{}'.format(rdf)
+        with open('{}{}_{}.rdf'.format(outpath, n, i), 'w', encoding='utf-8') as f:
+            f.write(rdf)
+
+def valid_http_status(status):
+    if 200 <= status <= 399:
+        return True
+    else:
+        return False
+
+def error(text):
+    click.secho(text, err=True, fg='red')
+    exit()
+
+def normalize_dir_path(path):
+    if not path.startswith('/'): path = '{}/{}'.format(os.getcwd(), path)
+    if not path.endswith('/'): path = '{}/'.format(path)
+
+    return path
+
+@click.command()
+@click.option('--action', default='all', help=action_help)
+@click.option('--endpoint', default='https://kulturarvsdata.se/', help='SOCH API endpoint.')
+@click.option('--institution', help='The institution abbreviation (Only applies if action=institution).')
+@click.option('--query', help='SOCH search query string (Only applies if action=query).')
+@click.option('--unpack', default=False, help='Directory of SOCH XML files to unpack.')
+@click.option('--outdir', default=False, help='The output directory.')
+def start(action, endpoint, institution, query=False, unpack=False, outdir=False):
+    click.secho('Validating arguments...', fg='yellow')
+
+    if not outdir:
+        error('Missing required output directory argument (--outdir).')
+
+    outdir = normalize_dir_path(outdir)
+
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
+    if unpack:
+        unpack = normalize_dir_path(unpack)
+        unpack_xml(unpack, outdir)
+
+    global api_endpoint
+    api_endpoint = endpoint
+    auth = KSamsok(endpoint=api_endpoint)
+    try:
+        auth = KSamsok(endpoint=api_endpoint)
+    except:
+        error('Bad endpoint.')
+
+    if action not in actions:
+        error('Unknown action.')
+
+    if action == 'institution':
+        if not institution:
+            error('Institution action given without specified institution.')
+        confirm('serviceOrganization="{}"'.format(institution), outdir)
+    elif action == 'query':
+        if not query:
+            error('Query action given without specified query.')
+        confirm(query, outdir)
+    elif action == 'all': confirm('*', outdir)
+    elif action == 'geodata-exists': confirm('geoDataExists=j', outdir)
+    elif action == 'color-exists': confirm('itemColor=*', outdir)
+    elif action == 'keyword-exists': confirm('itemKeyWord=*', outdir)
+
+if __name__ == '__main__':
+    start()
