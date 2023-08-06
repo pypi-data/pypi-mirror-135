@@ -1,0 +1,14 @@
+; Increase similarity between structure into a density. Fitting forces will increase
+; automatically until simulation crashes. You will have to provide "pixel-size-in-nm"
+; and "reference-density-filename". 
+density-guided-simulation-active                        = true
+density-guided-simulation-group                         = protein-H
+density-guided-simulation-similarity-measure            = cross-correlation
+density-guided-simulation-force-constant                = 10e1
+density-guided-simulation-atom-spreading-weight         = unity
+density-guided-simulation-gaussian-transform-spreading-width = ;0.85 * "pixel-size-in-nm"
+density-guided-simulation-reference-density-filename    = ;"reference-density-filename"
+density-guided-simulation-nst                           = 20
+density-guided-simulation-normalize-densities           = true
+density-guided-simulation-adaptive-force-scaling        = true
+density-guided-simulation-adaptive-force-scaling-time-constant = 4
