@@ -1,0 +1,74 @@
+Metadata-Version: 2.1
+Name: python-rabbitair
+Version: 0.0.2
+Summary: Python library for local control of RabbitAir air purifiers
+Home-page: https://github.com/al-s/python-rabbitair
+Author: RabbitAir
+Author-email: developer@rabbitair.com
+License: Apache-2.0
+Project-URL: Bug Tracker, https://github.com/al-s/python-rabbitair/issues
+Platform: any
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Home Automation
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+RabbitAir Python library
+========================
+
+This library can be used to control RabbitAir air purifiers over a local
+network.
+
+# Usage
+
+```python
+#! /usr/bin/env python3
+
+import asyncio
+
+from rabbitair import Mode, Speed, UdpClient
+
+
+async def main():
+    with UdpClient("ip", "token") as client:
+
+        # Getting the current state of the air purifier
+
+        state = await client.get_state()
+        print(state)
+
+        # Controlling the air purifier
+
+        print("Power Off")
+        await client.set_state(power=False)
+
+        await asyncio.sleep(3)
+
+        print("Power On")
+        await client.set_state(power=True)
+
+        await asyncio.sleep(3)
+
+        print("Set Speed to High")
+        await client.set_state(speed=Speed.High)
+
+        await asyncio.sleep(3)
+
+        print("Set Speed to Low")
+        await client.set_state(speed=Speed.Low)
+
+        await asyncio.sleep(3)
+
+        print("Set Mode to Auto")
+        await client.set_state(mode=Mode.Auto)
+
+
+asyncio.run(main())
+```
+
+
