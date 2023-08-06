@@ -1,0 +1,98 @@
+from airflow import DAG
+from airflow.utils.dates import days_ago
+
+{% if cos_secret %}
+from airflow.kubernetes.secret import Secret
+{% endif %}
+
+args = {
+    'project_id' : '{{ pipeline_name }}',
+}
+
+dag = DAG(
+    '{{ pipeline_name }}',
+    default_args=args,
+    schedule_interval='@once',
+    start_date=days_ago(1),
+    description='{{ pipeline_description }}',
+    is_paused_upon_creation={{ is_paused_upon_creation }},
+)
+
+{% if cos_secret %}
+## Ensure that the secret named '{{ cos_secret }}' is defined in the Kubernetes namespace where this pipeline will be run
+env_var_secret_id = Secret(deploy_type='env',
+                           deploy_target='AWS_ACCESS_KEY_ID',
+                           secret='{{ cos_secret }}',
+                           key='AWS_ACCESS_KEY_ID',
+)
+env_var_secret_key = Secret(deploy_type='env',
+                            deploy_target='AWS_SECRET_ACCESS_KEY',
+                            secret='{{ cos_secret }}',
+                            key='AWS_SECRET_ACCESS_KEY',
+)
+{% endif %}
+
+{% for key, operation in operations_list.items() %}
+
+{% if not operation.is_generic_operator %}
+{% for import_statement in operation.imports %}
+{{import_statement}}
+{% endfor %}
+{% else %}
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+{% endif %}
+
+{% if operation.operator_source %}# Operator source: {{ operation.operator_source }}{% endif %}{% if not operation.is_generic_operator %}
+op_{{ operation.id|regex_replace }} = {{ operation.class_name }}(
+                                                           task_id='{{ operation.notebook|regex_replace }}',
+        {% for param, value in operation.component_params.items() %}
+                                                           {{ param }}={{ value }},
+        {% endfor %}
+    {% else %}
+op_{{ operation.id|regex_replace }} = KubernetesPodOperator(name='{{ operation.notebook|regex_replace }}',
+                                                            namespace='{{ namespace }}',
+                                                            image='{{ operation.runtime_image }}',
+        {% if operation.runtime_image_pull_secret %}
+                                                            image_pull_secrets='{{ operation.runtime_image_pull_secret }}',
+        {% endif %}
+                                                            cmds=['sh', '-c'],
+                                                            arguments=["{{ operation.argument_list }}"],
+                                                            task_id='{{ operation.notebook|regex_replace }}',
+                                                            env_vars={{ operation.pipeline_envs }},
+        {% if operation.cpu_request or operation.mem_request or operation.gpu_limit %}
+                                                            resources = {
+            {% if operation.cpu_request %}
+                                                                       'request_cpu': '{{ operation.cpu_request }}',
+            {% endif %}
+            {% if operation.mem_request %}
+                                                                       'request_memory': '{{ operation.mem_request }}',
+            {% endif %}
+            {% if operation.gpu_limit %}
+                                                                       'limit_gpu': '{{ operation.gpu_limit }}',
+            {% endif %}
+        },
+
+        {% endif %}
+    {% if cos_secret %}
+                                                          secrets=[env_var_secret_id, env_var_secret_key],
+    {% endif %}                                                        
+                                                          in_cluster={{ in_cluster }},
+                                                          config_file="{{ kube_config_path }}",
+    {% endif %}
+                                                          dag=dag)
+    {% if operation.image_pull_policy %}
+        op_{{ operation.id|regex_replace }}.image_pull_policy = '{{ operation.image_pull_policy }}'
+    {% endif %}
+
+    {% if operation.doc %}
+        op_{{ operation.id|regex_replace }}.doc = """
+        {{ operation.doc }}
+    """
+    {% endif %}
+
+    {% if operation.parent_operation_ids %}
+        {% for parent_operation_id in operation.parent_operation_ids %}
+            op_{{ operation.id|regex_replace }} << op_{{ parent_operation_id|regex_replace }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
