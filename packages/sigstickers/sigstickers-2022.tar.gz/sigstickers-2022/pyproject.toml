@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "sigstickers"
+version = "2022"
+license = "mit"
+description = "Download sticker packs from Signal"
+authors = ["FredHappyface"]
+classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Developers",
+	"Intended Audience :: Education",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Utilities",
+	"Topic :: Multimedia :: Graphics"
+]
+homepage = "https://github.com/FHPythonUtils/SigStickers"
+repository = "https://github.com/FHPythonUtils/SigStickers"
+documentation = "https://github.com/FHPythonUtils/SigStickers/blob/master/README.md"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+Pillow = "<10,>=9.0.0"
+signalstickers-client = "<5,>=3.0.0"
+anyio = "<4,>=2.0.2"
+emoji = "<2,>=0.6.0"
+
+[tool.poetry.scripts]
+sigstickers = "sigstickers:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.basic]
+argument-naming-style = "camelCase"
+attr-naming-style = "camelCase"
+function-naming-style = "camelCase"
+method-naming-style = "camelCase"
+variable-naming-style = "camelCase"
+
+[tool.pylint.format]
+indent-string = "\t"
+
+[tool.pylint.master]
+ignore-patterns = "test_.*?py"
+
+[tool.pylint.messages_control]
+enable = ["F", "E", "W", "R", "C"]
+disable = [
+	"pointless-string-statement",
+	"superfluous-parens",
+	"bad-continuation"
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+indent = "Tab"
+
+[tool.pydocstyle]
+convention = "google"
+ignore = "D205,D415"
