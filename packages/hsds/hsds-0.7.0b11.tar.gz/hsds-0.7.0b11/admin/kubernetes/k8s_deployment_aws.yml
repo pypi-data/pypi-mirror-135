@@ -1,0 +1,94 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hsds
+  name: hsds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hsds
+  template:
+    metadata:
+      labels:
+        app: hsds
+    spec:
+      containers:
+        -
+          name: sn
+          image: "hdfgroup/hsds:v0.7.0beta6"
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "1G"
+            limits:
+              memory: "1G"
+          volumeMounts:
+          - name: accounts
+            mountPath: "/config/passwd.txt"
+            subPath: passwd.txt
+          - name: config
+            mountPath: "/config"
+          ports:
+            -
+              containerPort: 5101
+          env:
+          - name: NODE_TYPE
+            value: sn
+          - name: HEAD_PORT
+            value: null # no head container
+          - name: PASSWORD_FILE
+            value: /config/passwd.txt
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: aws-auth-keys
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-auth-keys
+                key: aws_secret_access_key
+        -
+          name: dn
+          image: "hdfgroup/hsds:v0.7.0beta6"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/bin/curl", "-X", "DELETE", "http://127.0.0.1:6101/prestop"]
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "2G"
+            limits:
+              memory: "2G"
+          volumeMounts:
+          - name: config
+            mountPath: "/config"
+          ports:
+            -
+              containerPort: 6101
+          env:
+          - name: NODE_TYPE
+            value: dn
+          - name: HEAD_PORT
+            value: null # no head container
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: aws-auth-keys
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-auth-keys
+                key: aws_secret_access_key
+      volumes:
+      - name: accounts
+        secret:
+          secretName: user-password
+      - name: config
+        configMap:
+          name: hsds-config
