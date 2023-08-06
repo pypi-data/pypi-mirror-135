@@ -1,0 +1,62 @@
+<%BEGIN_DEFINITION_TEMPLATE>
+/********************
+    dense.cpp
+
+    Code generated using nn4mc.
+
+    This file implements a densely connected layer.
+
+*/
+
+#include "dense.h"
+
+#define max(a, b) (((a)>(b) ? (a) : (b)))
+#define min(a, b) (((a)<(b) ? (a) : (b)))
+
+struct Dense build_layer_dense(<%WEIGHT_DATATYPE_DELIMITER>* W, <%WEIGHT_DATATYPE_DELIMITER>* b, <%INDEX_DATATYPE_DELIMITER> input_size, <%INDEX_DATATYPE_DELIMITER> output_size, char activation)
+{
+	struct Dense layer;
+
+	layer.weights = W;
+	layer.biases = b;
+
+	layer.input_shape[0] = input_size;
+	layer.output_shape[0] = output_size;
+    layer.weight_shape[0] = input_size;
+    layer.weight_shape[1] = output_size;
+
+    layer.activation = activation;
+	return layer;
+}
+
+
+<%LAYER_DATATYPE_DELIMITER> * fwd_dense(struct Dense L, <%LAYER_DATATYPE_DELIMITER>* input)
+{
+    <%LAYER_DATATYPE_DELIMITER> * h = (<%LAYER_DATATYPE_DELIMITER>*)malloc(L.output_shape[0] * sizeof(<%LAYER_DATATYPE_DELIMITER>));
+
+	for(<%INDEX_DATATYPE_DELIMITER> i = 0; i < L.output_shape[0]; i++)
+	{
+		h[i] = L.biases[i];
+
+		for(<%INDEX_DATATYPE_DELIMITER> j = 0; j < L.input_shape[0]; j++)
+		{
+            h[i] += *(L.weights + j*L.weight_shape[1] + i)*input[j];
+		}
+	}
+
+    h = activate(h,L.output_shape[0],L.activation);
+    free(input);
+    return h;
+
+}
+
+<%END_DEFINITION_TEMPLATE>
+
+
+<%BEGIN_INITIALIZE_TEMPLATE>
+        <%LAYER_NAME> = build_layer_dense(&<%WEIGHT_NAME>[0], <%BIAS_NAME>, <%INPUT_SHAPE_0>, <%OUTPUT_SHAPE>, <%ACTIVATION>);
+<%END_INITIALIZE_TEMPLATE>
+
+<%BEGIN_CALL_TEMPLATE>
+        data = fwd_dense(<%LAYER_NAME>, data);
+<%END_CALL_TEMPLATE>
