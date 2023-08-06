@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "rialtic-engine-lib-py"
+version = "1.11.1"
+description = "Python Library for development of Rialtic Insight Engines"
+
+authors = ["Rialtic <engines.data@rialtic.io>"]
+
+readme = "README.md"
+homepage = "https://rialtic.io"
+repository = "https://github.com/rialtic-community/rialtic-engine-lib-py"
+keywords = ["rialtic", "insight", "engine", "library"]
+
+license = "Apache-2.0"
+
+classifiers = [
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: OS Independent",
+]
+packages = [{ include = "enginelib" }]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+insight-engine-schema-python = "^0"
+rialtic-data-dev-py = "<2"
+"fhir.resources" = "^6.1.0"
+sphinx = "^4.1.2"
+deprecation = ">2.0"
+
+[tool.poetry.dev-dependencies]
+sphinx-autodoc-typehints = "^1.12.0"
+pytest = "^6.2.4"
+PyGithub = "^1.55"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
