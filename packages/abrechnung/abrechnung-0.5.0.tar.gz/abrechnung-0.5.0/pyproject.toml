@@ -1,0 +1,89 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "abrechnung"
+authors = [
+    {name = "Michael Loipführer", email = "milo@sft.lol"},
+    {name = "Jonas Jelten", email = "jj@sft.lol"},
+    {name = "Michael Enßlin", email = "mic@sft.lol"}
+]
+license = {file = "LICENSE"}
+dynamic = ["version", "description"]
+readme = "README.md"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 5 - Production/Stable",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "aiohttp~=3.8",
+    "aiohttp-cors~=0.7",
+    "asyncpg~=0.24",
+    "bcrypt~=3.2",
+    "pyjwt~=2.2",
+    "PyYAML~=5.3",
+    "marshmallow~=3.14",
+    "schema",
+    "email-validator~=1.1",
+    "apispec",
+    "webargs"
+]
+
+[project.optional-dependencies]
+test = [
+    "aiosmtpd~=1.4",
+    "pytest",
+    "pytest-cov",
+]
+dev = [
+    "black",
+    "mypy~=0.930",
+    "types-PyYAML~=5.4",
+    "pylint~=2.12",
+]
+docs = [
+    "sphinx",
+    "sphinx-autobuild",
+    "sphinx-autodoc-typehints",
+]
+
+[project.urls]
+Source = "https://github.com/SFTtech/abrechung"
+Documentation = "https://abrechnung.readthedocs.io"
+
+[project.scripts]
+abrechnung = "abrechnung.__main__:main"
+
+[tool.flit.sdist]
+exclude = [
+    "web/",
+    "tools/",
+    ".github",
+    ".readthedocs.yaml",
+    "config",
+    "systemd",
+]
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.messages_control]
+disable = [
+    "C",
+    "R",
+    "fixme",
+    "logging-fstring-interpolation"
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+pretty = true
+
+[tool.coverage.run]
+source = [
+    "abrechnung"
+]
