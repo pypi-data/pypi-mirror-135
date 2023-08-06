@@ -1,0 +1,128 @@
+# Extranat API
+
+## Usage
+
+Installation
+
+```bash
+pip install extranatapi
+```
+
+Désinstallation
+
+```bash
+pip uninstall extranatapi
+```
+
+Commandes
+
+```bash
+extranat-cli [parameters]
+```
+
+Sortie `--format`
+
+* json
+* column
+* csv
+* text
+
+### Principales commandes
+
+```bash
+# regions
+extranat-cli --list-regions
+extranat-cli --list-regions --format=json
+extranat-cli --list-regions --format=column
+extranat-cli --list-regions --format=csv
+extranat-cli --list-regions --format=text
+
+# departements
+extranat-cli --list-departements
+extranat-cli --list-departements --format=json
+extranat-cli --list-departements --format=column
+extranat-cli --list-departements --format=csv
+extranat-cli --list-departements --format=text
+
+# clubs
+extranat-cli --list-clubs
+extranat-cli --list-clubs --format=json
+extranat-cli --list-clubs --format=column
+extranat-cli --list-clubs --format=csv
+extranat-cli --list-clubs --format=text
+
+# saison d'un club
+extranat-cli --saison --annee=xx --idclub=xx
+extranat-cli --saison --annee=xx --idclub=xx --format=json
+extranat-cli --saison --annee=xx --idclub=xx --format=column
+extranat-cli --saison --annee=xx --idclub=xx --format=csv
+extranat-cli --saison --annee=xx --idclub=xx --format=text
+
+# nageur
+extranat-cli --nageur <iuf>
+extranat-cli --nageur <iuf> --all
+
+extranat-cli --nageur <fichier_csv_or_xlsx>
+extranat-cli --nageur <fichier_csv_or_xlsx> --all
+extranat-cli --nageur <fichier_csv_or_xlsx> --format=csv
+extranat-cli --nageur <fichier_csv_or_xlsx> --format=csv  --file=<cvs_file>
+extranat-cli --nageur <fichier_csv_or_xlsx> --format=xlsx --file=<excel_file>
+
+# cotation
+extranat-cli --cotation <fichier_csv_or_xlsx> --format=csv
+extranat-cli --cotation <fichier_csv_or_xlsx> --format=csv  --file=<cvs_file>
+extranat-cli --cotation <fichier_csv_or_xlsx> --format=xlsx --file=<excel_file>
+
+# Recherche d'une équipe
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx>
+# Recherche d'une équipe Masculine
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx> M
+# Recherche d'une équipe Féminine
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx> F
+# Recherche d'une équipe avec <N> Dames ou Messieurs
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx> <N>
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx> 1
+```
+
+Le fichier CSV/EXCEL pour l'option `--nageur` doit avoir le champ `iuf`.
+
+Le fichier CSV/EXCEL pour l'option `--cotation` doit avoir les champs: `nageur`, `annee`, `age`, `iuf`, `sexe`, `bassin`, `nage`, `temps`.
+
+Le séparateur pour CSV doit être `;`.
+
+## Cas d'usage
+
+### Génération d'un fichier nageur/nage/cotation
+
+Etapes
+
+* Extraire d'Extranat la liste des membres du club
+
+* Récupération des temps des nageurs
+
+```bash
+extranat-cli --nageur ffn_extraction_CLUB_ANNEE.xlsx --format=xlsx --file=nageurs_temps.xlsx
+```
+
+* Modifier le fichier `nageurs_temps.xlsx` pour ajouter/modifier/supprimer des nageurs/nages/temps.
+
+* Calcul des points de cotation
+
+```bash
+# Compétitions jeunes
+extranat-cli --cotation nageurs_temps.xlsx --format=xlsx --file=nageurs_cotation.xlsx
+
+# Compétitions master
+extranat-cli --cotation nageurs_temps.xlsx --format=xlsx --file=nageurs_cotation.xlsx --master
+```
+
+### Génération d'une équipe
+
+* Faire les étapes [Génération d'un fichier nageur/nage/cotation](#gnration-dun-fichier-nageurnagecotation)
+
+* Recherche d'une équipe
+
+```bash
+# Recherche d'une équipe avec <N> Dames ou Messieurs
+extranat-cli --recherche_equipe <fichier_NAGES_csv_or_xlsx> <fichier_NAGEURS_csv_or_xlsx> <N>
+```
