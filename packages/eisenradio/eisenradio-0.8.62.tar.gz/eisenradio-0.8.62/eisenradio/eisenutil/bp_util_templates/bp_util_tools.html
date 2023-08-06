@@ -1,0 +1,71 @@
+{% extends 'bp_util_base.html' %}
+            {% block tools %}
+                <li class="active"><a href="{{url_for('eisenutil_bp.about')}}">Tools</a>
+            {% endblock %}
+{% block content %}
+
+    <h1>{% block title %} Tools {% endblock %}</h1>
+
+        <hr>
+                    <p></p>
+                    <p>Delete all Radios.</p>
+                    <p></p>
+                    <form id="del_all_radios_form" action="{{ url_for('eisenutil_bp.tools') }}" method="post">
+                        <div class="form-group">
+                            <input class="btn btn-primary btn-sm"
+                                   type="submit"
+                                   id="del_all_radios"
+                                   value="Go ahead"
+                                   onclick="return confirm('Are you sure you want to delete all radios?')"
+                                   name="post_delete_all_radios">
+                            <label for="del_all_radios">Create new ones and remember to set the "Save" path in navigation bar.
+                            </label>
+                        </div>
+                    </form>
+        <hr>
+                    <p></p>
+                    <p>Export (backup) all names and urls from your database to GhettoRecorder settings.ini file.</p>
+                    <p></p>
+                    <form id="export_all_radios_form" action="{{ url_for('eisenutil_bp.tools') }}" method="post">
+                        <div class="form-group">
+                            <input class="btn btn-primary btn-sm"
+                                   type="submit"
+                                   id="export_all_radios"
+                                   value="Export"
+                                   onclick=""
+                                   name="post_export_to_ini">
+                            <label for="export_all_radios"> Path: {{ export_path }}
+                            </label>
+                        </div>
+                    </form>
+        <hr>
+                    <p></p>
+                    <p>Import (restore) names and urls from GhettoRecorder *.ini file into your database. Remember the "Save" path in navigation bar. </p>
+                    <p></p>
+
+                    <form id="form_los" action="{{ url_for('eisenutil_bp.tools') }}" method="post">
+                        <button type="submit" class="btn btn-primary btn-sm">Import</button>
+                        <label for="post_inputFile_import"><b>Path to *.ini file</b> </label>
+                        <p></p>
+
+                            <input type="text"
+                                   name="post_inputFile_import"
+                                    class="form-control"
+                                    placeholder="/home/osboxes/Downloads/my_lovely_ghetto.ini"
+                                    value="{{ request.form['post_inputFile_import'] }}"
+                                    id="post_inputFile_import">
+                    </form>
+
+
+        <div>
+            <p>ini looks like so:</p>
+        </div>
+        <pre>[STATIONS]
+		<br>BLUES_UK = http://149.255.59.3:8232/stream
+		<br>hr3 = http://metafiles.gl-systemhaus.de/hr/hr3_2.m3u
+        <br>pop24 = http://rosewellpop.radioca.st:80/streams/128kbps
+		</pre>
+
+    <hr>
+
+{% endblock %}
