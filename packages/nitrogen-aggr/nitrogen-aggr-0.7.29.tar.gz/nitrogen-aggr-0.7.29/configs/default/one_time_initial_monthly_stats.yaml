@@ -1,0 +1,182 @@
+debug: false
+
+#    """
+#    Logic:
+#    This yaml calculate the initial monthly stats
+#    this only include the initial recreation of the incremental monthly stats
+#    this process produces one row per each measure per year/month
+#    monhtly stats are recreated using the nitrogen audit tables (old: EA_Audit and new:nitrogen_yearly_dashboard)
+#    if the audit tables are missing initial months the data is completed with the earliest values in the corresponding year
+#
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  aggr_nitrogen_yearly_dashboard:
+    type: parquet
+    location: "{aggr_location}/nitrogen_yearly_dashboard/"
+
+  ea_audit:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_Audit/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+       SELECT
+         max(id) as last_job_id
+       FROM job
+       WHERE status = 'OPEN' and client_name ='{client}'
+
+  audit_records_new:
+    sql: >-
+      with hist(
+          SELECT t1.record_timestamp,
+            concat(
+            cast(year(t1.record_timestamp) as string) ,
+            SUBSTRING( CONCAT('000',CAST(month(t1.record_timestamp) AS string))  ,-2,2) ) as history_month,
+            t1.year,
+            stack(8,
+                        'avg_hcc_captured', avg_hcc_captured,
+                        'avg_hcc_opp', avg_hcc_opp,
+                        'avg_raf', avg_raf,
+                        'avg_raf_demo', avg_raf_demo,
+                        'avg_raf_projected', avg_raf_projected,
+                        'eligible_count', cast(eligible_count as double),
+                        'no_dos_count', cast(no_dos_count as double),
+                        'recapture_rate', cast(recapture_rate as double)
+                        )  as ( measure, value)
+          FROM aggr_nitrogen_yearly_dashboard t1 )
+      select x.*
+      from hist x
+      INNER JOIN  epianalyst_client_settings s on x.year between s.current_year-2 and s.current_year
+      where value is not null
+
+  audit_records_old:
+    sql: >-
+      with hist as (
+        SELECT
+          record_timestamp,
+          concat(
+          cast(year(record_timestamp) as string) ,
+          SUBSTRING( CONCAT('000',CAST(month(record_timestamp) AS string)) ,-2,2) ) as history_month,
+          year,
+          trim(lower(replace(measure, ' ', '_'))) as measure,
+          value
+        FROM ea_audit
+        ),
+        mea as (
+            select
+            record_timestamp,
+            history_month,
+            year,
+            case
+            when measure = 'avg_hcc_captured' then 'avg_hcc_captured'
+            when measure =	'avg_hcc_opportunity' then  'avg_hcc_opp'
+            when measure = 	'avg_raf_score' then   'avg_raf'
+            when measure = 	'avgdemo' then  'avg_raf_demo'
+            when measure = 	'avg_projected_raf_score' then   'avg_raf_projected'
+            when measure = 	'eligible_members' then      'eligible_count'
+            when measure = 	'members_w/_no_provider_visits' then  'no_dos_count'
+            when measure = 	'recapture_rates' then  'recapture_rate'
+            else '' end as measure,
+            value
+          from hist
+        )
+        select x.*
+        from mea x
+        INNER JOIN  epianalyst_client_settings s on x.year between s.current_year-2 and s.current_year
+        where length(measure) > 0
+
+  months:
+    sql: >-
+      with month_list as (select posexplode(array('01',  '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'))
+           as (pos,mon)
+      )
+      select  posexplode(array(s.current_year-2, s.current_year-1 , s.current_year)) as (p, year), x.mon, s.current_year-2 as about_year
+      from  month_list x
+      INNER JOIN  epianalyst_client_settings s on s.current_year <= year(current_date())
+      union
+      select  posexplode(array(s.current_year-1 , s.current_year)) as (p, year), x.mon, s.current_year-1 as about_year
+      from  month_list x
+      INNER JOIN  epianalyst_client_settings s on s.current_year <= year(current_date())
+      union
+      select  0 as p,  s.current_year as  year, x.mon, s.current_year as about_year
+      from  month_list x
+      INNER JOIN  epianalyst_client_settings s on s.current_year <= year(current_date())
+
+  #get the last record per month and complete missing (ONLY initial) months with the oldest value available for the corresponding year
+  monthly_stats_full:
+    sql: >-
+      With
+      all_months_data as (
+            select * from audit_records_new
+            union
+            select * from audit_records_old
+      ),
+      last_per_month as (
+          SELECT * ,
+          row_number() over(partition by  year, history_month, measure order by record_timestamp desc) as r
+          from all_months_data
+      ),
+      min_vals as (
+        select *, row_number() over (partition by year, measure order by history_month ) as initial
+        from last_per_month
+                 where r=1
+      ), monthly_stats_with_missing as (
+        select
+          coalesce ( y.record_timestamp,  timestamp(concat( x.year, '-', x.mon, '-01' )) ) as record_timestamp,
+          concat(x.year, x.mon) as history_month,
+          x.about_year as year,
+          coalesce(y.measure, z.measure) as measure,
+          coalesce(y.value, z.value) as value
+        from months x
+        inner join min_vals z on x.about_year = z.year and z.initial = 1
+        left join last_per_month y on x.about_year = y.year
+                                 and  concat(x.year, x.mon) = y.history_month
+                                 and  z.measure = y.measure
+                                 and  y.r=1
+      )
+      select
+        hash(
+          history_month,
+          year,
+          measure,
+          value
+        ) as hash_value,
+        'INSERT' as operation,
+        ( select last_job_id from cad_job )  as job_id,
+        record_timestamp,
+        history_month,
+        year,
+        measure,
+        value
+      from monthly_stats_with_missing
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  monthly_stats_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/monthly_stats'
+      mode: overwrite
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_monthly_dashboard
+      mode: overwrite

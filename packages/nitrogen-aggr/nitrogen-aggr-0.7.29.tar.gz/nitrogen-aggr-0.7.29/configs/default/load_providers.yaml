@@ -1,0 +1,572 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the providers sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for providers
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  providers_history:
+    type: parquet
+    location: "{aggr_location}/providers_history/"
+
+  #main provider data
+  rafi_providers:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_Providers/"
+
+  ea_npi:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_NPI/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+  provider_member_relationships:
+    type: parquet
+    location: "{aggr_location}/provider_member_relationships_full"
+
+  RAFi_Flex:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_Flex/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  eam:
+    type: parquet
+    location: "{project_root_path}/{client}/EAM/"
+
+  eamd:
+    type: parquet
+    location: "{project_root_path}/{client}/EAMD/"
+
+Transform:
+
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by provider_id order by  job_id desc ) as r
+#         FROM providers_history)
+#      SELECT
+#         provider_id,
+#         hash_value,
+#         job_id
+#      FROM allrows
+#      WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         provider_id,
+         hash_value,
+         job_id
+      FROM providers_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+#          AND
+#          pcp_id in (
+#          '1558336552',
+#          '1912158726',
+#          '1801887559',
+#          '1679557771',
+#          '1023190071')
+#  where a.provider_id in (
+#  '1558336552',
+#  '1912158726',
+#  '1801887559',
+#  '1679557771',
+# '1023190071')
+  providers_full:
+    sql: >-
+      WITH
+      current_setting as (
+               SELECT
+                   current_year,  delete_disconnected_providers
+               FROM epianalyst_client_settings
+      ),
+      Current_HCC_per_provider as (
+        SELECT pcp_id as provider_id,
+               Round(Avg(hcc_suspects_all), 3) as Current_Avg_Opportunity
+          FROM   eam a
+          INNER JOIN eamd c on  a.member_id =c.member_id
+          inner join  current_setting b on c.year = b.current_year
+          WHERE c.is_eligible
+          GROUP  BY pcp_id
+      ),
+      ranked_opportunity as (
+        SELECT provider_id,
+               Rank()  OVER( ORDER BY current_avg_opportunity) AS Rnk
+          FROM   current_hcc_per_provider
+          WHERE  current_avg_opportunity > 0
+      ),
+      ranked_opp_percentage as (
+        SELECT provider_id,
+                           ( rnk * 1.0 / (SELECT Count(*) as totalMembersWithOpportunity
+                                          FROM   current_hcc_per_provider
+                                          WHERE  current_avg_opportunity > 0) ) * 100 AS
+                                  Rnk_Percent
+                    FROM   ranked_opportunity AS tbl
+      ),
+      rank_opportunity as (
+        SELECT provider_id,
+             CASE
+                 WHEN rnk_percent <= 100
+                      AND rnk_percent > 95 THEN 100
+                 WHEN rnk_percent <= 95
+                      AND rnk_percent > 90 THEN 95
+                 WHEN rnk_percent <= 90
+                      AND rnk_percent > 85 THEN 90
+                 WHEN rnk_percent <= 85
+                      AND rnk_percent > 80 THEN 85
+                 WHEN rnk_percent <= 80
+                      AND rnk_percent > 75 THEN 80
+                 WHEN rnk_percent <= 75
+                      AND rnk_percent > 70 THEN 75
+                 WHEN rnk_percent <= 70
+                      AND rnk_percent > 65 THEN 70
+                 WHEN rnk_percent <= 65
+                      AND rnk_percent > 60 THEN 65
+                 WHEN rnk_percent <= 60
+                      AND rnk_percent > 55 THEN 60
+                 WHEN rnk_percent <= 55
+                      AND rnk_percent > 50 THEN 55
+                 WHEN rnk_percent <= 50
+                      AND rnk_percent > 45 THEN 50
+                 WHEN rnk_percent <= 45
+                      AND rnk_percent > 40 THEN 45
+                 WHEN rnk_percent <= 40
+                      AND rnk_percent > 35 THEN 40
+                 WHEN rnk_percent <= 35
+                      AND rnk_percent > 30 THEN 35
+                 WHEN rnk_percent <= 30
+                      AND rnk_percent > 25 THEN 30
+                 WHEN rnk_percent <= 25
+                      AND rnk_percent > 20 THEN 25
+                 WHEN rnk_percent <= 20
+                      AND rnk_percent > 15 THEN 20
+                 WHEN rnk_percent <= 15
+                      AND rnk_percent > 10 THEN 15
+                 WHEN rnk_percent <= 10
+                      AND rnk_percent > 5 THEN 10
+                 WHEN rnk_percent <= 5
+                      AND rnk_percent > 0 THEN 5
+                 ELSE 0
+               END as Opportunity_Score
+      FROM   ranked_opp_percentage
+      )
+      ,num_mems as (
+          SELECT provider_id, Count(DISTINCT(member_id) ) as num_members
+          FROM  provider_member_relationships a
+          GROUP BY provider_id
+      ),
+      num_pcp_mems as (
+                SELECT provider_id, Count(DISTINCT(member_id) ) as num_members
+                FROM  provider_member_relationships a
+                WHERE relation_type = 'pcp'
+                GROUP BY provider_id
+            ),
+      num_non_pcp_mems as (
+                SELECT provider_id, Count(DISTINCT(member_id) ) as num_members
+                FROM  provider_member_relationships a
+                 WHERE relation_type = 'enc'
+                GROUP BY provider_id
+            ),
+      providersPlusOne as (
+            select * from rafi_providers
+            union
+            select
+                '-1' as provider_id,
+                '-1' as npi,
+                'UNASSIGNED 'as first_name,
+                'PROVIDER' as last_name,
+                 cast(null as string) as address_1,
+                 cast(null as string) as address_2,
+                 cast(null as string) as city,
+                 cast(null as string) as state,
+                 cast(null as string) as zip,
+                 cast(null as string) as phone,
+                 cast(null as string) as fax,
+                 cast(null as string) as tax_id,
+                 cast(null as string) as license,
+                 true as is_pcp ,
+                 1 as is_acceptable
+            ),
+      providers as (
+      SELECT
+          a.provider_id,
+          a.npi,
+          a.tax_id,
+          cast(null as string) as alternate_id,
+          trim(a.first_name) as first_name,
+          trim(a.last_name) as last_name,
+          concat(
+          ifnull(trim(a.last_name),''),
+          (case when ifnull(trim(a.first_name),'') = ''
+          THEN ''
+          else   concat( ', ', trim(a.first_name) )
+          end )
+          ) as full_name,
+          license,
+          CASE WHEN a.is_pcp THEN 'PCP'
+          ELSE 'Specialist'
+          END as provider_type,
+          ifnull(address_1,'') as address_1 ,
+          ifnull(address_2,'') as address_2 ,
+          ifnull(city,'') as city ,
+          ifnull(state,'') as state ,
+          ifnull(zip,'') as zip ,
+          ifnull(phone,'') as phone ,
+          ifnull(fax,'') as fax ,
+          ifnull(opportunity_score,0.000) as opportunity_score ,
+          ifnull(z.num_members, 0)  as number_of_members,
+          ifnull(y.num_members,0)  as  pcp_assigned_members,
+          ifnull(w.num_members,0)  as  non_pcp_assigned_members,
+          CASE WHEN ifnull(is_acceptable, 0) = 0 THEN FALSE ELSE TRUE END as is_acceptable,
+          ifnull(taxonomy_code_1,'') as taxonomy_code_1 ,
+          case when  taxonomy_desc_1 = 'NULL'    then '' else ifnull( taxonomy_desc_1,'') end  as taxonomy_desc_1 ,
+          ifnull(taxonomy_code_2,'') as taxonomy_code_2 ,
+          case when  taxonomy_desc_2 = 'NULL'    then '' else ifnull( taxonomy_desc_2,'') end  as taxonomy_desc_2 ,
+          ifnull(taxonomy_code_3,'') as taxonomy_code_3 ,
+          case when  taxonomy_desc_3 = 'NULL'    then '' else ifnull( taxonomy_desc_3,'') end  as taxonomy_desc_3 ,
+          ifnull(taxonomy_code_4,'') as taxonomy_code_4 ,
+          case when  taxonomy_desc_4 = 'NULL'    then '' else ifnull( taxonomy_desc_4,'') end  as taxonomy_desc_4 ,
+          ifnull(taxonomy_code_5,'') as taxonomy_code_5 ,
+          case when  taxonomy_desc_5 = 'NULL'    then '' else ifnull( taxonomy_desc_5,'') end  as taxonomy_desc_5 ,
+          ifnull(taxonomy_code_6,'') as taxonomy_code_6 ,
+          case when  taxonomy_desc_6 = 'NULL'    then '' else ifnull( taxonomy_desc_6,'') end  as taxonomy_desc_6 ,
+          ifnull(taxonomy_code_7,'') as taxonomy_code_7 ,
+          case when  taxonomy_desc_7 = 'NULL'    then '' else ifnull( taxonomy_desc_7,'') end  as taxonomy_desc_7 ,
+          ifnull(taxonomy_code_8,'') as taxonomy_code_8 ,
+          case when  taxonomy_desc_8 = 'NULL'    then '' else ifnull( taxonomy_desc_8,'') end  as taxonomy_desc_8 ,
+          ifnull(taxonomy_code_9,'') as taxonomy_code_9 ,
+          case when  taxonomy_desc_9 = 'NULL'    then '' else ifnull( taxonomy_desc_9,'') end  as taxonomy_desc_9 ,
+          ifnull(taxonomy_code_10,'') as taxonomy_code_10 ,
+          case when  taxonomy_desc_10 = 'NULL'    then '' else ifnull( taxonomy_desc_10,'') end  as taxonomy_desc_10 ,
+          ifnull(flex_1 ,'' ) as  flex1 ,
+          ifnull(flex_2 ,'' ) as  flex2 ,
+          ifnull(flex_3 ,'' ) as  flex3 ,
+          ifnull(flex_4 ,'' ) as  flex4 ,
+          ifnull(flex_5 ,'' ) as  flex5 ,
+          ifnull(flex_6 ,'' ) as  flex6 ,
+          ifnull(flex_7 ,'' ) as  flex7 ,
+          ifnull(flex_8 ,'' ) as  flex8 ,
+          ifnull(flex_9  ,'') as  flex9 ,
+          ifnull(flex_10 ,'') as flex10
+      FROM  providersPlusOne a
+      left join  current_setting b on b.delete_disconnected_providers in (0,1)
+      LEFT JOIN  rafi_flex b on a.provider_id = b.reference_id and upper(b.reference_type)='P'
+      LEFT JOIN  ea_npi c on a.provider_id = c.provider_id
+      LEFT JOIN num_mems z ON a.provider_id = z.provider_id
+      LEFT JOIN num_pcp_mems y ON a.provider_id = y.provider_id
+      LEFT JOIN num_non_pcp_mems w ON a.provider_id = w.provider_id
+      LEFT JOIN rank_opportunity d4  ON a.provider_id = d4.provider_id
+      WHERE
+      (
+          (  ifnull(b.delete_disconnected_providers,0) = 1 and ifnull(z.num_members,0) > 0 )
+          OR
+          (  ifnull(b.delete_disconnected_providers,0)  = 0)
+      )
+      )
+      SELECT
+      *,
+      hash(
+        provider_id,
+        npi,
+        tax_id,
+        alternate_id,
+        first_name,
+        last_name,
+        full_name,
+        license,
+        provider_type,
+        address_1,
+        address_2,
+        city,
+        state,
+        zip,
+        phone,
+        fax,
+        opportunity_score,
+        number_of_members,
+        pcp_assigned_members,
+        non_pcp_assigned_members,
+        is_acceptable,
+        taxonomy_code_1,
+        taxonomy_desc_1,
+        taxonomy_code_2,
+        taxonomy_desc_2,
+        taxonomy_code_3,
+        taxonomy_desc_3,
+        taxonomy_code_4,
+        taxonomy_desc_4,
+        taxonomy_code_5,
+        taxonomy_desc_5,
+        taxonomy_code_6,
+        taxonomy_desc_6,
+        taxonomy_code_7,
+        taxonomy_desc_7,
+        taxonomy_code_8,
+        taxonomy_desc_8,
+        taxonomy_code_9,
+        taxonomy_desc_9,
+        taxonomy_code_10,
+        taxonomy_desc_10,
+        flex1,
+        flex2,
+        flex3,
+        flex4,
+        flex5,
+        flex6,
+        flex7,
+        flex8,
+        flex9,
+        flex10
+        ) as hash_value,
+        ( select cad_job_id from cad_job )  as job_id
+      FROM
+      providers
+
+  providers_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+             a.hash_value,
+             'INSERT' as operation,
+             a.job_id,
+            a.provider_id,
+            a.npi,
+            a.tax_id,
+            a.alternate_id,
+            a.first_name,
+            a.last_name,
+            a.full_name,
+            a.license,
+            a.provider_type,
+            a.address_1,
+            a.address_2,
+            a.city,
+            a.state,
+            a.zip,
+            a.phone,
+            a.fax,
+            a.opportunity_score,
+            a.number_of_members,
+            a.pcp_assigned_members,
+            a.non_pcp_assigned_members,
+            a.is_acceptable,
+            a.taxonomy_code_1,
+            a.taxonomy_desc_1,
+            a.taxonomy_code_2,
+            a.taxonomy_desc_2,
+            a.taxonomy_code_3,
+            a.taxonomy_desc_3,
+            a.taxonomy_code_4,
+            a.taxonomy_desc_4,
+            a.taxonomy_code_5,
+            a.taxonomy_desc_5,
+            a.taxonomy_code_6,
+            a.taxonomy_desc_6,
+            a.taxonomy_code_7,
+            a.taxonomy_desc_7,
+            a.taxonomy_code_8,
+            a.taxonomy_desc_8,
+            a.taxonomy_code_9,
+            a.taxonomy_desc_9,
+            a.taxonomy_code_10,
+            a.taxonomy_desc_10,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+          FROM  providers_full a
+          LEFT JOIN  previous_load b on a.provider_id = b.provider_id
+          WHERE b.provider_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job ) as job_id,
+             a.provider_id,
+             cast(null as string) as npi,
+             cast(null as string) as tax_id,
+             cast(null as string) as alternate_id,
+             cast(null as string) as first_name,
+             cast(null as string) as last_name,
+             cast(null as string) as full_name,
+             cast(null as string) as license,
+             cast(null as string) as provider_type,
+             cast(null as string) as address_1,
+             cast(null as string) as address_2,
+             cast(null as string) as city,
+             cast(null as string) as state,
+             cast(null as string) as zip,
+             cast(null as string) as phone,
+             cast(null as string) as fax,
+             cast(null as double) as opportunity_score,
+             cast(null as integer) as number_of_members,
+             cast(null as integer) as pcp_assigned_members,
+             cast(null as integer) as non_pcp_assigned_members,
+             cast(null as boolean) as is_acceptable,
+             cast(null as string) as taxonomy_code_1,
+             cast(null as string) as taxonomy_desc_1,
+             cast(null as string) as taxonomy_code_2,
+             cast(null as string) as taxonomy_desc_2,
+             cast(null as string) as taxonomy_code_3,
+             cast(null as string) as taxonomy_desc_3,
+             cast(null as string) as taxonomy_code_4,
+             cast(null as string) as taxonomy_desc_4,
+             cast(null as string) as taxonomy_code_5,
+             cast(null as string) as taxonomy_desc_5,
+             cast(null as string) as taxonomy_code_6,
+             cast(null as string) as taxonomy_desc_6,
+             cast(null as string) as taxonomy_code_7,
+             cast(null as string) as taxonomy_desc_7,
+             cast(null as string) as taxonomy_code_8,
+             cast(null as string) as taxonomy_desc_8,
+             cast(null as string) as taxonomy_code_9,
+             cast(null as string) as taxonomy_desc_9,
+             cast(null as string) as taxonomy_code_10,
+             cast(null as string) as taxonomy_desc_10,
+             cast(null as string) as flex1,
+             cast(null as string) as flex2,
+             cast(null as string) as flex3,
+             cast(null as string) as flex4,
+             cast(null as string) as flex5,
+             cast(null as string) as flex6,
+             cast(null as string) as flex7,
+             cast(null as string) as flex8,
+             cast(null as string) as flex9,
+             cast(null as string) as flex10
+          FROM  previous_load a
+          LEFT JOIN  providers_full  b on a.provider_id = b.provider_id
+          WHERE b.provider_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+            a.provider_id,
+            a.npi,
+            a.tax_id,
+            a.alternate_id,
+            a.first_name,
+            a.last_name,
+            a.full_name,
+            a.license,
+            a.provider_type,
+            a.address_1,
+            a.address_2,
+            a.city,
+            a.state,
+            a.zip,
+            a.phone,
+            a.fax,
+            a.opportunity_score,
+            a.number_of_members,
+            a.pcp_assigned_members,
+            a.non_pcp_assigned_members,
+            a.is_acceptable,
+            a.taxonomy_code_1,
+            a.taxonomy_desc_1,
+            a.taxonomy_code_2,
+            a.taxonomy_desc_2,
+            a.taxonomy_code_3,
+            a.taxonomy_desc_3,
+            a.taxonomy_code_4,
+            a.taxonomy_desc_4,
+            a.taxonomy_code_5,
+            a.taxonomy_desc_5,
+            a.taxonomy_code_6,
+            a.taxonomy_desc_6,
+            a.taxonomy_code_7,
+            a.taxonomy_desc_7,
+            a.taxonomy_code_8,
+            a.taxonomy_desc_8,
+            a.taxonomy_code_9,
+            a.taxonomy_desc_9,
+            a.taxonomy_code_10,
+            a.taxonomy_desc_10,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+           FROM   providers_full  a
+           INNER JOIN previous_load b on a.provider_id = b.provider_id
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  providers_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/providers_full'
+      mode: overwrite
+
+  providers_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/providers_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_providers
+#      mode: overwrite
+
