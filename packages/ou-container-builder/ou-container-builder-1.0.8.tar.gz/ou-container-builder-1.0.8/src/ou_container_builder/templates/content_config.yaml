@@ -1,0 +1,35 @@
+{% if content %}
+paths:
+  {% for part in content %}
+    {% if not part.target.startswith('/') %}
+  - source: /etc/module-content/data{% if part.target %}/{% endif %}{{ part.target }}
+    target: /home/ou/{{ module.code }}-{{ module.presentation }}{% if part.target %}/{% endif %}{{ part.target }}
+    overwrite: {{ part.overwrite }}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if scripts and (scripts.startup or scripts.shutdown) %}
+scripts:
+  {% if scripts.startup %}
+    startup:
+      {% for script in scripts.startup %}
+        {% if script.commands %}
+      - cmd: {{ script.commands[0] }}
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+  {% if scripts.shutdown %}
+    shutdown:
+      {% for script in scripts.shutdown %}
+        {% if script.commands %}
+      - cmd: {{ script.commands[0] }}
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+{% endif %}
+{% if services %}
+services:
+  {% for service in services %}
+  - {{ service }}
+  {% endfor %}
+{% endif %}

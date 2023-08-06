@@ -1,0 +1,114 @@
+{% block from %}
+FROM {{ base }}
+{% endblock %}
+
+{% block arguments %}
+ARG TARGETPLATFORM
+{% endblock %}
+
+{% block environment %}
+ENV USER="ou"
+ENV UID="1000"
+ENV GID="100"
+ENV MODULE_CODE="{{ module.code }}"
+ENV MODULE_PRESENTATION="{{ module.presentation }}"
+ENV HOME="/home/$USER/$MODULE_CODE-$MODULE_PRESENTATION"
+{% endblock %}
+
+USER root
+
+{% block createuser %}
+RUN mkdir /home/$USER && \
+    useradd -u $UID -g $GID -d $HOME -m $USER
+{% endblock %}
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tini{% if sources and sources.apt %} curl gnupg{% endif %}
+
+{% block hacks %}
+  {% if hacks %}
+    {% if 'missing-man1' in hacks %}
+RUN mkdir -p /usr/share/man/man1
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block apt_sources %}
+  {% if sources and sources.apt %}
+    {% for source in sources.apt %}
+RUN curl -fsSL "{{ source.key }}" | apt-key --keyring "/etc/apt/trusted.gpg.d/{{ source.name }}.gpg" add - && \
+    echo "{{ source.deb }}" > "/etc/apt/sources.list.d/{{ source.name }}.list"
+    {% endfor %}
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
+  {% endif %}
+{% endblock %}
+
+{% block apt %}
+  {% if packages and packages.apt %}
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y {{ ' '.join(packages.apt) }}
+  {% endif %}
+{% endblock %}
+
+{% block pip %}
+  {% if packages and packages.pip %}
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then pip install --no-cache-dir --extra-index-url=https://www.piwheels.org/simple {% for package in packages.pip %}"{{ package }}" {% endfor %}; else pip install --no-cache-dir {% for package in packages.pip %}"{{ package }}" {% endfor %}; fi
+  {% endif %}
+{% endblock %}
+
+{% block content%}
+  {% if flags and flags.ou_container_content %}
+RUN mkdir -p /etc/module-content/data
+COPY ou-builder-build/content_config.yaml /etc/module-content/config.yaml
+    {% if content %}
+      {% for part in content %}
+        {% if part.source.startswith('/') %}
+          {% if part.target.startswith('/') %}
+RUN cp -r {{ part.source }} {{ part.target }}
+          {% else %}
+RUN cp -r {{ part.source }} /etc/module-content/data/{{ part.target }}
+          {% endif %}
+        {% else %}
+          {% if part.target.startswith('/') %}
+COPY {{ part.source }} {{ part.target }}
+          {% else %}
+COPY {{ part.source }} /etc/module-content/data/{{ part.target }}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if scripts and scripts.build %}
+    {% for script in scripts.build %}
+      {% if script.commands %}
+RUN {{ ' && \\\n    '.join(script.commands) }}
+      {% elif script.cmd %}
+RUN {{ script.cmd }}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock %}
+
+{% block application %}{% endblock %}
+
+{% block set_permissions %}
+RUN chown -R $USER:$GID $HOME {% if flags and flags.ou_container_content %}/etc/module-content{% endif %}
+{% endblock %}
+
+USER $USER
+
+{% block runtime_environment %}
+WORKDIR $HOME
+ENTRYPOINT ["tini", "-g", "--"]
+{% endblock %}
+
+{% block expose %}
+EXPOSE 8888
+{% endblock %}
+
+{% block cmd %}
+CMD ["start.sh"]
+{% endblock %}
