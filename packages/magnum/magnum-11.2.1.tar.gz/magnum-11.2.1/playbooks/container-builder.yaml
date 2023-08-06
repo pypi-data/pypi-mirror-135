@@ -1,0 +1,54 @@
+- hosts: all
+  tasks:
+    - include_vars: container-builder-vars.yaml
+
+    - name: "Build magnum images"
+      block:
+        - name: "Build {{ magnum_repository }}/{{ item.name }}:{{ item.tag }} image"
+          docker_image:
+            path: "{{ magnum_src_dir }}/dockerfiles/{{ item.name }}"
+            name: "{{ magnum_repository }}/{{ item.name }}"
+            tag: "{{ item.tag }}"
+            push: no
+          with_items: "{{ magnum_images }}"
+          retries: 10
+
+    - name: "Build kubernetes images"
+      block:
+        - name: "Build {{ magnum_repository }}/{{ item[1].name }}:{{ item[0].version }} image"
+          docker_image:
+            path: "{{ magnum_src_dir }}/dockerfiles/{{ item[1].name }}"
+            name: "{{ magnum_repository }}/{{ item[1].name }}"
+            tag: "{{ item[0].version }}"
+            buildargs:
+              KUBE_VERSION: "{{ item[0].version }}"
+            push: no
+          with_nested:
+            - "{{ kubernetes_versions }}"
+            - "{{ kubernetes_images }}"
+          retries: 10
+
+    - name: "Build helm-client image"
+      block:
+        - docker_image:
+            path: "{{ magnum_src_dir }}/dockerfiles/helm-client"
+            name: "{{ magnum_repository }}/helm-client"
+            tag: "{{ item.version }}"
+            buildargs:
+              HELM_VERSION: "{{ item.version }}"
+            push: no
+          with_items: "{{ helm_versions }}"
+          retries: 10
+
+    - name: "Build cluster-autoscaler image"
+      block:
+        - name: "Build {{ magnum_repository }}/cluster-autoscaler:v{{ item.version }}"
+          docker_image:
+            path: "{{ magnum_src_dir }}/dockerfiles/cluster-autoscaler"
+            name: "{{ magnum_repository }}/cluster-autoscaler"
+            tag: "v{{ item.version }}"
+            buildargs:
+              AUTOSCALER_VERSION: "cluster-autoscaler-{{ item.version }}"
+            push: no
+          with_items: "{{ cluster_autoscaler_versions }}"
+          retries: 10

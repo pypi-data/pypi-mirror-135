@@ -1,0 +1,43 @@
+- job:
+    name: magnum-container-build
+    pre-run: playbooks/container-builder-setup-gate.yaml
+    run: playbooks/container-builder.yaml
+    post-run: playbooks/container-builder-copy-logs.yaml
+    roles:
+      - zuul: openstack/openstack-zuul-jobs
+    timeout: 1800
+    irrelevant-files:
+      - ^.*\.rst$
+      - ^api-ref/.*$
+      - ^doc/.*$
+      - ^specs/.*$
+      - ^install-guide/.*$
+      - ^releasenotes/.*$
+      - ^magnum/.*$
+
+- job:
+    name: magnum-container-publish
+    parent: magnum-container-build
+    post-run: playbooks/container-publish.yaml
+    secrets:
+      - magnum_docker_login
+    timeout: 2400
+
+- project:
+    templates:
+      - openstack-cover-jobs
+      - openstack-python3-victoria-jobs
+      - check-requirements
+      - publish-openstack-docs-pti
+      - release-notes-jobs-python3
+    check:
+      jobs:
+        - magnum-tempest-plugin-tests-api
+        - magnum-container-build
+    gate:
+      queue: magnum
+      jobs:
+        - magnum-tempest-plugin-tests-api
+    post:
+      jobs:
+        - magnum-container-publish
