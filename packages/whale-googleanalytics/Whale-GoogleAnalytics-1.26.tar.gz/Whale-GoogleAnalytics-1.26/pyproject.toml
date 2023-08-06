@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "Whale-GoogleAnalytics"
+version = "1.26"
+description = "This library is used to fetch data from Google Analytics GA v4 and MCF v3"
+authors = ["PO Boisvert <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+gino = {extras = ["pg", "starlette"], version = "^1.0.1"}
+fastapi = "^0.70.0"
+uvicorn = "^0.15.0"
+gunicorn = "^20.1.0"
+psycopg2-binary = "^2.9.2"
+google-api-python-client = "^2.31.0"
+oauth2client = "^4.1.3"
+pandas = "^1.3.4"
+plotly = "^5.4.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+requests = "^2.26.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "whale_googleanalytics.main:start"
