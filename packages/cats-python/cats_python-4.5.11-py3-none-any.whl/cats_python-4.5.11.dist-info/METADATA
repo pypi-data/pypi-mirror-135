@@ -1,0 +1,83 @@
+Metadata-Version: 2.1
+Name: cats-python
+Version: 4.5.11
+Summary: Cifrazia Action Transport System for Python
+Home-page: https://adambrianbright.github.io/cats-python/
+License: MIT
+Keywords: cifrazia,tcp,rpc,cats,tornado
+Author: Bogdan Parfenov
+Author-email: adam.brian.bright@gmail.com
+Requires-Python: >=3.10.0,<4.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Framework :: AsyncIO
+Classifier: Framework :: Pytest
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Natural Language :: Russian
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Operating System :: OS Independent
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Typing :: Typed
+Provides-Extra: django
+Provides-Extra: djantic
+Provides-Extra: pydantic
+Requires-Dist: Django (>=2.0,<3.0); extra == "django" or extra == "djantic"
+Requires-Dist: PyYAML (>=6.0,<7.0)
+Requires-Dist: djangorestframework (>=3.12.4); extra == "django"
+Requires-Dist: djantic (>=0.3.3); extra == "djantic"
+Requires-Dist: msgpack (>=1.0.3,<2.0.0)
+Requires-Dist: pydantic (>=1.9.0); extra == "pydantic" or extra == "djantic"
+Requires-Dist: pytz (>=2021.3,<2022.0)
+Requires-Dist: richerr (>=0.2.3,<0.3.0)
+Requires-Dist: rollbar (>=0.16.2,<0.17.0)
+Requires-Dist: struct-model-python (>=0.1.1,<0.2.0)
+Requires-Dist: toml (>=0.10.2,<0.11.0)
+Requires-Dist: tornado (>=6.1,<7.0)
+Project-URL: Bug Tracker, https://github.com/AdamBrianBright/cats-python/issues
+Project-URL: ChangeLog, https://adambrianbright.github.io/cats-python/changelog
+Project-URL: Contact Author, https://vk.com/adam_bright
+Project-URL: Documentation, https://adambrianbright.github.io/cats-python/
+Project-URL: Repository, https://github.com/AdamBrianBright/cats-python
+Description-Content-Type: text/markdown
+
+# Welcome
+
+[![PyPI version](https://badge.fury.io/py/cats-python.svg)](https://badge.fury.io/py/cats-python) [![codecov](https://codecov.io/gh/Cifrazia/cats-python/branch/master/graph/badge.svg?token=MMDPS40REC)](https://codecov.io/gh/Cifrazia/cats-python) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCifrazia%2Fcats-python.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FCifrazia%2Fcats-python?ref=badge_shield)
+
+## Cifrazia Action Transport System
+
+CATS - is a TCP based byte protocol for persistence package exchanging. This so-called protocol is designed specifically
+for internal use in [Cifrazia](https://cifrazia.com).
+
+[Learn more about protocol](./protocol)
+
+## Features
+
++ One action at a time
++ Up-to 4GB payload in single [plain Action](protocol/2.0.md#0x00-action)
++ Unlimited and delayed payload in [Streaming Actions](protocol/2.0.md#0x01-streamaction)
++ Chained [inputs](protocol/2.0.md#inputs)
++ [Broadcasts](protocol/2.0.md#broadcast)
++ Multiple [data formats](protocol/2.0.md#data-types)
++ Custom [handshakes](protocol/2.0.md#handshake)
++ ~~Local and global encryption~~
+
+[!ref](get-started.md)
+
+## Requirements
+
++ Python `^3.9`
++ Tornado `^6.1`
++ Sentry SDK `^1.1.0`
++ uJSON `^4.0.2`
++ PyTZ `^2021.1`
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCifrazia%2Fcats-python.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FCifrazia%2Fcats-python?ref=badge_large)
