@@ -1,0 +1,59 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+usage() {
+    cat <<EOF
+Usage: start_ca_servers <options>
+
+Starts servers for handling OCSP requests and providing CRL downloads.
+
+List of options:
+    -h, --help          Print this help
+    --crl-port <int>    The listening port for a webserver that provides
+                        an option to download CRLs. Can be set as well via
+                        the environment variable TLSMATE_CRL_PORT. Defaults
+                        to 44400.
+    --ocsp-ca-rsa-port <int>
+                        The listening port for an OCSP reponder (RSA-based CA).
+                        Can be set as well via the environment variable
+                        TLSMATE_OCSP_CA_RSA_PORT. Defaults to 44401.
+    --ocsp-ca-edcda-port <int>
+                        The listening port for an OCSP reponder (ECDSA-based
+                        CA). Can be set as well via the environment variable
+                        TLSMATE_OCSP_CA_ECDSA_PORT. Defaults to 44402.
+    --ocsp-root-rsa-port <int>
+                        The listening port for an OCSP reponder (RSA-based root CA).
+                        Can be set as well via the environment variable
+                        TLSMATE_OCSP_ROOT_RSA_PORT. Defaults to 44403.
+    --ocsp-root-edcda-port <int>
+                        The listening port for an OCSP reponder (ECDSA-based
+                        root CA). Can be set as well via the environment variable
+                        TLSMATE_OCSP_ROOT_ECDSA_PORT. Defaults to 44404.
+EOF
+    exit 1
+}
+
+if [ -n "$TLSMATE_SERVER_PORT" ]; then
+    port=$TLSMATE_SERVER_PORT
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help) usage ;;
+        --version) version="--version $2"; shift;;
+        --crl-port) crl_port="--port $2"; shift;;
+        --ocsp-ca-rsa-port) ocsp_ca_rsa_port="--port $2"; shift;;
+        --ocsp-ca-ecdsa-port) ocsp_ca_ecdsa_port="--port $2"; shift;;
+        --ocsp-root-rsa-port) ocsp_root_rsa_port="--port $2"; shift;;
+        --ocsp-root-ecdsa-port) ocsp_root_ecdsa_port="--port $2"; shift;;
+        --) shift; break ;;
+        *) echo "Unknown option $1"; usage; exit 1 ;;
+    esac
+    shift
+done
+
+$SCRIPTPATH/start_crl_server $crl_port &
+$SCRIPTPATH/start_ocsp_server --ca ca-rsa $ocsp_ca_rsa_port &
+$SCRIPTPATH/start_ocsp_server --ca ca-ecdsa $ocsp_ca_ecdsa_port &
+$SCRIPTPATH/start_ocsp_server --ca root-rsa $ocsp_root_rsa_port &
+$SCRIPTPATH/start_ocsp_server --ca root-ecdsa $ocsp_root_ecdsa_port &

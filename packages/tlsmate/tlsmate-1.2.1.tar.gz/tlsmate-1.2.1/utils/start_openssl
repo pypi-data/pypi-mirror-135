@@ -1,0 +1,89 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+usage() {
+    cat <<EOF
+Usage: start_openssl <options>
+
+Starts a openssl server.
+
+List of options:
+    -h, --help          Print this help
+    --version           The openssl version to use. Currently supported:
+                        openssl3_0_0, openssl1_1_1, openssl1_0_2,
+                        openssl1_0_1g, openssl1_0_1e
+    --port <int>        The listening port for the openssl server.
+                        Can be set as well via the environment variable
+                        TLSMATE_SERVER_PORT. Defaults to 44330.
+    --cert1 <str>       The certificate, key and certificate chain files to select.
+                        key file: $TLSMATE_DIR/ca/private/<str>.key
+                        certificate file: $TLSMATE_DIR/ca/certs/<str>.pem
+                        cert chain file: $TLSMATE_DIR/ca/chains/<str>.chn
+    --cert2 <str>       Same as --cert1. It is a secondary option to select
+                        another certificate.
+    --cert3 <str>       Same as --cert1. It is yet another option to select
+                        another certificate.
+    --no-cert-chain     An indication that the -cert_chain option should not
+                        be used. Useful if e.g. ssl2 is used.
+    --ca-file <str>     The trust store file to pass to openssl via the -CAfile
+                        option. File: $TLSMATE_DIR/certs/<str>.pem
+    --                  Indicates the end of the options for this script.
+                        All following options will be passed transparently
+                        to the openssl command.
+EOF
+    exit 1
+}
+ca_dir=$SCRIPTPATH/../ca
+
+port=44330
+version=openssl3_0_0
+cert1=server-rsa
+no_cert_chain=0
+
+if [ -n "$TLSMATE_SERVER_PORT" ]; then
+    port=$TLSMATE_SERVER_PORT
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help) usage ;;
+        --version) version="$2"; shift;;
+        --port) port="$2"; shift;;
+        --cert1) cert1="$2"; shift;;
+        --cert2) cert2="$2"; shift;;
+        --cert3) cert3="$2"; shift;;
+        --ca-file) ca_file="-CAfile $ca_dir/certs/$2.pem"; shift;;
+        --no-cert-chain) no_cert_chain=1 ;;
+        --) shift; break ;;
+        *) echo "Unknown option $1"; usage; exit 1 ;;
+    esac
+    shift
+done
+
+openssl_path=$SCRIPTPATH/../tlslibraries/$version
+if [ -z "$OPENSSL" ]; then
+    OPENSSL=$openssl_path/apps/openssl
+fi
+if [ -n "$cert1" ]; then
+    cert_params1=" -key $ca_dir/private/$cert1.key -cert $ca_dir/certs/$cert1.pem"
+    if [ "$no_cert_chain" == "0" ]; then
+        cert_params1="$cert_params1 -cert_chain $ca_dir/chains/$cert1.chn"
+    fi
+fi
+if [ -n "$cert2" ]; then
+    cert_params2=" -dkey $ca_dir/private/$cert2.key -dcert $ca_dir/certs/$cert2.pem"
+    if [ "$no_cert_chain" == "0" ]; then
+        cert_params2="$cert_params2 -dcert_chain $ca_dir/chains/$cert2.chn"
+    fi
+fi
+if [ -n "$cert3" ]; then
+    cert_params3=" -xkey $ca_dir/private/$cert3.key -xcert $ca_dir/certs/$cert3.pem"
+    if [ "$no_cert_chain" == "0" ]; then
+        cert_params3="$cert_params3 -xchain $ca_dir/chains/$cert3.chn"
+    fi
+fi
+
+kill `lsof -t -i :$port`
+cmd="$OPENSSL s_server $cert_params1 $cert_params2 $cert_params3 $ca_file -accept $port $@"
+echo $cmd
+$cmd

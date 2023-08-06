@@ -1,0 +1,65 @@
+#!/bin/bash
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+usage() {
+    cat <<EOF
+Usage: start_openssl <options>
+
+Starts a openssl server.
+
+List of options:
+    -h, --help          Print this help
+    --port <int>        The listening port for the openssl server.
+                        Can be set as well via the environment variable
+                        TLSMATE_SERVER_PORT. Defaults to 44330.
+    --cert1 <str>       The certificate, key and certificate chain files to select.
+                        key file: $TLSMATE_DIR/ca/private/<str>.key
+                        certificate file: $TLSMATE_DIR/ca/certs/<str>.pem
+                        cert chain file: $TLSMATE_DIR/ca/chains/<str>.chn
+    --cert2 <str>       Same as --cert1. It is a secondary option to select
+                        another certificate.
+    --ca-file <str>     The trust store file to pass to openssl via the -CAfile
+                        option. File: $TLSMATE_DIR/certs/<str>.pem
+    --                  Indicates the end of the options for this script.
+                        All following options will be passed transparently
+                        to the openssl command.
+EOF
+    exit 1
+}
+
+ca_dir=$SCRIPTPATH/../ca
+port=44333
+
+libressl_path=/opt/libressl/
+cipher=ALL
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help) usage ;;
+        --port) port="$2"; shift;;
+        --cert1) cert1="$2"; shift;;
+        --cert2) cert2="$2"; shift;;
+        --ca-file) ca_file="-CAfile $ca_dir/certs/$2.pem"; shift;;
+        --) shift; break ;;
+        *) echo "Unknown option $1"; usage; exit 1 ;;
+    esac
+    shift
+done
+
+if [ -n "$cert1" ]; then
+    cert_params1=" -key $ca_dir/private/$cert1.key -cert $ca_dir/certs/$cert1.pem"
+fi
+if [ -n "$cert2" ]; then
+    cert_params2=" -dkey $ca_dir/private/$cert2.key -dcert $ca_dir/certs/$cert2.pem"
+fi
+
+cert_params=" -key $key1 -cert $cert1"
+if [ -n "$auth2" ]; then
+    cert_params2=" -key2 $key2 -cert2 $cert2"
+fi
+
+kill `lsof -t -i :$port`
+
+export LD_LIBRARY_PATH=$libressl_path/lib:$LD_LIBRARY_PATH
+cmd="$libressl_path/bin/openssl s_server $cert_params1 $cert_params2 $ca_file -accept $port $@"
+echo $cmd
+$cmd
