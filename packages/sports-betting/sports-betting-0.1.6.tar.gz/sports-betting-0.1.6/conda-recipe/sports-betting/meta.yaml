@@ -1,0 +1,42 @@
+package:
+  name: sports-betting
+  version: "0.1.6"
+
+source:
+  url: "https://files.pythonhosted.org/packages/66/6b/c3cc8e479e08faf2ea4b0f16fe1022436efe07f6ce0b21929b33a042f821/sports-betting-0.1.5.tar.gz"
+  sha256: "1331906a6bd218f64a00d84ab0ac1f4d49af06b54de43b7dc8e3375e46c4b1eb"
+
+build:
+  number: 0
+  noarch: python
+
+requirements:
+  host:
+    - pip
+    - python
+    - pandas >=1.0.0
+    - scikit-learn >=1.0.0
+    - cloudpickle >=2.0.0
+    - beautifulsoup4 >=4.0.0
+    - rich >=4.28
+
+  run:
+    - python
+    - pandas >=1.0.0
+    - scikit-learn >=1.0.0
+    - cloudpickle >=2.0.0
+    - beautifulsoup4 >=4.0.0
+    - rich >=4.28
+
+test:
+  requires:
+    - coverage
+    - pytest
+    - pytest-cov
+  imports:
+    - sportsbet
+
+about:
+  home: "https://github.com/georgedouzas/sports-betting"
+  license: "MIT"
+  license_file: ""
