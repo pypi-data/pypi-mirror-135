@@ -1,0 +1,19 @@
+{% if furo_topbar is defined %}
+<div class="ftb-container" id="ftb-container">
+  {% for fbt_name, ftb_data in furo_topbar.items() %}
+  <div class="ftb-dropdown">
+    <button type="button" class="ftb-dropbtn {{ ftb_data.button_class }}" title="{{ ftb_data.button_title }}" onClick="{{ ftb_data.button_onclick }}">
+      {% if ftb_data.button_title %}
+      <div class="visually-hidden">{{ ftb_data.button_title }}</div>
+      {% endif %}
+      {{ ftb_data.button }}
+    </button>
+    {% if ftb_data.dropdown %}
+    <div class="ftb-dropdown-content">
+      {{ ftb_data.dropdown }}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
