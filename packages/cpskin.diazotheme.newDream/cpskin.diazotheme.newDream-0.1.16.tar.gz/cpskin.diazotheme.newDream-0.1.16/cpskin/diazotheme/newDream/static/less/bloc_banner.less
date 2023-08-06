@@ -1,0 +1,94 @@
+#cpskin-banner{
+    position: relative;
+    max-height: @banner-max-height;
+    min-height: @banner-min-height;
+    .banner-container{
+        width: 100%;
+        overflow: hidden;
+        min-height: @banner-min-height;
+        position: relative;
+    }
+    img{
+        position: relative;
+    }
+
+}
+
+#toggle-video{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99;
+    font-size: 0;
+    background: transparent;
+    border: 0px;
+    cursor: pointer;
+    &::after{
+        content: "";
+        height: 20px;
+        width: 20px;
+        display: block;
+    }
+    &.video-play{
+        &::after{
+            background: url("/++theme++cpskin.diazotheme.newDream/pause.svg") no-repeat;
+            background-size: contain;
+        }
+    }
+    &.video-pause{
+        &::after{
+            background: url("/++theme++cpskin.diazotheme.newDream/play.svg")no-repeat;
+            background-size: contain;
+        }
+    }
+}
+@media screen and (max-width:1280px){
+    #toggle-video{
+        top: 170px;
+    }
+}
+ #cpskin-slogan{
+     display: none;
+ }
+
+ #cpskin-slogan-inside{
+     position: absolute;
+     z-index: 1;
+     color: #fff;
+     left: 5%;
+     top: 13%;
+     #cpskin-slogan-titre{
+         font-size: 25px;
+     }
+     #cpskin-slogan-description{
+         font-size: 70px;
+     }
+ }
+ @media screen and (max-width:1200px){
+    #cpskin-banner{
+        img.banner{
+            position: absolute;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+ @media screen and (min-width:900px){
+    #cpskin-slogan-inside{
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        #cpskin-slogan-titre{
+            font-size: 40px;
+        }
+        #cpskin-slogan-description{
+            font-size: 130px;
+        }
+    }
+}
+@media screen and (min-width:1300px){
+    #cpskin-slogan-inside{
+        width: 1200px;
+    }
+}

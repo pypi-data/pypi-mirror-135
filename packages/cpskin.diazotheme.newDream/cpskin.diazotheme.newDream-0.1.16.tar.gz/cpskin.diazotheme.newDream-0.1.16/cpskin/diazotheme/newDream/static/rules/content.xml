@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+   <rules css:if-content="#viewlet-social-like">
+       <replace css:content="#viewlet-social-like">
+           <div id="social-document-actions">
+               <xsl:copy-of select="//div[@class='iconifiedDocumentActions']" />
+               <xsl:copy-of select="."/>
+           </div>
+       </replace>
+       <drop css:content="#viewlet-social-like" />
+       <drop css:content=".iconifiedDocumentActions" />
+   </rules>
+
+</rules>
