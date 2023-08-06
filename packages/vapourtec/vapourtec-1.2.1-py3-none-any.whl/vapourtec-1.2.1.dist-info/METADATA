@@ -1,0 +1,128 @@
+Metadata-Version: 2.1
+Name: vapourtec
+Version: 1.2.1
+Summary: An unofficial package to control Vapourtec products; we are not affliated with Vapourtec.
+Home-page: https://gitlab.com/heingroup/vapourtec
+Author: Veronica Lai // Hein Group
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: ftdi-serial
+
+# vapourtec
+
+An unofficial package to control Vapourtec products; we are not affliated with Vapourtec.
+
+Supported devices:
+- [SF10 reagent pump](https://www.vapourtec.com/products/sf-10-pump-features/)
+
+Requires Windows operating system.
+
+## SF10 reagent pump
+https://www.vapourtec.com/products/sf-10-pump-features/
+
+### Hardware check
+
+The SF10 connects to a computer using a Serial cable. It is possible to use a Serial to USB converter to connect to the computer via USB.
+
+The SF10 pump should have firmware v1.8 installed on it. To update the firmware on the pump, the file to update the pump must be on a USB stick and used to update the pump.
+
+Remote control must also be enabled on the pump. To check this, use some software to communicate with the pump with RS-232. During development the program Termite was used.
+Connect to the pump in the program and send the following command to enable remote control of the pump: `REMOTEEN vtec 1`. You should receive an `OK` back from the pump if successful. This only has to be done once.
+
+Once this is done, you can send the `GV` command to check the firmware version on the pump, and send `REMOTEEN` again to check that remote control is enabled
+
+### Getting started/example script
+
+Check the [examples](examples) folder for example script on how to use the SF10 module.
+
+To connect to the pump in Python, you need to know the comport of the pump when it is connected to the computer. To know this, before plugging the pump into the computer open the `Windows Device Manager` program and expand `Ports`. Then plug in the pump and see what new port appears, e.g. `COM6`. This is what you will use to create the `SF10` instance in Python to connect to and control the pump.
+
+### Graphical User Interface
+
+A basic GUI is provided for simple control of a SF10 pump. To run this, you can run the [main.py](gui/sf10/main.py) file in the [gui/sf10](gui/sf10) folder in Python. Or you can launch the [standalone Windows executable (.exe) file](gui/sf10/built_gui/dist/main.exe) without needing to use Python.
+
+
+<img src="gui/sf10/gui_screenshot.png" width="500">
+
+
+### Serial settings and protocols
+
+These are the settings and protocols from the manual.
+
+    Connection settings according to the manual are
+    +----------------------+---------------------------------------------+
+    | Parameter            | Comment                                     |
+    +----------------------+---------------------------------------------+
+    | Baud rate            | 9600                                        |
+    +----------------------+---------------------------------------------+
+    | Parity               | Not specified in manual, None is used       |
+    +----------------------+---------------------------------------------+
+    | Handshaking          | Not specified in manual, None is used       |
+    +----------------------+---------------------------------------------+
+    | Data bits            |  Not specified in manual, 8 is used         |
+    +----------------------+---------------------------------------------+
+    | Stop bits            |  Not specified in manual, 1 is used         |
+    +----------------------+---------------------------------------------+
+    | Physical connection  | Connect from PC to SF10 with a serial cable |
+    |                      | A straight, RS232, 9 pin serial cable will  |
+    |                      | be required. (Female to Female)             |
+    |                      | Use a USB to serial converter if the PC     |
+    |                      | has no built in serial connector.           |
+    |                      | Your PC will allocate a COM port number to  |
+    |                      | the serial port or the converter (if used). |
+    +----------------------+---------------------------------------------+
+    | Message Terminators  | Not specified in the manual, <CR> is used   |
+    +----------------------+---------------------------------------------+
+
+
+    Protocols are:
+    If a recognized command was sent to the pump OK will be sent back.
+    OK will still be sent back even if numerical parameters are out of
+    range and sent to the pump, even though the pump may not change to the set value.
+    Note that setting a value out of range causes the default parameter to be used.
+    +---------------+-------------------------+-----------------------------------+
+    | Sent by PC    | Parameter               | Description                       |
+    +---------------+-------------------------+-----------------------------------+
+    | START         |                         | Start pump                        |
+    +---------------+-------------------------+-----------------------------------+
+    | STOP          |                         | Stop pump                         |
+    +---------------+-------------------------+-----------------------------------+
+    | VALVE x       | x is A or B             | Select valve position x,          |
+    |               |                         | e.g. VALVE A, VALVE B             |
+    +---------------+-------------------------+-----------------------------------+
+    | MODE x        | x is FLOW or REG or     | Select pump mode x,               |
+    |               | DOSE or GAS or RAMP     | e.g. MODE FLOW, MODE REG          |
+    +---------------+-------------------------+-----------------------------------+
+    | SETFLOW x     | x is the flow rate in   | Sets flow rate to x mL/min, used  |
+    |               | mL/min                  | by FLOW and DOSE modes,           |
+    |               |                         | e.g. SETFLOW 5.0                  |
+    +---------------+-------------------------+-----------------------------------+
+    | SETGASFLOW x  | x is the gas flow       | Sets gas flow rate to x ssc/min,  |
+    |               | rate  in ssc/min        | used by GAS modes,                |
+    |               |                         | e.g. SETGASFLOW 50.0              |
+    +---------------+-------------------------+-----------------------------------+
+    | SETREG X      | x is the pressure in    | Sets regulator mode pressure to   |
+    |               | bar                     | x bar, used by REGULATOR mode     |
+    |               |                         | e.g. SETREG 4.0                   |
+    +---------------+-------------------------+-----------------------------------+
+    | SETDOSE X     | x is the dose volume    | Sets dose volume in mL/min,used   |
+    |               | in mL/min               | by DOSE mode,                     |
+    |               |                         | e.g. SETDOSE 20.0                 |
+    +---------------+-------------------------+-----------------------------------+
+    | SETRAMP x y z | x is the start speed    | Sets ramp speed from x mL/min to  |
+    |               | in mL/min, y is the     | y mL/min over z minutes,          |
+    |               | final speed in mL/min,  | e.g. SETRAMP 1 2 10               |
+    |               | z is time in minutes    |                                   |
+    +---------------+-------------------------+-----------------------------------+
+
+### Frequently asked questions
+
+#### I followed the instructions but am still unable to connect to/control the pump
+Check using the physical buttons and display on the pump that firmware 1.8 is installed and go through the Hardware check section again. If The firmware is up to date but there are issues communicating with the pump using Termite, try using a different cable to connect the pump to the computer. 
+
+
+
