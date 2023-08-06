@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+<rules if-not="$isinminisitemode"> 
+  <after css:content-children="#portal-footer">
+    <div class="footer-banner"></div>
+  </after>
+</rules>
+<drop css:content="#footer-sitemap .footer-sitemap-item"/>
+<rules if="$isinminisitemode">
+  <drop css:content="#footer-sitemap"/>
+  <drop css:content="#portal-footer-wrapper #portal-siteactions"/>
+</rules>
+</rules>
