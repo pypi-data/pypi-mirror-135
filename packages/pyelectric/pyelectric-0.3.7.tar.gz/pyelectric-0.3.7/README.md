@@ -1,0 +1,5 @@
+# pyeletric
+
+```
+pip install pyelectric
+```
