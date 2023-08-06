@@ -1,0 +1,17 @@
+[Unit]
+Description=Meltingplot Telegram Service
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+StartLimitInterval=0
+StartLimitBurst=1440
+RestartSec=60
+ExecStart=/home/ubuntu/mp_telegram_bot/venv/bin/python -m mp_telegram_bot.mp_telegram_bot
+WorkingDirectory=/home/ubuntu/mp_telegram_bot
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target
