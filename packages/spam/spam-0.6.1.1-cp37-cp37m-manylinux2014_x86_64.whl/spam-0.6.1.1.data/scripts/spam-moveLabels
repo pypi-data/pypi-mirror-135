@@ -1,0 +1,85 @@
+#!python
+
+"""
+This python script deforms a labelled image based on a deformation field using SPAM functions
+Copyright (C) 2020 SPAM Contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import spam.helpers
+import spam.label as ltk
+import spam.DIC
+import spam.deformation
+import numpy
+numpy.seterr(all='ignore')
+import sys, os
+import tifffile
+#import matplotlib.pyplot as plt
+# Added from rotation_correlation-style parallelisation
+import multiprocessing
+import argparse
+import progressbar
+
+
+# Define argument parser object
+parser = argparse.ArgumentParser(description="spam-moveLabels "+spam.helpers.optionsParser.GLPv3descriptionHeader +\
+                                             "This script applies discretely measured deformation functions (Phi) coming from 'spam-ddic' to a labelled image, "+\
+                                             "thus generating the deformed labelled image.\n\nWarning: since we're moving labels, "+\
+                                             "nearest neighbour interpolation must be used, and thus the shapes of the labels will be slightly damaged",
+                                 formatter_class=argparse.RawTextHelpFormatter)
+
+# Parse arguments with external helper function
+args = spam.helpers.optionsParser.moveLabelsParser(parser)
+
+
+print("spam-moveLabels -- Current Settings:")
+argsDict = vars(args)
+for key in sorted(argsDict):
+    print("\t{}: {}".format(key, argsDict[key]))
+
+if args.RETURN_STATUS_THRESHOLD is None:
+    DVC = spam.helpers.readCorrelationTSV(args.TSVFile.name, readConvergence=False)
+    RS = None
+else:
+    DVC = spam.helpers.readCorrelationTSV(args.TSVFile.name, readConvergence=True)
+    RS = DVC['returnStatus']
+
+# Read labelled image
+lab = tifffile.imread( args.LabFile.name )
+
+
+#if args.GREY_FILE is not None:
+    #greyTmp = tifffile.imread(args.GREY_FILE)
+    #grey = numpy.zeros((labShapeOrig[0]+2*args.OVERALL_MARGIN,
+                        #labShapeOrig[1]+2*args.OVERALL_MARGIN,
+                        #labShapeOrig[2]+2*args.OVERALL_MARGIN), dtype=greyTmp.dtype)
+    #grey[slicePadToNonPad] = greyTmp
+
+labOut = spam.label.moveLabels(lab,
+                               DVC['PhiField'],
+                               returnStatus=RS,
+                               margin=args.MARGIN,
+                               PhiCOM=args.PHICOM,
+                               threshold=args.THRESH,
+                               labelDilate=args.LABEL_DILATE,
+                               nProcesses=args.NUMBER_OF_PROCESSES)
+
+#if args.GREY_FILE is None:
+print("\nSaving labelled image with displaced grains...", end='')
+tifffile.imsave( args.OUT_DIR+"/"+args.PREFIX+".tif", labOut.astype(lab.dtype) )
+#else:
+    #print("\nSaving binary image with displaced grains...", end='')
+    #tifffile.imsave( args.OUT_DIR+"/"+args.PREFIX+".tif", labOut[slicePadToNonPad].astype('<u1')*255 )
+print("done.")
