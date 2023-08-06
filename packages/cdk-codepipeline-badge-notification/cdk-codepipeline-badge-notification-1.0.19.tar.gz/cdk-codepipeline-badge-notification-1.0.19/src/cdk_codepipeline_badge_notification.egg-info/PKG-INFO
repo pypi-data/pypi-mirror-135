@@ -1,0 +1,88 @@
+Metadata-Version: 2.1
+Name: cdk-codepipeline-badge-notification
+Version: 1.0.19
+Summary: cdk-codepipeline-badge-notification
+Home-page: https://github.com/kimisme9386/cdk-codepipeline-badge-notification
+Author: Chris Yang
+License: Apache-2.0
+Project-URL: Source, https://github.com/kimisme9386/cdk-codepipeline-badge-notification
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: JavaScript
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Typing :: Typed
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+[![NPM version](https://badge.fury.io/js/cdk-codepipeline-badge-notification.svg)](https://badge.fury.io/js/cdk-codepipeline-badge-notification)
+[![PyPI version](https://badge.fury.io/py/cdk-codepipeline-badge-notification.svg)](https://badge.fury.io/py/cdk-codepipeline-badge-notification)
+[![Release](https://github.com/kimisme9386/cdk-codepipeline-badge-notification/actions/workflows/release.yml/badge.svg)](https://github.com/kimisme9386/cdk-codepipeline-badge-notification/actions/workflows/release.yml)
+
+# CDK-CodePipeline-Badge-Notification
+
+## Feature
+
+* Generate badge when AWS CodePipeline state change
+* Update GitHub commit status when AWS CodePipeline state change
+* Notification for chat bot provider
+
+  * Slack
+  * Google Chat
+  * Telegram
+
+## Usage
+
+```python
+import { CodePipelineBadgeNotification } from 'cdk-pipeline-badge-notification';
+import * as cdk from '@aws-cdk/core';
+import * as codePipeline from '@aws-cdk/aws-codepipeline';
+
+const app = new cdk.App();
+const env = {
+  region: process.env.CDK_DEFAULT_REGION,
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+};
+const stack = new cdk.Stack(app, 'codepipeline-badge-notification', { env });
+
+const pipeline = new codePipeline.Pipeline(stack, 'TestPipeline', {
+  pipelineName: 'testCodePipeline',
+  crossAccountKeys: false,
+});
+
+new CodePipelineBadgeNotification(stack, 'CodePipelineBadgeNotification', {
+  pipelineArn: pipeline.pipelineArn,
+  gitHubTokenFromSecretsManager: {
+    secretsManagerArn:
+      'arn:aws:secretsmanager:ap-northeast-1:111111111111:secret:codepipeline/lambda/github-token-YWWmII',
+    secretKey: 'codepipeline/lambda/github-token',
+  },
+  notification: {
+    stageName: 'production',
+    ssmSlackWebHookUrl: '/chat/google/slack',
+    ssmGoogleChatWebHookUrl: '/chat/google/webhook',
+    ssmTelegramWebHookUrl: '/chat/telegram/webhook',
+  },
+});
+```
+
+> :warning: telegram webhook url from ssm parameter which the URL is not include `text` query string
+
+> gitHubTokenFromSecretsManager and notification is optional
+
+#### Only badge
+
+```python
+new CodePipelineBadgeNotification(stack, 'CodePipelineBadgeNotification', {
+  pipelineArn: pipeline.pipelineArn,
+});
+```
+
+
