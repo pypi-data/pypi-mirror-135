@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Dashboard API &mdash; Django Grappelli 2.15.4 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Internals" href="internals.html" />
+    <link rel="prev" title="Dashboard Setup" href="dashboard_setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Django Grappelli
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.15.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customization</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dashboard_setup.html">Dashboard Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dashboard API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-dashboard-class">The Dashboard class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-dashboardmodule-class">The DashboardModule class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-group-class">The Group class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-linklist-class">The LinkList class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-applist-class">The AppList class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-modellist-class">The ModelList class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-recentactions-class">The RecentActions class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-feed-class">The Feed class</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Django Grappelli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Dashboard API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/dashboard_api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dashboard-api">
+<span id="id1"></span><h1>Dashboard API<a class="headerlink" href="#dashboard-api" title="Permalink to this headline">¶</a></h1>
+<p>This section describe the API of the Grappelli dashboard and dashboard modules.</p>
+<div class="section" id="the-dashboard-class">
+<h2>The Dashboard class<a class="headerlink" href="#the-dashboard-class" title="Permalink to this headline">¶</a></h2>
+<p>Base class for dashboards.
+The dashboard class is a simple python list that has two additional
+properties:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">title</span></code></dt><dd><p>The dashboard title, by default, it is displayed above the dashboard in a <code class="docutils literal notranslate"><span class="pre">h2</span></code> tag.
+Default: <code class="docutils literal notranslate"><span class="pre">Dashboard</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">template</span></code></dt><dd><p>The template used to render the dashboard.
+Default: <code class="docutils literal notranslate"><span class="pre">grappelli/dashboard/dashboard.html</span></code></p>
+</dd>
+</dl>
+<p>Here’s an example of a custom dashboard:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># append an app list module for &quot;Applications&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Applications&#39;</span><span class="p">),</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">collapsible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,),</span>
+        <span class="p">))</span>
+
+        <span class="c1"># append an app list module for &quot;Administration&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Administration&#39;</span><span class="p">),</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">collapsible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,),</span>
+        <span class="p">))</span>
+
+        <span class="c1"># append a recent actions module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">RecentActions</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Recent actions&#39;</span><span class="p">),</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">collapsible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-dashboardmodule-class">
+<h2>The DashboardModule class<a class="headerlink" href="#the-dashboardmodule-class" title="Permalink to this headline">¶</a></h2>
+<p>Base class for all dashboard modules.
+Dashboard modules have the following properties:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">collapsible</span></code></dt><dd><p>Boolean that determines whether the module is collapsible.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">column</span></code> (required)</dt><dd><p>Integer that corresponds to the column.
+Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">title</span></code></dt><dd><p>String that contains the module title, make sure you use the django gettext functions if your application is multilingual.
+Set to <code class="docutils literal notranslate"><span class="pre">''</span></code> if you need to suppress the title.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">css_classes</span></code></dt><dd><p>A list of css classes to be added to the module <code class="docutils literal notranslate"><span class="pre">div</span></code> class attribute.
+Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pre_content</span></code></dt><dd><p>Text or HTML content to display above the module content.
+Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">post_content</span></code></dt><dd><p>Text or HTML content to display under the module content.
+Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">template</span></code></dt><dd><p>The template used to render the module.
+Default: <code class="docutils literal notranslate"><span class="pre">grappelli/dashboard/module.html</span></code></p>
+</dd>
+</dl>
+</div>
+<div class="section" id="the-group-class">
+<h2>The Group class<a class="headerlink" href="#the-group-class" title="Permalink to this headline">¶</a></h2>
+<p>Represents a group of modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;My group&quot;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">collapsible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Administration&#39;</span><span class="p">,</span>
+                    <span class="n">models</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,)</span>
+                <span class="p">),</span>
+                <span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Applications&#39;</span><span class="p">,</span>
+                    <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,)</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-linklist-class">
+<h2>The LinkList class<a class="headerlink" href="#the-linklist-class" title="Permalink to this headline">¶</a></h2>
+<p>A module that displays a list of links.</p>
+<p>Link list modules children are simple python dictionaries that can have the
+following keys:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">title</span></code></dt><dd><p>The link title.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">url</span></code></dt><dd><p>The link URL.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">external</span></code></dt><dd><p>Boolean that indicates whether the link is an external one or not.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">description</span></code></dt><dd><p>A string describing the link, it will be the <code class="docutils literal notranslate"><span class="pre">title</span></code> attribute of
+the html <code class="docutils literal notranslate"><span class="pre">a</span></code> tag.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">target</span></code></dt><dd><p>A string or boolean value describing what is the link target. To open
+link in a new window/tab you can pass <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">'_blank'</span></code> value to
+this parameter. When you pass an string value, it is directly used in
+the <code class="docutils literal notranslate"><span class="pre">target</span></code> attribute of the generated <code class="docutils literal notranslate"><span class="pre">a</span></code> tag in the template.</p>
+</dd>
+</dl>
+<p>Children can also be iterables (lists or tuples) of length 2, 3, 4, or 5.</p>
+<p>Here’s an example of building a link list module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">LinkList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Links&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Python website&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;http://www.python.org&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;external&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Python programming language rocks!&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="s1">&#39;_blank&#39;</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="p">[</span><span class="s1">&#39;Django website&#39;</span><span class="p">,</span> <span class="s1">&#39;http://www.djangoproject.com&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+                <span class="p">[</span><span class="s1">&#39;Some internal link&#39;</span><span class="p">,</span> <span class="s1">&#39;/some/internal/link/&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-applist-class">
+<h2>The AppList class<a class="headerlink" href="#the-applist-class" title="Permalink to this headline">¶</a></h2>
+<p>Module that lists installed apps and their models.
+As well as the <code class="xref py py-class docutils literal notranslate"><span class="pre">DashboardModule</span></code>
+properties, the <code class="xref py py-class docutils literal notranslate"><span class="pre">AppList</span></code>
+has two extra properties:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">models</span></code></dt><dd><p>A list of models to include, only models whose name (e.g.
+“blog.models.BlogEntry”) match one of the strings (e.g. “blog.*”)
+in the models list will appear in the dashboard module.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">exclude</span></code></dt><dd><p>A list of models to exclude, if a model name (e.g.
+“blog.models.BlogEntry”) match an element of this list (e.g.
+“blog.*”) it won’t appear in the dashboard module.</p>
+</dd>
+</dl>
+<p>If no models/exclude list is provided, <strong>all apps</strong> are shown.</p>
+<p>Here’s an example of building an app list module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># will only list the django.contrib apps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Administration&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,)</span>
+        <span class="p">))</span>
+        <span class="c1"># will list all apps except the django.contrib ones</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">AppList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Applications&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">exclude</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,)</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module takes into account user permissions. For
+example, if a user has no rights to change or add a <code class="docutils literal notranslate"><span class="pre">Group</span></code>, then
+the django.contrib.auth.Group model won’t be displayed.</p>
+</div>
+</div>
+<div class="section" id="the-modellist-class">
+<h2>The ModelList class<a class="headerlink" href="#the-modellist-class" title="Permalink to this headline">¶</a></h2>
+<p>Module that lists a set of models.
+As well as the <code class="xref py py-class docutils literal notranslate"><span class="pre">DashboardModule</span></code>
+properties, the <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelList</span></code> takes
+two extra arguments:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">models</span></code></dt><dd><p>A list of models to include, only models whose name (e.g.
+“blog.models.BlogEntry”) match one of the strings (e.g. “blog.*”)
+in the models list will appear in the dashboard module.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">exclude</span></code></dt><dd><p>A list of models to exclude, if a model name (e.g.
+“blog.models.BlogEntry”) match an element of this list (e.g.
+“blog.*”) it won’t appear in the dashboard module.</p>
+</dd>
+</dl>
+<p>Here’s a small example of building a model list module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">ModelList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Several Models&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;django.contrib.*&#39;</span><span class="p">,)</span>
+        <span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">ModelList</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Single Model&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;blog.models.BlogEntry&#39;</span><span class="p">,)</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module takes into account user permissions. For
+example, if a user has no rights to change or add a <code class="docutils literal notranslate"><span class="pre">Group</span></code>, then
+the django.contrib.auth.Group model won’t be displayed.</p>
+</div>
+</div>
+<div class="section" id="the-recentactions-class">
+<h2>The RecentActions class<a class="headerlink" href="#the-recentactions-class" title="Permalink to this headline">¶</a></h2>
+<p>Module that lists the recent actions for the current user.
+As well as the <code class="xref py py-class docutils literal notranslate"><span class="pre">DashboardModule</span></code>
+properties, the <code class="xref py py-class docutils literal notranslate"><span class="pre">RecentActions</span></code>
+takes three extra keyword arguments:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">include_list</span></code></dt><dd><p>A list of contenttypes (e.g. “auth.group” or “sites.site”) to include,
+only recent actions that match the given contenttypes will be
+displayed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">exclude_list</span></code></dt><dd><p>A list of contenttypes (e.g. “auth.group” or “sites.site”) to exclude,
+recent actions that match the given contenttypes will not be
+displayed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">limit</span></code></dt><dd><p>The maximum number of children to display.
+Default: <code class="docutils literal notranslate"><span class="pre">10</span></code></p>
+</dd>
+</dl>
+<p>Here’s an example of building a recent actions module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">RecentActions</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Django CMS recent actions&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-feed-class">
+<h2>The Feed class<a class="headerlink" href="#the-feed-class" title="Permalink to this headline">¶</a></h2>
+<p>Class that represents a feed dashboard module.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class requires the
+<a class="reference external" href="https://pypi.python.org/pypi/feedparser">Universal Feed Parser module</a>, so you’ll need to install it.</p>
+</div>
+<p>As well as the <code class="xref py py-class docutils literal notranslate"><span class="pre">DashboardModule</span></code>
+properties, the <code class="xref py py-class docutils literal notranslate"><span class="pre">Feed</span></code> takes two
+extra keyword arguments:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">feed_url</span></code></dt><dd><p>The URL of the feed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">limit</span></code></dt><dd><p>The maximum number of feed children to display.
+Default: <code class="docutils literal notranslate"><span class="pre">None</span></code> (which means that all children are displayed)</p>
+</dd>
+</dl>
+<p>Here’s an example of building a recent actions module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">grappelli.dashboard</span> <span class="kn">import</span> <span class="n">modules</span><span class="p">,</span> <span class="n">Dashboard</span>
+
+<span class="k">class</span> <span class="nc">MyDashboard</span><span class="p">(</span><span class="n">Dashboard</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Dashboard</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modules</span><span class="o">.</span><span class="n">Feed</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Latest Django News&#39;</span><span class="p">),</span>
+            <span class="n">feed_url</span><span class="o">=</span><span class="s1">&#39;http://www.djangoproject.com/rss/weblog/&#39;</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="internals.html" class="btn btn-neutral float-right" title="Internals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dashboard_setup.html" class="btn btn-neutral float-left" title="Dashboard Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Patrick Kranzlmueller.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
