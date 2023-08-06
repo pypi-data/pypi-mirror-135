@@ -1,0 +1,74 @@
+Metadata-Version: 2.1
+Name: asyncpg-listen
+Version: 0.0.3
+Summary: Helps to use PostgreSQL listen/notify with asyncpg
+Home-page: https://github.com/Pliner/asyncpg-listen
+Author: Yury Pliner
+Author-email: yury.pliner@gmail.com
+License: MIT
+Platform: macOS
+Platform: POSIX
+Platform: Windows
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: OS Independent
+Classifier: Environment :: Web Environment
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Framework :: AsyncIO
+Classifier: Typing :: Typed
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# asyncpg-listen
+
+This library simplifies usage of listen/notify with [asyncpg](https://github.com/MagicStack/asyncpg):
+1. Handles loss of a connection
+2. Simplifies notifications processing from multiple channels
+3. Setups a timeout for receiving a notification
+4. Allows to receive all notifications/only last notification depending on ListenPolicy.
+
+```python
+import asyncio
+import asyncpg
+import asyncpg_listen
+
+
+async def handle_notifications(notification: asyncpg_listen.NotificationOrTimeout) -> None:
+    print(f"{notification} has been received")
+
+
+listener = asyncpg_listen.NotificationListener(asyncpg_listen.connect_func())
+listener_task = asyncio.create_task(
+    listener.run(
+        {"channel": handle_notifications},
+        policy=asyncpg_listen.ListenPolicy.LAST,
+        notification_timeout=1
+    )
+)
+
+async with asyncpg.connect() as connection:
+    for i in range(42):
+        await connection.execute(f"NOTIFY simple, '{i}'")
+```
+
+## v0.0.3 (2022-01-23)
+
+* [Support python 3.8](https://github.com/anna-money/asyncpg-listen/pull/55)
+
+
+## v0.0.2 (2021-11-02)
+
+* [Support async-timeout 4.0+](https://github.com/Pliner/asyncpg-listen/pull/10)
+
+
+## v0.0.1 (2021-10-27)
+
+* A first version
+
+
