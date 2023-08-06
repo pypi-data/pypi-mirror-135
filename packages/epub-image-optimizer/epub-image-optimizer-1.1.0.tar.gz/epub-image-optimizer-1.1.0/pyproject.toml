@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "epub-image-optimizer"
+version = "1.1.0"
+description = "Small application to optimize images (and cover) inside epub files"
+authors = ["Javier Sacido <jabbo16@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/Jabbo16/epub-image-optimizer"
+repository = "https://github.com/Jabbo16/epub-image-optimizer"
+keywords = ["epub", "image", "optimizer", "cli", "tinify"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Utilities",
+    "Intended Audience :: End Users/Desktop",
+]
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+tinify = "1.5.2"
+Pillow = "9.0.0"
+click = "^8.0.1"
+lxml = "^4.6.3"
+defusedxml = "^0.7.1"
+coloredlogs = "^15.0.1"
+rich = "^11.0.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+black = "^21.7b0"
+pytest-cov = "^3.0.0"
+pre-commit = "^2.17.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+epub-image-optimizer = 'epub_image_optimizer.cli:main'
+
+[tool.black]
+target-version = ['py38', 'py39']
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
