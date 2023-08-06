@@ -1,0 +1,138 @@
+# ourkvm
+Our KVM solution. Cluster, API and local tools all in one.
+
+ * [![Flake8 Checks](https://github.com/Torxed/ourkvm/actions/workflows/flake8.yaml/badge.svg)](https://github.com/Torxed/ourkvm/actions/workflows/flake8.yaml)
+ * [![Bandit Security Checks](https://github.com/Torxed/ourkvm/actions/workflows/bandit.yaml/badge.svg)](https://github.com/Torxed/ourkvm/actions/workflows/bandit.yaml)
+ * [![mypy Type Checks](https://github.com/Torxed/ourkvm/actions/workflows/mypy.yaml/badge.svg)](https://github.com/Torxed/ourkvm/actions/workflows/mypy.yaml)
+ * [![PyPi Release Upload](https://github.com/Torxed/ourkvm/actions/workflows/pypi.yaml/badge.svg)](https://github.com/Torxed/ourkvm/actions/workflows/pypi.yaml)
+ * [![pytest Checks](https://github.com/Torxed/ourkvm/actions/workflows/pytest.yaml/badge.svg)](https://github.com/Torxed/ourkvm/actions/workflows/pytest.yaml)
+
+# What is ourkvm?
+
+There are four overall components:
+
+|Product             |Description                                                                        |
+|--------------------|-----------------------------------------------------------------------------------|
+|API                 |A FastAPI backend that browsers can talk to                                        |
+|Cluster             |The API optionally supports enabling cluster services                              |
+|CLI Tool            |A CLI tool that can produce virtual machines, report health and run cluster agents |
+|Library             |A Python library which the above uses to perform their tasks                       |
+
+## API
+
+The API is a rest API enabled by running `python -m ourkvm --api`<br>
+The API is built using [FastAPI](https://fastapi.tiangolo.com/).
+
+The API requires authentication and uses [OpenID connect](https://openid.net/connect/) and [JWT](https://jwt.io/) for SSO.<br>
+This is done using [fastapi_resource_server](https://github.com/livioribeiro/fastapi-resource-server). It's tested against [Keycloak](https://www.keycloak.org/) using a custom realm, users and roles/groups to isolate permissions.
+
+## Cluster
+
+The cluster communicates on port 8050 using JWT and standard sockets.
+For documentation on the protocol, see `docs/cluster` for more information.
+To register a cluster agent, simply run the CLI tool with the parameter `--cluster-agent`.
+
+## CLI Tool
+
+The library ships with a Python module that can produce qemu strings that you can use to launch a machine.<br>
+It can create local resources such as Qemu disk images, Virtual Machine templates, configuration and `.service` files.
+
+These `.service` files that the module generates, can be started with `systemctl --user start machineX.service` which is described below.
+
+### Creating a local virtual machine
+
+```bash
+$ python -m ourkvm \
+    --machine-name testmachine \
+    --namespace testmachine \
+    --memory 4096 \
+    --harddrives ./testimg.qcow2:20G,./testlarge.qcow2:40G \
+    --cdroms ~/archiso/out/*.iso \
+    --service /etc/systemd/system/ \
+    --config /etc/qemu.d/
+```
+
+The following will create a minimal virtual machine using NAT for networking, headless operation meant to be started with `systemctl start testmachine.service`.
+
+### Stopping a machine
+
+```bash
+$ sudo systemctl stop testmachine.service
+```
+Using the above example service of `testmachine.service`, the service will trigger `python -m ourkvm --machine-name testmachine --stop` which will attach to the Qemu QMP socket at `/tmp/testmachine.qmp` and execute a `poweroff` *(followed by `qemu-quit` after a grace period if the machine has not yet powered off)*.
+
+### Adding custom networking
+
+```bash
+$ python -m ourkvm \
+    --machine-name testmachine \
+    --namespace testmachine \
+    --memory 4096 \
+    --harddrives ./testimg.qcow2:20G,./testlarge.qcow2:40G \
+    --cdroms ~/archiso/out/*.iso \
+    --service /etc/systemd/system/ \
+    --config /etc/qemu.d/ \
+    --network '[ {  "type": "tap",  "name": "tap0",  "bridge": "ns_br0",  "namespace": {"from": null, "to": true},  "attach": true}, {  "type": "veth",  "name": "vens0",  "bridge": "test_bridge",  "namespace": {"from": null, "to": true},  "veth_pair": "vens0_ns" }, {  "type": "veth",  "name": "vens0_ns",  "bridge": "ns_br0",  "namespace": {"from": null, "to": true},  "veth_pair": "vens0",  "mac": "fe:00:00:00:00:01" }]'
+```
+
+Adding to the previous example, this will add networking according to the following JSON layout:
+
+```json
+[
+    {
+        "type": "tap",
+        "name": "tap0",
+        "bridge": "ns_br0",
+        "namespace": {"from": null, "to": true},
+        "attach": true
+    },
+    {
+        "type": "veth",
+        "name": "vens0",
+        "bridge": "test_bridge",
+        "namespace": {"from": null, "to": true},
+        "veth_pair": "vens0_ns"
+    },
+    {
+        "type": "veth",
+        "name": "vens0_ns",
+        "bridge": "ns_br0",
+        "namespace": {"from": null, "to": true},
+        "veth_pair": "vens0",
+        "mac": "fe:00:00:00:00:01"
+    }
+]
+```
+
+This creates several network components. Beginning from the top of the JSON file *(but backwards logically)*:
+
+ 1. A `tap0` interface attached to the virtual machine
+ 2. A bridge `ns_br0` connecting `tap0` to it
+ 3. Moving the above two interfaces into a namespace called `testmachine`
+ 4. Creating a veth-pair of `vens0`<-->`vens0_ns`
+ 5. Creating a bridge called `test_bridge`
+ 6. Adding `vens0` to the `test_bridge`
+ 7. Moving `vens0_ns` into the namespace `testmachine`
+ 8. Sets MAC address FE:00:00:00:00:01 to interface vens0_ns upon VM startup
+
+Creating a network chain that looks like the following:<br>
+`[host] test_bridge <--> vens0--|--vens0_ns <--> ns_br0 <--> tap0 [vm]`.<br>
+The API will take care of creating the elaborate network infrastructure, but the CLI does the work for now.<br>
+<br>
+***Note:** the `namespace` declaration in the network struct is `True` and will automatically get converted to the `--namespace` definition. Specific namespace names can be supplied here instead if the VM are to connect between multiple namespaces using bridges or veth interfaces.*
+
+*note: MAC addresses will be auto-generated for tap0 and vens0 in the above example upon creation*
+
+# Contributing
+
+We use tabs over spaces. We follow pep8 to some extent using [Flake8](https://flake8.pycqa.org/en/latest/) *(see `.flake8` for exceptions)*. We follow strict typing using [mypy](http://mypy-lang.org/) with the `--strict` parameter and we require every function to have a associated [pytest](https://docs.pytest.org/) function under `/tests/`.
+
+We welcome PR's on any addition/change. They might not all make it, but we develop straight against `main` which is our master branch. Occational `vX.y.z-dev` branch might appear to fix an older version while a major release is being on the way. PR's will not be merged until the three GitHub workflows *(flake8, mypy and pytest)* have completed successfully.
+
+# Help
+
+Feel free to open a issue if you think it's a bug or you want to suggest an improvement.
+
+# Discussions
+
+Open a discussion on a topic you believe is relevant to discuss or talk about surrounding ourkvm, if it doesn't fit the #help section.
