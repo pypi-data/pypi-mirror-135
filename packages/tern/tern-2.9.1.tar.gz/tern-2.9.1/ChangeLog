@@ -1,0 +1,1078 @@
+CHANGES
+=======
+
+v2.9.1
+------
+
+* Prepare for patched release 2.9.1
+* Fix scancode KeyError during license parsing
+* classes: Parse extended attributes
+* Fix retrieving image digest
+* Fix CycloneDX report generation
+
+v2.9.0
+------
+
+* Prepare for Release 2.9.0
+* Use Skopeo to pull container images
+* formats: Modify layer title based on manifest
+* Modify environments to install skopeo
+* Change -i option to use OCIImage
+* Replace get\_untar\_dir with ImageLayer method
+* classes: Add OCIImage class and use image\_layout
+* classes: Move get\_untar\_dir to ImageLayer
+* fix: unmount rootfs only for fuse and overlay2
+* Collect dpkg and rpm source pkg info
+* Collect dpkg and rpm source information
+* Add source package info to package data model
+* Enable Tern to run in an unprivileged container
+* Update README.md with new Docker instructions
+* Use the default driver in Dockerfile
+* Fix application for multiple cached layers
+* Enable multi-layer analysis with no mount
+* Remove unnecessary mounting and unshare commands
+* classes: Add new property is\_whiteout
+* Allow whiteout files to be accessed by fs\_hash.sh
+* Multiple checks for keys in check\_sourcable func
+* updating setup.cfg fields
+* Report Debian package licenses in default report
+* Add SPDX "document DESCRIBES image" relationship
+* Add DockerException when daemon not running
+* Fix for SPDX JSON format to match SPDX JSON schema
+* Scancode should run n-1 core
+* Remove unused clean\_image\_tars function
+* Change SPDX pkg download location to NOASSERTION
+* Remove unused functions from lock.py
+* Direct check for key in command\_lib['snippets']
+* Update VS Code documentation for Mac/Windows
+* Direct check for key in command['base'] dictionary
+* Change package download location to NOASSERTION
+* Fix CI status badge
+* Direct check for key in os\_release\_dict
+
+v2.8.0
+------
+
+* Prepare for Release 2.8.0
+* Cleanup unecessary files
+* Add cyclonedxjson to help menu
+* Fix: duplicate scancode files being reported
+* Add Maintainer and Governance Info
+* Update docs around getting started in VS Code
+* Suppress some pylint warnings
+* Force prospector version 1.5.1 to be installed
+* fix: Pass the redo flag to the executor
+* Remove \`/\` from image SPDX Identifier Reference
+* Prospector 1.4.1 fixes
+* Add CycloneDX JSON output support
+* Fix: Ignore newlines in os\_release file
+* Explain commit message guidelines better
+* Fix duplicate line in Dockerfile.scancode
+* formats: Add spdxjson consumer
+* Remove requirements.scancode.txt
+* Add pkg\_format values to base.yml
+* Identify Distroless version in os-release file
+* Added test for the pkg\_format property
+* Created a functional test suite for releases
+* Deprecate run\_on\_image()
+
+v2.7.0
+------
+
+* Prepare for Release 2.7.0
+* Fix live execution if no previous sboms are given
+* Fix Scancode collection of package licenses
+* Show package type in default report
+* Bump debian-inspector version
+* Make "tern lock" work for multistage docker file
+* Fix prereqs.fs\_shell variable naming
+* Introduce JSON consumer
+* Fix diffing of packages in layers
+* Connect machinery to ingest previous reports
+* main: Add command line arg for consuming reports
+* Install scancode in /install
+* Install scancode with fixed dependencies
+* formats: Add layer level JSON consumer
+* formats: Add consumer abstract base class
+
+v2.6.1
+------
+
+* Bump release 2.6.0 to 2.6.1
+* Prepare for Release 2.6.0
+
+v2.6.0
+------
+
+* Record and report scancode file licenses
+* Update README with Cybersecurity EO/SPDX info
+* Add 'Understanding the Reports' section to README
+* Added copyright info for NPM packages
+* Update debug execution path with prereqs object
+* scancode: filter license from pip pkg classifiers
+* Replace \`debut\` with \`debian-inspector\`
+* Better parsing of created\_by values
+* ADD/COPY command analysis by tern
+* Fixed an issue with the export command
+* CI: Test lock with single stage Dockerfile
+* Clean up lines in default report
+* Deprecate command library commands in reports
+* Update 'invoke\_for\_base' Notice verbiage
+* Reorganize package metadata info in default report
+* Reorganize package metadata info in default report
+* Add prettytable dep to reformat default report
+* Remove regex based filtering for prop\_names
+* Generate SBoMs at container build time
+* fix: Set layer creation notice only on cache miss
+* Add devcontainer configuration
+* Handling the traceback in commit message linting
+* Fix linting errors and cyclic import
+* SPDX JSON SBoM generation at container build time
+* Add reporting for OS type
+* Account for "host" scripts
+* Add JSON and YAML generator for layer object
+* Add HTML format for one layer object
+* Enable default format reporting for live run
+* Hook up --live with execution path
+* Added a new option -l,--live to report subcommand
+* Introduce inventory of live container
+* Use slim variant of Debian Buster as base image
+* Add project\_urls to debian based images
+* Use dpkg-query to list installed packages on debian
+
+v2.5.0
+------
+
+* Prep for Release 2.5.0
+* fix: Include information about layer's created\_by
+* Use deepcopy to find key listing dictionary
+* Fix duplicate OS notices
+* Set WORKDIR directory to collect go modules
+* Refactor: Combine distroless into generic "host"
+* bugfix: Escape empty braces when parsing snippets
+* Add jq dependency to Dockerfiles and README
+* Use jq to detect npm components
+* Add GitPython as a runtime dependency
+* Update community meeting time to UTC time zone
+* Add initial support for distroless containers
+* Compare ordered pkg\_licenses for Package objects
+* Use GitPython for all git operations
+* Timeout for pulling large images
+* Fix execution path for raw image tarball
+* Fix for docker registries hosted on different port
+* Refactor: pass arguments as a single object
+* Fix error msg when no created\_by info for layers
+* Minimize complexity of do\_main
+* Generate SBoM for single layer
+
+v2.4.0
+------
+
+* Prep for Release 2.4.0
+* Fix duplicate package reporting for alpine images
+* Enabled SPDX document validation for CI
+* Bug fix for images that don't have repos or tags
+* Added run\_extension\_layer for ImageLayer object
+* Warn user when he sets --layer too large
+* Fix docstring in cache.py
+* Add layer support to default reporter
+* Implement partial analysis
+* Add print\_inclusive parameter to generate()
+* Add -li --layer-inclusive CLI argument
+* Prepare Image class for partial image loading
+* Add -y --layer option to command line
+* Fix for not retrieving cached notices
+* Load notices from cache for each layer
+* Refactor get\_os\_style to set the right properties
+* Fix tests for human readable id creation
+* Fix image human readable id formatting
+* Update tests to refer to the main branch
+* Add community meeting info to README
+* Make scancode use more processes
+* Set SPDX PackageDownloadLocation to valid value
+* Remove repotag:PackageDownloadLocation mapping
+* Set spdxtagvalue PackageDownloadLocation to NONE
+* Set spdxjson image downloadLocation to NOASSERTION
+* Add File support for JSON SPDX Documents
+* Only include fileType if it exists
+* Add extractedText licenseRef info to spdxjson docs
+* Add new function get\_extracted\_text\_dict()
+* Use LicenseRef for spdxjson File licenses
+* Update spdxtagvalue file-related functions
+* Add spdxjson information to README
+* Add support for SPDX JSON format
+* Add support for SPDX JSON format
+* Refactor: move common functions to spdx\_common.py
+* Create spdx\_common.py for common functions
+* Move spdx/formats.py to spdxtagvalue directory
+* Add spdxjson command line format option
+* main: Fix formatting for -wd option
+* Change vagrant box to generic/ubuntu1804
+* Add libvirt provider support to Vagrantfile
+* Change Vagrant box to generic/ubuntu1804
+* Add info about Discussions in CONTRIBUTING.md
+* Introduce debug subcommand
+* Updated documentation with tern debug instructions
+* Move container\_debug script into debug subcommand
+* Add subcommand debug to replace verify\_invoke
+
+v2.3.0
+------
+
+* Prep for Release 2.3.0
+* merge: Enable analysis for multistage Dockerfiles
+* Fix ci build for locking a Dockerfile
+* Fixes for reading and writing Dockerfiles
+* Fix Dockerfile build with context
+* Enable multistage Dockerfile analysis
+* Replace the short driver option with -dr
+* Add subroutine to analyze multistage Dockerfiles
+* Update code navigation document
+* Add Dockerfile for scancode
+* Add 'apt' Snippet In Command Library
+* Fix crash when a chroot command fails
+* Fix Dockerfile analysis if no base image is found
+* Gracefully exit if there is no image to analyze
+* Fix unbound local error when repo digest is given
+* Recognize assignments before command in script
+* merge: Organize code under tern/analyze
+* Fix tests after refactor
+* Shorten fill\_package\_metadata function
+* Re-enable Dockerfile lock
+* Fix operation errors after refactor
+* Refactor functions with too many branches
+* Complete Dockerfile analysis
+* Fix multi-layer container analysis
+* Fix single layer analysis
+* More moving of code into logical places
+* Organized code in the analyze folder
+* Move multi-layer analysis to default
+* Move command\_lib into default and organize
+* Create new folder for default operation
+* merge: Move external interactions to load directory
+* Remove container.py and some deprecated functions
+* Fix checksum parsing and Dockerfile building
+* Fixed tests and linting for common.py and Package
+* Fix loading package files from cache
+* Hook up docker\_api to setup and teardown
+* classes: Use load functions in DockerImage
+* load: New code section for external interactions
+* merge: Map layer files to packages
+* Fix error caused by tabs in ENV
+* Add file info for packages
+* Extract file info for packages
+* docs: Add GitHub Action link in README
+* ci: Update python version for GHA
+* Refactor Dockerfiles
+
+v2.2.0
+------
+
+* Prep for Release 2.2.0
+* merge: Integrate package data from scancode
+* Reconcile scancode packages with existing ones
+* Include packages collected by scancode in reports
+* Split multistage dockerfile for building images
+* Enable golang package listing
+* Set environment vars before package collection
+* Add logic to find shell in Alpine images
+* Remove warning to Mac users in README
+* Skip empty layers during analysis
+* merge: Run in container on a non-linux host
+* Update utilities to set working directory
+* Enable Terns run in a container for non-Linux host
+* Amend Dockerfile and docker\_run for fuse-overlayfs
+* Add support to execute commands from WORKDIR
+* Fixes exit with complicated RUN statement
+* merge: Improve branch statement reporting
+* Add test for get\_shell\_commands()
+* Add report for branch statement
+* Fix package version collection for Alpine
+* Update functions for shell script parser
+* Bump up prospector and bandit versions
+* github actions: Use a supported python version
+* Add docker APIError to list of possible exceptions
+* Removing multiple options to instantiate Image class
+* Remove raise immediately statements
+* Use container image layer index
+* Remove extra underscore in Image class properties
+* Add CI test for HTML format
+* Print report to console if no output file provided
+* Remove failing CircleCI badge from README
+* Add HTML report format
+* Add new HTML report format
+* Move license collection reporting to content.py
+* Update GH Actions for better UI presentation
+* Remove circleci from running on pull requests
+* merge: Initial RUN shell script parser
+* Quick fix on pipe symbol and export cmd
+* Generate report.txt when no output file specified
+* Add parse loop and use clean\_command()
+* Replace yaml file cache
+* utils: Use JSON instead of YAML as cache
+* extensions: scancode: Store headers as a list
+* formats: spdxtagvalue: Fix missing LicenseRef
+* Using Regex to split shell script
+* Adding microdnf package type
+* formats: spdxtagvalue: Fix 2.2 validation errors
+* Don't set digest type for raw image tarballs
+* Adding zypper to analyze openSUSE images
+* Add test dockerfiles for split shell script
+* Allow for multiple snippet install and remove cmds
+* Update README with support Docker image info
+
+v2.1.0
+------
+
+* Prep for Release 2.1.0
+* Fix package pinning when package is also pkg mngr
+* extensions: scancode: Fix file type reporting
+* extensions: cve-bin-tool: Print error and result
+* Fix error with missing keys in cache
+* classes: Set digest when instantiating DockerImage
+* formats: spdxtagvalue: Update to SPDX 2.2
+* Update warning message to be more helpful
+* formats: spdxtagvalue: Add extension\_info headers
+* Add Scancode header in generated documents
+* Get Debian package licenses from copyrights
+* Parse Debian copyright texts to get licenses
+* classes: package: Add property pkg\_licenses
+* Enable -r--/redo option for extensions
+* Enable npm and yarn package listing
+* extensions: scancode: Increase timeout limit
+* Let GNU tar extract leading forwardslash members
+* Bug fix if image has no created\_by key
+* analyze: Reduce branches in analyze\_first\_layer
+* Look for shell in filesystem
+* Adding support for bundler
+* Update base.yml to echo debian copyright file path
+* Run prospector on all files for CI tests
+* formats: spdx: add PackageComment for layers
+* Revert "Update base.yml to echo debian copyrig..."
+* command\_lib: Remove shell listing from base.yml
+* analyze: Update finding and using a shell binary
+* command\_lib: Add new file common.yml
+* Update base.yml to echo debian copyright file path
+* Enable gem package listing
+* Undo mount operation in event of errors
+* Enable pip package listing
+* Fix infinite loop in container\_debug.py
+* utils: Exclude whiteout files when extracting
+* Combine RUN commands in Tern's Dockerfile
+* tools: Update container\_debug and verify\_invoke
+* Fix prospector too-many-branches error for plugins
+* Fix linting error for helper.py
+* Fix linting error for generator.py
+* Use absolute path for ADDed Dockerfile files
+* Add CI test for Dockerfile lock
+* docs: Update the project roadmap for 2020
+* Include file level data into SPDX documents
+* spdxtagvalue: Fix SPDX validation errors
+* spdxtagvalue: Create valid doc with file data
+* scancode: Include file\_type and checksums
+* classes: Modify checksums data structure
+* tools: Hash only non-empty files
+* formats: spdx: Use helpers in generator
+* formats: spdx: Move image level SPDX to a new file
+* formats: spdx: Move layer functions to new file
+* classes: Get checksum for docker images
+* formats: spdx: Move package format to new file
+* formats: spdx: Add Package Verification Code
+* formats: spdx: Add file block functions
+* classes: Add short\_file\_type to FileData class
+* Point to new code hosting link
+* Add docs to create a dev env. when using vagrant
+* Increase timeout for pulling large images
+* Add exception for raw container image teardown
+* Find Git Project URL
+* Fixed some typos and grammar in docs
+* Add documentation about Dockerfile lock
+* Preserve newline characters in Dockerfile.lock
+* Add ‘checksums’ properties to Image and ImageLayer
+* Add test to validate cache behavior on layers
+
+v2.0.0
+------
+
+* Prep for Release 2.0.0
+* Except 'NotFound' error if FROM image DNE
+* Fix file and base OS caching
+* merge: Dockerfile lock cleanup
+* docs: Update scancode documentation
+* Replace manual dfile parser with dockerfile-parse
+* Update parsing functions to use dockerfile objects
+* Add dfile\_lock & dfobj flags to analysis functions
+* analyze: Fix caching for base layer
+* Don't store multiple copies of notices
+* analyze: Resolve loading files and packages
+* analyze: Find the base OS binary without mounting
+* Add quotations around Dockerfile name for clarity
+* Revert "Check cache before finding shell"
+* Include base OS value in Tern's data model
+* file\_data.py: Add checksums property
+* Fix TypeError for Dockerfile scratch base images
+* analyze: docker: Check cache before finding shell
+* Include file level licenses in the default report
+* merge: Add dockerfile lock feature
+* Add dockerfile lock functionality
+* Include dockerfile lock in execute\_dockerfile()
+* Change path to absolute when building from dfile
+* Add function to return pinning\_separator
+* Add locked dockerfile to constants
+* Add Dockerfile lock functionality to Tern CLI
+* Record git project name and sha
+* CLI: Removed -l option add a --quiet option
+* merge: Integrate file level data from scancode
+* tests: test\_analyze\_common.py
+* Parsing ARG variables
+* extensions:scancode: Only scan at directory level
+* Cache file level data
+* Update FileData object and scancode executor
+* classes: Add merge method to FileData class
+* extensions: scancode: Fix call to get\_file\_command
+* Add .tox and .coverage to gitignore
+* Load FileData info from cache
+* Integrate scancode data
+* Parse package name from version
+* extensions: Integrate scancode results
+* classes: Add file\_type setter to FileData
+* image\_layer.py: Extract file data attributes
+* tests: test\_class\_image
+* Add --wd argument to change the working directory
+* Document YAML data output that Tern produces
+* classes: Add FileData object list to package class
+* classes: Added FileData object list to ImageLayer
+* tox.ini: configure and run tox
+* Extract sha digest of Docker image
+* container: close the client socket
+* README: Clarified extensions usage
+* Added --rm in docker\_run.sh
+* Added conditional to check the mountpoints
+* Cleanup README
+* formats: spdx: Add implementation for file\_data
+* Add new class FileData
+* tests: Fix reuse of python builtin id
+* Add new class FileData
+* Remove coverage --fail-under flag
+* config.yml: Add coverage
+* test\_class\_docker\_image: Add a test image
+* ci/cd: Migrate Tern from CircleCI to GH Actions
+* Remove unwanted tests
+* Use dockerfile\_parse to get Dockerfile info
+* \_\_main\_\_.py: Check docker image string
+* customizes usage instructions for MAC users
+* Bump prospector version and disable pep8 N802
+* extensions: scancode: Ignore stderr if json exists
+* Run extensions with sudo
+* Update copyright dates for 2020
+* analyze: use passthrough command full path
+* utils: Update shell\_command calls
+* Allow cve-bin-tool and scancode to run as root
+* Allow plugin provided commands to run as root
+* utils: Move check for userid to general
+* circleci: Update prospector profile
+* merge: pep8/pylint fixes
+* Fix pylint cyclic-import error
+* Fix no-else-continue pylint error from prospector
+* Fix pep8 E121 linting error from prospector
+* Remove semicolon from end of line
+* Fix unnecessary-pass pylint error from prospector
+* Fix N805 pep8 error from prospector
+* Fix pep8 E126 and W293 errors from prospector
+* executor: scancode: Use pip package
+* docs: Update README project status
+* Corrections to release chklist and v101 rel. notes
+
+v1.0.1
+------
+
+* release: Prep for Patched Release 1.0.1
+* merge: Fix overlayfs mount location
+* ci: Use test Dockerfile to run Tern from master
+* cleanup: remove unnecessary blank lines
+* Delete bind\_mount argument from clean\_working\_dir
+* Set working dir based on --bind\_mount CLI option
+* Clean working dir the same for --bind-mount option
+* Update Dockerfile to run in container
+* Change bind\_mount CLI option to store value
+* Dockerfile: add tar dependency
+* release: New post release flow and corrections
+* docs: Tern Lab tweaks
+* docs: install \`wheel\` as part of setup in the lab
+* docs: add git to the install dependencies in the lab tutorial
+* docs: fix a typo in the lab tutorial
+* docs: fix JSON report generation command in lab tutorial
+
+v1.0.0
+------
+
+* release: Prep for Release 1.0.0
+* circleci: Remove auto deploy to PyPI
+* merge: Documentation updates for Extensions
+* docs: Added extensions to navigating the code doc
+* docs: Update Contributing section in README
+* docs: Added link back to README in individual docs
+* docs: Updates to architecture
+* docs: Updates to glossary
+* README: Added content for using tool extensions
+* docs: Added creating extensions and data model
+* docs: Update directions to activate venv
+* docs: Update custom formats documentation
+* extensions: Added initial scancode extension
+* tools: Fix imports for container\_debug
+* Catch exceptions when docker is not set up
+* docs: Fix lab tutorial formatting typo
+* docs: Add Strigo lab tutorial for Tern
+* Soldier on if Dockerfile build fails
+* Fix-up license summary for Dockerfile built images
+* Fix soldiering on if Dockerfile build fails
+* Fix info overwriting  when retrieving from cache
+* merge: Create external tool extensions
+* analyze: docker: Refactor to reduce complexity
+* extentions: Enable cve-bin-tool
+* extensions: Add cve-bin-tool extension
+* extensions: Added setup for extension plugins
+* Enable cli to use raw container image
+* Merge: Precautions against external interference
+* spdx: Remove invalid characters from LicenseRef
+* cache: move cache file to dot folder
+* tools: switch debug directory to hidden folder
+* Move working directory into hidden dot folder
+* Safely unmount on keyboard interrupt
+* merge: Refactor docker image analysis to new module
+* Refactor: deprecate tern/helpers folder
+* Refactor docker-specific analysis to new module
+* docs: Update references in navigating-the-code.md
+* Report package information by layer
+* Add analyzed\_output property
+* Set PackageDownloadLocation as NOASSERTION
+* ci: Replace unit test for DockerImage class
+* Create default report plugin and deprecate verbose
+* Add files\_analyzed property to ImageLayer
+* report: Add external tool passthrough
+* report: Add missing copyright and license header
+* CLI: update command line 'report' options
+* cli: Update "report" help info to be more useful
+* Check tarballs before extracting
+* spdx: Handle reporting for empty license metadata
+* merge: Untar tarballs files with root permissions
+* utils: Added extra checks for extracting archives
+* Extract tarballs in Ubuntu:14.04
+* Allow Tern to pull by digest
+* Check for binary after base image layer is mounted
+* docs: Updates based on current project status
+* Refactor analyze\_docker\_image
+* fix: Remove hardcoded version string
+* ci/cd: Stop prospector errors for imports
+* docs: update README to call yaml report correctly
+* Dockerfile: install tern using pip
+* requirements: Add stevedore
+* Wrap python2.7 error message
+* docs: Update README to call json report correctly
+* Separate YAML formatting into its own plugin
+* Separate json formatting into its own plugin
+* Remove dev-requirements.txt and redundancy in circleci
+* release: Modify deployment steps
+* docs: Updated to release 0.5.4
+* docs: Release notes for release 0.5.3
+* ci/cd: Update description key in setup.cfg
+* docs: Release notes for release 0.5.2
+* ci/cd: Fix typo in pypirc file
+* docs: Release notes for release 0.5.1
+* ci/cd: Remove 'verify' custom command
+* docs: Release notes and freeze for v0.5.0
+* Install tern in dev mode
+* update dockerfile.py with raw string notation
+* Feature: Introduce stevedore plugins to Tern
+* ci/cd: Add a pre-deploy to use release reqs file
+* REVERT-ME: disable Travis
+* circleci: Change mirrors to prevent test failures
+* classes: Removed unnecessary pass
+* docs: Use pip-tools when cutting a release
+* tools: Added requirements.in file
+* ci: Run tests in parallel
+* ci: TravisCI equivalent tests
+* docs: Add a release checklist
+* Build a binary wheel of the Tern module for PyPI
+* docs: Require wheel to be installed
+* Report base OS for image with /etc/os-release
+* Add git commit sha1 from git repo to -V option
+* Pin requirements only upto the minor version
+* Fix incorrect reporting when fs\_hash.sh fails
+* ci: Create build and release pipeline for Tern
+* Fix vagrant documentation and bootstrap file
+* Add a version argument to tern CLI
+* Added Checksum as a Package Property
+* Add functionality to report repo style and distro
+* common.py: Add get\_os\_style function
+* command\_lib: Change variable name for consistency
+* command\_lib: Add check\_pkg\_format function
+* Add pkg\_format attribute to image\_layer class
+* Add pkg\_format to each package manager in base.yml
+* docs:Improve CONTRIBUTING.md
+* ci: Fix commit linter not testing body
+* ci/cd:Add long\_description\_content\_type to setup.py
+* tools: Add tool to debug a container image
+* utils: pep8: Fix line continuation error
+* report: Separate prep\_rootfs from mount\_overlay\_fs
+* Fix incorrect test to run in circleci
+* Clean up PEP8 style inconsistencies in setup.py
+* Improves setup.py
+* ci: Fix pipe error if there are no changes
+* ci: Enable linting for each .py file in the PR
+* ci: Make test\_suite a dictionary of lists
+* ci: Fix another exit and print error
+* ci: Fix exit statement for change based tests
+* ci: Fix print statement and PEP8 errors
+* ci: Don't run prospector for .md file changes
+* Remove 'D' from utf header in test\_files\_touched.py
+* Run tests based on which files were touched
+* Remove tests/test\_commit\_message.py
+* docs: Add ci to directory list
+* fix: ci: Check for no commits
+* Make sure commit linter checks all commits
+* Separate bandit and prospector linting in circleci
+* Add GitPython dev requirement
+* tests: Add commit message linting script
+* helpers: Consolidate instances of the same command
+* classes: Added merge method to combine commands
+* tern: Use split\_command for long commands
+* utils: Added function to split a command string
+* utils: Moved cleaning command strings to general
+* Add Bandit to linting tools
+* Create 'helpers' folder for a few module files
+* README: Replaced build badge with CircleCI badge
+* circleci: Enable Prospector run for every commit
+* report: spdxtagvalue: Fix Prospector errors
+* Cleanup and add missing SPDX copyright headers
+* Removed .travis.yml
+* Add Circle CI config file
+* README: Break up unnecessarily long sentence
+
+v0.4.0
+------
+
+* release: Cut release v0.4.0
+* report: spdxtagvalue: Generate license reference
+* report: spdxtagvalue: Format license into SPDX format
+* report: spdxtagvalue: Added missing mandatory fields
+* requirements: Bump up versions for all dependencies
+* docs: Fixed errors in steps to run
+* docs: Updated project roadmap
+* docs: Updated architecture documents
+* docs: Updated code navigation document
+* cache: Removed unused cache.yml file
+* docs: Removed contributing-setup.md
+* docs: README: Added new information with formatting
+* docs: Added section on development environment
+* Added docs for SPDX tag-value proposal
+* docs: Added docs for custom templating
+* Tighten SPDX document reporting
+* report: spdxtagvalue: Fix typo and add newline
+* report: spdxtagvalue: Reorder and format fixes
+* report: spdxtagvalue: Fixes to formatting
+* Plugin SPDX formatting functionality
+* main: Move check\_file\_existence out of main
+* main: Add argument for format type
+* report: spdxtagvalue: Full generator implementation
+* report: content: Fixed unnecessary else
+* report: spdxtagvalue: Image level reporting
+* report: spdxtagvalue: Fixes to generator
+* report: spdxtagvalue: Document level SPDX tag-value
+* classes: Added method to get an image name
+* refactor: Separate version reporting
+* report: spdxtagvalue: Added formats for SPDX document
+* report: Wrote up skeleton code for SPDX generator
+* report: Initial addition of SPDX doc generator
+* Rename 'src\_url' to 'proj\_url'
+* Add test for get\_package\_id in the Package class
+* classes: Modified SPDX template to match spec
+* classes: Add download\_url property to Package class
+* Added get\_package\_id method to the Package class
+* merge: Allow for Copyright text metadata
+* classes: Fix check for property filter
+* PEP8: Fix lines longer than 80 characters
+* report: Modify formatting to accomodate copyrights
+* refactor: Separate collecting and formatting metadata
+* command\_lib: Add copyright to base keys
+* classes: Check for missing properties in fill method
+* command\_lib: Removed individual package collection
+* classes: Added copyright property to Package class
+* Fix to resolve inability to look up cached data
+* report: updated package object's license property
+* utils: Fix functions to update the cache properly
+* ISSUE\_TEMPLATE: Added task and tinytask templates
+* tests: Removed unnecessary print statements
+* Added encoding annotation to python source files (#238)
+* Renaming license to pkg\_license in all classes and tests
+* tests: Added new test file for class Origins
+* classes: Allow Origins class to accept Template
+* Accept Template object in class NoticeOrigin
+* classes: Removed 'levels' from dict object
+* Accept Template object in Notice class
+* Groundwork for custom templating - 2
+* Added test for templating in Image class
+* classes: to\_dict accepts Template for DockerImage
+* classes: Refactor to\_dict for Package class
+* classes: Refactor to\_dict for ImageLayer
+* tests: Added more tests for Image class
+* Image class's to\_dict method takes Template object
+* classes: Removed unnecessary redefined-builtin
+* Renaming id to image\_id in all classes and tests Resolves part of issue #213
+* Removing an unused argument from get\_base\_bin
+* tests: dismiss warning for subprocess module
+* tests: Replace Copyright docstring with comments
+* classes: Package: code, comments and tests cleanup
+* classes: Modified to\_dict method for ImageLayer
+* tests: Added template test to Package unittest
+* tests: Added tests for templates
+* tests: Fixed Package class tests
+* classes: Modified to\_dict method to use template
+* utils: Added function to get object properties
+* classes: Fixed method name image\_layer
+* classes: Added initial template - SPDX
+* classes: Added abstract class Template
+* Adding 'attr' install in vagrant bootstrap
+* Resolve code check issues for tern/utils/dockerfile.py
+* Updated requirements to direct dependencies
+* Resolve code check issue for tern/tools/verify\_invoke.py
+* Resolve code check issues for tern/\_\_main\_\_.py
+* Resolve code check issues for tern/common.py
+* Resolve code check issues for tern/docker\_helpers.py
+* Resolve code check issues for tern/command\_lib/command\_lib.py
+* Minor edits to the README.md file
+* Resolve code check issue for tern/classes/command.py
+* Resolve code check issues for tern/classes/docker\_image.py
+* Resolve code check issues for tern/classes/image.py
+* Resolve code check issues for tern/classes/image\_layer.py
+* Resolve code check issues for tern/classes/notice.py
+* Resolve code check issues for tern/classes/notice\_origin.py
+* Resolve code check issues for tern/classes/origins.py
+* Resolve code check issues for tern/classes/package.py
+* Resolve code check issues for tern/report/errors.py
+* Resolve code check issues for tern/report/content.py
+* Resolve code check issues for tern/report/formats.py
+* Resolve code check issues for tern/report/report.py
+* tests: Fixed some simple class tests
+* tools: Update verify\_invoke.py script
+* Add initial support for rpm based distros
+* Resolve code check issues for tern/utils/container.py
+* Resolve code check issues for tern/utils/constants.py
+* Resolve code check issues for tern/utils/cache.py
+* Resolve code check issues for tern/utils/general.py
+* Resolve code check issues for src/utils/metadata.py
+* Resolve code check isues for src/utils/rootfs.py
+* README: modified install scripts to use pip
+* Make tern pypi installable
+* Dockerfile: remove WORKDIR instruction
+* travis: fix executable script
+* Dockerfile: use the pip installable command
+* utils:general: fix "not running inside a git repo"
+* setup: bump version, make importable
+* tern: use pkg\_resources to do information lookup
+* setup: syntax fixes
+* tern:main: factor main into a function
+* tern: batch import fixes
+* utils/cache: catch non-existing cache
+* src -> tern
+* Add development requirements file
+* command\_lib:base,snippets: add archlinux support
+
+v0.3.0
+------
+
+* Added Release 0.3.0 notes
+* Added a demo gif
+* Updated docs and project roadmap
+* Dismiss security issues for subprocess and random
+* Refactor: Move all source code to src folder
+* Fixed issues discovered by security linter
+* Added Dockerfile and script to run in a container
+* Report out to stdout by default
+* Added -b option to work with bind mount directory
+* Added listing for tdnf command
+* Enabled console logging as an option
+* Remove logging's console StreamHandler
+* Call fs\_hash.sh tool using root\_command wrapper
+* Pull docker image if not on disk
+* Convert Docker CLI calls to Docker API calls
+* Updated git stash commands in dealing with cache
+* Rename docker.py to docker\_helpers.py
+* Fix typo for adding a notice to list of origins
+
+v0.2.0
+------
+
+* Added Release Notes for v0.2.0
+* Compare package objects rather than package names
+* Rewrite cache when --redo is True
+* Add command line argument to redo cache
+* Fixed error with skipping extraction of base layer
+* Load from cache only when redo=False
+* Fixed error message for unknown filesystem
+* Check if working directory exists before removing
+* Improvements to CONTRIBUTING accessability
+* Added issue templates for different issues
+* Added reference to Vagrant setup
+* Added quick links and updated intro in README.md
+* Added an issue template
+* Update vagrant setup
+* Remove existing\_layers, check from save\_to\_cache
+* Added command line for JSON output file
+* JSON formatted report
+* Changed cmdline option to -Y for yaml file output
+* Add YAML generation command to README.md
+* Generate YAML report
+* Added notices to dict representation of classes
+* Updates for full functional testing
+* Add unit test for \`notice\_origin\`
+* Added test for to\_dict method in test\_class\_notice.py
+* Improve unit test for classes/notice.py
+* filled to\_dict() method in image class
+* Completed to\_dict() method in image\_layer class
+* Add instance check for every add\_\* methods in classes folder
+* 90 Add to\_dict to docker\_image.py
+* Abandon docker images command and python 3.7 env
+* Attempt to export result of docker images command
+* Attempt rearranging commands to use env
+* Replace back ticks with shell eval
+* Add travis-ci build status in README.md
+* Tag docker image that was pulled by digest
+* Fixed export of env variable in .travis.yml file
+* Fixed docker command in .travis.yml
+* Added .travis.yml file for CI
+* Add to\_dict method to Origins class
+* Fix indent in to\_dict method in image\_layer class
+* Added stub method to\_dict
+* Changes to CONTRIBUTING.md regarding access and VM
+* Added Deep Comparison to Package Object
+* Notice and NoticeOrigin object to dictionary
+* Add current git SHA to report
+* Merge: Alternative method for finding dependencies
+* Fixed error in parsing package listing
+* Retrieve layer packages with command object
+* Refactor: get shell commands from docker history
+* Made finding packages using base OS method generic
+* Support for package listing as a key in base.yml
+* Fixed fs hash reporting and PEP8 formatting
+* Fix mounting multiple filesystem layers
+* Used subprocess check\_output for docker save
+* Remove inode from filesystem hash script
+* Replace diff\_id with fs\_hash as layer id
+* Replaced file stats and hash function with script
+* Create random Container, Tag, and Image values
+* Fix updating master list of packages
+* Fixes #1, removed TODO and created #74
+* Added utilities to find filesystem hash
+* Fixed parsing of dpkg installed packages
+* Updated README based on release v0.1.0
+
+v0.1.0
+------
+
+* Added release notes for release 0.1.0
+* Analyze local Docker image
+* Moved verify\_invoke.py into tools and updated docs
+* Improved docs for verify\_invoke.py
+* Added master list of package names
+* Made message for no\_created\_by more clear
+* Added tweeks to the verbose report
+* Default to removing the temp directory
+* Fixed reporting for the base layer
+* Added functionality to identify imported layers
+* Fixed issues with cached data
+* Fixed tern executable so it creates a report
+* Added error reporting for analyze\_docker\_image
+* Changed argument name in get\_base\_listing module
+* Added module to get the binary of the base layer
+* Added module to analyze diff layers
+* Refactor: rewrite report.py to use rootfs
+* Update common.py to use base layer discovery
+* Modified command\_lib modules to use new keys
+* Rewrite base.yml to key off package manager
+* Updated arch diagram
+* Attempt to fix image reference and formatting
+* Added process flowchart to arch doc
+* Removed troubleshooting step for docker daemon
+* Added guidelines to deal with modified cache.yml
+* Modified PR contributing guidelines
+* Fixed bug in reporting urls for installed packages
+* Updated verify\_invoke.py to work with current arch
+* Added a sample Dockerfile for Apline image
+* Fixed a bug in shell command parser
+* Enable Alpine base images
+* Add cache.yml to .gitignore
+* Used the docker container instead of chroot
+* Modified get\_pkg\_attr\_list to use native chroot
+* Added invoke\_in\_container equivalent for rootfs
+* Added a 'num\_layers' argument to unmount\_rootfs
+* Added setup function and some modifications
+* Remove virtual environment creation from documentation
+* Create documentation for virtual machine setup
+* fix path to samples/photon\_git/Dockerfile
+* Broke apart rootfs unmount
+* Improvements to rootfs utils
+* Gracefully exit if the docker daemon is not running
+* Docs: Added coding style section
+* Docs: Added learning links to CONTRIBUTING.md
+* Docs: Added faq.md and modified roadmap.md
+* docs: Fix links in architecture.md
+* Docs: Added a ToC, arch and glossary docs
+* WIP: README table of contents
+* WIP: Added utility to debug container layers
+* Convert short names of modules to the full name
+* Fixed missing module error
+* Refactor: Enable summary report
+* Refactor: Added command library scripts
+* Refactor: Full report fixes
+* Refactor: Added full report generation
+* Refactor: Modified modules to use Origins class
+* Refactor: WIP: Added NoticeOrigin and Origins classes
+* Refactor: Final fixes till saving to cache
+* Refactor: WIP: Fixes to reporting for remaining image
+* Refactor: WIP: Fixes for imported image
+* Refactor: WIP: Fixed illegal notice error
+* Refactor: WIP: Fixed saving image layers to cache
+* Refactor: WIP: Fixed setting imported image
+* Refactor: WIP: Fixes to report execution
+* Refactor: WIP: Added logging to common.py
+* Refactor: WIP: Fixed get\_image\_shell module
+* Refactor: WIP: Fixed double calling of check\_container
+* Refactor: WIP: Fixed module level logging
+* Refactor: Fixes around getting dockerfile FROM lines
+* Refactor: Modify main executable to run correctly
+* Refactor: add dockerfile parsing as backup
+* Refactor: Added module to save image layers
+* Refactor: WIP: Populate the image object with packages
+* Refactor: Modified docker.py
+* Refactor: Added modules to common.py
+* Refactor: Added module to get package listing
+* Refactor: Add module to get last import
+* Refactor: WIP: create a report
+* Refactor: redo reporting steps
+* Add openjdk:8 to base.yml
+* Enforce execution environment to be python3
+* Refactor: Fixes for new modules
+* Refactor: Removed print messages in DockerImage class
+* Refactor: Moved messages from info to formats
+* Refactor: Added modules to filter out install packages
+* Refactor: Provide pointer to imported image
+* Refactor: Removed old modules
+* Refactor: Modified package metadata retrieval
+* Refactor: Check for unique packages in ImageLayer
+* Refactor: Separated Docker specific modules
+* Refactor: Added more messages
+* Refactor: Small changes to utilities
+* Refactor: Move to working with Image object
+* Refactor: Initialize Notice object with arguments
+* Refactor: Added 'info' notice level
+* Refactor: Added name and tag to Image class
+* Add checks for dockerfile existence
+* CONTRIBUTING.md: Link to public slack invite
+* README.md: Don't require a github account to clone repository
+* Refactor: Added notices to package, layer and image
+* CONTRIBUTING: changed discussion forum
+* Refactor: Added class Notice
+* Refactor: Added check for command library keys
+* Refactor: Moved report functions to report folder
+* Refactor: Moved metadata modules to DockerImage
+* Refactor: Added DockerImage class
+* Refactor: Moved commands.py to command\_lib
+* Refactor: Added modules to commands.py
+* Refactor: Added to command and image classes
+* Refactor: Added new class: Command
+* Refactor: Added unit tests for Image class
+* Refactor: Rearrange utils and added container.py
+* Refactor: Added Image class
+* Refactor: Modified Class ImageLayer
+* Docs: Added project roadmap
+* Removed the TODO for command line arguments check
+* Update README.md
+* CONTRIBUTING.md: Correct a few spelling errors
+* Docs: Contributing to the Command Library
+* Changed license from Apache-2.0 to BSD-2-Clause
+* Add tern logo
+* Added developer certificate of origin
+* Added a docs folder
+* Added project status to the README
+* Formatting fixes to CONTRIBUTING
+* Added initial contributing documentation
+* Copyright notice for all Dockerfile samples and tools
+* [Bug Fixes] Corner cases with debian\_vim sample
+* Added copyright and pep8 fixes
+* Modified formatting for report.py logging
+* Added PhotonOS with git Dockerfile
+* Fixed bugs in reporting
+* Package version is a string not a float
+* Fixed operation and formatting errors
+* Modified scripts for deps in tyum
+* Added option to clear the cache
+* Fixed issues with PhotonOS snippets
+* Added PhotonOS sample Dockerfile
+* Refactor - combine summary and longform report
+* Enabled logging
+* Adding stub contributing guidelines
+* Update README.md with Getting Started
+* Look for layer sha in cache for each Dockerfile line
+* Added first Dockerfile sample
+* Fixed cache saving for dockerfile RUN lines
+* Using diff ids instead of Docker generated layer sha
+* Cleared the cache to start from scratch
+* Updated verify\_invoke to test snippets library
+* Functionality to retrieve package information
+* Updates to process Dockerfile RUN
+* Added modules to process dependencies per Docker RUN
+* Initial package dependency implementation
+* Modified verify\_invoke to print extra information
+* Added debian:jessie to base.yml
+* Report Docker build error message
+* Created longform reporting
+* Removed bug, feature and milestone information
+* Updated the README to match new tool name
+* Added License and Notice files
+* Removed demo.py
+* Added caching of layers
+* Added functionality in case of no Docker image
+* Fixed bugs: report created in the wrong place
+* Added extra information to the snippet library
+* Added initial code for finding dockerfile packages
+* Fixed newline in license reporting
+* Added vmware/photon base command library
+* Added a command\_lib test script
+* Removed extra print lines
+* Fixes to command library and reporting
+* Added commands for vmware/photon to command library
+* Fixed Bug: docker command doesn't check sudo
+* Updated the README - fixed some bugs
+* Fixed bugs in reporting for an unknown base image
+* Allowed for invoking snippets for the base image
+* Initial report creation with nothing in cache
+* Modified cache layout
+* Added metadata modules
+* Moved temp folder to constants.py
+* Added module to get the image manifest
+* Added modules to extract docker image metadata
+* Modified checking if the base image exists
+* Modified tern to only contain arg parsing commands
+* Modified tern command line arguments
+* Added common module to import in tern exec
+* Fixes with python 3.6 upgrade
+* Added tern executable
+* Modified commands util to accomodate the layer db
+* Added caching functions
+* Moved some files around and added to TODO list
+* Modified command library structure
+* Added classes for Package and Layer
+* Updated README with new bugs and TODOs
+* Moved utility functions to utils folder
+* Updated bugs and next steps in the README
+* Updated demo.py with some fixes
+* Added command functions
+* Rearranged modules to reduce complexity
+* Added Usage to README
+* Removed pyvenv files
+* Added an initial readme with tasks
+* Added dockerfile base image parsing
+* Find sources for packages installed using apt-get
+* Bundled pyvenv packages
+* First Commit
