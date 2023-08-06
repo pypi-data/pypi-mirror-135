@@ -1,0 +1,66 @@
+introduction
+============
+
+本工具主要用于实验室中的日常科研工作．
+
+主要功能
+========
+
+1. cnki
+-------
+
+处理从网络中抓取的ｘｍｌ数据：
+
+myLabTools.cnki.article, 从mongodb 中获取论文的全文
+myLabTools.cnki.xml2html, 原始的xml数据转化为html格式
+
+2. db
+-----
+
+myLabTools.db.mongodb ,mongodb 的数据查询，遍历，插入等操作．
+
+myLabTools.db.mysqldb ,mysql 的数据查询，遍历，插入等操作．
+
+myLabTools.db.multi_process 多进程数据处理模块
+
+3. nlp
+------
+
+myLabTools.nlp.data_process ,jsonline ,tsv 格式数据的处理.
+
+myLabTools.nlp.es_index　,elasticsearch 索引的构建与查询.
+
+myLabTools.nlp.json2bieo　,conll格式和offset格式的命名实体识别数据的转换.
+
+myLabTools.nlp.paragraph_split , 基于正则表达的是句子切分模块
+
+myLabTools.nlp.wordcollocation_based_mi , 互信息的计算
+
+4. t2s
+------
+
+myLabTools.t2s.conv_tra2sim , 繁体中文转换为简体中文
+
+5. text_classification
+----------------------
+
+基于bert的文本分类模块
+
+myLabTools.text_classification.train_text_clf_model,
+通过命令行进行文本分类模型的构建
+
+myLabTools.text_classification.predict_on_raw_data ,
+文本分类pipline的构建
+
+6. translate
+------------
+
+中英文翻译模块,模型来自于huggingface
+
+7. 其他
+-------
+
+myLabTools.files , 文件操作基本工具
+
+myLabTools.tools , pickle,json
+等的操作工具,代码复杂复分析,信息提取等模块.
