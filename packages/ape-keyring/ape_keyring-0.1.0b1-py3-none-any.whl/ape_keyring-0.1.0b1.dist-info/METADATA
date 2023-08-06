@@ -1,0 +1,131 @@
+Metadata-Version: 2.1
+Name: ape-keyring
+Version: 0.1.0b1
+Summary: ape-keyring: Store secrets for ape using Keyring.
+Home-page: https://github.com/unparalleled-js/ape-keyring
+Author: Juliya Smith
+Author-email: juliya@juliyasmith.com
+License: Apache-2.0
+Keywords: ethereum
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Natural Language :: English
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.7,<4
+Description-Content-Type: text/markdown
+Requires-Dist: click (>=8.0.3)
+Requires-Dist: eth-ape (>=0.1.0b2)
+Requires-Dist: eth-account (<0.6.0,>=0.5.6)
+Requires-Dist: eth-utils (<1.11,>=1.10.0)
+Requires-Dist: keyring (<22.0,>=21.8.0)
+Requires-Dist: importlib-metadata ; python_version < "3.8"
+Provides-Extra: dev
+Requires-Dist: pytest (<7.0,>=6.0) ; extra == 'dev'
+Requires-Dist: pytest-xdist ; extra == 'dev'
+Requires-Dist: pytest-cov ; extra == 'dev'
+Requires-Dist: hypothesis (<7.0,>=6.2.0) ; extra == 'dev'
+Requires-Dist: black (<22.0,>=21.10b0) ; extra == 'dev'
+Requires-Dist: mypy (<1.0,>=0.910) ; extra == 'dev'
+Requires-Dist: flake8 (<4.0,>=3.8.3) ; extra == 'dev'
+Requires-Dist: isort (<6.0,>=5.9.3) ; extra == 'dev'
+Requires-Dist: setuptools ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+Requires-Dist: commitizen ; extra == 'dev'
+Requires-Dist: pre-commit ; extra == 'dev'
+Requires-Dist: pytest-watch ; extra == 'dev'
+Requires-Dist: IPython ; extra == 'dev'
+Requires-Dist: ipdb ; extra == 'dev'
+Provides-Extra: lint
+Requires-Dist: black (<22.0,>=21.10b0) ; extra == 'lint'
+Requires-Dist: mypy (<1.0,>=0.910) ; extra == 'lint'
+Requires-Dist: flake8 (<4.0,>=3.8.3) ; extra == 'lint'
+Requires-Dist: isort (<6.0,>=5.9.3) ; extra == 'lint'
+Provides-Extra: release
+Requires-Dist: setuptools ; extra == 'release'
+Requires-Dist: wheel ; extra == 'release'
+Requires-Dist: twine ; extra == 'release'
+Provides-Extra: test
+Requires-Dist: pytest (<7.0,>=6.0) ; extra == 'test'
+Requires-Dist: pytest-xdist ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: hypothesis (<7.0,>=6.2.0) ; extra == 'test'
+
+# ape-keyring
+
+Store secrets and manage accounts for `ape` using [keyring](https://pypi.org/project/keyring/).
+
+## Dependencies
+
+* [python3](https://www.python.org/downloads) version 3.7 or greater, python3-dev
+
+## Installation
+
+### via `pip`
+
+You can install the latest release via [`pip`](https://pypi.org/project/pip/):
+
+```bash
+pip install ape-keyring
+```
+
+### via `setuptools`
+
+You can clone the repository and use [`setuptools`](https://github.com/pypa/setuptools) for the most up-to-date version:
+
+```bash
+git clone https://github.com/ApeWorX/ape-keyring.git
+cd ape_keyring
+python3 setup.py install
+```
+
+## Quick Usage
+
+Add accounts to keyring:
+
+```bash
+ape keyring import keyring_dev_0
+```
+
+and then when it prompts you, input your private key.
+
+To add secrets to keyring:
+
+```bash
+ape keyring set WEB3_API_KEY
+```
+
+and then when it prompts you, input the value to your secret.
+
+Optionally, scope your secrets to the active project.
+
+```bah
+ape keyring set DEPLOYMENT_SECRET --scope project 
+```
+
+To enable your secrets to become environment variables at runtime,
+use the `ape-config.yaml` option `set_env_vars`:
+
+```yaml
+keyring:
+  set_env_vars: true
+```
+
+## Development
+
+This project is in early development and should be considered an alpha.
+Things might not work, breaking changes are likely.
+Comments, questions, criticisms and pull requests are welcomed.
+
+## License
+
+This project is licensed under the [Apache 2.0](LICENSE).
+
+
