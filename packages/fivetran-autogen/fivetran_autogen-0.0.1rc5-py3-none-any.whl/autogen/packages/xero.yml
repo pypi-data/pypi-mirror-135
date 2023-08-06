@@ -1,0 +1,13 @@
+name: fivetran/xero
+version: [">=0.4.0", "<0.5.0"]
+
+# dataset location
+source_data_location:
+  schema_variable: xero_schema
+  database_variable: xero_database
+
+# variables that are conditional on tables being present
+enabled_variables:
+  - name: xero__using_credit_note
+    required_tables:
+      - credit_note
