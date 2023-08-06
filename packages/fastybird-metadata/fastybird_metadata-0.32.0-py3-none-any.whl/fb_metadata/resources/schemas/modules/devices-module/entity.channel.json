@@ -1,0 +1,56 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "types" : {
+      "nullable_string" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          }
+        ]
+      }
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Entity uuid v4 identifier. This identifier is unique"
+    },
+    "identifier" : {
+      "type" : "string",
+      "description" : "Unique human readable identifier used across services"
+    },
+    "key" : {
+      "type" : "string",
+      "description" : "Unique pub/sub identifier per each entity"
+    },
+    "name" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "comment" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "device" : {
+      "type" : "string",
+      "description" : "Device unique uuid v4 identifier used across services"
+    },
+    "owner" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "description" : "Entity owner uuid v4 identifier"
+    }
+  },
+  "required" : [
+    "id",
+    "identifier",
+    "key",
+    "name",
+    "comment",
+    "device"
+  ]
+}

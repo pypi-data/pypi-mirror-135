@@ -1,0 +1,40 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "state" : {
+      "type" : "string",
+      "enum" : [
+        "active",
+        "blocked",
+        "deleted",
+        "invalid"
+      ]
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Entity uuid v4 identifier. This identifier is unique"
+    },
+    "state" : {
+      "$ref" : "#/definitions/state"
+    },
+    "uid" : {
+      "type" : "string"
+    },
+    "password" : {
+      "type" : "string"
+    },
+    "account" : {
+      "type" : "string",
+      "description" : "Account unique uuid v4 identifier used across services"
+    }
+  },
+  "required" : [
+    "id",
+    "state",
+    "uid",
+    "account"
+  ]
+}
