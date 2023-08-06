@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+
+import sys
+import argparse
+import shutil
+import time
+import os
+import xattr
+
+parser = argparse.ArgumentParser(description='Restore a file created by bak, this is the same as bak -u')
+parser.add_argument('Source', help='bak file to restore')
+args = parser.parse_args()
+duplicate = int(1)
+
+def checkdest(dest, duplicate):
+    if os.path.exists(dest):
+        if os.path.exists("%s(%s)" % (dest, duplicate)):
+            duplicate += 1
+            dest = checkdest(dest, duplicate)
+        else:
+            dest = "%s(%s)" % (dest, duplicate)
+    return dest
+
+def extrattr(source, setget, dest):
+    msg = ''
+    if setget == "set":
+        try:
+            xattr.setxattr(source.encode('utf-8'), "user.bak", dest.encode('utf-8'))
+        except IOError as e:
+            if not "Operation not supported" in e:
+                msg = e
+            else:
+                msg = "Unbak not supported for this file.\n %s" % e
+    elif setget == "get":
+        try:
+            dest = xattr.getxattr(source.encode('utf-8'), "user.bak")
+        except IOError as e:
+            if not "Operation not supported" in e:
+                msg = e
+            else:
+                msg = "Unbak not supported for this file.\n %s" % e
+    else:
+        try:
+            xattr.removexattr(source.encode('utf-8'), "user.bak")
+        except IOError as e:
+            if not "Operation not supported" in e:
+                msg =  e
+            else:
+                msg = "Unbak not supported for this file.\n %s" % e
+    return dest, msg
+
+def main(args):
+    source = args.Source
+    arglist = list()
+
+
+    if source[-1] == '/':
+        source = source[:-1]
+
+    dest, msg = extrattr(source, "get", '')
+    if not msg == '':
+        print(msg)
+        sys.exit(1)
+    if os.path.isfile(source):
+        shutil.copy(source, dest)
+    elif os.path.isdir(source):
+        if os.path.isdir(dest):
+            shutil.rmtree(dest)
+        shutil.copytree(source, dest)
+    else:
+        print("%s does not exist" % source)
+        sys.exit(1)
+    sys.exit(0)
+
+main(args)
