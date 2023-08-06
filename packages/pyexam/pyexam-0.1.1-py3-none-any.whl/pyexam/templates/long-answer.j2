@@ -1,0 +1,11 @@
+{% include 'question.j2' %}
+{% if not solution  %}
+  {% if lines|length %}
+    \fillwithlines{ {{ lines }} }
+  {% else %}
+    \vspace{ {{ spaces }} }
+  {% endif %}
+{% endif %}
+\begin{solution}
+  {{answer}}
+\end{solution}
