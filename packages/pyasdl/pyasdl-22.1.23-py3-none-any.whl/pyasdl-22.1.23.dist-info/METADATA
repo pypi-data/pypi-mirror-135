@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: pyasdl
+Version: 22.1.23
+Summary: ASDL Parser
+Home-page: https://github.com/isidentical/pyasdl
+Author: isidentical
+Author-email: isidentical@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: pegen (==0.1.0)
+
+# PyASDL
+
+A yet another implementation for [Zephyr ASDL](https://www.cs.princeton.edu/~appel/papers/asdl97.pdf) format.
+
+## API
+
+### `parse(source: str, *, filename: str = "<pyasdl>") -> Module`
+
+Parse the given `source` string, and return the AST in the shape of an `pyasdl.Module`. The
+full format is defined in the [`grammar.asdl`](./pyasdl/static/grammar.asdl) file. The `filename`
+can be optionally supplied, and will be displayed if there is any syntax error.
+
+### `fetch_comments(source: str) -> Iterator[str]:`
+
+Return an iterator of the ASDL comments in the given `source` string.
+
+### `is_simple_sum(node: Sum) -> bool:`
+
+Check whether if the given `node`'s all children lack any fields.
+
+### Examples
+
+Here is a list of example tools that process the given ASDL with `PyASDL`:
+
+- [Typing Stub Generator](./examples/generators/src/typing_stub.py)
+- [Python Class Generator](./examples/generators/src/python.py)
+- [ESDL Generator](./examples/generators/src/edgedb.py)
+- [GraphQL Converter](./examples/generators/src/graphql.py)
+
+
