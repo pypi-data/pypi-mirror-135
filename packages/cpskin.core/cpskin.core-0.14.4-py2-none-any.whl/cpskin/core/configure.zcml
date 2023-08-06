@@ -1,0 +1,115 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser">
+
+    <!-- Dependencies -->
+    <include package="Products.CMFCore" file="permissions.zcml" />
+    <include package="collective.anysurfer" />
+    <include package="collective.lesscss" />
+    <include package="archetypes.schemaextender" />
+    <include package="imio.ckeditortemplates" />
+    <include package="collective.directory" />
+    <include package="collective.geo.leaflet" />
+    <include package="collective.sticky" />
+    <include package="collective.quickupload" />
+    <include package="wildcard.foldercontents" />
+    <include package="collective.iconifieddocumentactions" />
+    <include package="cpskin.locales" />
+    <include package="collective.z3cform.keywordwidget" />
+    <include package="eea.facetednavigation" />
+    <include package="collective.js.fancybox" />
+    <include package="sc.social.like" />
+    <include package="collective.recaptcha" />
+    <include package="collective.dexteritytextindexer" />
+
+    <include file="permissions.zcml" />
+    <include file="profiles.zcml" />
+    <include file="monkey.zcml" />
+
+    <include package=".behaviors" />
+    <include package=".browser" />
+    <include package=".menu" />
+    <include package=".portlets" />
+    <include package=".viewlets" />
+    <include package=".faceted" />
+    <include package=".transmo" />
+
+    <include package="collective.printrss" />
+
+    <utility component=".vocabulary.BookingTypesVocabularyFactory"
+             name="cpskin.core.vocabularies.booking_types" />
+
+    <utility component=".vocabulary.ActionMenuEligibleVocabularyFactory"
+             name="cpskin.core.vocabularies.action_menu_eligible" />
+
+    <utility component=".vocabulary.IStandardTagsVocabularyFactory"
+             name="cpskin.core.vocabularies.standardTags" />
+
+    <utility component=".vocabulary.IAmTagsVocabularyFactory"
+             name="cpskin.core.vocabularies.iamTags" />
+
+    <utility component=".vocabulary.ISearchTagsVocabularyFactory"
+             name="cpskin.core.vocabularies.isearchTags" />
+
+    <utility component=".vocabulary.HiddenTagsVocabularyFactory"
+             name="cpskin.core.vocabularies.hiddenTags" />
+
+    <utility component=".vocabulary.ContactFieldsVocabularyFactory"
+             name="cpskin.core.vocabularies.contact_fields" />
+
+   <utility component=".vocabulary.GeoTypesVocabularyFactory"
+            name="cpskin.core.vocabularies.geo_types" />
+
+   <utility component=".vocabulary.SliderDisplayTypeVocabulary"
+            name="cpskin.core.vocabularies.slider_display_types" />
+
+   <adapter factory=".extender.ContentExtender"
+           provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+           name="cpskin.core.extender" />
+
+  <adapter factory=".indexer.StandardTagIndexer" name="standardTags" />
+
+  <adapter factory=".indexer.IAmTagIndexer" name="iamTags" />
+
+  <adapter factory=".indexer.ISearchTagIndexer" name="isearchTags" />
+
+  <adapter factory=".indexer.HiddenTagIndexer" name="hiddenTags" />
+
+  <adapter factory=".indexer.DocumentExtender" name="IDocument" />
+
+  <adapter factory=".indexer.LinkExtender" name="ILink" />
+
+  <adapter factory=".indexer.FileExtender" name="IFile" />
+
+  <adapter factory=".indexer.OrganizationExtender" name="IOrganization" />
+
+  <subscriber for="collective.contact.core.content.organization.IOrganization
+                   zope.lifecycleevent.interfaces.IObjectAddedEvent"
+              handler=".events.set_lat_lng" />
+
+  <subscriber for="collective.contact.core.content.organization.IOrganization
+                   zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+              handler=".events.set_lat_lng" />
+
+  <subscriber for="collective.contact.core.content.person.IPerson
+                   zope.lifecycleevent.interfaces.IObjectAddedEvent"
+              handler=".events.set_lat_lng" />
+
+  <subscriber for="collective.contact.core.content.person.IPerson
+                   zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+              handler=".events.set_lat_lng" />
+
+  <subscriber for="plone.app.imagecropping.interfaces.IImageCroppingMarker
+                   zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+              handler=".events.apply_crops_after_modify" />
+
+  <subscriber for="cpskin.minisite.event.IMinisiteMarkedEvent"
+              handler=".events.checkMinisites" />
+
+  <adapter
+    for="imio.dashboard.content.pod_template.IDashboardPODTemplate
+         plone.app.contenttypes.interfaces.ICollection"
+    factory=".adapter.DashboardPODTemplateCondition"
+    />
+
+
+</configure>
