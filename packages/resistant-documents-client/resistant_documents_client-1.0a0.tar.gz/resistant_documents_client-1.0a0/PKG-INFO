@@ -1,0 +1,82 @@
+Metadata-Version: 2.1
+Name: resistant-documents-client
+Version: 1.0a0
+Summary: Resistant.ai document forjerry python client for convenient integration with REST API service.
+Author: Resistant.ai
+Author-email: sales@resistant.ai
+Requires-Python: >=3.7,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: requests (>=2.22.0,<3.0.0)
+Description-Content-Type: text/markdown
+
+# Resistant documents client
+
+This tool facilitates communication with the [resistant.ai](https://resistant.ai/products/documents/) document forjerry analysis service using
+Python. [Here](https://pdf.resistant.ai/docs/v1.html) you can find a description of the underlying REST service. Below we describe the Python
+interface. For a detailed description, go directly to the referenced API docs.
+
+## Prerequisites
+
+You will need one string to perform further steps which you receive during the customer onboarding process.
+
+- API_KEY
+
+## Basic usage
+
+The following example runs fraud analysis on a given document. It is the most usual usage of the API.
+
+```python
+from bp_pdf_forgery_client.client import BpPdfForgeryClient
+
+client = BpPdfForgeryClient(api_key="YOUR_API_KEY")
+with open("local_file.pdf", "rb") as fp:
+    report = client.analyze(fp.read(), query_id="local_file.pdf")
+
+print(report)
+``` 
+
+## Customized usage
+
+Suppose you want to customize parameters of the process or perform another type of analysis. Below we describe what are the particular steps which you
+have to run.
+
+### Create client with you credentials
+
+```python
+client = BpPdfForgeryClient(api_key="YOUR_API_KEY")
+```
+
+### Create submission with pipeline setup
+
+```python
+with open("local_file.pdf", "rb") as fp:
+    my_submission_id = client.submit(fp.read(), query_id="local_file.pdf", pipeline_configuration="CONTENT_AFTER_FRAUD_AFTER_QUALITY")
+```
+
+Possible pipeline configurations are listed in REST API docs.
+### Retrieve analysis result
+You can retrieve only those types of analysis which were specified in previous `pipeline_configuration`.
+
+```python
+result_results = client.results(submission_id=my_submission_id)
+result_content = client.content(submission_id=my_submission_id)
+result_quality = client.quality(submission_id=my_submission_id)
+
+print(result_content)
+print(result_fraud)
+print(result_quality)
+```
+These methods also accept `max_num_retries`, which represents how many times will the client poll the server before failing (because the communication is asynchronous). It might be customized but has a default
+value. Other parameters correspond to the ones in the REST API docs.
+
+### Presigned url
+```python
+data = client.presign(submission_id=my_submission_id, expiration=600)
+presigned_url = data["presigned_url"]
+```
+This method lets you generate a link for anybody else to access the analysis result. You can set expiration to this temporary generated link in the parameter `expiration`. Note that the value is in seconds with lower bound `1` and upper bound `604800` (one week).
+
