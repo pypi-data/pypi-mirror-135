@@ -1,0 +1,82 @@
+---
+name: Code Linting
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+    paths:
+      - '**'
+      - '.github/workflows/lint.yml'
+      - '!docs/**'
+      - '!*.rst'
+      - '!*.md'
+      - '!datacube_ows/__init__.py'
+      - '!.github/**'
+
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '**'
+      - '.github/workflows/lint.yml'
+      - '!docs/**'
+      - '!*.rst'
+      - '!*.md'
+      - '!datacube_ows/__init__.py'
+      - '!.github/**'
+
+env:
+  ORG: opendatacube
+  IMAGE: ows
+  DB_USERNAME: opendatacubeusername
+
+jobs:
+  pylint:
+    runs-on: ubuntu-latest
+    name: Pylint
+    steps:
+      - name: checkout git
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install dependencies and run pylint
+        run: |
+          pip install .[test,dev]
+          pip install pylint
+          pylint -j 2 --reports no datacube_ows --disable=C,R,E1136
+
+  flake8:
+    name: flake8
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - run: python -m pip install flake8
+      - name: flake8 cleanup imported but unused
+        uses: liskin/gh-problem-matcher-wrap@v1
+        with:
+          linters: flake8
+          run: |
+            flake8 . --exclude Dockerfile --ignore=E501 --select=F401,E201,E202,E203,E502,E241,E225,E306,E231,E226,E123,F811
+
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - run: python -m pip install isort
+      - name: isort
+        uses: liskin/gh-problem-matcher-wrap@v1
+        with:
+          linters: isort
+          run: |
+            isort --check --diff .
