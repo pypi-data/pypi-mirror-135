@@ -1,0 +1,203 @@
+Metadata-Version: 2.1
+Name: oftest
+Version: 0.2.0
+Summary: test framework for OpenFOAM
+Home-page: https://github.com/HenningScheufler/oftest
+Author: Henning Scheufler
+Author-email: henning.scheufler@dlr.de
+License: GPLv3
+Project-URL: Documentation, https://oftest.readthedocs.io/
+Project-URL: Changelog, https://oftest.readthedocs.io/en/latest/changelog.html
+Project-URL: Issue Tracker, https://github.com/HenningScheufler/oftest/issues
+Keywords: openfoam,cfd,pytest,testing
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Operating System :: Unix
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Utilities
+Requires-Python: >=3.6
+License-File: LICENSE
+License-File: AUTHORS.rst
+Requires-Dist: pandas (>=0.21.0)
+Requires-Dist: pyfoam (>=0.6.8)
+Requires-Dist: pytest (>=6.0.0)
+Provides-Extra: dev
+Requires-Dist: tox (>=3.0.0) ; extra == 'dev'
+
+========
+Overview
+========
+
+
+
+test framework for OpenFOAM
+
+* Free software: GPLv3 License
+
+Installation
+============
+
+::
+
+    pip install oftest
+
+You can also install the in-development version with::
+
+    pip install https://github.com/HenningScheufler/oftest/archive/master.zip
+
+
+Documentation
+=============
+
+
+https://oftest.readthedocs.io/
+
+
+Development
+===========
+
+To run all the tests run and build the doc::
+
+    tox
+
+
+QuickStart
+==========
+
+add conftest.py and pytest.ini to your project
+
+cat pytest.ini:
+
+::
+
+    [pytest]
+    #minversion = 6.0
+    addopts = -ra -v --import-mode=importlib --tb=no --cache-clear
+    testpaths =
+        tests
+
+cat conftest.py:
+
+::
+
+    import pytest
+
+    def pytest_addoption(parser):
+        parser.addoption(
+            "--writeNSteps", action="store", default=0, help="only perform specified number of timestep"
+        )
+        parser.addoption(
+            "--no-clean-up", action='store_false',default=True ,help="do not clean case after run"
+        )
+
+we assume that all OpenFOAM test are located in the tests folder and that each test can be started with a
+Allrun or Allclean script. By adding a test_*.py to each OpenFOAM test, py.test automatically discovers all
+tests in the folder and they can be run with:
+
+::
+
+    py.test
+
+with the command line option the test only run one time step
+
+::
+
+    py.test --writeNSteps 1
+
+
+Extensions
+----------
+
+Running py.test with multple threads:
+
+pip install pytest-xdist
+
+the output can be pretified with the extension:
+
+pip install pytest-sugar
+
+Changelog
+=========
+
+0.2.0 (2021-1-20)
+-----------------
+
+added:
+- log files are copied in logs folder
+
+0.1.2 (2021-12-22)
+------------------
+
+added:
+- success to run_case, run_reset_case, clean_case
+- copy_log_files
+
+::
+    accessible with
+    run_reset_case.success
+
+    add copy_log_files() copy files to os.path.join("logs",current_test())
+    use case
+    if (not run_reset_case.success)
+    oftest.copy_log_files()
+
+
+
+0.1.1 (2021-12-22)
+------------------
+
+added exit code to run_case, run_reset_case, clean_case
+accessible with:
+c_mod.meta_data['return_value']
+
+0.1.0 (2021-05-7)
+------------------
+
+added expected_results: loads a results in csv format and return the results in 
+a pandas DataFrame:
+
+test = oftest.expected_results([1,2],('isoAlpha',32))
+test['err_shape']
+
+0.0.5 (2021-05-7)
+------------------
+
+update documentation and added docstrings
+
+0.0.4 (2021-04-24)
+------------------
+
+* added fixture for running cleaning and modify
+
+break compatiblity due to run_case does not clean the case anymore
+please substitute with run_reset_case
+
+TL;DR
+
+run_case -> run_reset_case
+
+0.0.3 (2021-04-23)
+------------------
+
+* changed License to GPL -> pyfoam is GPLv2
+
+0.0.0 (2021-04-17)
+------------------
+
+* First release on PyPI.
+
+
+
+
