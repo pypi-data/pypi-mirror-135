@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "deepdog"
+version = "0.1.1"
+description = ""
+authors = ["Deepak Mallubhotla <dmallubhotla+github@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8,<3.10"
+pdme = "^0.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=6"
+flake8 = "^4.0.1"
+pytest-cov = "^3.0.0"
+mypy = "^0.931"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--junitxml pytest.xml --cov deepdog --cov-report=xml:coverage.xml --cov-fail-under=90 --cov-report=html"
+junit_family = "xunit1"
