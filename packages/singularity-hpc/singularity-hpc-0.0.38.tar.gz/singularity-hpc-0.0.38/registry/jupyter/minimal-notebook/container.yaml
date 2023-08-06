@@ -1,0 +1,14 @@
+docker: jupyter/minimal-notebook
+url: https://hub.docker.com/r/jupyter/minimal-notebook
+maintainer: '@vsoch'
+description: Jupyter Minimal Notebook from https://github.com/jupyter/docker-stacks
+latest:
+  "4.0": sha256:6f9d189494fe091700681eb39b429dfe1420ad0717697c2e2293779fcb80cd1e
+tags:
+  "4.0": sha256:6f9d189494fe091700681eb39b429dfe1420ad0717697c2e2293779fcb80cd1e
+  latest: sha256:1866eaf6a7fc0fc9564650a296625a6a4be24f4c392c95d9b547b92483dad99d
+features:
+  home: true
+aliases:
+- name: run-notebook
+  command: jupyter notebook --no-browser --port=$(shuf -i 2000-65000 -n 1) --ip 0.0.0.0
