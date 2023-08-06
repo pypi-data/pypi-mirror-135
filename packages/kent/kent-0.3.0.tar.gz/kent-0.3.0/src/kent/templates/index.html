@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Kent: Fake Sentry</title>
+    <link rel="icon" type="image/png" href="/static/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/pico.1.4.3.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    <script>
+      function flush() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.origin + "/api/flush/");
+        xhr.send();
+        xhr.onload = function() {
+          window.location.reload();
+        };
+      }
+    </script>
+  </head>
+  <body>
+    {% block body %}
+      <main class="container">
+        <hgroup>
+          <h1>Kent</h1>
+          <h2>A fake Sentry server for debugging and integration tests</h2>
+        </hgroup>
+
+        <h2>Errors</h2>
+        <p>
+          There are {{ errors|count }} errors in memory.
+          <a href="#" onClick ="javascript:flush()">[Flush]</a>
+        </p>
+        {% if errors %}
+          <table>
+            <thead>
+              <th>timestamp</th>
+              <th>project id</th>
+              <th>id</th>
+            </thead>
+            <tbody>
+              {% for error in errors %}
+                <tr>
+                  <td>{{ error.get_timestamp() }}</td>
+                  <td>{{ error.project_id }}</td>
+                  <td><a href="/api/error/{{ error.error_id }}">{{ error.error_id }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+
+        <h2>API</h2>
+        <table>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">End point and notes</th>
+          </tr>
+          <tr>
+            <td class="nowrap">Sentry DSN</td>
+            <td>
+              <p><code>GET {{ dsn }}</code></p>
+              <p>Returns no payload.</p>
+              <p>
+                If you're running this in a Docker container and the
+                service you want sending errors to Fake Sentry is in another
+                Docker container, then you will need to use the appropriate
+                host for the service.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="nowrap">Error list</td>
+            <td>
+              <p><code>GET {{ host }}/api/errorlist/</code></p>
+              <p>Returns JSON payload.</p>
+              <dl>
+                <dt><code>errors</code></dt>
+                <dd>List of error ids as strings.</dd>
+              </dl>
+              <p>Example:</p>
+<pre><code>{
+  "errors": [
+    "f2edba96-0433-47e0-af86-ecfbbb16a544",
+    "1a45b81f-5960-4174-9945-7fe9a8285d90
+  ]
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td class="nowrap">Error</td>
+            <td>
+              <p><code>GET {{ host }}/api/error/&lt;ERRORID&gt;</code></p>
+              <p>Returns JSON payload.</p>
+              <dl>
+                <dt><code>project_id</code></dt>
+                <dd>Project id as an int</dd>
+                <dt><code>error_id</code></dt>
+                <dd>Error id as a string</dd>
+                <dt><code>payload</code></dt>
+                <dd>Error payload sent by the sentry-sdk</dd>
+              </dl>
+              <p>Contrived example:</p>
+<pre><code>{
+  "project_id": 1,
+  "error_id": "f2edba96-0433-47e0-af86-ecfbbb16a544",
+  "payload": {
+    whatever sentry-sdk sent here
+  }
+}</code></pre>
+            </td>
+          </tr>
+          <tr>
+            <td class="nowrap">Flush errors</td>
+            <td>
+              <p><code>POST {{ host }}/api/flush/</code></p>
+              <p>Returns JSON payload.</p>
+              <dl>
+                  <dt><code>success</code></dt>
+                  <dd><i>true</i> if successful</dd>
+              </dl>
+              <p>Example:</p>
+<pre><code>{"success": true}</code></pre>
+          </tr>
+        </table>
+      </main>
+      <footer class="container">
+        <small>
+          Powered by Kent: the fakest Sentry | 
+          version {{ version }} |
+          <a href="https://github.com/willkg/kent/">source</a>
+        </small>
+      </footer>
+    {% endblock %}
+  </body>
+</html>
