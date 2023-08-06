@@ -1,0 +1,143 @@
+---
+
+extra_includes:
+- "frc/kinematics/SwerveModuleState.h"
+
+classes:
+  SwerveDrivePoseEstimator:
+    shared_ptr: false
+    doc: |
+      This class wraps an Unscented Kalman Filter to fuse latency-compensated
+      vision measurements with swerve drive encoder velocity measurements. It will
+      correct for noisy measurements and encoder drift. It is intended to be an
+      easy but more accurate drop-in for :class:`SwerveDriveOdometry`.
+
+      :meth:`update` should be called every robot loop. If your loops are faster or
+      slower than the default of 0.02s, then you should change the nominal delta
+      time by specifying it in the constructor.
+
+      :meth:`addVisionMeasurement` can be called as infrequently as you want; if you
+      never call it, then this class will behave mostly like regular encoder
+      odometry.
+
+      The state-space system used internally has the following states (x), inputs
+      (u), and outputs (y):
+
+      :math:`x = [x, y, \theta]^T` in the field-coordinate system
+      containing x position, y position, and heading.
+
+      :math:`u = [v_x, v_y, d\theta]^T`
+      in the field-coordinate system.
+
+      :math:`y = [x, y, \theta]^T` from vision containing x position, y
+      position, and heading; or :math:`y = [theta]^T` containing gyro
+      heading.
+    template_params:
+    - size_t NumModules
+    methods:
+      SwerveDrivePoseEstimator:
+        param_override:
+          nominalDt:
+            default: 0.02_s
+      ResetPosition:
+      GetEstimatedPosition:
+      SetVisionMeasurementStdDevs:
+      AddVisionMeasurement:
+        overloads:
+          Pose2d&, units::second_t:
+          Pose2d&, units::second_t, wpi::array<double, 3>&:
+      Update:
+        param_override:
+          gyroAngle:
+            ignore: true
+          moduleStates:
+            ignore: true
+        cpp_code: |
+          []() {
+            if constexpr (NumModules == 2) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2) {
+                return self->Update(gyroAngle, s1, s2);
+              };
+            } else if constexpr (NumModules == 3) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2, SwerveModuleState s3) {
+                return self->Update(gyroAngle, s1, s2, s3);
+              };
+            } else if constexpr (NumModules == 4) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2,
+                        SwerveModuleState s3, SwerveModuleState s4) {
+                return self->Update(gyroAngle, s1, s2, s3, s4);
+              };
+            } else if constexpr (NumModules == 6) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2,
+                        SwerveModuleState s3, SwerveModuleState s4,
+                        SwerveModuleState s5, SwerveModuleState s6) {
+                return self->Update(gyroAngle, s1, s2, s3, s4, s5, s6);
+              };
+            }
+          }()
+      UpdateWithTime:
+        param_override:
+          currentTime:
+            ignore: true
+          gyroAngle:
+            ignore: true
+          moduleStates:
+            ignore: true
+        cpp_code: |
+          []() {
+            if constexpr (NumModules == 2) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self,
+                        units::second_t currentTime, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2) {
+                return self->UpdateWithTime(currentTime, gyroAngle, s1, s2);
+              };
+            } else if constexpr (NumModules == 3) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self,
+                        units::second_t currentTime, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2, SwerveModuleState s3) {
+                return self->UpdateWithTime(currentTime, gyroAngle, s1, s2, s3);
+              };
+            } else if constexpr (NumModules == 4) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self,
+                        units::second_t currentTime, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2,
+                        SwerveModuleState s3, SwerveModuleState s4) {
+                return self->UpdateWithTime(currentTime, gyroAngle, s1, s2, s3, s4);
+              };
+            } else if constexpr (NumModules == 6) {
+              return [](SwerveDrivePoseEstimator<NumModules> * self,
+                        units::second_t currentTime, const Rotation2d& gyroAngle,
+                        SwerveModuleState s1, SwerveModuleState s2,
+                        SwerveModuleState s3, SwerveModuleState s4,
+                        SwerveModuleState s5, SwerveModuleState s6) {
+                return self->UpdateWithTime(currentTime, gyroAngle, s1, s2, s3, s4, s5, s6);
+              };
+            }
+          }()
+      
+
+templates:
+  SwerveDrive2PoseEstimator:
+    qualname: frc::SwerveDrivePoseEstimator
+    subpackage: estimator
+    params:
+    - 2
+  SwerveDrive3PoseEstimator:
+    qualname: frc::SwerveDrivePoseEstimator
+    subpackage: estimator
+    params:
+    - 3
+  SwerveDrive4PoseEstimator:
+    qualname: frc::SwerveDrivePoseEstimator
+    subpackage: estimator
+    params:
+    - 4
+  SwerveDrive6PoseEstimator:
+    qualname: frc::SwerveDrivePoseEstimator
+    subpackage: estimator
+    params:
+    - 6
