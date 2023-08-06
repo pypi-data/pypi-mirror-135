@@ -1,0 +1,74 @@
+Welcome to TMDbAPIs Documentation!
+==========================================================
+
+.. image:: https://img.shields.io/readthedocs/tmdbapis?style=plastic
+    :target: https://tmdbapis.readthedocs.io/en/latest/?badge=latest
+    :alt: Read the Docs
+
+.. image:: https://img.shields.io/github/v/release/meisnate12/TMDbAPIs?style=plastic
+    :target: https://github.com/meisnate12/TMDbAPI/releases
+    :alt: GitHub release (latest by date)
+
+.. image:: https://img.shields.io/pypi/v/TMDbAPIs?style=plastic
+    :target: https://pypi.org/project/tmdbapis/
+    :alt: PyPI
+
+.. image:: https://img.shields.io/pypi/dm/tmdbapis.svg?style=plastic
+    :target: https://pypi.org/project/tmdbapis/
+    :alt: Downloads
+
+.. image:: https://img.shields.io/github/commits-since/meisnate12/TMDbAPIs/latest?style=plastic
+    :target: https://github.com/meisnate12/TMDbAPIs/commits/master
+    :alt: GitHub commits since latest release (by date) for a branch
+
+.. image:: https://img.shields.io/badge/-Sponsor_or_Donate-blueviolet?style=plastic
+    :target: https://github.com/sponsors/meisnate12
+    :alt: GitHub Sponsor
+
+
+Overview
+----------------------------------------------------------
+Unofficial Python bindings for the TMDb API. The goal is to make interaction with the API as easy as possible while emulating the endpoints as much as possible
+
+
+Installation & Documentation
+----------------------------------------------------------
+
+.. code-block:: python
+
+    pip install tmdbapis
+
+Documentation_ can be found at Read the Docs.
+
+.. _Documentation: http://tmdbapis.readthedocs.io/en/latest/
+
+
+Using the Object API
+==========================================================
+
+
+Getting a TMDbAPIs Instance
+----------------------------------------------------------
+
+To create a TMDbAPIs Object you need your V3 API Key, which can be found following `this guide <https://developers.themoviedb.org/3/getting-started/introduction>`_.
+
+.. code-block:: python
+
+    from tmdbapis import TMDbAPIs
+
+    apikey = "0010843563404748808d3fc9c562c05e"
+
+    tmdb = TMDbAPIs(apikey)
+
+
+Hyperlinks
+----------------------------------------------------------
+
+* `TMDb V3 API Docs <https://developers.themoviedb.org/3/getting-started/introduction>`_
+* `TMDb V4 API Docs <https://developers.themoviedb.org/4/getting-started/authorization>`_
+
+Usage & Contributions
+----------------------------------------------------------
+* Source is available on the `Github Project Page <https://github.com/meisnate12/tmdbapis>`_.
+* Contributors to TMDbAPIs own their own contributions and may distribute that code under
+  the `MIT license <https://github.com/meisnate12/tmdbapis/blob/master/LICENSE.txt>`_.
