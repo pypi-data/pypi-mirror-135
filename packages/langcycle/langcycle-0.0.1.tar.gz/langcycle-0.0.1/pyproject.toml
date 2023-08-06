@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[tool.pytest.ini_options]
+addopts = "-s --mypy"
+python_files = [
+    "tests/langcycle_tests.py",
+]
+
+[tool.black]
+line-length = 79
+include = '\.py$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.venv
+  | \.pytest_cache
+  | _build
+  | buck-out
+  | build
+  | dist
+  | coverage_html
+)/
+'''
+
+[tool.isort]
+line_length = 79
+profile = "black"
+src_paths = ["tests", "langcycle/"]
