@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: fastack-cache
+Version: 1.2.0
+Summary: Caching plugin for fastack
+Home-page: https://github.com/fastack-dev/fastack-cache
+License: MIT
+Author: aprilahijriyan
+Author-email: 37798612+aprilahijriyan@users.noreply.github.com
+Maintainer: aprilahijriyan
+Maintainer-email: 37798612+aprilahijriyan@users.noreply.github.com
+Requires-Python: >=3.7,<3.10
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Provides-Extra: aioredis
+Provides-Extra: redis
+Requires-Dist: aioredis (>=2.0.1,<3.0.0); extra == "aioredis"
+Requires-Dist: fastack (>=4.0.0,<5.0.0)
+Requires-Dist: redis (>=4.1.1,<5.0.0); extra == "redis"
+Project-URL: Bug Tracker, https://github.com/fastack-dev/fastack-cache/issues
+Project-URL: Repository, https://github.com/fastack-dev/fastack-cache
+Description-Content-Type: text/markdown
+
+# fastack-cache
+
+fastack-cache is a caching plugin for [fastack](https://github.com/fastack-dev/fastack) ❤️
+
+This plugin is inspired by the [django cache framework](https://docs.djangoproject.com/en/4.0/topics/cache/) and [django-redis](https://github.com/jazzband/django-redis)!
+
+Supported cache backend:
+
+* Redis:
+    * ``fastack_cache.backends.redis.RedisBackend`` - Sync version
+    * ``fastack_cache.backends.aioredis.AioRedisBackend`` - Async version
+
+# Installation
+
+```
+pip install -U fastack-cache
+```
+
+# Usage
+
+Add the plugin to your project configuration:
+
+```python
+PLUGINS = [
+    "fastack_cache",
+    ...
+]
+```
+
+Configuration:
+
+```python
+REDIS_HOST = "localhost"
+REDIS_PORT = 6900
+REDIS_DB = 0
+CACHES = {
+    # cache name
+    "default": {
+        # cache backend
+        "BACKEND": "fastack_cache.backends.redis.RedisBackend",
+        # Cache options to be passed to the Redis(...) class
+        "OPTIONS": {
+            "host": REDIS_HOST,
+            "port": REDIS_PORT,
+            "db": REDIS_DB,
+        },
+        # Serializer for converting data into cache
+        "SERIALIZER": {
+            "CLASS": "fastack_cache.serializers.JSONSerializer",
+            "OPTIONS": {
+                # Option to pass when dumps() method in serializer class is called
+                "DUMPS": {},
+                # Option to pass when loads() method in serializer class is called
+                "LOADS": {}
+            }
+        }
+    }
+}
+```
+
