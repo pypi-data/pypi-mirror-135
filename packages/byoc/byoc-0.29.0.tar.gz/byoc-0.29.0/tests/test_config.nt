@@ -1,0 +1,867 @@
+test_config_init:
+  -
+    id: config
+    factory:
+      > DummyConfig = Config
+    expected:
+      autoload: True
+      dynamic: False
+  -
+    id: config-autoload-setup
+    factory:
+      > DummyConfig = Config.setup(autoload=False)
+    expected:
+      autoload: False
+      dynamic: False
+  -
+    id: config-autoload-cls
+    factory:
+      > class DummyConfig(Config):
+      >     autoload = False
+    expected:
+      autoload: False
+      dynamic: False
+  -
+    id: config-dynamic-setup
+    factory:
+      > DummyConfig = Config.setup(dynamic=True)
+    expected:
+      autoload: True
+      dynamic: True
+  -
+    id: config-dynamic-cls
+    factory:
+      > class DummyConfig(Config):
+      >     dynamic = True
+    expected:
+      autoload: True
+      dynamic: True
+  -
+    id: config-err
+    factory:
+      > DummyConfig = Config.setup(unknown_arg=1)
+    error:
+      type: byoc.ApiError
+      message:
+        - Config() received unexpected keyword argument(s): 'unknown_arg'
+
+test_argparse_docopt_config:
+  -
+    id: argparse
+    obj:
+      > class DummyObj:
+      >     __config__ = [ArgparseConfig]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >
+      >     x = byoc.param()
+      >     y = byoc.param(Key(CliConfig, 'y'))
+      >
+      >     def get_argparse(self):
+      >         import argparse
+      >         p = argparse.ArgumentParser(description="Do something")
+      >         p.add_argument('x')
+      >         p.add_argument('-y', action='store_true')
+      >         return p
+    usage:
+      > usage: app [-h] [-y] x
+      >
+      > Do something
+      >
+      > positional arguments:
+      >   x
+      >
+      > optional arguments:
+      >   -h, --help  show this help message and exit
+      >   -y
+      >
+    brief:
+      > Do something
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x'
+          y: False
+      -
+        argv:
+          > ./app x -y
+        expected:
+          x: 'x'
+          y: True
+  -
+    id: argparse-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [
+      >         ArgparseConfig.setup(
+      >             parser_getter=lambda obj: obj.get_my_argparse(),
+      >             schema=lambda d: {**d, 'x': 'x*'},
+      >         ),
+      >     ]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >
+      >     x = byoc.param()
+      >     y = byoc.param()
+      >
+      >     def get_my_argparse(self):
+      >         import argparse
+      >         p = argparse.ArgumentParser(description="Do something")
+      >         p.add_argument('x')
+      >         p.add_argument('-y', action='store_true')
+      >         return p
+    usage:
+      > usage: app [-h] [-y] x
+      >
+      > Do something
+      >
+      > positional arguments:
+      >   x
+      >
+      > optional arguments:
+      >   -h, --help  show this help message and exit
+      >   -y
+      >
+    brief:
+      > Do something
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x*'
+          y: False
+      -
+        argv:
+          > ./app x -y
+        expected:
+          x: 'x*'
+          y: True
+  -
+    id: docopt
+    obj:
+      > class DummyObj:
+      >     """\
+      >     Do something.
+      >
+      >     Usage:
+      >         app <x> [<y>...] [-z]
+      >     """
+      >     __config__ = [DocoptConfig]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >
+      >     x = byoc.param(Key(CliConfig, '<x>'))
+      >     y = byoc.param('<y>', default=None)
+      >     z = byoc.param('-z', default=None)
+    usage:
+      > Do something.
+      >
+      > Usage:
+      >     app <x> [<y>...] [-z]
+      >
+    brief:
+      > Do something.
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x'
+          y: None
+          z: None
+      -
+        argv:
+          > ./app x -z
+        expected:
+          x: 'x'
+          y: None
+          z: True
+      -
+        argv:
+          > ./app x y -z
+        expected:
+          x: 'x'
+          y: ['y']
+          z: True
+  -
+    id: docopt-setup
+    obj:
+      > class DummyObj:
+      >     doc = """\
+      > Usage:
+      >     app <x> [<y>...] [-z]
+      > """
+      >     __config__ = [
+      >         DocoptConfig.setup(
+      >             usage_getter=lambda obj: obj.doc,
+      >             options_first=True,
+      >             schema=lambda d: {**d, '<x>': d['<x>'] + '*'},
+      >         ),
+      >     ]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >     version = '1.0'
+      >
+      >     x = byoc.param('<x>')
+      >     y = byoc.param('<y>', default=None)
+      >     z = byoc.param('-z', default=None)
+    usage:
+      > Usage:
+      >     app <x> [<y>...] [-z]
+      >
+    brief:
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x*'
+          y: None
+          z: None
+      -
+        argv:
+          > ./app x -z
+        expected:
+          x: 'x*'
+          y: ['-z']
+          z: None
+      -
+        argv:
+          > ./app -z x
+        expected:
+          x: 'x*'
+          y: None
+          z: True
+  -
+    id: docopt-class-attrs
+    obj:
+      > class DummyDocoptConfig(DocoptConfig):
+      >     usage_getter = lambda obj: obj.doc
+      >     options_first = True
+      >     schema = lambda d: {**d, '<x>': d['<x>'] + '*'}
+      >
+      > class DummyObj:
+      >     doc = """\
+      > Usage:
+      >     app <x> [<y>...] [-z]
+      > """
+      >     __config__ = [DummyDocoptConfig]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >     version = '1.0'
+      >
+      >     x = byoc.param('<x>')
+      >     y = byoc.param('<y>', default=None)
+      >     z = byoc.param('-z', default=None)
+    usage:
+      > Usage:
+      >     app <x> [<y>...] [-z]
+      >
+    brief:
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x*'
+          y: None
+          z: None
+      -
+        argv:
+          > ./app x -z
+        expected:
+          x: 'x*'
+          y: ['-z']
+          z: None
+      -
+        argv:
+          > ./app -z x
+        expected:
+          x: 'x*'
+          y: None
+          z: True
+  -
+    id: docopt-mako
+    obj:
+      > class DummyObj:
+      >     """\
+      > Usage:
+      >     app <x> [-y Y]
+      >
+      > Options:
+      >     -y Y  [default: ${app.y.upper()}]
+      > """
+      >     __config__ = [DocoptConfig]
+      >     usage = byoc.config_attr()
+      >     brief = byoc.config_attr()
+      >
+      >     x = byoc.param('<x>')
+      >     y = byoc.param('-y', default='a')
+    usage:
+      > Usage:
+      >     app <x> [-y Y]
+      >
+      > Options:
+      >     -y Y  [default: A]
+      >
+    brief:
+    invocations:
+      -
+        argv:
+          > ./app x
+        expected:
+          x: 'x'
+          y: 'A'
+      -
+        argv:
+          > ./app x -y b
+        expected:
+          x: 'x'
+          y: 'b'
+
+test_appdirs_config:
+  -
+    obj:
+      > class DummyAppDirsConfig(AppDirsConfig):
+      >   name = 'conf.yml'
+      >
+      > class DummyObj:
+      >     __config__ = [DummyAppDirsConfig]
+      >     dirs = byoc.config_attr()
+      >     config_paths = byoc.config_attr()
+    slug: 'dummyobj'
+    author: None
+    version: None
+    files:
+      user/conf.yml:
+        > x: 1
+      site/conf.yml:
+        > y: 2
+    layers:
+      -
+        values: {'x': 1}
+        location: user/conf.yml
+      -
+        values: {'y': 2}
+        location: site/conf.yml
+  -
+    obj:
+      > class DummyAppDirsConfig(AppDirsConfig):
+      >   name = 'conf.yml'
+      >   slug = 'slug'
+      >   author = 'author'
+      >   version = 'version'
+      >
+      > class DummyObj:
+      >     __config__ = [DummyAppDirsConfig]
+      >     dirs = byoc.config_attr()
+      >     config_paths = byoc.config_attr()
+    slug: 'slug'
+    author: 'author'
+    version: 'version'
+    files:
+      user/conf.yml:
+        > x: 1
+      site/conf.yml:
+        > y: 2
+    layers:
+      -
+        values: {'x': 1}
+        location: user/conf.yml
+      -
+        values: {'y': 2}
+        location: site/conf.yml
+
+test_appdirs_config_get_name_and_config_cls:
+  -
+    id: error
+    config: AppDirsConfig
+    error:
+      type: byoc.ApiError
+      message:
+        - must specify `AppDirsConfig.name` or `AppDirsConfig.config_cls`
+  -
+    id: error
+    config: AppDirsConfig.setup(name='conf.yml', format=TomlConfig)
+    error:
+      type: byoc.ApiError
+      pattern:
+        - can't specify `AppDirsConfig.name` and `AppDirsConfig.format`
+        - name: 'conf.yml'
+        - format: <class 'byoc.*TomlConfig'>
+        - use `AppDirsConfig.stem` to change the filename used by `AppDirsConfig.format`
+  -
+    id: error
+    config: AppDirsConfig.setup(name='conf.xyz')
+    error:
+      type: byoc.ApiError
+      pattern:
+        - can't find FileConfig subclass to load 'conf.xyz'
+        - found these subclasses:
+        - <class 'byoc.*YamlConfig'>: .yml .yaml
+        - <class 'byoc.*TomlConfig'>: .toml
+        - <class 'byoc.*NtConfig'>: .nt
+
+  -
+    id: name
+    config: AppDirsConfig.setup(name='my-conf.yml')
+    name: my-conf.yml
+    config_cls: YamlConfig
+  -
+    id: name
+    config: AppDirsConfig.setup(name='my-conf.yaml')
+    name: my-conf.yaml
+    config_cls: YamlConfig
+  -
+    id: name
+    config: AppDirsConfig.setup(name='my-conf.toml')
+    name: my-conf.toml
+    config_cls: TomlConfig
+  -
+    id: name
+    config: AppDirsConfig.setup(name='my-conf.nt')
+    name: my-conf.nt
+    config_cls: NtConfig
+
+  -
+    id: format
+    config: AppDirsConfig.setup(format=YamlConfig)
+    name: conf.yml
+    config_cls: YamlConfig
+  -
+    id: config_cls
+    config: AppDirsConfig.setup(format=YamlConfig, stem='my-conf')
+    name: my-conf.yml
+    config_cls: YamlConfig
+  -
+    id: config_cls
+    config: AppDirsConfig.setup(format=TomlConfig)
+    name: conf.toml
+    config_cls: TomlConfig
+  -
+    id: config_cls
+    config: AppDirsConfig.setup(format=TomlConfig, stem='my-conf')
+    name: my-conf.toml
+    config_cls: TomlConfig
+  -
+    id: config_cls
+    config: AppDirsConfig.setup(format=NtConfig)
+    name: conf.nt
+    config_cls: NtConfig
+  -
+    id: config_cls
+    config: AppDirsConfig.setup(format=NtConfig, stem='my-conf')
+    name: my-conf.nt
+    config_cls: NtConfig
+
+test_file_config:
+  -
+    id: yaml
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig]
+      >     path = 'x.yml'
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+  -
+    id: toml
+    obj:
+      > class DummyObj:
+      >     __config__ = [TomlConfig]
+      >     path = 'x.toml'
+    files:
+      x.toml:
+        > x = 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.toml
+  -
+    id: nt
+    obj:
+      > class DummyObj:
+      >     __config__ = [NtConfig]
+      >     path = 'x.nt'
+    files:
+      x.nt:
+        > x: 1
+    layers:
+      -
+        values: {'x': '1'}
+        location: x.nt
+        linenos: {('x',): 0}
+  -
+    id: json
+    obj:
+      > class DummyObj:
+      >     __config__ = [JsonConfig]
+      >     path = 'x.json'
+    files:
+      x.json:
+        > {"x": 1}
+    layers:
+      -
+        values: {'x': 1}
+        location: x.json
+  -
+    id: path-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig.setup('x.yml')]
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+  -
+    id: paths-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig.setup(['x.yml', 'y.yml'])]
+    files:
+      x.yml:
+        > x: 1
+      y.yml:
+        > y: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+      -
+        values: {'y': 1}
+        location: y.yml
+  -
+    id: path-getter-cls
+    obj:
+      > class DummyYamlConfig(YamlConfig):
+      >     path_getter = lambda obj: obj.p
+      >
+      > class DummyObj:
+      >     __config__ = [DummyYamlConfig]
+      >     p = 'x.yml'
+      >
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+  -
+    id: path-getter-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [
+      >         YamlConfig.setup(path_getter=lambda x: x.p),
+      >     ]
+      >     p = 'x.yml'
+      >
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+  -
+    id: schema-cls
+    obj:
+      > class DummyYamlConfig(YamlConfig):
+      >     schema = ...
+      >
+      > class DummyObj:
+      >     __config__ = [DummyYamlConfig]
+      >     path = 'x.yml'
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+        schema: ...
+  -
+    id: schema-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig.setup(schema=...)]
+      >     path = 'x.yml'
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+        schema: ...
+  -
+    id: root-key-cls
+    obj:
+      > class DummyYamlConfig(YamlConfig):
+      >     root_key = 'x'
+      >
+      > class DummyObj:
+      >     __config__ = [DummyYamlConfig]
+      >     path = 'x.yml'
+    files:
+      x.yml:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.yml
+        root_key: 'x'
+  -
+    id: root-key-setup
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig.setup(root_key='x')]
+      >     path = 'x.nt'
+    files:
+      x.nt:
+        > x: 1
+    layers:
+      -
+        values: {'x': 1}
+        location: x.nt
+        root_key: 'x'
+  -
+    id: not-found
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig]
+      >     path = 'not-found.yml'
+    files:
+    layers:
+      - FileNotFoundLayer('not-found.yml')
+
+  -
+    id: not-given-path
+    obj:
+      > class DummyObj:
+      >     __config__ = [YamlConfig]
+    files:
+    layers:
+      []
+
+test_on_load:
+  -
+    id: init
+    prepare:
+    load:
+      > byoc.init(obj)
+    expected:
+      - default
+      - DummyConfig
+      - A
+      - A1
+      - A2
+
+  -
+    id: load
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B1
+      - B2
+  -
+    id: load-a
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, A)
+    expected:
+  -
+    id: load-a1
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, A1)
+    expected:
+  -
+    id: load-a2
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, A2)
+    expected:
+  -
+    id: load-b
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, B)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B1
+      - B2
+  -
+    id: load-b1
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, B1)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B1
+  -
+    id: load-b2
+    prepare:
+      > byoc.init(obj)
+    load:
+      > byoc.load(obj, B2)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B2
+
+  -
+    id: reload
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj)
+    expected:
+      - default
+      - DummyConfig
+      - A
+      - A1
+      - A2
+      - B
+      - B1
+      - B2
+  -
+    id: reload-a
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, A)
+    expected:
+      - default
+      - DummyConfig
+      - A
+      - A1
+      - A2
+  -
+    id: reload-a1
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, A1)
+    expected:
+      - default
+      - DummyConfig
+      - A
+      - A1
+  -
+    id: reload-a2
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, A2)
+    expected:
+      - default
+      - DummyConfig
+      - A
+      - A2
+  -
+    id: reload-b
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, B)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B1
+      - B2
+  -
+    id: reload-b1
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, B1)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B1
+  -
+    id: reload-b2
+    prepare:
+      > byoc.load(obj)
+    load:
+      > byoc.reload(obj, B2)
+    expected:
+      - default
+      - DummyConfig
+      - B
+      - B2
+
+  -
+    id: direct
+    prepare:
+    load:
+      > obj.on_default()
+    expected:
+      - default
+
+test_dict_like:
+  -
+    f: f = lambda x: x+1
+    x: 1
+    expected: 2
+  -
+    f:
+      > def f(x):
+      >     raise KeyError
+    error:
+      type: KeyError
+  -
+    f:
+      > def f(x):
+      >     raise IndexError
+    raises:
+      - IndexError
+    error:
+      type: KeyError
+  -
+    f:
+      > def f(x):
+      >     raise IndexError
+    raises:
+      - AttributeError
+    error:
+      type: IndexError
+  -
+    f:
+      > def f(x):
+      >     raise IndexError
+    raises:
+      - AttributeError
+      - IndexError
+    error:
+      type: KeyError
+
+

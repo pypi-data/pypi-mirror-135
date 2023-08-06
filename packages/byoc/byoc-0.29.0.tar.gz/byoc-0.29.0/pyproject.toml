@@ -1,0 +1,61 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "byoc"
+author = "Kale Kundert"
+author-email = "kale@thekunderts.net"
+home-page = 'https://github.com/kalekundert/byoc'
+description-file = 'README.rst'
+requires-python = "~=3.6"
+requires = [
+  'autoprop',
+  'appdirs',
+  'docopt~=0.6.2',
+  'mako',
+  'more_itertools',
+  'nestedtext',
+  'pyyaml',
+  'tidyexc',
+  'tomli',
+]
+classifiers = [
+  'Programming Language :: Python :: 3',
+  'License :: OSI Approved :: MIT License',
+]
+
+[tool.flit.metadata.requires-extra]
+tests = [
+  'pytest',
+  'pytest-cov',
+  'pytest-unordered',
+  'coveralls',
+  'parametrize_from_file',
+  'voluptuous',
+  're-assert',
+]
+docs = [
+  'sphinx',
+  'sphinx_rtd_theme',
+  'autoclasstoc',
+]
+
+[tool.flit.metadata.urls]
+'Documentation' = 'https://byoc.readthedocs.io/en/latest/'
+'Version Control' = 'https://github.com/kalekundert/byoc'
+'Bug Tracker' = 'https://github.com/kalekundert/byoc/issues'
+'Continuous Integration' = 'https://github.com/kalekundert/byoc/actions'
+'Test Coverage' = 'https://coveralls.io/github/kalekundert/byoc'
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules --doctest-glob='*.rst'"
+doctest_optionflags = 'NORMALIZE_WHITESPACE'
+
+[tool.pccc]
+header_length = 72
+types = ["chore", "docs", "feat", "fix", "refactor", "style", "test", "wip"]
+
+[tool.semantic_release]
+version_variable = 'byoc/__init__.py:__version__'
+build_command = 'python -m pip install flit && flit build'
