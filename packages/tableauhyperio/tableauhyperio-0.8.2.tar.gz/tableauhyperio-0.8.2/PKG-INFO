@@ -1,0 +1,76 @@
+Metadata-Version: 2.1
+Name: tableauhyperio
+Version: 0.8.2
+Summary: Read and write Tableau hyper files using Pandas DataFrames
+Home-page: https://github.com/AlexFrid/tableauhyperio
+License: BSD-3-Clause
+Keywords: Tableau,hyper,extract,pandas,DataFrame
+Author: Alexander Fridriksson
+Author-email: post@alexanderfridriksson.com
+Requires-Python: >=3.7.1
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Office/Business
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: black (>=19.10b0)
+Requires-Dist: flake8 (>=3.8.3)
+Requires-Dist: pandas (>=1.0.4)
+Requires-Dist: tableauhyperapi (>=0.0.10899)
+Requires-Dist: tqdm (>=4.46.1)
+Project-URL: Repository, https://github.com/AlexFrid/tableauhyperio
+Description-Content-Type: text/markdown
+
+#DEPRECATED
+
+Go to https://github.com/innobi/pantab for a maintained package
+
+# Tableau Hyper IO: read and write Tableau hyper files using Pandas DataFrames
+[![PyPI](https://img.shields.io/pypi/v/tableauhyperio)](https://pypi.org/project/tableauhyperio)
+[![PyPI - License](https://img.shields.io/pypi/l/tableauhyperio)](https://github.com/AlexFrid/tableauhyperio/blob/master/LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+## What is it?
+A simple way to read Tableau hyper files into Pandas DataFrames
+and write to Tableau hyper files from Pandas DataFrames.
+
+## Why was this made?
+For a project I was working on I needed to read hyper files.
+I searched if a package already existed and found only the [pandleau](https://pypi.org/project/pandleau/) package,
+which only writes to hyper files but does not read them and also uses the older extract 2.0 API.
+Since I couldn't find any other package that met my needs I decided to make one myself, which has been a good learning experience.
+
+## Installation
+
+You can install tableauhyperio using pip:
+```bash
+pip install tableauhyperio
+```
+This will also try downloading the Tableau hyper API, tqdm and pandas packages
+if you don't have them already.
+
+## Example usage
+```python
+import tableauhyperio as hio
+
+# Reading a regular hyper file
+df = hio.read_hyper("example.hyper")
+
+# Reading a hyper file with a custom schema
+df = hio.read_hyper("example.hyper", "my_schema")
+
+# Writing a regular hyper file
+hio.to_hyper(df, "example_output.hyper")
+
+# Writing a hyper file with a custom schema and custom table name
+hio.to_hyper(df, "example_output.hyper", "my_schema", "my_table")
+```
+
+## Dependencies
+- [Pandas](https://pandas.pydata.org)
+- [tableauhyperapi](https://help.tableau.com/current/api/hyper_api/en-us/index.html)
+- [tqdm](https://github.com/tqdm/tqdm)
+
