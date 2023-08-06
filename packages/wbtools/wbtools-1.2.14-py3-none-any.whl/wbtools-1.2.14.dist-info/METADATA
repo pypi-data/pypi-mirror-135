@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: wbtools
+Version: 1.2.14
+Summary: Interface to WormBase (www.wormbase.org) curation data, including literature management and NLP functions
+Home-page: https://github.com/WormBase/wbtools
+Author: Valerio Arnaboldi
+Author-email: valearna@caltech.edu
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: psycopg2-binary
+Requires-Dist: numpy (~=1.19.2)
+Requires-Dist: fabric (~=2.5.0)
+Requires-Dist: gensim (~=3.8.3)
+Requires-Dist: nltk (~=3.5)
+Requires-Dist: setuptools (~=50.3.2)
+Requires-Dist: regex (~=2020.10.28)
+Requires-Dist: pdfminer.six (==20201018)
+Requires-Dist: pytz (~=2021.1)
+Requires-Dist: pandas (~=1.3.3)
+
+# WBtools
+> Interface to WormBase curation database and Text Mining functions
+
+Access WormBase paper corpus information by loading pdf files (converted to txt) and curation info from the WormBase 
+database. The package also exposes text mining functions on papers' fulltext.
+
+## Installation
+
+```pip install wbtools```
+
+## Usage example
+
+### Get sentences from a WormBase paper
+
+```python
+from wbtools.literature.corpus import CorpusManager
+
+paper_id = "00050564"
+cm = CorpusManager()
+cm.load_from_wb_database(db_name="wb_dbname", db_user="wb_dbuser", db_password="wb_dbpasswd", db_host="wb_dbhost",
+                         paper_ids=[paper_id], ssh_host="ssh_host", ssh_user="ssh_user", ssh_passwd="ssh_passwd")
+sentences = cm.get_paper(paper_id).get_text_docs(split_sentences=True)
+```
+
+### Get the latest papers (up to 50) added to WormBase or modified in the last month  
+
+```python
+from wbtools.literature.corpus import CorpusManager
+import datetime
+
+cm = CorpusManager()
+cm.load_from_wb_database(db_name="wb_dbname", db_user="wb_dbuser", db_password="wb_dbpasswd", db_host="wb_dbhost",
+                         from_date=datetime.datetime.now(), max_num_papers=50, ssh_host="ssh_host", ssh_user="ssh_user", 
+                         ssh_passwd="ssh_passwd")
+paper_ids = [paper.paper_id for paper in cm.get_all_papers()]
+```
+
+### Get the latest 50 papers added to WormBase or modified that have a final pdf version and have been flagged by WB paper classification pipeline, excluding reviews and papers with temp files only (proofs)
+
+```python
+from wbtools.literature.corpus import CorpusManager
+import datetime
+
+cm = CorpusManager()
+cm.load_from_wb_database(db_name="wb_dbname", db_user="wb_dbuser", db_password="wb_dbpasswd", db_host="wb_dbhost",
+                         from_date=datetime.datetime.now(), max_num_papers=50, must_be_autclass_flagged=True,
+                         exclude_pap_types=['Review'], exclude_temp_pdf=True, ssh_host="ssh_host", ssh_user="ssh_user", 
+                         ssh_passwd="ssh_passwd")
+paper_ids = [paper.paper_id for paper in cm.get_all_papers()]
+```
+
