@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: django-mqtt
+Version: 0.0.2
+Summary: UNKNOWN
+Home-page: http://github.com/kfdm/django-mqtt
+Author: Paul Traylor
+License: MIT License
+Project-URL: Issues, http://github.com/kfdm/django-mqtt/issues
+Project-URL: Source Code, http://github.com/kfdm/django-mqtt
+Description: # django-mqtt
+        
+        MQTT tools for Django project
+        
+        [![PyPI](https://img.shields.io/pypi/v/django-mqtt)](https://pypi.org/project/django-mqtt/)
+        
+        # Usage
+        
+        - Add `"dmqtt"` to your `INSTALLED_APPS`
+        - Add `MQTT_HOST`, `MQTT_USER`, `MQTT_PASS`, `MQTT_PORT`
+        - Run with `python manage.py mqtt`
+        
+        ```python
+        from dmqtt.signals import connect, regex, topic
+        from django.dispatch import receiver
+        
+        @receiver(connect)
+        def on_connect(sender, **kwargs):
+            sender.subscribe("#")
+        
+        @topic("some/mqtt/topic")
+        def simple_topic(sender, topic, data, **kwargs):
+            pass
+        
+        @regex("^some/(?P<username>[^/]+)/(?P<topic>[^/]+)$")
+        def regex_topic(match, data, **kwargs):
+            device = match.groupdict()
+        ```
+        
+Keywords: django mqtt
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Internet :: WWW/HTTP
+Description-Content-Type: text/markdown
