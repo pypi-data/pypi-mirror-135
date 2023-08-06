@@ -1,0 +1,32 @@
+[tool.black]
+line-length = 100
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.githooks
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | yoyo
+  )/
+  | setup.py
+)
+'''
+
+[tool.pytest.ini_options]
+addopts = "-svx --cov=."
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+omit =["tests/*", "*generated*", "resolver.py"]
+[tool.coverage.report]
+omit =["tests/*", "*generated*", "resolver.py"]
