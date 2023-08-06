@@ -1,0 +1,57 @@
+Metadata-Version: 2.1
+Name: dstack
+Version: 0.0.2rc5
+Summary: A Command Line Interface for training models with https://dstack.ai
+Home-page: https://dstack.ai
+Author: peterschmidt85
+Author-email: team@dstack.ai
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+Requires-Dist: pyyaml
+Requires-Dist: requests
+Requires-Dist: gitpython
+Requires-Dist: tabulate
+Requires-Dist: boto3
+Requires-Dist: colorama
+Requires-Dist: tqdm
+Requires-Dist: jsonschema
+Requires-Dist: botocore
+Requires-Dist: python-dateutil
+
+![](https://github.com/dstackai/dstackai.github.io/raw/main/docs/images/splash.png?raw=true)
+
+[Website](https://dstack.ai) | [Documentation](https://docs.dstack.ai)
+
+Typical ML workflows include multiple steps, e.g. pre-processing data, training, fine-tuning, validation, etc.
+
+With `dstack`, you can define ML workflows in a simple YAML format, and run them from CLI on either your own servers or
+using spot instances in your own cloud.
+
+### How dstack works
+
+1. You define `.dstack/workflows.yaml` and `.dstack/variables.yaml` files inside your project (must be a Git repository)
+   .
+
+![](https://github.com/dstackai/dstackai.github.io/raw/main/docs/images/dstack_screenshots_workflows.png?raw=true)
+
+
+2. You install the `dstack` CLI via `pip`.
+3. You either install `dstack-runner` daemon on your servers, or use the `dstack aws configure` to authorize dstack to
+   use your own cloud to create runners on-demand using spot instances.
+4. You use the `dstack` CLI to run workflows, manage runs, jobs, logs, artifacts, runners.
+
+![](https://github.com/dstackai/dstackai.github.io/raw/main/docs/images/dstack_screenshots_commands.png?raw=true)
+
+5. When a workflow is submitted via the CLI (e.g. via `dstack run`) , the request is sent to the dstack server. The dstack
+   server creates jobs for the submitted run, and assign them to available runners (either servers where you've
+   installed dstack-runner or on-demand spot instances in your cloud that you allowed creating).
+6. Runners execute assigned jobs, report their logs in real time, and upload artifacts once the job is finished.
+
+
+For more information, please visit https://dstack.ai or https://docs.dstack.ai.
+
