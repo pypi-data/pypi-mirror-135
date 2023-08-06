@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvegafusion_jupyter=self.webpackChunkvegafusion_jupyter||[]).push([[480],{480:(e,t,u)=>{u.r(t),u.d(t,{default:()=>a});var r=u(565),i=u(229),s=u(657);const a={id:"vegafusion-jupyter:plugin",requires:[r.IJupyterWidgetRegistry],activate:function(e,t){t.registerWidget({name:s.o,version:s.Y,exports:i})},autoStart:!0}}}]);
