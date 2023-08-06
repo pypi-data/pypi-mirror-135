@@ -1,0 +1,146 @@
+{
+  //json5 allows for comments :)
+  "center_text": false,
+  "quit_key": "esc",
+  //i.e. can be ctrl_l etc... Anything from this list -- https://github.com/moses-palmer/pynput/blob/master/lib/pynput/keyboard/_win32.py#L108
+  "title": "This app is for goldfish who can't remember buttons. Are you a goldfish? :3c",
+  "default_messages": [
+    [
+      "Welcome!"
+    ],
+    [
+      "Feel free to resize the window to hide these lower lines."
+    ],
+    [
+      "Also, press a non-numeric button to choose a keymap."
+    ],
+    [
+      "By default, 'esc' key will quit."
+    ]
+  ],
+  "font_type": "Consolas",
+  "font_size": 32,
+  "font_margin": 4,
+  "window_always_on_top": true,
+  "icon_path": "pelleds.jpg",
+  "window_width": 1000,
+  "window_height": 400,
+  "screen_width": 1920,
+  "screen_height": 1080,
+  "background_color": [
+    //R,G,B
+    20,
+    20,
+    20
+  ],
+  "text_color": [
+    255,
+    0,
+    0
+  ],
+  "keymaps": {
+    "DEAD OR ALIVE 6": {
+      "keys": {
+        "W": "[↑]   Jump",
+        "A": "[←]   Left",
+        "S": "[↓]   Crouch",
+        "D": "[→]   Right",
+        //
+      }
+    },
+    "GG:S Default": {
+      "keys": {
+        "W": "[↑]   Jump",
+        "A": "[←]   Left",
+        "S": "[↓]   Crouch",
+        "D": "[→]   Right",
+        //
+        "U": "[P]   Punch",
+        "I": "[S]   Slash",
+        "J": "[K]   Kick",
+        "K": "[HS]  HSlash",
+        "O": "[D]   Dust"
+      },
+      "chords": {
+        //for testing key "chords", just taps
+        "A A": "dash/backdash",
+        "D D": "dash/backdash",
+        "S W": "super jump"
+      },
+      "combinations": {
+        //key combos, you need to HOLD CTRL and then press X
+        //TODO NYI
+        "CTRL-X": "Cut (excel :P)",
+        "S-K": "[2H]  Crouching Heavy Slash",
+        "S-P": "[2D]  Crouching Dust"
+      },
+      "macros": [
+        //these let you spoof keyboard inputs. TODO Not yet implemented.
+        {
+          "Kara Cancel Potemkin Buster (left facing)": {
+            "inputs": "A 0.1 A S 0.1 S D 0.1 D 0.1 A 0.1 J 0.05 U",
+            //what key combo to press to trigger the keyboard input?
+            "trigger": {
+              "type": "combination",
+              "sequence": "ALT D"
+            },
+          }
+        }
+      ]
+    },
+    "GG:S HenryFBP Custom (E+R=RC,PB)": {
+      "inherit": "GG:S Default",
+      "keys": {
+        // my custom keys below
+        "E": "[RC]  Roman Cancel",
+        "R": "[PB]  Psych Burst"
+      }
+    },
+    "Tekken 7 Default": {
+      "keys": {
+        "W": "[↑]   Jump",
+        "A": "[←]   Left",
+        "S": "[↓]   Crouch",
+        "D": "[→]   Right",
+        //
+        "B": "[Pause]",
+        "V": "[Select]",
+        //
+        "P": "[LB]  L Bumper",
+        "O": "[RB]  R Bumper",
+        ";": "[LT]  L Trigger",
+        "L": "[RT]  R Trigger",
+        //
+        "C": "[LS]  L Stick Press",
+        "N": "[RS]  R Stick Press",
+        //
+        "U": "[1](X)    Left Punch",
+        "I": "[2](Y)    Right Punch",
+        "J": "[3](A)    Left Kick",
+        "K": "[4](B)    Right Kick"
+      }
+    },
+    "MELTY BLOOD: TYPE LUMINA Default": {
+      "keys": {
+        "W": "[↑]       Jump",
+        "A": "[←]       Left",
+        "S": "[↓]       Crouch",
+        "D": "[→]       Right",
+        //
+        "U": "[A]   (x)     Weak",
+        "I": "[B]   (y)     Medium",
+        "O": "[C]   (b)     Strong",
+        "J": "[D]   (a)     Shield",
+        //
+        ";": "[BC]  (RB)    B+C",
+        "L": "[AD]  (LB)    A+D",
+        ":": "[AB]  (RT)    A+B",
+        "K": "[ABC] (LT)    A+B+C",
+        //
+        "T": "Start",
+        "R": "Restart"
+        //
+      }
+    }
+  }
+}
