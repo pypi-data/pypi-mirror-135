@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "cv-aid"
+version = "0.2.0"
+description = "CV Aid is a set of helpers for computer vision tasks."
+authors = ["Khalid Mohamed Elborai <accnew820@gmail.com>"]
+license = "GNU Version 3"
+packages = [
+    { include = "cv_aid" },
+    { include = "tests", format = "sdist" },
+    { include = "tests", format = "wheel" },
+    { include = "scripts.py", format = "sdist" },
+    { include = "scripts.py", format = "wheel" },
+]
+readme = "README.md"
+repository = "https://github.com/khalidelboray/cv-aid"
+keywords = ["computer vision", "cv", "image", "processing", "helpers","open-cv","dlib","face detection"]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+deepstack-sdk = "^0.2.1"
+filetype = "^1.0.9"
+numpy = "^1.21"
+opencv-python = "^4.1.0"
+tqdm = "^4.62.3"
+requests = "^2.27.1"
+cmake = "^3.22.1"
+dlib = "^19.22.1"
+
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+test = 'scripts:test'
