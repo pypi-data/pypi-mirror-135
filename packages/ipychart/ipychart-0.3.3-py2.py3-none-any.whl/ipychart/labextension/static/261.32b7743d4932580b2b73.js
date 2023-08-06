@@ -1,0 +1,1 @@
+(self.webpackChunkipychart=self.webpackChunkipychart||[]).push([[261],{6261:(e,t,r)=>{var i=r(1568),a=r(1337);e.exports={id:"ipychart",requires:[a.IJupyterWidgetRegistry],activate:function(e,t){t.registerWidget({name:"ipychart",version:i.version,exports:i})},autoStart:!0}}}]);
