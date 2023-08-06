@@ -1,0 +1,93 @@
+[tool.poetry]
+name = "stupidb"
+version = "7.0.4"
+packages = [{ include = "stupidb" }]
+homepage = "https://github.com/cpcloud/stupidb"
+repository = "https://github.com/cpcloud/stupidb"
+documentation = "https://stupidb.readthedocs.io"
+description = "The stupidest of all the databases."
+authors = ["Phillip Cloud <cpcloud@gmail.com>"]
+maintainers = ["Phillip Cloud <cpcloud@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+atpublic = "^2.3"
+toolz = "^0.11"
+pydot = { version = "^1.4.2", optional = true }
+tabulate = "^0.8.9"
+
+[tool.poetry.dev-dependencies]
+Sphinx = "^4.2.0"
+black = "21.9b0"
+coverage = "^6"
+flake8 = "^4.0.1"
+isort = "^5.9.3"
+mypy = "^0.931"
+pydocstyle = "^6.1.1"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+pytest-randomly = "^3.10.1"
+pytest-xdist = "^2.3.0"
+pyupgrade = "^2.28.1"
+sphinx-autodoc-typehints = "^1.12.0"
+
+[tool.poetry.extras]
+animation = ["pydot"]
+
+[tool.pytest.ini_options]
+xfail_strict = true
+addopts = [
+  "--ignore=site-packages",
+  "--ignore=dist-packages",
+  "--ignore=.direnv",
+  "--strict-markers",
+  "--doctest-modules",
+]
+markers = ["animate"]
+norecursedirs = ["site-packages", "dist-packages", ".direnv"]
+
+[tool.black]
+line_length = 88
+
+[tool.isort]
+line_length = 88
+profile = "black"
+
+[tool.pydocstyle]
+convention = "numpy"
+add_ignore = ["D105", "D213", "D203"]
+match-dir = "stupidb"
+
+[tool.mypy]
+exclude = "docs/conf\\.py"
+ignore_missing_imports = true
+# untyped things
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+# Any handling
+disallow_any_unimported = false
+disallow_any_expr = false
+disallow_any_decorated = false
+disallow_any_explicit = false
+disallow_any_generics = false
+disallow_subclassing_any = false
+# None/Optional handling
+no_implicit_optional = true
+# show more context on failure
+show_error_context = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
