@@ -1,0 +1,184 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "types" : {
+      "nullable_string" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          }
+        ]
+      },
+      "nullable_number" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "number"
+          }
+        ]
+      },
+      "nullable_string_number" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          },
+          {
+            "type" : "number"
+          }
+        ]
+      }
+    },
+    "data_type" : {
+      "type" : "string",
+      "enum" : [
+        "char",
+        "uchar",
+        "short",
+        "ushort",
+        "int",
+        "uint",
+        "float",
+        "bool",
+        "string",
+        "enum"
+      ]
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Entity uuid v4 identifier. This identifier is unique"
+    },
+    "identifier" : {
+      "type" : "string",
+      "description" : "Unique human readable identifier used across services"
+    },
+    "key" : {
+      "type" : "string",
+      "description" : "Unique pub/sub identifier per each entity"
+    },
+    "name" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "comment" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "data_type" : {
+      "$ref" : "#/definitions/data_type",
+      "default" : null
+    },
+    "default" : {
+      "$ref" : "#/definitions/types/nullable_string_number",
+      "default" : null
+    },
+    "value" : {
+      "$ref" : "#/definitions/types/nullable_string_number",
+      "default" : null
+    },
+    "channel" : {
+      "type" : "string",
+      "description" : "Channel unique uuid v4 identifier used across services"
+    },
+    "owner" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "description" : "Entity owner uuid v4 identifier"
+    }
+  },
+  "if" : {
+    "properties" : {
+      "data_type" : {
+        "const" : "enum"
+      }
+    }
+  },
+  "then" : {
+    "properties" : {
+      "values" : {
+        "type" : "array"
+      }
+    },
+    "required" : [
+      "id",
+      "identifier",
+      "key",
+      "name",
+      "comment",
+      "data_type",
+      "default",
+      "value",
+      "channel",
+      "values"
+    ]
+  },
+  "else" : {
+    "if" : {
+      "properties" : {
+        "data_type" : {
+          "enum" : [
+            "char",
+            "uchar",
+            "short",
+            "ushort",
+            "int",
+            "uint",
+            "float"
+          ]
+        }
+      }
+    },
+    "then" : {
+      "properties" : {
+        "min" : {
+          "$ref" : "#/definitions/types/nullable_number",
+          "default" : null
+        },
+        "max" : {
+          "$ref" : "#/definitions/types/nullable_number",
+          "default" : null
+        },
+        "step" : {
+          "$ref" : "#/definitions/types/nullable_number",
+          "default" : null
+        }
+      },
+      "required" : [
+        "id",
+        "identifier",
+        "key",
+        "name",
+        "comment",
+        "data_type",
+        "default",
+        "value",
+        "channel",
+        "min",
+        "max",
+        "step"
+      ]
+    },
+    "else" : {
+      "required" : [
+        "id",
+        "identifier",
+        "key",
+        "name",
+        "comment",
+        "data_type",
+        "default",
+        "value",
+        "channel"
+      ]
+    }
+  }
+}
