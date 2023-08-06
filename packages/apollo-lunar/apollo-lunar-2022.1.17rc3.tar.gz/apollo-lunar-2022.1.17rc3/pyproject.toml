@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "apollo-lunar"
+version = "2022.1.17rc3"
+description = "A Python SDK/CLI for Lunar API"
+authors = ["Lunar module <lunar@sktio.io>"]
+readme = "README.md"
+license = "MIT"
+include = [
+    "LICENSE",
+]
+packages = [
+    { include = "lunar" },
+    { include = "bap" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.0.1"
+requests = "^2.25.1"
+pydantic = "^1.8.2"
+aiohttp = "^3.7.4"
+scikit-learn = { version = "~0.24.2", optional = true }
+catboost = { version = "~0.26", optional = true }
+lightgbm = { version = "~3.2.1", optional = true }
+xgboost = { version = "~1.4.2", optional = true }
+boto3 = "*"
+cloudpickle = "^1.6.0"
+
+[tool.poetry.extras]
+ml = ["scikit-learn", "catboost", "lightgbm", "xgboost"]
+
+[tool.poetry.dev-dependencies]
+black = "^21.6b0"
+flake8 = "^3.9.2"
+pytest = "^6.2.4"
+pytest-mock = "^3.6.1"
+pdoc3 = "^0.9.2"
+jupyterlab = "^3.2.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+lunar = "lunar.cli:main"
