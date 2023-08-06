@@ -1,0 +1,14 @@
+---
+- name: Checking timedatectl status
+  become: true
+  command: timedatectl status
+  register: timedatectl_status
+  changed_when: false
+
+- name: Fail if the clock is not synchronized
+  fail:
+    msg: >-
+      timedatectl sees the system clock as unsynchronized.
+      Please wait for synchronization.
+  when:
+    - "'synchronized: yes' not in timedatectl_status.stdout"
