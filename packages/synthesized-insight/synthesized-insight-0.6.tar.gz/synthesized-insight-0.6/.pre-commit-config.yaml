@@ -1,0 +1,34 @@
+---
+default_language_version:
+  python: python3.8
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/PyCQA/flake8
+    rev: '4.0.1'
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.910-1
+    hooks:
+      - id: mypy
+        files: src
+        additional_dependencies: [pandas, pandas-stubs, numpy>=1.21]
+        args: [--install-types, --non-interactive]
+        # Note that using the --install-types is problematic if running in
+        # parallel as mutating the pre-commit env at runtime breaks cache.
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+...
