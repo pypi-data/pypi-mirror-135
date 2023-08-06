@@ -1,0 +1,44 @@
+#!/bin/vbash
+source /opt/vyatta/etc/functions/script-template
+
+if [ "$(id -g -n)" != 'vyattacfg' ] ; then
+    exec sg vyattacfg -c "/bin/vbash $(readlink -f $0) $@"
+fi
+
+# Configuration items start here
+
+configure
+
+{% if ospf.reference_bandwidth is defined %}
+set protocols ospf auto-cost reference-bandwidth {{ ospf.reference_bandwidth }}
+{% endif %}
+
+{% for l in interfaces|default([]) if l.ospf.passive|default(False) %}
+set protocols ospf passive-interface {{ l.ifname }}
+{% endfor %}
+
+set protocols ospf passive-interface dum0
+set protocols ospf interface dum0 area {{ ospf.area }}
+
+
+{% for l in interfaces|default([]) if 'ospf' in l %}
+
+set protocols ospf interface {{ l.ifname }} area {{ l.ospf.area }}
+
+{%   if l.ospf.network_type is defined %}
+set protocols ospf interface {{ l.ifname }} network {{ l.ospf.network_type }}
+{%   endif %}
+{%   if l.ospf.cost is defined %}
+set protocols ospf interface {{ l.ifname }} cost {{ l.ospf.cost }}
+{%   endif %}
+{%   if l.ospf.bfd|default(False) %}
+set protocols ospf interface {{ l.ifname }} bfd
+{%   endif %}
+
+{% endfor %}
+
+
+commit
+save
+exit
+
