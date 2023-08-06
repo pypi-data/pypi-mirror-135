@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <!-- <after css:theme="#login-forgotten-password" if="$login_message"> -->
+<rules css:if-content="body.template-login_form, body.template-logged_out, body.template-login_failed">
+
+  <rules if="$login_message">
+    <replace css:content-children="#content-core">
+      <div id="login-password">
+          <xsl:copy-of select="./*[@id='enable_cookies_message']"/>
+          <xsl:copy-of select="./*[@id='login_form']"/>
+          <xsl:copy-of select="./*[@id='login-forgotten-password']"/>
+          <xsl:copy-of select="./*[@id='login-new-user']"/>
+      </div>
+      <div class="login_message">
+        <div class="login-message-inner">
+          <xsl:value-of select="$login_message" disable-output-escaping="yes" />
+        </div>
+      </div>
+    </replace>
+  </rules>
+
+  <rules if-not="$login_message">
+    <replace css:content-children="#content-core">
+      <div id="login-password" class="no-login-message">
+          <xsl:copy-of select="./*[@id='enable_cookies_message']"/>
+          <xsl:copy-of select="./*[@id='login_form']"/>
+          <xsl:copy-of select="./*[@id='login-forgotten-password']"/>
+          <xsl:copy-of select="./*[@id='login-new-user']"/>
+      </div>
+    </replace>
+  </rules>
+
+  <drop css:content="#login_form"/>
+  <drop css:content="#login-forgotten-password"/>
+  <drop css:content="#login-new-user"/>
+</rules>
+ 
+</rules>

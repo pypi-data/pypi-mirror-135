@@ -1,0 +1,20 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <include file="configure.zcml" />
+  <include package="plone.app.contenttypes" />
+  <include package="jarn.jsi18n" />
+  <include package="collective.navigationtoggle" />
+  <include package="sc.social.like" />
+  <include package="imio.gdpr" />
+  <include package="collective.taxonomy" />
+
+  <genericsetup:registerProfile
+      name="testing"
+      title="cpskin.theme: testing"
+      directory="profiles/testing"
+      description="Installs CPSkin theme test profile"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>

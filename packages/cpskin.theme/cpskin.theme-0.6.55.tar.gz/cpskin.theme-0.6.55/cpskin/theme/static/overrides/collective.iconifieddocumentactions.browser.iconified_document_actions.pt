@@ -1,0 +1,27 @@
+<div class="visualClear"><!-- --></div>
+<div i18n:domain="plone"
+     class="iconifiedDocumentActions">
+    <tal:docactions tal:condition="view/actions">
+    <h5 class="hiddenStructure" i18n:translate="heading_document_actions">Document Actions</h5>
+
+    <ul>
+    <tal:actions repeat="daction view/actions">
+        <li>
+            <a href=""
+               tal:attributes="href daction/url;
+                               class string:icon-${daction/id}"
+               tal:define="title daction/title;
+                           icon daction/icon"
+               tal:condition="icon">
+               <img i18n:attributes="title" src="" alt="" title=""
+                     tal:attributes="src    icon;
+                                     id     python: 'document-action-' + daction['id'].lower();
+                                     title  title;
+                                     alt    title;" />
+            </a>
+        </li>
+    </tal:actions>
+    </ul>
+    </tal:docactions>
+
+</div>

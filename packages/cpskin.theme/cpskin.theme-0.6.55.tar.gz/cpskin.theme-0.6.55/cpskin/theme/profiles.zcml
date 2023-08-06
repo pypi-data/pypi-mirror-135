@@ -1,0 +1,79 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           i18n_domain="cpskin">
+
+    <genericsetup:registerProfile
+        name="default"
+        title="cpskin.theme"
+        directory="profiles/default"
+        description="Installs CPSkin theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="cpskin.theme: uninstall"
+        directory="profiles/uninstall"
+        description="Uninstalls CPSkin theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v7 (allow Diazo remote access)"
+        description="Upgrade step for CPSKIN Theme to allow Diazo remote access"
+        handler=".upgradehandlers.allow_diazo_remote_access"
+        source="6"
+        destination="7"
+        profile="cpskin.theme:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v6 (add search position variables)"
+        description="Upgrade step for CPSKIN Theme to add search position variables"
+        handler=".upgradehandlers.add_search_position_variables"
+        source="5"
+        destination="6"
+        profile="cpskin.theme:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v5 (set faceted-list-items instead of preview)"
+        description="Upgrade step for CPSKIN Theme to add add_ms_horizontal_navigation_any_mode variable"
+        handler=".upgradehandlers.set_faceted_list_items"
+        source="4"
+        destination="5"
+        profile="cpskin.theme:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v4 (add add_ms_horizontal_navigation_any_mode variable)"
+        description="Upgrade step for CPSKIN Theme to add add_ms_horizontal_navigation_any_mode variable"
+        handler=".upgradehandlers.add_ms_horizontal_navigation_any_mode_variable"
+        source="3"
+        destination="4"
+        profile="cpskin.theme:default"
+        />
+
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v3 (portal_skins cleanup)"
+        description="Upgrade step for CPSKIN Theme to clean portal_skins"
+        handler=".upgradehandlers.clean_portal_skins"
+        source="2"
+        destination="3"
+        profile="cpskin.theme:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="CPSKIN Theme: upgrade to v2 (LESS)"
+        description="Upgrade step for CPSKIN Theme to v2 (LESS)"
+        handler=".upgradehandlers.upgrade_to_less"
+        source="1"
+        destination="2"
+        profile="cpskin.theme:default"
+        />
+
+</configure>

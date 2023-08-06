@@ -1,0 +1,26 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:plone="http://namespaces.plone.org/plone">
+
+    <!-- Dependencies -->
+    <include package="z3c.jbot" file="meta.zcml" />
+    <browser:jbot directory="static/overrides" />
+    <include package="plone.app.theming" />
+    <include package="diazotheme.frameworks" />
+    <include package="collective.lesscss" />
+    <include package="collective.themefragments" />
+    <include package="cpskin.core" />
+    <include package="cpskin.locales" />
+
+    <include package=".browser" />
+
+    <include file="profiles.zcml" />
+
+    <!-- CPSkin themes -->
+    <plone:static
+      directory="static"
+      type="theme"
+      name="cpskin.theme.base"
+      />
+
+</configure>
