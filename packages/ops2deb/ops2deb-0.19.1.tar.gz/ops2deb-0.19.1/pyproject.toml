@@ -1,0 +1,95 @@
+[tool.poetry]
+name = "ops2deb"
+version = "0.19.1"
+description = "Build debian packages"
+repository = "https://github.com/upciti/ops2deb"
+license = "MIT"
+keywords=["Debian", "DevOps", "Automation", "Kubernetes", "APT"]
+authors = ["Upciti <support@upciti.com>"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Code Generators",
+    "Typing :: Typed",
+]
+readme = "README.md"
+packages = [
+    {include = "ops2deb", from  = "src"},
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+httpx = ">=0.20.0"
+semver = "3.0.0.dev3"
+"ruamel.yaml" = ">=0.17.16"
+python-debian = ">=0.1.42"
+PyYAML = "^6"
+typer = ">=0.4.0"
+aiofiles = ">=0.1.9"
+Jinja2 = "^3"
+pydantic = "^1"
+pyinstaller = { version = "*", optional = true }
+
+[tool.poetry.extras]
+pyinstaller = ["pyinstaller"]
+
+[tool.poetry.scripts]
+ops2deb = "ops2deb.cli:main"
+
+[tool.poetry.dev-dependencies]
+starlette = "*"
+pytest = "*"
+mypy = "*"
+taskipy = "*"
+pytest-cov = "*"
+flake8 = "*"
+black = "*"
+isort = "*"
+safety = "*"
+types-aiofiles = "*"
+types-PyYAML = "*"
+pytest-asyncio = "^0.17.2"
+poetry-dynamic-versioning = "^0.13.1"
+
+[tool.taskipy.tasks]
+check = """
+isort src tests\
+ && black src tests\
+ && flake8 src tests\
+ && mypy src\
+ && pytest --cov src tests\
+"""
+single_binary_application = """
+pyinstaller --onefile src/ops2deb/__main__.py --name ops2deb -s
+"""
+
+[tool.black]
+line-length = 90
+target_version = ['py38']
+exclude = '''
+(
+  /(
+    | \.git
+    | \.venv
+    | \.mypy_cache
+    | src/ops2deb/templates
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 90
+profile = "black"
+
+[build-system]
+requires = ["poetry>=1.0.2", "poetry-dynamic-versioning"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
+pattern = "(?x)^(?P<base>\\d+\\.\\d+\\.\\d+)(-?((?P<stage>[a-zA-Z]+)\\.?(?P<revision>\\d+)?))?(\\+(?P<tagged_metadata>.+))?$"
+
+[tool.poetry-dynamic-versioning.substitution]
+files = ["src/ops2deb/__init__.py"]
