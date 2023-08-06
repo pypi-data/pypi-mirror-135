@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: cnbcfinance
+Version: 0.0.4
+Summary: The package fetch stock data from cnbc.
+Home-page: https://github.com/dearvn/cnbcfinance
+Author: Donald
+Author-email: donald.nguyen.it@gmail.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/dearvn/cnbcfinance/issues
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.6.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: pytz
+Requires-Dist: pandas
+
+
+# Information
+This package to fetch data from cnbc
+## Installation
+```bash
+pip install cnbcfinance  --upgrade
+
+```
+## Get History by interval
+* Get data by interval and period
+```bash
+from cnbcfinance.cnbc import Cnbc
+
+cnbc = Cnbc('AAPL')
+df = cnbc.get_history_df('5M', proxy='138.201.120.214:1080')
+```
+## Get Quote
+* Get quote data realtime
+```bash
+from cnbcfinance.cnbc import Cnbc
+
+cnbc = Cnbc('AAPL')
+quote = cnbc.get_quote(proxy='184.180.90.226:8080')
+```
+
+
