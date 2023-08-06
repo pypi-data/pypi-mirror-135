@@ -1,0 +1,34 @@
+task: qa
+project_name: classy
+exp_name: null
+exp_folder: ./experiments/${exp_name}
+
+transformer_model: "bert-base-cased"
+
+callbacks_monitor: 'val_accuracy'
+callbacks_mode: 'max'
+
+hydra:
+  # customize working dir
+  run:
+    dir: ./experiments/${exp_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  # customize logging
+  verbose: [ classy ]
+  job_logging:
+    formatters:
+      simple:
+        format: '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+    root:
+      level: WARN
+
+# defaults
+defaults:
+  - callbacks: empty
+  - data: qa
+  - device: cuda
+  - evaluation: qa
+  - model: qa
+  - prediction: qa
+  - training: default
+  - logging: default
+  - _self_
