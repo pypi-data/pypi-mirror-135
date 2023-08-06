@@ -1,0 +1,155 @@
+Metadata-Version: 2.1
+Name: qwilfish
+Version: 0.2.0
+Summary: Python package for grammar-based Layer 2 fuzzing
+Home-page: https://gitlab.com/zluudg/qwilfish
+Author: Leon Fernandez
+Author-email: leonfe@kth.se
+License: UNKNOWN
+Keywords: ethernet fuzzing
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Introduction
+Qwilfish is a Python package for fuzzing various Ethernet-related protocols.
+It is a work in progress and the first goal is grammar-based generation of
+LLDP frames (IEEE 802.1AB).
+
+[[_TOC_]]
+
+# Installation
+
+## Prerequisites
+- A Linux system
+- Python3.8 (higher versions will probably work too, but no guarantees)
+- Root privileges (for changing the capabilities of Python binary)
+
+## Create a virtual environment
+It is recommended to create a virtual environment first:
+```
+$ python -m venv venv
+$ source venv/bin/activate
+```
+
+## Install with pip
+To install Qwilfish simply type:
+```
+$ pip install qwilfish
+```
+
+## Install from source
+To install Qwilfish from source type:
+```
+$ git clone https://gitlab.com/zluudg/qwilfish.git
+$ cd qwilfish
+$ pip install .
+```
+
+Qwilfish also supports an editable install:
+```
+$ pip install -e .
+```
+
+## Setting capabilities
+Qwilfish writes packets to raw sockets, which is prohibited for normal users.
+It is not recommended to install or run Qwilfish as root, however.
+Instead, change the capabilities of your Python binary:
+```
+$ sudo setcap cap_net_raw=eip /path/to/python/binary
+```
+
+# Usage
+## Basic usage
+Qwilfish can be invoked without any commands:
+```
+$ qwilfish
+```
+It will then send one fuzzed LLDP packet on the loopback interface.
+
+To send ten packets on the loopback interface, type:
+```
+$ qwilfish -c 10
+```
+
+To send a packet on the `eth0` interface, type:
+```
+$ qwilfish -i eth0
+```
+
+Keep a log file:
+```
+$ qwilfish -l
+```
+
+Print debugging info to stdout:
+```
+$ qwilfish -d
+```
+
+## gRPC features
+Qwilfish can also receive feedback from the SUT, assuming there is an
+appropriate gRPC service that it can connect to. For details on the interface
+it expects, see
+[the protobuf interface description](proto/feedback_interface.proto).
+Qwilfish will send one feedback data request for every packet it transmits and
+log the response in the log file (enabled with `-l`).
+
+### Connecting to a gRPC service
+Assuming the SUT is reachable on `eth0`, is running a gRPC service on port
+54545 (which is the default) and the user wishes to monitor the process `foo`:
+```
+$ qwilfish -i eth0 -c 10 -l grpc-oracle -a <SUT-gRPC-SERVICE-IP> foo
+```
+This will request feedback data about the process `foo` from the gRPC service
+that the SUT runs. If the service runs on a different port, specify it by
+passing the `-p` flag.
+
+Multiple processes can be monitored by simply appending them after the options:
+```
+$ qwilfish -i eth0 -c 10 -l grpc-oracle -a <SUT-gRPC-SERVICE-IP> foo bar
+```
+
+### `qwilfish-service`
+The Qwilfish package comes with another executable, `qwilfish-service`. Run
+it like so:
+```
+$ qwilfish-service -a <ADDR> -p <PORT>
+```
+To most requests it will just respond with some dummy data and is therefore
+mainly suited for development and debugging of the main Qwilfish application.
+However, if the request specifies a so-called "standalone worker", it will
+attempt to invoke an external Python module and try to build a request from
+whatever the external module returned.
+
+As an example, running:
+```
+$ qwilfish -i eth0 -c 10 -l grpc-oracle -a 192.168.0.2 -s /home/zluudg/worker.py:do_work foo
+```
+will tell the service to invoke the function `do_work` from the file
+`/home/zluudg/worker.py` and respond with whatever data `do_work` returns.
+Note that it's `qwilfish` being run here, as `qwilfish-service` is assumed to
+already be running on `192.168.0.2`.
+
+Running `qwilfish-service` on the SUT and then specifying a "standalone worker"
+when `qwilfish` is run on the host machine provides a quick-and-dirty way of
+getting feedback data from the SUT since a gRPC service need not be written
+from scratch.
+
+### `qwilfish-simple-client`
+Lastly, the Qwilfish package comes with yet another executable,
+`qwilfish-simple-client`. This is a simple client that can be used to test a
+gRPC service by sending hand-crafted requests. For details on usage, type:
+```
+$ qwilfish-simple-client -h
+```
+
+# Credit
+This project is more than heavily inspired by
+[The Fuzzing Book](https://www.fuzzingbook.org/). Be sure to check it out!
+
+

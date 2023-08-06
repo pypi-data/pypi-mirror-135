@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package feedbackif;
+
+service FeedbackInterface {
+    rpc GetFeedbackData(FeedbackDataRequest) returns (FeedbackDataResponse) {}
+    rpc Terminate(TerminateRequest) returns (TerminateResponse) {}
+}
+
+message FeedbackDataRequest {
+    repeated string process_list = 1;
+    string standalone_worker = 2;
+}
+
+message FeedbackDataResponse {
+    repeated ProcessFeedbackData data = 1;
+}
+
+message ProcessFeedbackData {
+    string process_name = 1;
+    uint32 cpu_usage = 2;
+    uint32 mem_usage = 3;
+}
+
+message TerminateRequest {}
+
+message TerminateResponse {}

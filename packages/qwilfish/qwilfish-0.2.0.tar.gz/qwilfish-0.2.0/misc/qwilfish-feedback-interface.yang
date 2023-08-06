@@ -1,0 +1,55 @@
+module qwilfish-feedback-interface {
+  yang-version 1.1;
+
+  namespace
+    "https://gitlab.com/zluudg/qwilfish/yang";
+
+  prefix qwilfish-feedback-interface;
+
+  organization
+    "Leon Fernandez";
+
+  description
+    "This YANG module represents an interface between the qwilfish
+    fuzzer and the system under test (SUT). Using this interface,
+    qwilfish can monitor certain metrics of the SUT and then make
+    PASS/FAIL assertions for a test case based on the observations.
+    The observations can also be used to guide qwilfish in test
+    case generation.";
+
+  revision "2021-12-17" {
+    description
+      "Initial revision.";
+    reference
+      "https://gitlab.com/zluudg/qwilfish/README.md";
+  }
+
+  container qwilfish-feedback-interface {
+    description
+      "Data from the SUT that can be used by a fuzzer";
+    container process-measurements {
+      description
+        "A list of CPU+mem usage measurements, one entry per process";
+      config false;
+      list measurement {
+        key pname;
+        leaf pname {
+          type string;
+        }
+        leaf cpu-usage {
+          type percentage;
+        }
+        leaf mem-usage {
+          type percentage;
+        }
+      }
+    }
+  }
+
+  typedef percentage {
+    type uint8 {
+      range "0 .. 100";
+    }
+    description "Percentage, an integer between 0 and 100";
+  }
+}
