@@ -1,0 +1,74 @@
+#!python
+
+import argparse
+import logging
+
+from fikkie.commands import Commands
+
+
+DESCRIPTION = """
+             _/_/  _/  _/        _/        _/
+          _/          _/  _/    _/  _/          _/_/
+       _/_/_/_/  _/  _/_/      _/_/      _/  _/_/_/_/
+        _/      _/  _/  _/    _/  _/    _/  _/
+       _/      _/  _/    _/  _/    _/  _/    _/_/_/
+
+                     https://github.com/nootr/fikkie/
+                      https://nootr.github.io/fikkie/
+
+A simple lightweight watchdog which monitors external services
+over SSH.
+"""
+
+COMMAND_HELP = """
+init  - Initialize fikkie's workspace.
+run   - Start fikkie.
+start - Start a fikkie daemon.
+stop  - Stop the fikkie daemon.
+status - Get status from all servers.
+"""
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter
+    )
+
+    parser.add_argument(
+        "command",
+        help=COMMAND_HELP,
+        action="store",
+        choices=["init", "run", "start", "stop", "status"],
+    )
+
+    parser.add_argument(
+        "-f",
+        "--format",
+        help="The output format of `fikkie status` (default: YAML).",
+        action="store",
+        choices=Commands.FORMAT_OPTIONS,
+        default="YAML",
+        type=str.upper,
+    )
+
+    parser.add_argument(
+        "-l",
+        "--loglevel",
+        help="The output loglevel (default: INFO).",
+        action="store",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "FAILURE"],
+        default="INFO",
+        type=str.upper,
+    )
+
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)-8s %(message)s", level=logging.INFO
+    )
+
+    args = parse_args()
+    kwargs = vars(args)
+    getattr(Commands, args.command)(output_format=args.format, loglevel=args.loglevel)
