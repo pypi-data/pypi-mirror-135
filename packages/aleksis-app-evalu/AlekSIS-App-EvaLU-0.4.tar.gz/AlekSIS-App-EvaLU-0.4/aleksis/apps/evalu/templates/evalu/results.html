@@ -1,0 +1,117 @@
+{# -*- engine:django -*- #}
+
+{% extends "core/base.html" %}
+
+{% load i18n static %}
+
+{% block browser_title %}{% blocktrans %}Evaluation Results{% endblocktrans %}{% endblock %}
+{% block page_title %}
+  <a class="btn waves-effect waves-light right" href="{% url "evaluation_results_as_pdf" object.pk %}">
+    {% trans "Export results as PDF" %}
+  </a>
+  {% blocktrans with phase=object.phase.name person=object.person %}
+    Evaluation Results of {{ person }} for {{ phase }}
+  {% endblocktrans %}
+{% endblock %}
+{% block extra_head %}
+{% endblock %}
+{% block content %}
+  {{ results|json_script:"results-data" }}
+
+  <div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        {% for group in groups %}
+          <li class="tab">
+            <a href="#group-tab-{{ group.id }}">{{ group.group_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% for group, results in results %}
+      <div id="group-tab-{{ group.id }}" class="col s12">
+        <h4>
+          {% blocktrans with group=group.group_name %}Results for {{ group }}{% endblocktrans %}
+        </h4>
+        <div class="row">
+          <div class="col s12 m12 l6">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-title">{% trans "Average results for all items" %}</div>
+                <canvas id="chart-average-{{ group.id }}" width="400" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col s12 m12 l6">
+            <div class="card">
+              <div class="card-content">
+                <div class="card-title">{% trans "Answers in free text fields" %}</div>
+                <ul class="collection">
+                  {% for item in results.free_text %}
+                    <li class="collapsible-header"><strong>{{ item.item.question }}</strong></li>
+                    {% for answer in item.answers %}
+                      <li class="collection-item">
+                        {{ answer }}
+                      </li>
+                      {% empty %}
+                      <li class="collection-item">
+                        {% trans "No answers." %}
+                      </li>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          {% for result in results.average_by_part.values %}
+            <div class="col s12 m12 l6">
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-title">
+
+                    {% blocktrans with part=result.part.name %}
+                      Results as dartboard for {{ part }}
+                    {% endblocktrans %}
+                  </div>
+                  <canvas id="chart-average-radar-{{ group.id }}-{{ result.part.id }}" width="400"
+                          height="200"></canvas>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="row">
+          <h5>{% trans "Frequency of values for single items" %}</h5>
+          {% for result in results.frequency %}
+            <div class="col s12 m12 l6">
+              <div class="card">
+                <div class="card-content">
+                  <div class="card-title">
+                    {{ result.item.name }}
+                  </div>
+                  <p>
+                    <em class="grey-text text-darken-1">{{ result.item.question }}</em>
+                  </p>
+                  <div class="row">
+                    <canvas id="chart-frequency-{{ group.id }}-{{ result.item.id }}" width="400"
+                            height="200"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script src="{% static "js/helper.js" %}"></script>
+  <script src="{% static "chart.js/dist/chart.js" %}"></script>
+  <script>
+      const themeColor = "{{ SITE_PREFERENCES.theme__primary }}";
+      const themeSecondaryColor = "{{ SITE_PREFERENCES.theme__secondary }}";
+  </script>
+  <script src="{% static "js/evalu/results.js" %}"></script>
+{% endblock %}
