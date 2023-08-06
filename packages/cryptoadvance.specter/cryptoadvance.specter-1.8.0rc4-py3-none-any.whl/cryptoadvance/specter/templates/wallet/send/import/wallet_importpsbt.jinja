@@ -1,0 +1,89 @@
+{% extends "wallet/components/wallet_tab.jinja" %}
+{% set tab = 'send' %}
+{% block content %}
+	{% include "includes/qr-scanner.html" %}
+	{% from 'wallet/send/components/send_nav.jinja' import send_nav %}
+	{{ send_nav('import_psbt', wallet_alias) }}
+		<h1 class="padded">{{ _("Import PSBT transaction:") }}</h1>
+		<span class="center note padded">{{ _("Paste base64-encoded PSBT transaction here to import.") }}</span>
+		<form action="{{ url_for('wallets_endpoint.import_psbt',wallet_alias=wallet_alias) }}" method="POST">
+			<input type="hidden" class="csrf-token" name="csrf_token" value="{{ csrf_token() }}"/>
+			<div class="card">
+				<div class="row">
+					<textarea name="rawpsbt" id="rawpsbt" placeholder="{{ _('Paste PSBT here') }}"></textarea>
+				</div>
+				<div class="row break-row-mobile">
+					<qr-scanner id="psbt-scan" style="width:50%">
+						<a slot="button" href="#" class="btn" style="margin: 8px;">
+							<img src="{{ url_for('static', filename='img/qr-code.svg') }}" style="width: 26px; margin: 0px;" class="svg-white"> {{ _("Scan") }}
+							<div class="tool-tip">
+								<i class="tool-tip__icon">i</i>
+								<p class="tool-tip__info">
+									<span class="info">
+										<span class="info__title">{{ _("Using an airgapped device with QR codes") }}<br><br></span>
+										{{ _("PSBT should be base64 encoded.") }}
+									</span>
+								</p>
+							</div>
+					</a>
+					</qr-scanner>
+					<input type="file" id="file" class="inputfile"/>
+					<label for="file" class="btn" style="margin: 8px;">
+						<img src="{{ url_for('static', filename='img/file.svg') }}" style="width: 26px; margin: 0px;" class="svg-white"> {{ _("Choose file") }}
+						<div class="tool-tip">
+							<i class="tool-tip__icon">i</i>
+							<p class="tool-tip__info">
+								<span class="info">
+									<span class="info__title">{{ _("Using a file") }}<br><br></span>
+									{{ _("The file should contain either base64 or binary encoded PSBT.") }}
+								</span>
+							</p>
+						</div>
+					</label>
+				</div>
+				<button type="submit" name="action" value="importpsbt" class="btn centered" style="margin-top: 20px;">{{ _("Import transaction") }}</button>
+			</div>
+		</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+	document.addEventListener("DOMContentLoaded", function(){
+		var el = document.getElementById("file");
+		var txt = document.getElementById("rawpsbt");
+
+		if (el != null) {
+			el.addEventListener("change", (e) => {
+				files = e.currentTarget.files;
+				console.log(files);
+				for(let i=0; i<files.length; i++){
+					console.log(files[i].name);
+		            let reader = new FileReader();
+		            reader.onload = function(e) {
+		                let str = reader.result;
+		                // if raw bytes
+		                if(reader.result.startsWith("psbt") || reader.result.startsWith("pset")){
+		                    str = btoa(reader.result);
+		                }
+		                txt.value = str;
+		            }
+		            reader.readAsBinaryString(files[i]);
+				}
+			});
+		}
+	});
+</script>
+<script type="text/javascript">
+	let scanner = document.getElementById('psbt-scan');
+	if(scanner != null) {
+		scanner.addEventListener('scan', e=>{
+			let result = e.detail.result;
+			if(result==null){
+				return;
+			}
+			document.getElementById("rawpsbt").value = result;
+		});
+	}
+</script>
+{% endblock %}
