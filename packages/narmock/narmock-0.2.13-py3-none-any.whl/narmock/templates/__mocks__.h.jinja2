@@ -1,0 +1,52 @@
+/*
+Mocks header file
+
+Generated with Narmock v{{ narmock_version }} (https://github.com/vberlier/narmock)
+Do not edit manually
+*/
+
+#ifndef {{ guard_name }}
+#define {{ guard_name }}
+{{ includes }}
+#ifndef MOCK
+#define MOCK(function) (_narmock_get_mock_for_##function((void *)&function))
+#endif
+
+#ifndef _NARMOCK_RESET_ALL_MOCKS
+#define _NARMOCK_RESET_ALL_MOCKS 1
+void narmock_reset_all_mocks(void);
+#endif
+{% for mock in mocks %}
+
+{{ mock.DECL_MARKER }} {{ mock.func_name }}
+{{ mock.FLAGS_MARKER }} {{ mock.linker_flags }}
+
+typedef struct {{ mock.state_type }} {{ mock.state_type }};
+typedef struct {{ mock.params_type }} {{ mock.params_type }};
+
+struct {{ mock.state_type }}
+{
+    {{ mock.mock_return_decl | render }};
+    {{ mock.mock_implementation_decl | render }};
+    {{ mock.mock_errno_decl | render }};
+    {{ mock.disable_mock_decl | render }};
+    {{ mock.reset_decl | render }};
+    int call_count;
+    const {{ mock.params_type }} *last_call;
+};
+
+struct {{ mock.params_type }}
+{
+    {% for param in mock.params_struct %}
+    {{ param | render }};
+    {% endfor %}
+    {% if mock.return_value %}
+    {{ mock.return_value_decl | render }};
+    {% endif %}
+    int errsv;
+};
+
+const {{ mock.state_type }} *_narmock_get_mock_for_{{ mock.func_name }}(const void *function);
+{% endfor %}
+
+#endif
