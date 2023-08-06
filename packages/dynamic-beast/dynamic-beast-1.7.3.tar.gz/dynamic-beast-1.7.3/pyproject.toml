@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "dynamic-beast"
+version = "1.7.3"
+description = ""
+authors = ["Wytamma Wirth <wytamma.wirth@me.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+dynamic-beast = "dynamic_beast.main:app"
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<4.0"
+typer = {extras = ["all"], version = "^0.3.2"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^21.7b0"
+pytest-cov = "^2.12.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+omit = [
+    "dynamic_beast/__main__.py",
+    ]
