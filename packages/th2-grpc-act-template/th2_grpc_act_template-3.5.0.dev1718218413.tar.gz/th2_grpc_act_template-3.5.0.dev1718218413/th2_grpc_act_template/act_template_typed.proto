@@ -1,0 +1,173 @@
+/*
+ * Copyright 2020-2021 Exactpro (Exactpro Systems Limited)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+import "th2_grpc_common/common.proto";
+import "th2_grpc_act_template/act_template.proto";
+
+option java_multiple_files = true;
+option java_package = "com.exactpro.th2.act.grpc";
+
+service ActTyped {
+  /* This action executes next steps:
+      1) Registers checkpoint in Verifier microservice
+      2) Sends passed message as is to Connectivity microservice
+      3) Waits Execution Report or Business Message Reject with the same ClOrdID as in passed message
+          from Connectivity microservice
+      4) Returns the message repose and the Checkpoint */
+  rpc placeOrderFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+
+  /*Send fix message without response awaiting */
+  rpc sendMessage (PlaceMessageRequestTyped) returns (SendMessageResponse) {
+  }
+
+  rpc placeQuoteRequestFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+
+  rpc placeQuoteFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+
+  rpc placeOrderMassCancelRequestFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+
+  rpc placeQuoteCancelFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+
+  rpc placeQuoteResponseFIX (PlaceMessageRequestTyped) returns (PlaceMessageResponseTyped) {
+  }
+}
+
+message NoPartyIDs {
+  string PartyID = 2;
+  string PartyIDSource = 3;
+  int32 PartyRole = 4;
+}
+
+message TradingParty {
+  repeated NoPartyIDs NoPartyIDs = 1;
+}
+
+message NewOrderSingle {
+  string SecurityID = 1;
+  string SecurityIDSource = 2;
+  string OrdType = 3;
+  int32 AccountType = 4;
+  string OrderCapacity = 5;
+  float OrderQty = 6;
+  float DisplayQty = 7;
+  float Price = 8;
+  string ClOrdID = 9;
+  string SecondaryClOrdID = 10;
+  string Side = 11;
+  string TimeInForce = 12;
+  string TransactTime = 13;
+  TradingParty TradingParty = 14;
+}
+
+message Header {
+  string BeginString = 1;
+  int32 BodyLength = 2;
+  int32 MsgSeqNum = 3;
+  string MsgType = 4;
+  string SenderCompID = 5;
+  string SendingTime = 6;
+  string TargetCompID = 7;
+}
+
+message ExecutionReport {
+  string SecurityID = 1;
+  string SecurityIDSource = 2;
+  string OrdType = 3;
+  int32 AccountType = 4;
+  string OrderCapacity = 5;
+  string ClOrdID = 6;
+  float OrderQty = 7;
+  float LeavesQty = 8;
+  string Side = 9;
+  float CumQty = 10;
+  string ExecType = 11;
+  string OrdStatus = 12;
+  TradingParty TradingParty = 13;
+  string ExecID = 14;
+  float Price = 15;
+  string OrderID = 16;
+  string Text = 17;
+  string TimeInForce = 18;
+  string TransactTime = 19;
+  Header header = 20;
+}
+
+message BusinessMessageReject {
+  Header header = 1;
+  string RefMsgType = 2;
+  int32 BusinessRejectReason = 3;
+  string BusinessRejectRefID = 4;
+  int32 RefSeqNum = 5;
+  string Text = 6;
+}
+
+message QuoteStatusReport {
+  string QuoteReqID = 1;
+  string Text = 2;
+}
+
+message QuoteAck {
+  string RFQID = 1;
+  string Text = 2;
+}
+
+message OrderMassCancelReport {
+  string ClOrdID = 1;
+  string Text = 2;
+}
+
+message MassQuoteAcknowledgement {
+  string QuoteID = 1;
+  string Text = 2;
+}
+
+message ErrorMessage {
+  string message = 1;
+}
+
+message ResponseMessageTyped {
+  oneof kind {
+    BusinessMessageReject BusinessMessageReject = 1;
+    ExecutionReport ExecutionReport = 2;
+    QuoteStatusReport QuoteStatusReport = 3;
+    QuoteAck QuoteAck = 4;
+    OrderMassCancelReport OrderMassCancelReport = 5;
+    MassQuoteAcknowledgement MassQuoteAcknowledgement = 6;
+    ErrorMessage ErrorMessage = 7;
+  }
+}
+
+message PlaceMessageRequestTyped {
+  MessageMetadata metadata = 1;
+  NewOrderSingle message_typed = 2;
+  EventID parent_event_id = 3;
+  string description = 4;
+}
+
+message PlaceMessageResponseTyped {
+  MessageMetadata metadata = 1;
+  ResponseMessageTyped response_message_typed = 2;
+  EventID parent_event_id = 3;
+  RequestStatus status = 4;
+  Checkpoint checkpoint_id = 5;
+}
