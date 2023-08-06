@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+
+<!-- PyAuDiSam: Automation of Distance Sampling analyses with Distance software (http://distancesampling.org/)
+
+     Copyright (C) 2021 Jean-Philippe Meuret
+     
+     This program is free software: you can redistribute it and/or modify it under the terms
+     of the GNU General Public License as published by the Free Software Foundation,
+     either version 3 of the License, or (at your option) any later version.
+     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+     without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+     See the GNU General Public License for more details.
+     You should have received a copy of the GNU General Public License along with this program.
+     If not, see https://www.gnu.org/licenses/.
+-->
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="author" content="Jean-Philippe Meuret"/>
+  <meta name="copyright" content="Jean-Philippe Meuret 2021"/>
+  <meta name="license" content="CC BY NC SA"/>
+  <meta name="description" content="{{title}}"/>
+  <meta name="keywords" content="distance, sampling, mcds, {{keywords}}"/>
+  <meta name="datetime" content="{{genDateTime}}"/>
+  
+  <title>{{title}}</title>
+  
+  <link rel="stylesheet" media="screen" type="text/css" href="../report.css">
+  
+  <script>
+    // Back to top floating button managment
+    // When the user scrolls down100 px from the top of the document, show the button
+    window.onscroll = function()
+    {
+    	if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100)
+    		document.getElementById("toTopBtn").style.display = "block";
+    	else
+    		document.getElementById("toTopBtn").style.display = "none";
+    }
+    // When the user clicks on the button, scroll to the top of the document
+    function scrollToTop()
+    {
+    	document.body.scrollTop = 0;
+    	document.documentElement.scrollTop = 0;
+    }
+  </script>
+  
+</head>
+
+<body>
+
+  <table id="title">
+    <tr>
+      <td style="font-size: 480%; text-align: center">{{title}}</td>
+    </tr>
+    <tr>
+      <td style="font-size: 240%; text-align: center">{{subtitle}}</td>
+    </tr>
+    <tr>
+      <td style="font-size: 120%; text-align: center">{{description}}</td>
+    </tr>
+  </table>
+  
+  <div style="margin-left: 10px">
+
+    <img class="center" height="32" style="margin-top: 30px"
+         src="../fa-feather-alt.svg" alt="---" />
+
+    <h2 id="synthesis">
+      {{tr['Main results']}}
+      <a href="./{{navUrls.prevAnlys}}">
+        <img height="32" style="margin-left: 32px" src="../fa-arrow-left.svg"
+             onmouseover="this.src='../fa-arrow-left-hover.svg';"
+             onmouseout="this.src='../fa-arrow-left.svg';"
+             title="{{tr['Previous analysis']}}"
+             alt="{{tr['Previous analysis']}}" /></a>
+      <a href="./{{navUrls.back2Top}}">
+        <img height="40" style="margin-left: 16px" src="../fa-arrow-up.svg"
+             onmouseover="this.src='../fa-arrow-up-hover.svg';"
+             onmouseout="this.src='../fa-arrow-up.svg';"
+             title="{{tr['Back to top']}}"
+             alt="{{tr['Back to top']}}" /></a>
+      <a href="./{{navUrls.nextAnlys}}">
+        <img height="32" style="margin-left: 16px" src="../fa-arrow-right.svg"
+             onmouseover="this.src='../fa-arrow-right-hover.svg';"
+             onmouseout="this.src='../fa-arrow-right.svg';"
+             title="{{tr['Next analysis']}}"
+             alt="{{tr['Next analysis']}}" /></a>
+    </h2>
+    <div class="chapter" style="margin-left: 10px">
+
+      <p>{{tr['Study type:']}} {{surveyType}}, {{distanceType}}, {{clustering}}.</p>
+      <p>{{tr['Units used:']}} {{distanceUnit}} {{tr['for distances']}}, {{areaUnit}} {{tr['for areas']}}.</p>
+      <p>{{tr['Note: Some figures rounded, but not converted']}}</p>
+	  {{synthesis}}
+
+    </div>
+    
+    <img class="center" height="32" style="margin-top: 30px"
+         src="../fa-feather-alt.svg" alt="---" />
+
+    <h2 id="details">
+      {{tr['Detailed results']}}
+      <a href="./{{navUrls.prevAnlys}}">
+        <img height="32" style="margin-left: 32px" src="../fa-arrow-left.svg"
+             onmouseover="this.src='../fa-arrow-left-hover.svg';"
+             onmouseout="this.src='../fa-arrow-left.svg';"
+             title="{{tr['Previous analysis']}}"
+             alt="{{tr['Previous analysis']}}" /></a>
+      <a href="./{{navUrls.back2Top}}">
+        <img height="40" style="margin-left: 16px" src="../fa-arrow-up.svg"
+             onmouseover="this.src='../fa-arrow-up-hover.svg';"
+             onmouseout="this.src='../fa-arrow-up.svg';"
+             title="{{tr['Back to top']}}"
+             alt="{{tr['Back to top']}}" /></a>
+      <a href="./{{navUrls.nextAnlys}}">
+        <img height="32" style="margin-left: 16px" src="../fa-arrow-right.svg"
+             onmouseover="this.src='../fa-arrow-right-hover.svg';"
+             onmouseout="this.src='../fa-arrow-right.svg';"
+             title="{{tr['Next analysis']}}"
+             alt="{{tr['Next analysis']}}" /></a>
+    </h2>
+    <div class="chapter" style="margin-left: 10px">
+
+      <p>{{tr['Study type:']}} {{surveyType}}, {{distanceType}}, {{clustering}}.</p>
+      <p>{{tr['Units used:']}} {{distanceUnit}} {{tr['for distances']}}, {{areaUnit}} {{tr['for areas']}}.</p>
+      <p>{{tr['Note: All figures untouched, as output by MCDS']}}</p>
+	  {{details}}
+
+    </div>
+    
+    <img class="center" height="32" style="margin-top: 30px"
+         src="../fa-feather-alt.svg" alt="---" />
+
+    <h2 id="log">
+      {{tr['Summary computation log']}}
+      <a href="./{{navUrls.prevAnlys}}">
+        <img height="32" style="margin-left: 32px" src="../fa-arrow-left.svg"
+             onmouseover="this.src='../fa-arrow-left-hover.svg';"
+             onmouseout="this.src='../fa-arrow-left.svg';"
+             title="{{tr['Previous analysis']}}"
+             alt="{{tr['Previous analysis']}}" /></a>
+      <a href="./{{navUrls.back2Top}}">
+        <img height="40" style="margin-left: 16px" src="../fa-arrow-up.svg"
+             onmouseover="this.src='../fa-arrow-up-hover.svg';"
+             onmouseout="this.src='../fa-arrow-up.svg';"
+             title="{{tr['Back to top']}}"
+             alt="{{tr['Back to top']}}" /></a>
+      <a href="./{{navUrls.nextAnlys}}">
+        <img height="32" style="margin-left: 16px" src="../fa-arrow-right.svg"
+             onmouseover="this.src='../fa-arrow-right-hover.svg';"
+             onmouseout="this.src='../fa-arrow-right.svg';"
+             title="{{tr['Next analysis']}}"
+             alt="{{tr['Next analysis']}}" /></a>
+    </h2>
+    <div class="chapter" style="margin-left: 10px">
+
+	  <pre>{{log.text}}</pre>
+
+    </div>
+    
+    <img class="center" height="32" style="margin-top: 30px"
+         src="../fa-feather-alt.svg" alt="---" />
+
+    <h2 id="log">{{tr['Detailed computation log']}}</h2>
+    <div style="margin-left: 10px">
+
+      {% for ochap in output %}
+  
+        <h3 id="{{ochap.id}}">
+          {{ochap.title}}
+          <a href="./{{navUrls.prevAnlys}}">
+            <img height="32" style="margin-left: 32px" src="../fa-arrow-left.svg"
+                 onmouseover="this.src='../fa-arrow-left-hover.svg';"
+                 onmouseout="this.src='../fa-arrow-left.svg';"
+                 title="{{tr['Previous analysis']}}"
+                 alt="{{tr['Previous analysis']}}" /></a>
+          <a href="./{{navUrls.back2Top}}">
+            <img height="40" style="margin-left: 16px" src="../fa-arrow-up.svg"
+                 onmouseover="this.src='../fa-arrow-up-hover.svg';"
+                 onmouseout="this.src='../fa-arrow-up.svg';"
+                 title="{{tr['Back to top']}}"
+                 alt="{{tr['Back to top']}}" /></a>
+          <a href="./{{navUrls.nextAnlys}}">
+            <img height="32" style="margin-left: 16px" src="../fa-arrow-right.svg"
+                 onmouseover="this.src='../fa-arrow-right-hover.svg';"
+                 onmouseout="this.src='../fa-arrow-right.svg';"
+                 title="{{tr['Next analysis']}}"
+                 alt="{{tr['Next analysis']}}" /></a>
+        </h3>
+        <div class="chapter" style="margin-left: 10px">
+  	  
+          {% if ochap.title in plots %}
+            <img src="./{{plots[ochap.title]}}"/>
+          {% else %}
+            <pre>{{ochap.text}}<pre>
+          {% endif %}
+  	  
+        </div>
+  
+      {% endfor %} <!-- ochap in output -->
+
+    </div>
+    
+    <h6 style="margin-bottom: 10px">
+      {{tr['Page generated']}} {{tr['on']}} {{genDateTime}}
+      {{tr['with']}} <a href="https://www.python.org/" target="_blank">Python 3</a>,
+      <a href="https://numpy.org/" target="_blank">NumPy {{libVersions['NumPy']}}</a>,
+      <a href="https://pandas.pydata.org/" target="_blank">Pandas</a>,
+      <a href="https://github.com/polixir/ZOOpt/" target="_blank">ZOOpt {{libVersions['ZOOpt']}}</a>,
+      <a href="https://matplotlib.org/" target="_blank">Matplotlib</a>,
+      <a href="https://palletsprojects.com/p/jinja/" target="_blank">Jinja 2</a>
+      ... {{tr['and']}}
+      <a href="http://jpmeuret.free.fr/informatique.html#AutoDS" target="_blank">AutoDS {{autodsVersion}}</a>,
+      {{tr['with icons from']}} <a href="https://fontawesome.com/" target="_blank">Font Awesome</a>
+      {%if pySources %}
+        ({{tr['sources']}} :
+        {% for pySrc in pySources %}
+          <a href="./{{pySrc}}" target="_blank">{{pySrc}}</a>,
+        {% endfor %})
+      {% endif %}.
+    </h6>
+
+  </div>
+
+  <button onclick="scrollToTop()" id="toTopBtn" title="Haut de page">
+    <img width="64" height="64" src="../fa-angle-up.svg"/>
+  </button>
+
+</body>
