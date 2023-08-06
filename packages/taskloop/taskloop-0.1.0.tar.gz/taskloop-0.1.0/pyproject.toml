@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "taskloop"
+version = "0.1.0"
+description = "Taskwarrior utility to continually loop through and add tasks to a project"
+authors = ["Alex Kelly <kellya@arachnitech.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+click = "^8.0.3"
+prompt-toolkit = "^3.0.24"
+taskw = "^1.3.1"
+
+[tool.poetry.dev-dependencies]
+python-semantic-release = "^7.23.0"
+pylint = "^2.12.2"
+coverage = "^6.2"
+pytest = "^6.2.5"
+black = "^21.12b0"
+Sphinx = "^4.4.0"
+sphinx-rtd-theme = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+taskloop = 'taskloop.loop:main'
+
+[tool.semantic_release]
+version_variable = [
+    "pyproject.toml:version",
+    "taskloop/__init__.py:__version__",
+    "docs/source/conf.py:release"
+]
