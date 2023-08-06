@@ -1,0 +1,60 @@
+{% extends 'portal/base.html' %}
+{% load staticfiles %}
+{% load app_tags %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    .content > .container > form > table {
+        margin: 20px 0;
+        width: auto;
+    }
+    .content > .container > form > table > tbody > tr > th {
+        padding-left: 0;
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<div id="teacher_login_page"></div>
+
+{% if wizard.steps.current == 'auth' %}
+    <section class="row mx-0">
+        <span class="oval-blue login-shape-left"></span>
+        <span class="polygon-yellow login-shape-right"></span>
+        <div class="form--login is-flex form--register--teacher">
+            <div class="form col-xs-12 col-sm-8 col-md-8 col-lg-9 center-block">
+                <h4 class="center-block">Log in as a teacher</h4>
+                <form id="form-login-teacher" method="post" autocomplete="off">
+
+                    {% csrf_token %}
+                    {{ wizard.management_form }}
+
+                    {{ form.non_field_errors }}
+
+                    <label for="id_{{ form.username.html_name }}">{{ form.username.label }}</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+
+                    <label for="id_{{ form.password.html_name }}">{{ form.password.label }}</label>
+                    {{ form.password }}
+                    {{ form.password.errors }}
+
+                    {{ form.captcha }}
+
+                    <button type="submit" name="login_view" class="button button--primary button--login"
+                                onclick="deleteAllLocalStorageWorkspaces();">Log in</button>
+                </form>
+
+                <p><strong>Forgotten your password?</strong></p>
+                <p>Don&rsquo;t worry, you can
+                    <a id="teacher_forgotten_password_button" href="{% url 'teacher_password_reset' %}">reset your password</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+{% else %}
+    {% include "two_factor/core/login.html" %}
+{% endif %}
+
+{% endblock content %}
