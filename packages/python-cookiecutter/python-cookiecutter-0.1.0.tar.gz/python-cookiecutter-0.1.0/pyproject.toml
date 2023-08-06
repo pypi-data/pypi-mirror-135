@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "python-cookiecutter"
+version = "0.1.0"
+description = "The hypermodern Python project"
+authors = ["udeepam <udeepa652@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/udeepam/python-cookiecutter"
+repository = "https://github.com/udeepam/python-cookiecutter"
+keywords = ["hypermodern"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^8.0.3"
+requests = "^2.27.1"
+desert = "^2020.11.18"
+marshmallow = "^3.14.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+coverage = {extras = ["toml"], version = "^6.2"}
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.6.1"
+black = "^21.12b0"
+flake8 = "^4.0.1"
+flake8-bandit = "^2.1.2"
+flake8-black = "^0.2.3"
+flake8-bugbear = "^22.1.11"
+flake8-import-order = "^0.18.1"
+safety = "^1.10.3"
+mypy = "^0.931"
+pytype = {version = "^2022.1.13", python = "3.7"}
+typeguard = "^2.13.3"
+flake8-annotations = "^2.7.0"
+flake8-docstrings = "^1.6.0"
+bandit = "^1.7.1"
+darglint = "^1.8.1"
+xdoctest = "^0.15.10"
+sphinx-autodoc-typehints = "^1.15.3"
+codecov = "^2.1.12"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+python-cookiecutter = "python_cookiecutter.console:main"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["python_cookiecutter"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
