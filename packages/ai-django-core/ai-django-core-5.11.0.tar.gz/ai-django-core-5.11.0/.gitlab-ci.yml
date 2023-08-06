@@ -1,0 +1,58 @@
+image: docker:stable
+
+stages:
+- lint
+- build
+- test
+
+# When using dind, it's wise to use the overlays driver for
+# improved performance.
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  DOCKER_HOST: tcp://localhost:2375
+
+services:
+  - docker:18.09-dind
+
+lint:
+  image: python:3.9-slim
+  stage: lint
+  tags:
+    - normal-load
+  script:
+    - pip install flake8 pep8-naming
+    - flake8 .
+
+security check backend:
+  image: python:3.9-slim
+  stage: lint
+  tags:
+    - low-load
+  script:
+    - pip install pipreqs safety
+    - pipreqs
+    - safety check --file requirements.txt
+  allow_failure: true
+
+build:
+  stage: build
+  tags:
+    - normal-load
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
+    - docker pull $CI_REGISTRY_IMAGE:master || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:master -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+tests:
+  stage: test
+  tags:
+    - normal-load
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $IMAGE_TAG
+    - docker run $IMAGE_TAG pytest --ds settings tests --cov=ai_django_core/
