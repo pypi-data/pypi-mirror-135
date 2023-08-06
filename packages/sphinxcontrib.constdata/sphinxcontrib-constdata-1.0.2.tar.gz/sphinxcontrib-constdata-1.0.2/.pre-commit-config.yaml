@@ -1,0 +1,27 @@
+# please sync version (rev) with dev-requirements.txt
+
+repos:
+  # Format code to Black style
+  - repo: https://github.com/psf/black
+    rev: 21.11b1
+    hooks:
+      - id: black
+        # It is recommended to specify the latest version of Python
+        # supported by your project here, or alternatively use
+        # pre-commit's default_language_version, see
+        # https://pre-commit.com/#top_level-default_language_version
+        language_version: python3.9
+
+  # Remove unused imports
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v1.1.0 # Possible releases: https://github.com/hadialqattan/pycln/releases
+    hooks:
+      - id: pycln
+        args: [-a, sphinxcontrib, tests]
+
+  # Sort imports
+  # https://pycqa.github.io/isort/docs/configuration/pre-commit.html
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort

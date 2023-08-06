@@ -1,0 +1,53 @@
+image: python:3.8
+
+# pre-commit cache:
+# https://pre-commit.com/#managing-ci-caches
+# https://pre-commit.com/#gitlab-ci-example
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+  paths:
+    - .cache/pip
+    - venv
+    - ${PRE_COMMIT_HOME}
+
+before_script:
+  - python --version
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install tox
+
+test:
+  stage: test
+  script:
+    - tox
+
+mypy:
+  stage: test
+  script:
+    - tox -e mypy
+
+style:
+  stage: test
+  script:
+    - tox -e style
+
+pages:
+  stage: deploy
+  script:
+    - tox -e docs
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

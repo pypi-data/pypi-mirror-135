@@ -1,0 +1,1 @@
+.. caution:: Current version of |project| doesn't allow table templates (how are table rendered). `We know it <https://gitlab.com/documatt/sphinxcontrib-constdata/-/issues/3>`_ and hopefully fix it soon. Thanks for your patience!
