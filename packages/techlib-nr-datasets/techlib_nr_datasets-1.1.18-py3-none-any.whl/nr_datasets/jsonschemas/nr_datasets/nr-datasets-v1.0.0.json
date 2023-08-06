@@ -1,0 +1,27 @@
+{
+  "title": "NR DataSet record v1.0.0",
+  "type": "object",
+  "id": "https://data.narodni-repozitar.cz/schemas/nr_datasets/nr-datasets-v1.0.0.json",
+  "allOf": [
+    {"$ref": "../nr_datasets_metadata/nr-datasets-metadata-v3.0.0.json#/definitions/DataSet"},
+    {"$ref": "../communities-v3.0.0.json#/definitions/Communities"},
+    {"$ref": "../fsm-record-v2.0.0.json#/definitions/FSMRecord"},
+    {"$ref": "../invenio-v3.0.0.json#/definitions/InvenioRecord"},
+     {
+      "properties": {
+        "oarepo:doirequest": {
+          "type": "object",
+          "properties": {
+            "publisher": {
+              "type": "string"
+            },
+            "requestedBy": {"type": "integer"},
+            "requestedDate": {"type": "string","format": "datetime"}
+          },
+          "required": ["publisher", "requestedBy", "requestedDate"]
+        }
+      }
+    }
+  ],
+  "required": []
+}
