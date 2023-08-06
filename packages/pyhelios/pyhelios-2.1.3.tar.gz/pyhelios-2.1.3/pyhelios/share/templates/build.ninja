@@ -1,0 +1,28 @@
+### Define global ninja rules for Helios' workflow. ###
+# Copy file. #
+rule copy
+  command = cp -r $in $out
+# Render a template based on a toml configuration file. #
+rule render
+  command = pyhls render $in $toml -o $out > /dev/null
+# Run 2D mesh generation with gmsh. #
+rule gmsh_2d
+  command = gmsh -2 $in -o $out > $output_directory/gmsh_2d.log
+# Run 3D mesh generation with gmsh. #
+rule gmsh_3d
+  command = gmsh -3 $in -o $out > $output_directory/gmsh_3d.log
+# Run epilobe from 2D gmsh mesh to Cedre maillage.dat. #
+rule epilobe_gmsh_2d_to_cedre
+  command = pyhls run "epilobe" -s "1" -s "$basename" -s "0" -s "1" -s "0. 0. 1." -d "$output_directory" > $output_directory/epilobe.log
+# Run epilobe from 3D gmsh mesh to Cedre maillage.dat. #
+rule epilobe_gmsh_3d_to_cedre
+  command = pyhls run "epilobe" -s "1" -s "$basename" -s "0" -d "$output_directory" > $output_directory/epilobe.log
+# Run epinette from Cedre maillage.dat to *_m.0. #
+rule epinette
+  command = pyhls run "epinette -rc maillage.dat" -d "$output_directory" > $output_directory/epinette.log
+rule slurm
+  command = sbatch --workdir=$output_directory $in > $out
+rule python
+  command = pyhls python $in > $output_directory/python.log
+rule plot
+  command = pyhls plot $in -o $output_directory > $output_directory/plot.log
