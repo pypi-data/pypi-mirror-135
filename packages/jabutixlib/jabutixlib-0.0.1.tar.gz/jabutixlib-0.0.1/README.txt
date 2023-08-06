@@ -1,0 +1,1 @@
+This is a very simplistic API-like Python library for interating with an educational device called the jabuti, for my graduation final project. You're welcome to change it as you like.
