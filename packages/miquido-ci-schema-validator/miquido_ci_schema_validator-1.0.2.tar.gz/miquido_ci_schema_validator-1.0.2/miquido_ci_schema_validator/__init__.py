@@ -1,0 +1,1 @@
+from .miquido_ci_schema_validator import validate_yml
