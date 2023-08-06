@@ -1,0 +1,67 @@
+Metadata-Version: 2.1
+Name: fast-nosql-manager
+Version: 0.1.0
+Summary: Um pacote simples para realizar operações no mongoDB
+Home-page: https://github.com/OscarSilvaOfficial/fast_nosql_manager
+Author: Oscar da Silva
+Author-email: oscarkaka222@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pymongo (>=4.0.1)
+
+# Introdução
+
+Essa biblioteca foi criada como uma forma de abstração das operações mais simples
+de um banco noSQL.
+
+# Início
+
+Após fazer a instalação com o pip install fast_nosql_manager
+é necessário que você importe a classe correspondente ao banco
+que deseja manipular.
+
+```python
+from fast_nosql_manager.implementations.mongo import MongoRepository
+```
+
+Ao importar a classe você pode instância-la ou
+usa-la diretamente preenchendo os parâmetros necessários.
+
+```python
+db = MongoRepository(
+  db_str_connection='mongodb://localhost:27017/',
+  db_name='local'
+) 
+```
+
+# Métodos 
+
+## create_collection
+```python
+mongo.create_collection(collection_name='teste')
+```
+
+## delete_collection
+```python
+mongo.delete_collection(collection_name='teste')
+```
+
+## create_document
+```python
+mongo.create_document(
+    connection_name='teste', 
+    documents=[{'name': 'Oscar'}, {'name': 'Oscar'}]
+)
+```
+
+## select_all
+```python
+mongo.select_all(collection_name='teste')
+```
+
