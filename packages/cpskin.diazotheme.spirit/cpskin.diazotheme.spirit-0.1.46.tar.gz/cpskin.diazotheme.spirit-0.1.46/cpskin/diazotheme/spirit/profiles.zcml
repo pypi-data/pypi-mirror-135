@@ -1,0 +1,36 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           i18n_domain="cpskin">
+
+    <!-- Profile -->
+    <genericsetup:registerProfile
+        name="default"
+        title="cpskin.diazotheme.spirit"
+        directory="profiles/default"
+        description="Installs cpskin.diazotheme.spirit theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- Uninstall -->
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="cpskin.diazotheme.spirit: uninstall"
+        directory="profiles/uninstall"
+        description="Uninstalls cpskin.diazotheme.spirit theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <!-- Upgrade steps -->
+    <genericsetup:upgradeStep
+        title="CPSKIN Diazotheme Spirit: upgrade to v2: Add browserlayer"
+        description="Add new browserlayer"
+        handler=".upgradehandlers.add_browserlayer"
+        source="1"
+        destination="2"
+        profile="cpskin.diazotheme.spirit:default"
+        />
+
+</configure>
