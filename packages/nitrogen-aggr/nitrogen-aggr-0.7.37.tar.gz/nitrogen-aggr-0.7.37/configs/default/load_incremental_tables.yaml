@@ -1,0 +1,138 @@
+debug: false
+
+#    """
+#    Copy incremental sync tables to PG.
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  member_details_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/member_details_incremental/"
+
+  timestamps_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/timestamps_incremental/"
+
+  provider_member_relationships_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/provider_member_relationships_incremental/"
+
+  members_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/members_incremental/"
+
+  member_hccs_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/member_hccs_incremental/"
+
+  providers_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/providers_incremental/"
+
+  provider_details_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/provider_details_incremental/"
+
+  provider_npi_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/provider_npi_incremental/"
+
+  member_index_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/member_index_incremental/"
+
+  suspect_sources_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/suspect_sources_incremental/"
+
+  member_dx_codes_incremental:
+    type: parquet
+    location: "{project_root_path}/{client}/sync/member_dx_codes_incremental/"
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+
+  member_details_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_details
+      mode: overwrite
+
+  timestamps_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_timestamps
+      mode: overwrite
+
+  provider_member_relationships_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_member_relationships
+      mode: overwrite
+
+  members_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_members
+      mode: overwrite
+
+  member_hccs_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_hccs
+      mode: overwrite
+
+  providers_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_providers
+      mode: overwrite
+
+  provider_details_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_details
+      mode: overwrite
+
+  provider_npi_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_provider_npi
+      mode: overwrite
+
+  member_index_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_index
+      mode: overwrite
+
+  suspect_sources_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_suspect_sources
+      mode: overwrite
+
+  member_dx_codes_incremental:
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_member_dxcodes
+      mode: overwrite

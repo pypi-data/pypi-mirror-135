@@ -1,0 +1,122 @@
+debug: false
+
+#    """
+#    Review audit measures and saved out of bounds measure values
+#    Logic:
+#        1- For the most current audit timestamp measures. Get the daily difference per each of measure/year.
+#        2- Compare the daily difference of each  against the audit_threshold max and min values
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  aggr_nitrogen_yearly_dashboard_1:
+    type: parquet
+    location: "{aggr_location}/nitrogen_yearly_dashboard/"
+
+  audit_threshold:
+    type: parquet
+    location: "{aggr_location}/audit_threshold/"
+#  job:
+#    type: postgres
+#    conn_config_name: cadmium_postgres_db
+#    table_name: job
+#    skip_if_local: true
+
+Transform:
+
+  # get the last two job_id with the max record_timestamp
+  # NOTE: TODO: we need to add here the filter of "wrong" job_id based on the nitrogen.job table
+  # to eliminate the jobs that where completed executed and should not be taken as valid audit values
+  most_recent_job_ids:
+    sql: >-
+      select  job_id , max( record_timestamp) as record_timestamp
+              from aggr_nitrogen_yearly_dashboard_1
+              group by job_id
+              order by job_id  desc
+              limit 2
+  # this remove cases where there is more than one timestamp for the same  job_id
+  aggr_nitrogen_yearly_dashboard:
+    sql: >-
+      select a.*
+      from aggr_nitrogen_yearly_dashboard_1 a
+      inner join  most_recent_job_ids b on a.job_id = b.job_id and a.record_timestamp = b.record_timestamp
+
+  uppivot_yearly_dashboard:
+    type: user_function
+    function_name: unpivot_audit
+    cache: true
+
+  audit_verify_all:
+    sql: >-
+      with
+        mea as (
+           select *,
+           cast (a.record_timestamp as date) as load_date,
+           row_number() over(partition by measure, year order by job_id desc) as jobid_order
+           from uppivot_yearly_dashboard a
+         ),
+      changes_in_measures as (
+          select
+          r1.* ,
+          r2.value as previous_value,
+          r2.load_date as previous_load_date,
+          datediff( r1.load_date, r2.load_date) as day_diff,
+          round((r1.value-r2.value)*100, 3)    as real_changeinvalue,
+          round( (r1.value-r2.value)*100/cast(datediff( r1.load_date, r2.load_date) as double), 3) as real_daily_changeInValue
+          from mea r1
+          inner join mea r2 on  r1.measure = r2.measure and r1.year= r2.year
+          where r1.jobid_order = 1 and r2.jobid_order = 2
+      )
+      select
+          m.record_timestamp	,
+          m.year	,
+          m.year_name,
+          m.measure	,
+          m.value	,
+          m.groupy,
+          m.load_date,
+          m.previous_value,
+          m.previous_load_date,
+          m.day_diff	,
+          m.real_changeinvalue,
+          m.real_daily_changeInValue,
+          a.min_daily_changeinvalue	,
+          a.max_daily_changeinvalue,
+          m.job_id
+      from changes_in_measures m
+      inner  join audit_threshold a on lower(m.measure) = lower(a.measure) and m.year = a.year
+
+  audit_verify:
+    sql: >-
+      select * from audit_verify_all
+      where
+      (real_daily_changeInValue >  max_daily_changeInValue OR real_daily_changeInValue < min_daily_changeInValue)
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  audit_verify:
+    verify: true
+    loads:
+      load_1:
+        type: parquet
+        location: '{aggr_location}/audit_verify'
+        mode: overwrite
+      load_2:
+          type: parquet
+          location: '{aggr_location}/audit_verify_history'
+          partitions:
+          - job_id
+
+  audit_verify_all:
+    loads:
+      load_1:
+        type: parquet
+        location: '{aggr_location}/audit_review'
+        partitions:
+        - job_id
