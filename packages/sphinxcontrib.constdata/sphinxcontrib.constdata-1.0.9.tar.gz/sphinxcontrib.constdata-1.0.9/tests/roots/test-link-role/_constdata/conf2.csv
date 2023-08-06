@@ -1,0 +1,34 @@
+"Variable","Category","Description"
+"project","Project information","The documented project’s name."
+"author","Project information","The author name(s) of the document.  The default value is ``'unknown'``."
+"copyright","Project information","A copyright statement in the style ``'2008, Author Name'``."
+"project_copyright","Project information","An alias of ``copyright``.
+
+.. versionadded:: 3.5"
+"version","Project information","The major project version, used as the replacement for ``|version|``.  For
+example, for the Python documentation, this may be something like ``2.6``."
+"release","Project information","The full project version, used as the replacement for ``|release|`` and
+e.g. in the HTML templates.  For example, for the Python documentation, this
+may be something like ``2.6.0rc1``.
+
+If you don't need the separation provided between ``version`` and
+``release``, just set them both to the same value."
+"extensions","General configuration","A list of strings that are module names of extensions. These can be extensions coming with Sphinx (named
+``sphinx.ext.*``) or custom ones.
+
+Note that you can extend :data:`sys.path` within the conf file if your
+extensions live in another directory -- but make sure you use absolute paths.
+If your extension path is relative to the configuration directory,
+use :func:`os.path.abspath` like so::
+
+    import sys, os
+
+    sys.path.append(os.path.abspath('sphinxext'))
+
+    extensions = ['extname']
+
+That way, you can load an extension called ``extname`` from the subdirectory
+``sphinxext``.
+
+The configuration file itself can be an extension; for that, you only need
+to provide a :func:`setup` function in it."
