@@ -1,0 +1,39 @@
+{%- macro list_to_string_list(input_list) -%}
+    {%- for item in input_list -%}
+        "{{ item }}"{%- if not loop.last %}, {%- endif %}
+    {%- endfor -%}
+{%- endmacro -%}
+
+CREATE OR REPLACE TEMPORARY FUNCTION _{{ function_name }}(arg1 ARRAY)
+RETURNS {{ snowflake_output_type }}
+LANGUAGE PYTHON
+RUNTIME_VERSION=3.8
+handler = 'udf'
+as $$
+from typing import List
+import pandas
+
+def udf(params: List) -> {{ output_type }}:
+    input_columns = [{{- list_to_string_list(input_columns) -}}]
+    all_inputs_df = pandas.DataFrame([params], columns=input_columns)
+    input_map = {
+        {%- for input_name, columns in input_map.items() -%}
+        "{{ input_name }}": [{{- list_to_string_list(columns) -}}],
+        {%- endfor -%}
+    }
+    prefix_map = {
+        {%- for input_name, prefix in prefix_map.items() -%}
+        "{{ input_name }}": "{{ prefix }}",
+        {%- endfor -%}
+    }
+    inputs = {}
+    for input_name, columns in input_map.items():
+        df = all_inputs_df[columns]
+        df.columns = df.columns.str[len(prefix_map[input_name]):]
+        inputs[input_name] = df
+
+    result_df = {{ function_name }}(**inputs)
+    return result_df["{{ output_column }}"][0]
+
+{{ user_function }}
+$$;
