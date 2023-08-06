@@ -1,0 +1,319 @@
+components:
+  schemas:
+    Prefix.Config:
+      x-include:
+      - '../common/common.yaml#/components/schemas/GlobalObject'
+      required: [a, b, c, required_object]
+      description: |-
+        Container which retains the configuration
+      properties:
+        required_object:
+          description: |-
+            A required object that MUST be generated as such.
+          $ref: '#/components/schemas/EObject'
+        optional_object:
+          description: |-
+            An optional object that MUST be generated as such.
+          $ref: '#/components/schemas/EObject'
+        ieee_802_1qbb:
+          type: boolean
+        space_1:
+          type: integer
+        full_duplex_100_mb:
+          type: integer
+        response:
+          description: |-
+            Indicate to the server what response should be returned
+          type: string
+          enum: [status_200, status_400, status_404, status_500]
+          default: status_200
+        a:
+          x-status: under-review
+          description: |-
+            Small single line description
+          type: string
+        b:
+          x-status: deprecated
+          description: |-
+            Longer multi-line description
+            Second line is here
+            Third line
+          type: number
+          format: float
+        c:
+          type: integer
+        d_values:
+          description: A list of enum values
+          type: array
+          items:
+            type: string
+            enum: [a, b, c]
+        e:
+          description: A child object
+          $ref: '#/components/schemas/EObject'
+        f:
+          description: An object with only choice(s)
+          $ref: '#/components/schemas/FObject'
+        g:
+          description: A list of objects with choice and properties
+          type: array
+          items:
+            $ref: '#/components/schemas/GObject'
+        h:
+          description: A boolean value
+          type: boolean
+          default: true
+        i:
+          description: A byte string
+          type: string
+          format: binary
+        j:
+          description: A list of objects with only choice
+          type: array
+          items:
+            $ref: '#/components/schemas/JObject'
+        k:
+          description: A nested object with only one property which is a choice object
+          $ref: '#/components/schemas/KObject'
+        l:
+          $ref: '#/components/schemas/LObject'
+        list_of_string_values:
+          description: |-
+            A list of string values
+          type: array
+          items:
+            type: string
+        list_of_integer_values:
+          description: |-
+            A list of integer values
+          type: array
+          items:
+            type: integer
+        level:
+          $ref: '../multilevel/multi.yaml#/components/schemas/Level.One'
+        mandatory:
+          $ref: '#/components/schemas/Mandate'
+        ipv4_pattern:
+          $ref: '../pattern/pattern.yaml#/components/schemas/Ipv4Pattern'
+        ipv6_pattern:
+          $ref: '../pattern/pattern.yaml#/components/schemas/Ipv6Pattern'
+        mac_pattern:
+          $ref: '../pattern/pattern.yaml#/components/schemas/MacPattern'
+        integer_pattern:
+          $ref: '../pattern/pattern.yaml#/components/schemas/IntegerPattern'
+        checksum_pattern:
+          $ref: '../pattern/pattern.yaml#/components/schemas/ChecksumPattern'
+        case:
+          $ref: '#/components/schemas/Layer1Ieee802x'
+        m_object:
+          $ref: '#/components/schemas/MObject'
+        integer64:
+          description: int64 type
+          type: integer
+          format: int64
+        header_checksum:
+          x-field-pattern:
+            description: >-
+              Header checksum
+            format: checksum
+            length: 16
+        str_len:
+          x-status: under-review
+          description: |-
+            string minimum&maximum Length
+          type: string
+          minLength: 3
+          maxLength: 6
+        hex_slice:
+          x-status: under-review
+          description: |-
+            Array of Hex
+          type: array
+          items:
+            type: string
+            format: hex
+
+    Layer1Ieee802x:
+      type: object
+      properties:
+        flow_control:
+          type: boolean
+          
+    GObject:
+      x-include:
+      - '../common/common.yaml#/components/schemas/ListObject'
+      properties:
+        g_a:
+          type: string
+          default: asdf 
+        g_b:
+          type: integer
+          default: 6
+        g_c:
+          type: number
+          default: 77.7
+        choice:
+          type: string
+          enum: [g_d, g_e]
+          default: 'g_d'
+        g_d:
+          type: string
+          default: 'some string'
+        g_e:
+          type: number
+          format: double
+          default: 3.0
+        g_f:
+          description: |-
+            Another enum to test protbuf enum generation 
+          type: string
+          enum: [a, b, c]
+          default: a
+
+    EObject:
+      x-include:
+      - '../common/common.yaml#/components/schemas/GlobalObject'
+      - '../common/common.yaml#/components/schemas/MultiParamObject'
+      required: [e_a, e_b]
+      properties:
+        e_a:
+          type: number
+          format: float
+        e_b:
+          type: number
+          format: double
+
+    FObject:
+      type: object
+      properties:
+        choice:
+          type: string
+          enum: [f_a, f_b]
+          default: 'f_a'
+        f_a:
+          type: string
+          default: 'some string'
+        f_b:
+          type: number
+          format: double
+          default: 3.0
+
+    JObject:
+      type: object
+      properties:
+        choice:
+          type: string
+          enum: [j_a, j_b]
+          default: j_a
+        j_a:
+          $ref: '#/components/schemas/EObject'
+        j_b:
+          $ref: '#/components/schemas/FObject'
+
+    KObject:
+      type: object
+      properties:
+        e_object:
+          $ref: '#/components/schemas/EObject'
+        f_object:
+          $ref: '#/components/schemas/FObject'
+
+    LObject:
+      description: |-
+        Format validation object
+      type: object
+      properties:
+        string_param:
+          type: string
+        integer:
+          type: integer
+          minimum: 10
+          maximum: 90
+        float:
+          type: number
+          format: float
+        double:
+          type: number
+          format: double
+        mac:
+          type: string
+          format: mac
+        ipv4:
+          type: string
+          format: ipv4
+        ipv6:
+          type: string
+          format: ipv6
+        hex:
+          type: string
+          format: hex
+
+    MObject:
+      description: |-
+        Required format validation object
+      type: object
+      required: [string_param, integer, float, double, mac, ipv4, ipv6, hex]
+      properties:
+        string_param:
+          type: string
+        integer:
+          type: integer
+          minimum: 10
+          maximum: 90
+        float:
+          type: number
+          format: float
+        double:
+          type: number
+          format: double
+        mac:
+          type: string
+          format: mac
+        ipv4:
+          type: string
+          format: ipv4
+        ipv6:
+          type: string
+          format: ipv6
+        hex:
+          type: string
+          format: hex
+
+    Mandate:
+      description: "Object to Test required Parameter"
+      type: object
+      required: ['required_param']
+      properties:
+        required_param:
+          type: string
+
+    Update.Config:
+      description: "Object to Test required Parameter"
+      type: object
+      properties:
+        g:
+          description: A list of objects with choice and properties
+          type: array
+          items:
+            $ref: '#/components/schemas/GObject'
+
+    Metrics:
+      type: object
+      properties:
+        ports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Port.Metric'
+
+    Port.Metric:
+      type: object
+      required: [name, tx_frames, rx_frames]
+      properties:
+        name:
+          type: string
+        tx_frames:
+          type: number
+          format: double
+        rx_frames:
+          type: number
+          format: double
