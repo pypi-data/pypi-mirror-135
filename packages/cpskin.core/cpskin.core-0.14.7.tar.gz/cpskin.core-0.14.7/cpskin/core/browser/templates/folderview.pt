@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="cpskin">
+
+  <metal:styleslot fill-slot="style_slot" >
+        <style>
+        .section-notheme #portal-breadcrumbs {
+            display: none;
+        }
+        </style>
+  </metal:styleslot>
+
+  <metal:javascript_head_slot fill-slot="javascript_head_slot"
+                              tal:define="has_flexslider view/hasFlexSlider;
+                                          has_slick view/has_slick_slider;"
+                              tal:condition="view/hasFlexSlider">
+    <tal:if condition="python: has_flexslider and not has_slick">
+      <script type="text/javascript"
+              charset="utf-8"
+              src=""
+              tal:attributes="src string:${context/@@plone_portal_state/portal_url}/++resource++jquery.flexslider/javascript/jquery.flexslider-min.js"></script>
+      <script type="text/javascript"
+              charset="utf-8"
+              src=""
+              tal:attributes="src string:${context/@@plone_portal_state/portal_url}/++resource++jquery.flexslider/javascript/cpskin.slider.js"></script>
+    </tal:if>
+
+    <tal:if condition="has_slick">
+      <script type="text/javascript"
+              charset="utf-8"
+              src=""
+              tal:attributes="src string:${context/@@plone_portal_state/portal_url}/++resource++jquery.flexslider/javascript/slick.min.js"></script>
+      <script type="text/javascript"
+              charset="utf-8"
+              src=""
+              tal:attributes="src string:${context/@@plone_portal_state/portal_url}/++resource++jquery.flexslider/javascript/cpskin.slick.js"></script>
+    </tal:if>
+  </metal:javascript_head_slot>
+
+  <body>
+    <div metal:fill-slot="main"
+         tal:define="member context/@@plone_portal_state/member;
+                     contents view/getContents">
+      <metal:main-macro define-macro="main">
+        <div id="accueil">
+            <tal:bcl tal:repeat="content python:contents">
+              <metal:use use-macro="context/@@cpskincore-macros/homepage" />
+            </tal:bcl>
+            <div class="visualClear"></div>
+      </metal:main-macro>
+    </div>
+  </body>
+</html>
