@@ -1,0 +1,46 @@
+Metadata-Version: 2.1
+Name: django-fbv
+Version: 0.1.0
+Summary: Utilities to make function-based views cleaner, more efficient, and better tasting. 
+Home-page: https://github.com/adamghill/django-fbv/
+License: BSD-3
+Keywords: python,html,django
+Author: adamghill
+Author-email: adam@adamghill.com
+Requires-Python: >3.7,<4.0
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Provides-Extra: docs
+Requires-Dist: Sphinx (>=4.3.2,<5.0.0); extra == "docs"
+Requires-Dist: django (>2.2.0)
+Requires-Dist: django-jsonview (>=2.0.0,<3.0.0)
+Requires-Dist: furo (>=2021.11.23,<2022.0.0); extra == "docs"
+Requires-Dist: linkify-it-py (>=1.0.3,<2.0.0); extra == "docs"
+Requires-Dist: myst-parser (>=0.16.1,<0.17.0); extra == "docs"
+Requires-Dist: sphinx-copybutton (>=0.4.0,<0.5.0); extra == "docs"
+Project-URL: Funding, https://github.com/sponsors/adamghill
+Project-URL: Repository, https://github.com/adamghill/django-fbv/
+Description-Content-Type: text/markdown
+
+# django-fbv
+
+Utilities to make Django function-based views cleaner, more efficient, and better tasting.
+
+## decorators
+
+- `fbv.decorators.render_html`: convenience decorator to use instead of `django.shortcut.render` with a specified template
+- `fbv.decorators.render_view`: convenience decorator to use instead of `django.shortcut.render` with a specified template and content type
+
+## views
+
+- `fbv.views.html_view`: directly renders a template from `urls.py`
+
+## middleware
+
+- `fbv.middleware.RequestMethodMiddleware`: adds a boolean property to the `request` for the current request's HTTP method
+
+Complete documentation: https://django-fbv.readthedocs.org
+
