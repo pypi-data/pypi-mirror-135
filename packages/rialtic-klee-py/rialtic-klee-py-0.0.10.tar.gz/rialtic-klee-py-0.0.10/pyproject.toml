@@ -1,0 +1,45 @@
+[tool.poetry]
+version = "0.0.10"
+name = "rialtic-klee-py"
+authors = ["Rialtic <engines.data@rialtic.io>"]
+description = "Internal workflow/testing utility"
+keywords = ["rialtic", "insight", "engine", "test-library"]
+
+homepage = "https://github.com/rialtic-community/rialtic-klee-py"
+repository = "https://github.com/rialtic-community/rialtic-klee-py"
+
+readme = "README.md"
+license = "Apache-2.0"
+packages = [
+    { include = "klee" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: OS Independent",
+]
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/rialtic-community/rialtic-klee-py"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pytest = "^6.2.5"
+pytest-html = "^3.1.1"
+"fhir.resources" = "^6.1.0"
+insight-engine-schema-python = "^0"
+python-dotenv = "~0.19.2"
+requests = "^2.26"
+click = "^8.0.3"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+klee = 'klee:cli'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
