@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: django-kiwi
+Version: 0.0.1
+Summary: a package to help developers work with queue situations
+Home-page: https://gitlab.com/luisccf/django-kiwi.git
+Author: Luis Carlos Cardoso
+Author-email: luisccf@me.com
+License: BSD-3-Clause
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+=====
+django-kiwi
+=====
+
+django-kiwi is a simple Django app to avoid using Celery.
+
+Detailed documentation is in the "docs" directory.
+
+Quick start
+-----------
+
+1. Add "simple_queue" to your INSTALLED_APPS setting like this::
+
+    INSTALLED_APPS = [
+        ...
+        'simple_queue',
+    ]
+
+2. Include the polls URLconf in your project urls.py like this::
+
+    path('simple_queue/', include('simple_queue.urls')),
+
+3. Run `python manage.py migrate` to create the queue models.
+
+4. Start the development server and visit http://127.0.0.1:8000/admin/
+   to view your queues (you'll need the Admin app enabled).
+
+
