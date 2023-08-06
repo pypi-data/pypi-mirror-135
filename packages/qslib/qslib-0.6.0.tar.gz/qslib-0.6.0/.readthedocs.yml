@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2021-2022 Constantine Evans <const@costi.eu>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
+version: 2
+sphinx:
+  configuration: docs/conf.py
+build:
+  image: testing
+python:
+  version: 3.9
+  install:
+    - method: pip
+      path: .[docs]
