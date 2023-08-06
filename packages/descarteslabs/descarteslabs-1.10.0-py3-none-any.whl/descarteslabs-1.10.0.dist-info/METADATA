@@ -1,0 +1,78 @@
+Metadata-Version: 2.1
+Name: descarteslabs
+Version: 1.10.0
+Summary: Descartes Labs Python Client
+Home-page: https://github.com/descarteslabs/descarteslabs-python
+Author: Descartes Labs
+Author-email: hello@descarteslabs.com
+License: Apache 2.0
+Download-URL: https://github.com/descarteslabs/descarteslabs-python/archive/v1.10.0.tar.gz
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: ~=3.6
+Requires-Dist: affine (>=2.2.2)
+Requires-Dist: blosc (==1.10.2)
+Requires-Dist: cachetools (>=3.1.1)
+Requires-Dist: geojson (>=2.5.0)
+Requires-Dist: grpcio (<2,>=1.35.0)
+Requires-Dist: ibis-framework (==1.4.0)
+Requires-Dist: lazy-object-proxy (>=1.4.1)
+Requires-Dist: mercantile (>=1.1.3)
+Requires-Dist: numpy (>=1.18.1)
+Requires-Dist: pandas (>=1.3.4)
+Requires-Dist: Pillow (>=8.1.1)
+Requires-Dist: protobuf (<4,>=3.14.0)
+Requires-Dist: pyarrow (>=3.0.0)
+Requires-Dist: pytz (>=2021.1)
+Requires-Dist: requests[security] (<3,>=2.25.1)
+Requires-Dist: six (>=1.15.0)
+Requires-Dist: shapely (<2,>=1.7.1)
+Requires-Dist: tqdm (>=4.32.1)
+Requires-Dist: backports-datetime-fromisoformat (>=1.0.0) ; python_version < "3.7"
+Requires-Dist: dataclasses (>=0.8) ; python_version < "3.7"
+Requires-Dist: imagecodecs (>=2020.5.30) ; python_version < "3.7"
+Requires-Dist: tifffile (==2020.9.3) ; python_version < "3.7"
+Requires-Dist: cloudpickle (==0.4.0) ; python_version < "3.8"
+Requires-Dist: imagecodecs (>=2021.5.20) ; python_version >= "3.7"
+Requires-Dist: tifffile (==2021.4.8) ; python_version >= "3.7"
+Requires-Dist: cloudpickle (==1.6.0) ; python_version >= "3.8"
+Provides-Extra: complete
+Requires-Dist: matplotlib (>=3.1.2) ; extra == 'complete'
+Requires-Dist: ipyleaflet (<1,>=0.13.3) ; extra == 'complete'
+Requires-Dist: ipywidgets (<8,>=7.5.1) ; extra == 'complete'
+Requires-Dist: markdown2 (<3,>=2.4.0) ; extra == 'complete'
+Requires-Dist: traitlets (<6,>=4.3.3) ; (python_version < "3.7") and extra == 'complete'
+Requires-Dist: traitlets (<6,==5.0.5) ; (python_version >= "3.7") and extra == 'complete'
+Provides-Extra: tables
+Requires-Dist: geopandas (>=0.10.2) ; ("linux" in sys_platform) and extra == 'tables'
+Provides-Extra: tests
+Requires-Dist: hypothesis[numpy] (==5.7.0) ; extra == 'tests'
+Requires-Dist: mock ; extra == 'tests'
+Requires-Dist: pytest (==6.0.0) ; extra == 'tests'
+Requires-Dist: responses (==0.12.1) ; extra == 'tests'
+Requires-Dist: freezegun (==0.3.12) ; extra == 'tests'
+Requires-Dist: geopandas (>=0.10.2) ; ("linux" in sys_platform) and extra == 'tests'
+
+.. code-block:: bash
+
+    pip install descarteslabs[complete]
+
+Documentation is available at https://docs.descarteslabs.com.
+
+Source code and version information is at https://github.com/descarteslabs/descarteslabs-python.
+
+The Descartes Labs Platform simplifies analysis of **global-scale raster data** by providing:
+
+  * Access to a catalog of petabytes of disparate geospatial data,
+    all normalized and interoperable through one **common interface**
+  * **Infrastructure** to parallelize any code across thousands of machines co-located with that data
+  * The ability to **add new data to that catalog**-whether the output of analysis on existing data,
+    or from a proprietary source-which can then be used as an input for more analysis
+  * A Python client library to access these systems
+  * Web interfaces to `browse this catalog <https://catalog.descarteslabs.com/>`_
+    and `view imagery <https://viewer.descarteslabs.com/>`_, including your data you create
+
