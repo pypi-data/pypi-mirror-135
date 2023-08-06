@@ -1,0 +1,67 @@
+Metadata-Version: 2.1
+Name: calculadora-do-cidadao
+Version: 0.5.3
+Summary: Tool for Brazilian Reais monetary adjustment/correction
+Home-page: https://calculadora-do-cidadao.readthedocs.io/
+License: GPLv3
+Keywords: Brazil,Brazilian Reais,monetary adjusment,monetary correction,Inflation
+Author: Eduardo Cuducos
+Author-email: cuducos@users.noreply.github.com
+Requires-Python: >=3.7,<4.0
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Utilities
+Provides-Extra: docs
+Requires-Dist: lxml (>=4.7.1,<5.0.0)
+Requires-Dist: pip (>=20.0.0); extra == "docs"
+Requires-Dist: readthedocs-sphinx-ext (>=2.1.3); extra == "docs"
+Requires-Dist: requests (>=2.22.0)
+Requires-Dist: sphinx (>=3.4.3); extra == "docs"
+Requires-Dist: sphinx-rtd-theme (>=0.5.1); extra == "docs"
+Requires-Dist: typer (>=0.0.8)
+Requires-Dist: unicodecsv (>=0.14.1,<0.15.0)
+Requires-Dist: xlrd (>=2.0.1,<3.0.0)
+Requires-Dist: xlwt (>=1.3.0,<2.0.0)
+Project-URL: Repository, https://github.com/cuducos/calculadora-do-cidadao/
+Description-Content-Type: text/markdown
+
+# Calculadora do Cidadão
+
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/cuducos/calculadora-do-cidadao/Tests)](https://github.com/cuducos/calculadora-do-cidadao/actions)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/cuducos/calculadora-do-cidadao)](https://codeclimate.com/github/cuducos/calculadora-do-cidadao/maintainability)
+[![Code Climate coverage](https://img.shields.io/codeclimate/coverage/cuducos/calculadora-do-cidadao)](https://codeclimate.com/github/cuducos/calculadora-do-cidadao/test_coverage)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/calculadora-do-cidadao)](https://pypi.org/project/calculadora-do-cidadao/)
+[![PyPI](https://img.shields.io/pypi/v/calculadora-do-cidadao)](https://pypi.org/project/calculadora-do-cidadao/)
+[![](https://img.shields.io/readthedocs/calculadora-do-cidadao)](https://calculadora-do-cidadao.readthedocs.io/)
+
+Pacote em Python para correção de valores. Confira a [documentação](https://calculadora-do-cidadao.readthedocs.io/) e o [mini-guia de contribuição](CONTRIBUTING.md) para mais detalhes!
+
+## Exemplo de uso
+
+```python
+In [1]: from datetime import date
+   ...: from decimal import Decimal
+   ...: from calculadora_do_cidadao import Ipca
+
+In [2]: ipca = Ipca()
+
+In [3]: ipca.adjust(date(2018, 7, 6))
+Out[3]: Decimal('1.051202206630561280035407253')
+
+In [4]: ipca.adjust("2014-07-08", 7)
+Out[4]: Decimal('9.407523138792336916983267321')
+
+In [5]: ipca.adjust("12/07/1998", 3, "01/07/2006")
+Out[5]: Decimal('5.279855889296777979447848574')
+```
+
+[![asciicast](https://asciinema.org/a/295920.svg)](https://asciinema.org/a/295920)
+
