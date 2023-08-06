@@ -1,0 +1,1234 @@
+CHANGES
+=======
+
+* [VCDA-3147] Force delete cluster (#1287)
+* Fix flake8 warnings (#1285)
+* Fix failing v2 system test on CToT (#1282)
+* [VCDA-3192] Remove dependency on config file from the commands \`cse template import\` (#1281)
+* [VCDA-3162] Update gateway fetching to allow for datacenter group networks (#1279)
+* Fix client tests for failing CToTs (#1278)
+* [VCDA-3083, VCDA-3102] Add wait before cluster creation when creating clusters from CTOTs (#1277)
+* [VCDA-3206] Avoid waiting on behavior task in the Native API kubeconfig handler (#1276)
+* [VCDA-3183] Fix broken CSE cluster commands (#1272)
+* [VCDA-3191, VCDA-3204] Remove option to install templates during CSE install/upgrade (#1274)
+* Change NSS for Capvcd entity type (#1261)
+* Update CAPVCD schema (#1268)
+* Handle empty extra\_options section (#1267)
+* update cpi and csi versions (#1266)
+* [VCDA-3129] Support upgrade path for cse version 3.1.2 (#1265)
+* [VCDA-3072] Server-Config-Proxy-Support (#1260)
+* [VCDA-3087, VCDA-3088] Remove usage of x-vcloud-authorization from CSE codebase (#1259)
+* Trimmed down schema of CAPVCD (#1257)
+* [VCDA-3070] Fixed the regression that caused the pagination defect on cluster list (#1256)
+* Let CSE register CAPVCD schema (#1251)
+* [Vcda-3033] Fix for 10.1.3 CToT (#1253)
+* [VCDA-3034] Fix for 10.3.1 CToT (#1254)
+* [VCDA-3070] Pagination fix for list clusters and list ovdcs (#1252)
+* VCDA-3021: Use cloud-init for VM setup (#1248)
+* [VCDA-3034] Changes to follow delete nfs output and including timeouts (#1247)
+* Cluster upgrade tests 3 1 updates (#1237)
+* Update authors and changelog for cse 3.1.1
+
+3.1.1
+-----
+
+* system test fixes, limit vms created and decrease vm memory size (#1243)
+* VCDA-2968: Point to 1.0.0 manifests (#1245)
+* [VCDA-2845] Update pyvcloud requirement to 23.0.3 (#1242)
+* cluster name should be less than 25 chars (#1241)
+* Add OSL for CSE 3.1.1 (#1240)
+* Address installation of multiple templates when test\_all\_templates is… (#1236)
+* VAC URL change to production (#1232)
+* set verbose level to 10 for kuadm init and join (#1233)
+* [VCDA-2805] Add cpu/memory tests and fix some breaking logic in CToT (#1227)
+* Make local testing easier by skipping creation of prerequisites (#1230)
+* Fix vcd cse template list when no\_vc\_communication\_mode is true: initialize native template to empty list (#1231)
+* [VCDA-2981] Fix cluster apply sample for tkgm (#1228)
+* Fix template rules in cse legacy mode (#1229)
+* [VCDA-2982] Check presence of NFS section before converting it (#1226)
+* Fix incorrect parameter in cse install (#1225)
+* [VCDA-2783] Fix missing source id in telemetry (#1204)
+* [VCDA-2959] Populate cpu/mem fields in status section of RDEs while upgrading from CSE 3.1.0 to CSE 3.1.1 (#1223)
+* fix unexpose network on native cluster update (#1224)
+* Fix TKGm template being identified as TKG+ during cluster upgrade (#1220)
+* VCDA-2952: Fix private section getting deleted, and other small (#1221)
+* Fix escalated privilege on NAT rule creation (#1222)
+* Improve Logging (#1219)
+* [VCDA-2944, VCDA-2946] Fix sample generation, Stop loading native templates during CSE startup if \`no\_vc\_communication\_mode\` flag is turned on (#1217)
+* Fix deletion of DNAT rule while rolling back cluster creation (#1218)
+* VCDA-2953, VCDA-2954, VCDA-2926: Exclude pod and svc cidr validation (#1215)
+* Change CPU description in schema and upgrade schema when CSE is 3.1.0 (#1212)
+* Porting [VCDA-2530] RDE cluster tests to cse\_3\_1\_updates (#1194)
+* VCDA-2951: use internal ip for kubeadm join (#1214)
+* [VCDA-2834] telemetry for import template (#1201)
+* Flattened dictionary of entity.status for updating RDE status (#1213)
+* [VCDA-2884 and VCDA-2925] Adding etag support for entity update and disallow scaling down TKGm clusters (#1205)
+* Improve logging for code paths using CloudApiClient (#1210)
+* Rename \`tkgm\_only\_mode\` to \`no\_vc\_communication\_mode\` (#1209)
+* [VCDA-2902] TKGm to make use of cpu and memory properties for cluster operations (#1202)
+* [VCDA 2849] Make cluster processing during CSE upgrade idempotent (#1207)
+* VCDA-2922: Pass VAPP from CSE to CPI/CSI (#1208)
+* [VCDA-2894, VCDA-2906] Improve sample cluster spec generation, Add support for TKGm 1.4.0 OVA (#1206)
+* Fix incorrect github path in control-plane.sh (#1203)
+* [VCDA-2847] Machine token changes in CSE (#1193)
+* [VCDA-2856] Allow CSE server to function in Only TKGm mode (#1199)
+* Rename display all to display native (#1197)
+
+3.1.1.0b2
+---------
+
+* VCDA-2670, 2706, 2895, 2931: Changes needed for beta2 (#1198)
+* [VCDA-2669] Replace float version comparisions with version object comparisons (#1180)
+* VCDA-2786: remaining CR of Aritra and Sakthi (#1195)
+* Fix flake8 errors (#1196)
+* [VCDA-2525] Disallow cluster sharing for TKGm clusters (#1183)
+
+3.1.1.0b1
+---------
+
+* VCDA-2877: Remove vmware internal nameserver (#1191)
+* VCDA-2877: Changes for Beta (#1189)
+* initial cut for non cluster client tests (#1184)
+* [VCDA-2875] fix for getting entity in cluster service factory (#1188)
+* VCDA-2776: CSI and CPI integration with TKGm (#1185)
+* [VCDA-2855] Let CSE server startup without a default native template (#1182)
+* VCDA-2776: Merge code of TKGm with immutable infra changes. (#1179)
+* [VCDA-2571] Use cpu/mem fields for native cluster operations (#1181)
+* [VCDA-2373, 2764] TKGm template listing (#1176)
+* [VCDA-2807] Revert consolidated post boot customization (#1178)
+* Address comments for addition of CSE version (#1175)
+* [VCDA-2740] Implement TKGm runtime in CSE (#1165)
+* [VCDA-2736] Get cluster config from rde (#1171)
+* Add cse version in cse run (#1170)
+* [VCDA-2737] store kube config, kubeadm token in rde (#1164)
+* [VCDA-2758] Cluster service tkgm (#1167)
+* [VCDA-2588] Set up environment for RDE based tests (#1070) (#1155)
+* [VCDA-2768] Expose TKGm template list API endpoint (#1168)
+* [VCDA-2739] Implement 'cse template import\` command (#1166)
+* replace individual scripts execution with vsphere library with consolidated control plane and worker node script for post boot customization (#1163)
+* Fix flake8 (#1154)
+*  Handle exceptions when connecting to remote template cookbook (#1144)
+* Port Fix upgrade failure when OLM pods are present to master (#1146)
+* Remove hyphenated variables in setup.cfg (#1148)
+* move VAC url back to staging (#1129) (#1130)
+
+3.1.0
+-----
+
+* Update AUTHORS and ChangeLog for CSE 3.1.0 release
+* Edits to the Andromeda docs (#1126)
+* movee to VAC production for telemetry (#1125)
+* More Andromeda doc edits (#1124)
+* Making CSE 3.1 as main page (#1123)
+* More edits to the Andromeda docs (#1122)
+* [VCDA-2699] Split CSE MQTT extension registration and description update into two separate steps (#1118)
+* Updated the CSE config file (#1121)
+* Bump addressable from 2.7.0 to 2.8.0 in /docs (#1110)
+* Updated the latest VCD links (#1120)
+* Andromeda docs revised. (#1119)
+* [VCDA-2703, VCDA-2699] Fix RDE creation/update during CSE upgrade (#1114)
+* edit apply help string (#1113)
+* Fixing links in the Andromeda documentation (#1117)
+* Edits to the Andromeda documentation (#1116)
+* Updates to Andromeda dosc (#1115)
+* Fix K8s version parsing from RDE (#1109)
+* working cluster apply sample (#1111)
+* Edits to Andromeda documentation (#1112)
+* [VCDA-2693] Fixed legacy to RDE cluster upgrade failure (#1108)
+* [VCDA-2678]  Fix RDE status conversion error (#1106)
+* [VCDA-2667] Fix CSE install/upgrade to show better message around template creation/update (#1104)
+* [VCDA-2662] Change flag and code constant names for TKG, TKG+ (#1097)
+* telemetry collector id for andromeda (#1101)
+* Adding Known issues and share command content to the 3.1 docs (#1105)
+* [VCDA-2676] Prevent users with <= EDIT/VIEW rights on CSE:NATIVECLUSTER from updating private property of RDE Status (#1103)
+* [VCD-2663] Mark terminal state of task to be the last operation on cluster CRUD (#1099)
+* Documentation for Andromeda (#1085)
+* Restrcit upgrades from CSE 3.0.3 to CSE 3.1.0 (#1098)
+* Fixed the typo in response task header & updated the sample config with new remote-cookbook-url (#1100)
+* [VCDA-2655] Set the RDE.status to FAILED on cluster creation failure when rollback=true (#1093)
+* [VCDA-2647] Announce-Template-1.21.2-On-Github-Template-Announcement-Page (#1091)
+* [VCDA-2640] Port cluster expose feature to Cluster Service 2.x (#1094)
+* Change the behavior definition to include "actAsToken" property (#1096)
+* exclude invokeHooks params for non-admin user on CSE nativeEntity (#1095)
+* [VCDA-2651] Task operation messages do not show meaninful messages on UI. (#1092)
+* [VCDA - 2624] Add \`expose\` and \`exposed\` field to RDE 2.0.0 (#1089)
+* [VCDA-2627] Fixed incorrect in-progress messages even after cluster creation is successful (#1087)
+* [VCDA-2601] Create subdirectory under LOCAL SCRIPTS DIR (#1076)
+* [VCDA-2387] helper method, wait for customization phase to reach desired status (#1068)
+* waiting for dnat rule creation (#1088)
+* [VCDA-2160] Updated OSL for 3.1 GA (#1086)
+* [VCDA-2578, VCDA-2108, VCDA-2262] Cluster share fix and system user cluster sharing (#1083)
+* Release notes for CSE 3.0.3 (#1069)
+* [VCDA-2626] Run kubeadm init with --config param for TKG+ (#1082)
+* Fix /nativeclusters endpoint when no query params are set (#1084)
+* Retain status section in payload while creating RDE (#1081)
+* [VCDA-2407 and VCDA-2615] Fix for TKG cli and use 37-alpha when CLI is used with vcd 10.3 (#1075)
+* Fix incorrect error message during ovdc enable/disable (#1079)
+* [VCDA-2595] Fixed python key error on missing config legacy\_mode (#1077)
+* Fixes to accommodate multiple changes in VCD  (#1074)
+* [VCDA-2297] Fix stale sample help strings (#1072)
+* [VCDA-2476] Avoid processing headers in cluster\_handler layer (#1063)
+* Regression fix (#1067)
+* Change the CSE 3.1 -> work in progress to avoid confusion around public documentation. (#1066)
+* Separate folder for Andromeda documentation
+* [VCDA-2557] Update help strings install upgrade template install (#1057)
+* Use correct enum for template rule processing (#1064)
+* [VCDA:2550] RDE changes to accommodate Telefonica needs for cpu and memory. (#1059)
+* Rename mstr script in CSE repo to  control\_plane.sh (#1060)
+* [VCDA-2472 & VCDA-2545] Use version key in template yaml instead of depending on naming (#1052)
+* [VCDA-2479] prevent AMQP configuration with CSE 3.1 non-legacy mode and 10.3 VCD (#1048)
+* Fix flake8 errors (#1049)
+* [VCDA-2412] Clean up non-behaviors 2X backend. (#1047)
+* [VCDA-2480] Backend changes for RDE 2.0 schema (updates for R1) (#1044)
+* [VCDA-2435] Update the RDE schema to accommodate R1 (#1040)
+* Update Gemfile.lock and Gemfile for rexml and kramdown (#1036)
+* [VCDA-2410] Redirect v35\_handler to 36\_handler if runtime\_rde >= 2.0 (#1034)
+* [VCDA-2267] Upgrading cluster RDE instead of re-creating them in cse-upgrade (#1046)
+* PR-Fix for RDE\_RESTRICTED\_FIELDS [ status ] (#1045)
+* [Vcda 2462] Add behavior and handler for nfs node delete (#1037)
+* Enable  create, update and delete hooks (#1043)
+* cluster\_script package fix (#1039)
+* [VCDA-2172] Redirect native api to generic defined entity api (#1030)
+* [VCDA-2321] Update developer notes with instructions for maintaining CSE API (#1033)
+* [VCDA-2198] Selective user access (#1028)
+* Tested and working (#1031)
+* [VCDA-2282] Test and Fix CRUD operations via behaviors (#1027)
+* [VCDA-2391] Schema changes for matching TKG RDE type (#1024)
+* [VCDA-2307] port cluster apply, delete, and create for exposed NSX-T cluster RDE 1 and 2 to main branch (#1015)
+* docs added 1.20 template announcement (#1022)
+* Update pyvcloud, and fix storage profile checks (#1025)
+* [VCDA-2316] Extract out entity status updates to a separate funciton (#1020)
+* Fix server tests (#1023)
+* [VCDA-2320] updated contributor docs (#1013)
+* [VCDA-2144] Avoid querying vapp if defined entity doesn't have external ID (#1019)
+* [VCDA-2222, VCDA-2066] Remove use of api version from server config file and update operation context to support clients at multiple api versions (#1014)
+* Modified the success payload as per the new guidelines from DEF (#1017)
+* [VCDA-2319]Allow conditional firing of the hooks (#1016)
+* [VCDA-2304] change model classes to use snake case instead of camel case (#990)
+* [VCDA-2312] Entity update only to be done by privileged user (#1008)
+* [VCDA-2281] Stamp rde version after install and upgrade in non legacy mode (#999)
+* [VCDA-2318] Enabled hooks as part of Entity type registration (#1012)
+* Temporary fix for hooks (#1010)
+* Correction in the Release notes for 3.1 Beta
+* [VCDA-2217]Release check-list (#995)
+* 3.1 beta release notes RELEASE\_NOTES.md (#1004)
+* [VCDA-2314] Skip sizing class and storage profile validation if node count is 0 (#1001)
+* [VCDA-2209] Change imports, add TODO for dynamically picking the rde moel module (#954)
+
+3.1.0b1
+-------
+
+* Fix cse template list (#1006)
+* Fix cse run/install/upgrade (#1005)
+* Fix cluster apply cli referencing incorrect key (#1003)
+* [VCDA-2001]Adopt RDE task management in cluster\_service (#994)
+* [VCDA-2311] Allow dual form verbs in request url matching (#998)
+* Fix double conversion of CSE version string to semantic version (#1002)
+* [VCDA-2285] Enable cse 3.0 legacy to cse 3.1 legacy upgrade (#993)
+* VCDA-2313: Fix spec rde update (#1000)
+* [VCDA-2283] CLI changes to harden against RDE changes (#996)
+* [VCDA-2294,VCDA-2299] Remove-Wrong-RDE-Version-Stamping-And-Convert-CSE-Version-From-Extension (#989)
+* Fix task\_href error when converting rde 2.0 to rde 1.0 (#997)
+* Update 3.0.2 release notes
+* Fix fsencoding issue in mqtt publisher (#992)
+* [VCDA-2208] Documentation for CSE 3.0.2 (#982)
+* [VCDA-2205] V35 handler - process input and use cluster service based on runtime rde version (#984)
+* Enable backend to publish messages to MQTT bus (#978)
+* Updated OSL for 3.1 Beta (#986)
+* [VCDA-2238] edited regex pattern to redact headers with double quote (main) (#988)
+* [VCDA-2068, 2069, 2184] Remove api version from CSE upgrade/run/install (#981)
+* [VCDA-2272] Update rde 2.0.0 schema (#983)
+* update requirements txt (#977)
+* remove unsupported payload version (#979)
+* Process payload version in the behavior handler (#976)
+* [VCDA-2245] Modify-v36-Handler-Validate-Input-Based-On-Payload-Version (#972)
+* [VCDA-2195] Print template verification messages on console in CSE run (#968)
+* Fix cluster scripts and CTOT failure (#969)
+* [VCDA-2261] Made overriding behavior operation idempotent during install/upgrade (#967)
+* [VCDA-2274] Fix upgrade issue related to missing rights in \`cse service account\` (#965)
+* [VCDA-2249]Introduce payload versioning in the schema and model 2.0 (#964)
+* [VCDA-2193] Change CSE install and upgrade workflow to install supported templates (#958)
+* [VCDA-2004] Add known issue to UI plugin 1.0.3 docs (#963)
+
+3.1.0a1
+-------
+
+* [VCDA-2168] Upgrader for CSE 3.1 (#956)
+* [VCDA-2063, 2072] Auto negotiate api version to use from CSE client based on output of /api/cse/system (#955)
+* add legacy\_mode param to download all scripts (#960)
+* [VCDA-2197] Framework to connect behavior processor to the backend. (#957)
+* Changes to use TemplateV2.yaml (#952)
+* [VCDA-2204] modify v36 cluster handler (#947)
+* Port [VCDA-2188] ipam solution for getting available ip (#937) to master (#945)
+* [VCDA-2055] Implement behavior processor (#950)
+* Port [VCDA-2187] [Nsxt gateway delete dnat] (#936) to master (#948)
+* AFix for changing e to E in cluster-2-x (#946)
+* Port Fix repetitive expensive calls to vdcComputePolicies (#905) to master (#915)
+* [VCDA-2129] Report exception for Script execution error (#911) (#916)
+* Prevent returning response dict on server busy response (#901) (#914)
+* [VCDA-2064, VCDA-2065] Introduce support for feature flags and \`legacy\_mode\` to protect apis (#943)
+* [VCDA-2200] Exception handler for behavior\_service.py (#942)
+* Fix-Fix-DefEntityType-object-has-no-attribute-VENDOR (#938)
+* [VCDA-2148] Input validator by RDE version  (#934)
+* [VCDA-2073] Update handlers to work with request dispatcher (#935)
+* [VCDA-2057] Register, override, set acls on behaviors during CSE installation. (#933)
+* [VCDA-2185] Fix bugs introduced during RDE refactor (#932)
+* [VCDA-2151]  use server\_rde\_version to register rde schema in CSE install (#931)
+* Enhancements to RDE constants
+* [VCDA-2052] Get current state of cluster from Defined Entity Status (#928)
+* [VCDA-2153] cse run to load the schema based on rde\_in\_use (#925)
+* VCDA-2146: Implement Behavior service (#923)
+* [VCDA-2150] Pick cluster\_service file using rde in use (#922)
+* VCDA-1995: fix regression in test that uses vcdbroker.py (#924)
+* add storage profile as part Node dataclass (#926)
+* [VCDA-2175] Schema-change-for-RDE-Status-To-Reflect-Cluster-Current-state (#920)
+* Port [VCDA-1927 & VCDA-2042] Paginate TKG and legacy native cluster responses (#868) to master (#908)
+* VCDA-1995: use token while joining clients (#917)
+* Port [VCDA-2040 and VCDA-2043] Nsxt edge gateway (updates branch) to master (#902)
+* [VCDA-2149] Dynamically determine the enitity class to use (#919)
+* [VCDA-2147] Model classes for behavior (#918)
+* [VCDA-2125] Framework to accommodate multiple RDE versions (#909)
+* [VCDA-2122] Add utility methods for fetching rde\_schema\_version (#913)
+* Skip unavailable vCenter (#912)
+* [VCDA-2062] Implement request dispatcher to expose CSE REST api at multiple api versions (#904)
+* fixed incorrect import for pyvcloud utils (#907)
+* [VCDA-2125] Split models.py into common\_models.py and rde100.py (#906)
+* Port Fix ovdc list operation to support backward compatibility (#871) to master (#898)
+* [VCDA-2051] Added RDE schema and model 2.0.0 and enhanced the status schema with new optional properties. (#903)
+* [VCDA-2034] reorganize packages (#899)
+* [VCDA-2061] Determine common api versions supported by CSE and VCD (#897)
+* [VCDA-2002] Avoid resolving defined entities after every update (#877)
+* exclude nfs node from cluster upgrade (#894)
+* update nokogiri and related dependencies (#891)
+* Port "[VCDE-986]: Migrate to pika 1.1.0 (#847)" from cse\_3\_0\_updates (#881)
+* Port "[VCDA-1909] Add logic in AMQP consumer to reject redelivered messages (#851)" from cse\_3\_0\_updates (#882)
+* mqtt maintains only one token (#880)
+* Fix TKG cluster list operation when CLI is enabled only for TKG (#872)
+* Fix code reorg errors (#874)
+* [VCDA-1600] Reorganize shared constants and utility methods (#866)
+* [VCDA-1944] Paginate TKG and legacy native cluster responses (#859)
+* [VCDA-1958] update PKS telemetry with source (#864)
+* [VCDA-1941] Cluster unshare CLI (#858)
+* [VCDA-1987] Cluster share list (#856)
+* [VCDA 1950] Add source to telemetry (#857)
+* [VCDA-1973] Client and server changes for including upgrade in apply command (#853)
+* updated kramdown (#852)
+* [VCDA-1936] Cluster share command (#842)
+* [VCDA-1950] Thread local data handling enhancement   (#854)
+* updated cryptography library (#855)
+* Ubuntu 1.19 template announcement (#850)
+* [VCDA-1955] Update and resolve entity with correct status before syncing def entity (#845)
+* [VCDA-1927] paginate ovdc list (apiV 33 & 35) and cluster list (api 35). (#839)
+* [VCDA-1950] Fix missing value telemetry recording ovdc enable/disable (v35) (#844)
+* [VCDA-1937] Fix minor issue in \`cse create-service-role (#841)
+* [VCDA-1908] Reorder CSE installation steps, to make \`creation of extension\` the last step. (#840)
+* [VCDA-1907] Run Client Tests As k8 author  (#837)
+* Fixed Broken server system tests (#838)
+* [VCDA-1906] system-tests-in-test-org-context (#824)
+* [VCDA-1894] Refactor cse.py and separate out different command groups (#827)
+* Cherry pick commits from 3 0 1 branch (#835)
+* Release notes for CSE 3.0.1 (#830)
+* Update known issues for CSE 3.0.1 (#822)
+* [VCDA-1669] Optimize list vdc query using typed query (#809)
+* [VCDA-1884] Refactoring client modules (#808)
+* [Docs] Remove old content from CSE 3.0 docs (#799)
+* [VCDA-1897] sample generator with  MQTT section (#810)
+* [VCDA-1696] Upgrade cloudapi endpoints and refactor compute policy manager (#801)
+* [VCDA-1838] CLI pass in config to functions (#806)
+* Allow upgrade from 3.0.x to 3.0.1 (#811)
+* [VCDA-1619] - Fix system tests, Add support for specifying selective templates to r… (#805)
+* [VCDA-1711] Logger with request Id (#800)
+* [VCDA-1883] Improve client wire logging (#802)
+* removed duplicate code on template list cli (#804)
+* [VCDA-1877] Consumer watchdog (#785)
+* [VCDA-1847] Update mqtt to use api access token instead of authorization token  (#770)
+* [VCDA-1705 ] New consumer model for AMQP and MQTT consumers (#727)
+* [Docs] Push CSE 3.0 documentation live (#797)
+
+3.0.0
+-----
+
+* Update Authors and ChangeLog for CSE 3.0.0
+* [Docs] Work in progress docs (#796)
+* [VCDA-1825] Consume latest pyvcloud and vcd-cli (#789)
+* [Docs] More edits to the CSE 3.0 documentation (#795)
+* [Docs] Minor edits to CSE 3.0 content (#794)
+* [Docs] CSE 3.0 as the main page (#793)
+* [Docs] Final edits for CSE 3.0
+* [VCDA-1876] Update documentation for Container UI Plugin (#779)
+* [Docs] Release notes for CSE 3.0 and few other edits (#791)
+* Add information about deprecation of templates (#790)
+* [Docs] Edits to CSE 3.0 documentation (#788)
+* [Docs] Correction in the upgrade path to CSE3.0 (#787)
+* [Docs] Minor edits to CSE30 and TemplateManagement files (#786)
+* [Docs] Minor edits in the Troubleshooting and Known Issues pages (#784)
+* Added a Known issue : how to delete the stale entries of a cluster that seems to be in stuck state. (#783)
+* Fix warning statement thrown when checking if element is not None (#782)
+* nfs count default set to 0 (#781)
+* Update log bundle information for cse 3.0 (#778)
+* [Docs] How to set the default storage-polify for native deployments. (#780)
+* [VCDA-1766] Move to VAC production for telemetry (#757)
+* [VCDA-1875] Update template announcements page (#776)
+* Add Container UI Plugin 1.0.3 (#777)
+* Update task to error if defined enttiy update / create fails (#774)
+* Check if the defined entity is in resolved state before fetching the configuration (#769)
+* [VCDA-1860] Change DE deletion on cluster creation rollback to use sysadmin context (#766)
+* Removed offensive terminology in github docs
+* Fixed links under CSE3.0 (#773)
+* [Github docs] Add upcoming documentation (#772)
+* Updated OSL for 3.0 GA (#767)
+* [VCDA-1868] Server side changes to handle when TKG+ is swithced off (#765)
+* [VCDA-1848] Update sample config api version to 35.0 (#762)
+* [VCDA-1858] Encode value for query filter expressions (#763)
+* [VCDA-1849] CSE upgrade to tag templates with placement policy when template creation is skipped (#761)
+* Fix error messages and upgrade command for native (#764)
+* Hiding ovdc list command in api v 33 and 34 (#756)
+* reverting wait on task for create entity in create cluster (#759)
+* [VCDA-1825] Fix Minor error codes and add exception handling to cluster\_service (#755)
+* Update pyvcloud requirement to 22.0.2.dev31 (#754)
+* Fix CTOT failure due to CLI (#753)
+* [VCDA-1787] Add --id option for cluster commands (#749)
+* [VCDA-1638] Use scrypt for encryption algorithm (#743)
+* [VCDA-1831] Fixed broken vcd cse pks ovdc disable command (#748)
+* [VCDA-1794] Order-of-output-columns-fixed (#745)
+* Fix filter parameters for cluster list (#746)
+* [VCDA-1812] Move command examples from Group level to relevant subcommands (#737)
+* Removed offensive terminology (#735)
+* Fix entities endpoint for tkg client (#747)
+* Add resource version to the request before update operation for TKG (#730)
+* [VCDA-1793] Create defined entities in specific org when sysadmin creates a cluster (#738)
+* Change tkgCluster to TanzuKubernetesCluster in output (#736)
+* CLI for cse configure-pks (#726)
+* [VCDA-1612] vcd cse cluster remove-nfs CLI (#731)
+* Deprecated entities endpoint. (#732)
+* [VCDA-1775] Add --org option for cluster apply to help sysadmin specify deployment org for TKG (#722)
+* Changes for showing proper error message for TKG cluster upgrade and … (#716)
+* [VCDA-1781,1803, 1735] - Fix missing references to missing methods in cluster\_service.py (#724)
+* Fix help strings in CLI (#721)
+* [VCDA-1712,VCDA-1740] sample generation for tkg and help text for sample file (#718)
+* Fix failing CToT against vCD 10.2 (#729)
+* Avoid showing Native clusters if CLI is enabled only for TKG (#723)
+* Enable pks ovdc commands for v35 (#719)
+* [VCDA-1633, VCDA-1634] Mqtt consumer POC (single-threaded) (#709)
+* [VCDA-1772, VCDA-1734, fix snake case output] Exception when no rights, fix write operation task output (#720)
+* Changed name validation regex for cluster name (#715)
+* Avoid filters for searching sizing policy during cluster create (#717)
+* Fix regression related to cse install/upgrade/run (#713)
+* [VCDA-1652] Transfer ownership of defined entity to cluster owner during cse upgrade (#710)
+* [bug fix]checking API version before checking for MQTT extension (#712)
+* Fix rollback true/false conditions on cluster create (#711)
+* [VCDA-1564] Telemetry for defined entities (#699)
+* Update template list endpoint to return all data about templates (#707)
+* Add support for handling multiple Accept headers in incoming requests (#705)
+* [VCDA-1635] Change references for tkg\_plus to TKG+ (#706)
+* [VCDA-1632] Mqtt upgrade (#694)
+* Update pyvcloud version in requirements.txt (#703)
+* [VCDA-1622] TKG cluster get config operation from CLI (#702)
+* [VCDA-1695] Hide references to TKG PLUS unless opt-ed in (#693)
+* [VCDA 1653] Avoid using prefix while creating/ updating clusters (#698)
+* [VCDA-1698] Allow upgrade from arbitrary patch version in a supported upgrade path (#696)
+* VCDA-1644 Add description for the schema (#691)
+* Set default values for hidden parameters (#695)
+* [VCDA-1704] Default down to tkg only operations when cse server is not running (#690)
+* added paho-mqtt to requirements.txt (#700)
+* Fix for broken vcd cse template list for api version 35 (#692)
+* Add cse def schema to CSE whl package (#688)
+* [VCDA-1675, VCDA-1630] config validator and install with mqtt components (#680)
+* [VCDA-1694] Disable --tkg-plus options for ovdc enable and disable based on environmen… (#684)
+* Fix sending the correct parent key (#687)
+* [VCDA-1621] Create, Update and Delete TKG clusters from CLI (#682)
+* [VCDA-1645] Validate PUT Def Entity Payload (#671)
+* Regenerated TKGclient from swagger (#678)
+* [VCDA-1657, VCDA-1668] Update CSE REST api endpoints (#677)
+* [VCDA-1515] Report users at the end of CSE upgrade who needs to be assigned DEF entity RBAC rights (#666)
+* [VCDA-1681] cluster restriction with placement policies fixed (#675)
+* [VCDA-1671] Def entity owner as part of console display on cluster list CLI (#679)
+* NFS implementation (#673)
+* [VCDA-1627, VCDA-1628, VCDA-1629] Adding MQTT extension manager (#658)
+* [VCDA-1517] Ignore cse node commands for api version 35 (#672)
+* [VCDA-1682] Generate new client for TKG swagger changes (#669)
+* [VCDA-1672] Include Org and Owner as part of the defined entity model (#674)
+* [ PR ] Cluster command help message and fix (#665)
+* [VCDA-1608] Cluster config CLI implementation (#664)
+* Hide ovdc info command as it doesnt display any more info than list (#663)
+* [VCDA-1594& VCDA-1604]: Implement scale down for clusters (#661)
+* [VCDA-1610] Cluster upgrade CLI implementation for Defined Entity (#660)
+* Fix failing CToT (#662)
+* [Vcda 1613]: Format console output for v35 cli (#655)
+* Model and Schema changes to include nfs (#657)
+* [VCDA-1611] CLI implementation cluster-upgrade-plan  (#654)
+* [PR] CTOT Fix - cluster resize with no worker node is a positive test case (#656)
+* [VCDA-1609] DEF entity cluster delete (#653)
+* [VCDA-1542, 1543, 1545] Handle CSE upgrade to api version 35.0 (#632)
+* [VCDA 1595,1603] apply - generate sample file, resize cluster CLI implementation (#651)
+* [VCDA-1624] Hook TKG client to CSE client (#649)
+* [VCDA1590] Cluster create and resize support to handle 0 worker nodes (#644)
+* Update CSE UI plugin to 1.0.2; update documentation (#652)
+* [Vcda 1605] implement server side get cluster config (#646)
+* Fix ovdc enable bug in system tests (#645)
+* [VCDA-1580] Move to pre-defined kubernetes interface (#641)
+* [Vcda 1535] Ovdc Enable and disable with placement policy (#626)
+* [VCDA-1548] Cluster List and Info for Defined Entity (#642)
+* [VCDA-1567] Add nodes section to the schema. Enhance create and resize workflows (#640)
+* [Vcda 1541] upgrade cluster workflow (#635)
+* fix remove compute policy errors (#643)
+* Remove operation context from compute policy manager (#637)
+* [VCDA-1547] Implement vcd cse cluster apply for create cluster (#634)
+* PR- Fix CTOT failure (#639)
+* VCDA-1589 Implemennt cluster-delete new endpoint. (#636)
+* Reverting system tests after photon gc bug fix (#633)
+* [VCDA-1568] Exception-Handler For Defined Entity Services and Cluster Handler (#628)
+* [VCDA-1571] update schema with k8s, cni, docker and os info (#630)
+* [VCDA-1544, 1546] CSE upgrade command (#624)
+* Change the ID format of the interface and entity type. (#631)
+* Revert GC fix, since fix is now available from vCD (#629)
+* [VCDA-1572] CLI-To-Use-CSE-Server-Api-Version (#623)
+* Server side implementation for V35 cluster resize operation (#622)
+* Skip Photon template installation during system tests (#627)
+* [VCDA-1534] Tag templates with placement policies during template install (#621)
+* [VCDA-1518] Use sizing\_class for creation of VMs in the cluster (#614)
+* Def-entity Cluster Status (#617)
+* Remote template url change (#620)
+* VCDA-1574 & 1578 Entity filtering, GET and LIST endpoints
+* Workaround for GC bug in vCD leading to template creation failure (#618)
+* [VCDA-1516] Add base code for CSE upgrade (#613)
+* [VCDA-1549] Add version tracking to CSE server (#609)
+* [VCDA-1533] Create placement policies on cse install (#608)
+* [VCDA-1531] CLI skeleton (#606)
+* Fixing the (bug) method params of new def\_cluster\_handler.py (#612)
+* VCDA-1539 Separate defined entity handler, backend service and cluster-create implementation. (#599)
+* Update CSE-vCD compatibility matrix to add patch/update releases of supported vCD versions (#607)
+* [VCDA-1536] Suppress template rule checking for api v35 and above (#605)
+* [VCDA 1528] Added vCD api version check to CSE config validator (#604)
+* VCDA-1538&1539 Create schema and model for native cluster (#603)
+* Registering schema.json without manual copy (#601)
+* [Vcda 1508] Register DEF schema on CSE install (#597)
+* Temporary fix for OVDC compute policy remove (#595)
+* VCDA-1497 Implement Defined Entity Service (#596)
+* Resolved flake8 errors for system tests (#594)
+* VCDA-1498 Defined entity schema service (#588)
+* Fix flake8 errors in system tests (#593)
+* [VCDA-1502] Add cloudapi client into request context (#591)
+* Better error message on connectivity failure due to self-signed certificates (#590)
+* Fix client in pksbroker (#586)
+* Fix for missing admin client on ovdc update (#585)
+* [VCDA-1477] Implement request context (#584)
+* [VCDA-1481, 1482, 1483] Change logging strategy (#583)
+* [VCDA-1488] Separate ovdc enable for Ent-PKS (#576)
+* Address merge conflicts
+* [VCDA-1438] Separate PKS command group - Server side changes (#561)
+* [VCDA-1457] Add tests for cluster resize (#560)
+* [VCDA-1431] resolve multiple telemetry calls (#558)
+* [VCDA-1272] Optimize ovdc list from server (#562)
+* fix for recording incorrect telemetry details (#555)
+* [VCDA-1270] Change Temp vm name to meaningful one (#549)
+* Separate-Command-Group-For-PKS(Client Side Changes) (#550)
+* [VCD-1436] Update docs for CSE 2.6.1 announcing support for PKS 1.7 (#569)
+* Add fields in base\_config.yaml to support 2nd org for running tests (#579)
+* Add CSE UI plugin v1.0.1 (#580)
+* Fix cluster list to show PKS cluster k8s version (#575)
+* Fix convert cluster showing incorrect kubernetes version (#572)
+* [VCDA-1451] Update cluster list to show Kubernetes info (#557)
+* [VCDA-1378] Update docs for 2.6.0 GA (#538)
+* Bump nokogiri from 1.8.5 to 1.10.8 in /docs (#529)
+* Add UI 1.0.0 release build (#552)
+* Update pyvcloud requirement to 22.0.1 (#559)
+* [VCDA-1441] Update PKS client to v1.7 (#553)
+* [VCDA-1257] Add cpu, memory and ssh keys option for cluster resize (#551)
+* Fix bug where auth token can be referenced before assignment (#543)
+* Update Template announcement page (#537)
+* remote template url set to master template repo (#523)
+* [VCDA-1394] Telemetry Fixes (#530)
+* [VCDA-1384] Update dependency for CSE 2.6.0 (#531)
+* [VCDA-1365] Update OSL files of 2.6.0 GA (#526)
+* [VCDA-1381] Fix error message on triggering invalid operation on non native clusters. (#525)
+* Change cluster upgrade k8s version check to >= to accomodate photon's k8s versioning (#521)
+* Post the telemetry data in a separate async thread (#528)
+* [VCDA-1382] Expose CSE server CLI commands to manage life-cycle of CSE UI plugin (#524)
+* Add flake8 ignore to manage\_plugin.py (#520)
+* Fix docstring consistency (#517)
+
+2.6.0.0b1
+---------
+
+* Update AUTHORS and Changelog (#516)
+* Fixing some small mistakes in CSE\_UI\_PLUGIN doc page (#515)
+* Update docs for CSE 2.6.0 beta (#513)
+* Adding 1.0.0.0b1 CSE UI plugin (#514)
+* Add back default 'config.yaml' to --config option (#512)
+* Change CLI context arguments to required options (#510)
+* Update OSL files (#511)
+* Update pyvcloud and vcd-cli library versions in requirements.txt (#509)
+* Sort \`cse template list\` command's output (#508)
+* Fix how Kubernetes version is fetched in get\_all\_clusters() (#507)
+* Fix indefinite wait on Guest Customization during convert-cluster operation (#506)
+* [VCDA-1362] Edit cse.service and cse.sh to consider config encryption (#505)
+* Add version info for semantic-version dependency (#503)
+* telemetry workflow for CSE operations (#501)
+* Disabling cse check install test. (#502)
+* [VCDA-1329,1343] Fix default number of consumer threads. Update help string of CSE CLI commands (#499)
+* [VCDA - 1340, 1342] Adding support for JWT for authorization in CSE (#496)
+* telemetry support to CSE operations (#494)
+* [VCDA-1313], [VCDA-1314] Implement cluster upgrade (#495)
+* [VCDA-1334] Adding support for VmSizing Policy based compute policy association/d… (#493)
+* [VCDA-1311], [VCDA-1312] Add functionality to display upgrade plans for a cluster (#492)
+* Remove password option from server CLI (#491)
+* Add vac url, collector id in config at CSE server startup (#490)
+* [VCDA-1293], [VCDA-1294] Add cluster/template metadata to track software versions (#487)
+* VAC client for CSE (#482)
+* config keys added to support telemetry (#488)
+* [VCDA-1274] Change num\_workers to be an optional parameter for PKS cluster creation (#486)
+* Allow 0 worker node cluster creation (#485)
+* Fix bad error message when required key is not provided (#484)
+* [VCDA-1269] Decouple PKS config from CSE config (#480)
+* Bump rubyzip from 1.2.2 to 2.0.0 in /docs (#476)
+* Implement kubectl drain for node delete operation (#472)
+* Skip decryptionon configuration file (#479)
+* [VCDA-1268] CSE support for encrypted configuration file (#474)
+
+2.5.1
+-----
+
+* Add 2.5.1 changelog (#470)
+* Update known issues and release notes for CSE 2.5.1 (#465)
+* Remove unnecessary reboot in template creation (#468)
+* Fix bug blocking new compute policy creation and server startup (#461)
+* Fix how server handles default data values (#459)
+* Fix duplicated heading in known issues (#464)
+* Update known issues (#462)
+* Update Known Issues for CSE 2.5 (#460)
+* Updating Changelog
+
+2.5.0
+-----
+
+* Some more edits in docs (#456)
+* Update docs for CSE 2.5.0 (#455)
+* Update documentation diagrams (#454)
+* Fix typos in CSE sample text (#453)
+* Check cloudapi vdcComputePolicy uri endpoint (#452)
+* [VCDA-1239] Bump up version requirement for pyvcloud and vcd-cli (#451)
+* [VCDA-1211] Modify VM compute policy update to be asynchronous (#443)
+* Log file information updated (#446)
+* Change default template name and revision values to sample values. (#449)
+* Remove documentation for Essential PKS (#450)
+* [VCDA-1203] Refactor \`get\_all\_cse\_policies()\` to return a generator  (#437)
+* Set the script file permissions to read,write for owner only (#448)
+* [VCDA-1138] Updated OSL file 2.5 GA release (#439)
+* [VCDA-1210] Fix cluster deployment for non admin cross org users with api v33.0 (#442)
+* [VCDA-1223] CSE SERVER MANAGEMENT - Left Side Navigation Changes (#441)
+* Navigation link added for Enterprise PKS Limitations (#445)
+* [VCDA-1213] Fixed GA Release Date For CSE 1.1.0 (#440)
+* [VCDA-1164] Introduced minor error codes in CSE responses, customization of error message on client (#436)
+* [VCDA-1175] Replace existing VMs compute policy with 'System Default' during forced ovdc compute policy removal (#433)
+* [VCDA-1195] Force template compute policy removal client to api version 32.0 (#435)
+* Add debug messages to server tests (#428)
+* [VCDA-1199] Add K8s\_version field to output of /api/cse/clusters and /api/cse/cluster/{name} (#434)
+* Update pyvcloud requirement to v20.1.1dev97 (#431)
+* [VCDA-1193] VM customization script runs check result errors (#427)
+
+2.5.0b1
+-------
+
+* Updating Changelog
+* Small typo fix in docs navigation panel
+* CSE 2.5.0beta1 docs (#422)
+* Add todo hack to fix how default values are handled (#424)
+* [VCDA-1155] Expose command to migrate clusters deployed by CSE 2.0.0 and below to current CSE. (#421)
+* Update pyvcloud and vcd-cli requirement for CSE 2.5.0 (#423)
+* Add template name and resize to cluster resize (#419)
+* [VCDA-1136] Implement ovdc compute policy operations (#414)
+* Update requirement pyvcloud >= 20.1.1.dev90 (#417)
+* Update template repo for system tests to vmware official template recipe repo. (#418)
+* Get the password from vapp instead of from template that causes backward incompatibility on template name (#416)
+* Updating sample generator to pull template recipe from vmware repo by default. (#415)
+* [VCDA-1095] Add persona support for node operation
+* B105: hardcoded\_password\_string: false positives and test environment password strings marked not vulnerable (#413)
+* [VCDA-1120] Making templates complaint with the compute policy (#410)
+* [VCDA-1108] Fix how \`ovdc list --pks-plans\` gets vCenter name (#408)
+* [VCDA-1066, VCDA-1068] Implement cse template install command (#407)
+* Fix ovdc list bug (#405)
+* [VCDA-1096] Add persona support for cluster info and config
+* Fix-Missing-Vcd-Client-Argument (#403)
+* [VCDA-1094] Add persona support for delete clusters
+* Refactor brokers and server data handling (#398)
+* [VCDA-1093] Add persona based tests for cluster create and list (#396)
+* [VCDA-1093] Add persona based tests for cluster create and list
+* Update pyvcloud dependency to 20.1.1.dev73 (#400)
+* [VCDA-1060, VCDA-1063, VCDA-1064] - Implemented cse template list command (#401)
+* Support for vdc compute policy to vdc and vms (#397)
+* [VCDA-1084, VCDA-1085] Introduction of template default over-ride rules  (#394)
+* [VCDA-1105] Fix task based CSE operation for vCD 9.8 (#391)
+* [VCDA-1113] Expose template revision as cli command options (#393)
+* Add cluster request handler and refactor brokers to use request dictionary (#392)
+* Add ovdc, system, template request handlers (#388)
+* [VCDA -1083,1089,1114] Replace local template section in config yaml with remote template cookbook workflow (#387)
+* [VCDA-1098] Add persona support for system test framework (#384)
+* Organize constants/bare strings into enums for data consistency (#386)
+* [VCDA-1087] Add functionality to create templates out of recipe and scripts downloaded from remote template cookbook (#385)
+* Fix bugs preventing proper Kubernetes app deployment on clusters (#382)
+* [VCDA-1062] Introduce remote template cookbook (#383)
+* Upgrade packages in template vApps to address vulnerabilities (#376)
+* Revert unintentionally checked in code. (#379)
+* [VCDA - 939, 959,1072, 1074] Refactor CSE's broker manager, processor, util files, client - server communication (#371)
+* VCDA-X: Fix tox.ini to exclude auto-generated PKS and UAAC client files from flake8 check (#375)
+* [VCDA-1050] Update Photon Docker version and system tests (#373)
+*  Update assert failures to print useful debugging info (#369)
+* Fix wrong command in enterprise PKS tenant workflow image
+* Fix doc error - Wrong command in doc for generating sample config files. (#374)
+* Change how passwords are generated and read for K8 cluster vms (#367)
+* Fixed stack trace displayed on console when executing vcd cse node info (#366)
+* Handle org and vdc arguments (#365)
+* [VCDA-1037] vcd cse node info command broken after enabling PKS (#350)
+* Documentation on OIDC and Pay-as-you-go models for ovdc (#362)
+* Include org option and set the default org if not provided in the command line (#364)
+* Handle vdc,org options for delete cluster (#357)
+* VCDA-999: Unable to get the correct cluster config as sys admin (#361)
+* Add DNS suffix bug info to known issues doc (#360)
+* Extend the query filter that extracts vApp list with vdc and org values from the query parameters (#354)
+* [VCDA-1007] Validate PKS connection at CSE startup (#337)
+* Filtering cluster list as org-admin also includes org-admin as owner check (#351)
+* Documentation updates to CSE 2.0 GA (#348)
+
+2.0.0
+-----
+
+* Update Changelog
+* Documentation updates to CSE2.0 (#346)
+* [VCDA-1016] Update CLI help strings (#336)
+* CSE 2.0 documentation updates (#345)
+* Fix Photon OS Kubernetes version (#344)
+* Documentation updates for CSE 2.0 (#340)
+* VCDA-1033: Proper message for missing network name error in cluster creation command (#343)
+* [VCDA-1029] Updated OSL file for GA release. (#341)
+* [VCDA-1036] Address CVE-2019-9636 (#339)
+* [VCDA-1032] System admin create cluster show appropriate error message (#338)
+* [VCDA-960] org admin support for pks crud operations (#335)
+* [VCDA-1005] Restrict access to clusters with failed network isolation (#334)
+* Avail plans to only sys admins and removing the org vdc in use to be passed as a param for vdc to resize clusters. (#332)
+* [VCDA-1006] Update org source to request spec in create\_cluster\_thread (#330)
+* [VCDA-974] List clusters needs to have org column (#331)
+* VCDA-974-list-clusters-needs-to-have-org-column (#315)
+* VCDA-897: Implementation of PKS plans command in CSE (#329)
+* [VCDA-966] Remove vcd user id from console output and exceptions (#304)
+* [Doc] Fix broken links in Release Notes (#328)
+* [VCDA-924] Upgrade Photon OS 2.0 from kubernetes v1.10.11 to v1.12.7 (#290)
+* [VCDA-989] Fix inter-operability of CSE with NSX-T 2.4 (#326)
+* [Doc] Added vCD-Enterprise PKS vCenter connection as a known issue and the workaround. (#327)
+* [Doc] Fixing web links in Enterprise PKS enablement (#324)
+* [Doc] Fix weblinks in Enterprise PKS enablement (#323)
+* [Doc] Cosmetic edits on Enterprise PKS enablement
+* [Doc] Fixing web links in Enterprise PKS enablement (#321)
+* [VCDA-990] Update RBAC doc page with PKS operation rights. (#313)
+* [Doc] Fixing comptibility matrix of Enterprise PKS enablement (#320)
+* Documentation fix (#319)
+* Documentation for Enterprise PKS enablement (#318)
+* Update Changelog with 2.0.0.0b1
+
+2.0.0b1
+-------
+
+* Update Changelog and AUTHOR
+* Update legal documents for CSE 2.0 Beta (#317)
+* Include compute-profile-name as part of cluster information (#316)
+* exclude admin only cluster information for tenant users (#312)
+* [VCDA-981] Updated logic to determine fallback broker to preserve CSE behavior on upgrade (#310)
+* Update ubuntu 16.04 description and system test template (#305)
+* Fixing disable ovdc operation. (#306)
+* [VCDA-975] Beautify CLI documentation (#296)
+* [VCDA-976] Refactor pks.yaml to get rid of optional orgs section from sample. (#303)
+* [VCDA-977] Redesign create-cluster, enablek8s, list-clusters; Fix broken exception handling from new pks bits. (#301)
+* [VCDA-895] Isolate PKS cluster via NSX-T DFW rules (#289)
+* Add debug log (#302)
+* Fix broken ovdc-enable command when enabling for unqualified ovdc (#299)
+* Async keyword renamed; unsupported long data type merged to int type (#300)
+* Missed this file as part of my previous submit (update pks bits) (#298)
+* Update PKS client package with new version of PKS (#297)
+* [VCDA-955] Handle admin use cases when retaining vcd user context in pks (#288)
+* [VCDA-965] List clusters as sysadmin fails if org name is not passed
+* [VCDA-949, VCDA-963, VCDA-980] Refactor pks yaml to introduce NSXT params (#292)
+* Fix bugs (#291)
+* VCDA-876: Add rbac/authorization aspect to PKS broker (#287)
+* org-name optional argument provided;use org-in-use if no org-name provided (#285)
+* VCDA-968 - 'cse run' fails when 'pks\_config' is set to an empty 'pks.… (#286)
+* [VCDA-903] Upgrade kubernetes templates from v1.10.11 to v1.13.5 (#276)
+* [VCDA-906] Redact sensitive information in CSE logs (#283)
+* VCDA-937: Enhance Cluster config command to accomodate PKS config command. (#280)
+* VCDA-933: Enhance create cluster command (#278)
+* [VCDA-931] Implementation of ovdc list command (#281)
+* [VCDA-869] Enhance Cluster List - Optimization  (#282)
+* [VCDA-930] Create-compute-profile-while-enabling-ovdc
+* vCDA-927: Resize cluster command; Exception handling of PksBroker; Refactoring (#275)
+* Option to include ovdc name as part of cluster list (#279)
+* [VCDA-877] Vcd-User-Context-In-Pks-Cluster-Management (#269)
+* Update Docker and Kubernetes version descriptions (#254)
+* VCDA-934: Enhance Cluster Info and Delete commands to take optional param 'vdc' (#272)
+* Extract pvdc-id correctly among different vcd-api versions (#271)
+* [VCDA-946] Updated logic to check for presence of PKS/CSE right in vCD/System org. (#267)
+* [VCDA-930] Set default org name for ovdc metadata operations for k8s (#265)
+* [VCDA-896] Beautify vCD setup/config file errors during installation (#256)
+* VCDA-916: Broker manager to handle CRUD operations on vCD and PKS (#262)
+* VCDA-913: Revisit config validation checks to relax checks for additional keys (#263)
+* VCDA-921: Add new methods to ovdc\_cache and pks\_cache; some refactoring. (#260)
+* Fix enablek8s failure on VCD-9.1 (#259)
+* [VCDA-893] Remove '--ext-install' option from CSE installation (#251)
+* VCDA-917: Add another method in pks\_cache to get PKS information per org (#255)
+* [VCDA-872] Replace pks-cache-stub with actual implementation (#249)
+* VCDA-902 : Implementation of CPI id, developer-mode, removal of rp-paths (#252)
+* Add documentation for 'enforce\_authorization' and config file update procedure (#244)
+* Fix bad sample values (#245)
+* [VCDA-794] Add client tests (#220)
+* [VCDA-875] Broker instance selection based on container-provider (#233)
+* [VCDA-873] Hook up ovdcCache to PKS broker (#250)
+* Added documentation for sharing catalog with non org admin users. (#235)
+* [VCDA-879] Add CRUD methods on PKS compute profiles (#234)
+* VCDA-867: PKS Cache Implementation for Pvdc and PKS information from configs (#221)
+* Fix formatting in release notes (#239)
+
+1.2.7
+-----
+
+* Add release notes for 1.2.7 (#238)
+* Fix CVE-2019-5736 (runc vulnerability) for Ubuntu and Photon vApp templates (#237)
+* Fix 'cse sample' bug if user had click<7.0 (#236)
+* Fix cluster config command and node rollback (#227)
+* [VCDA-854] Enable/Disable ovdc command implementation (#216)
+* Fixing bug with \`cse check\` commands and get\_validated\_config (#226)
+* VCD-878: New PKS Bits (#223)
+* VCDA-849: Update cse sample and check commands to accomodate new pks config (#203)
+* Updated Authors and Changelog
+
+1.2.6
+-----
+
+* [VCDA-864] Add documentation for RBAC, update release notes. (#218)
+* Update pyvcloud>=20.0.3, vcd-cli>=21.0.2 (#217)
+* Fix to make sure the logger directories are created before trying to write into logs. (#214)
+* Fix rights registration bug (#213)
+* Fix minor spelling and spacing issues (#199)
+* Fixed new validation error after updating flake8 to v3.7.2 (#212)
+* [VCDA-865] Remove vCD AMQP configuration and Enhance Extension Checks (#206)
+* [VCDA-843] Update CSE install method to add rights for CSE/PKS authorization (#211)
+* [VCDA-871] Implement toggle switch for CSE authorization (#210)
+* [VCDA-870] Refactor CSE files to not pass around server running configuration. (#208)
+* [VCDA-859] PKS Broker implementation (#200)
+* Flake8 errors fixed (#205)
+* Update system test framework (#184)
+* [VCDA-856] Implement authorization framework for CSE (#201)
+* [VCDA 853] Construct ovdc metada and persist in Vcd (#202)
+* VCDA-858: PKS and Uaac Client; Sample code to establish connection with PKS (#194)
+* [VCDA-852] Get ovdc resource pool (#197)
+* Client side changes - Task update with stacktrace (#192)
+* [VCDA-846] Update release notes with CSE 1.2.x incompatibility with vCD 8.20 (#193)
+* [VCDA-820] Improve documentation on NFS persistent volumes (#188)
+* [VCDA-835] Add VM customization tests to installation test suite (#180)
+* [VCDA-815] Cleaned up and enhanced CSE server installation docs (#183)
+* [VCDA-825] client side exception handling (#179)
+* [VCDA-834] Implement flag to disable rollback for troubleshooting (#178)
+* [VCDA-813] Implement centralized logging system (#174)
+* [VCDA-814] Restructured CSE documentation to improve navigation (#177)
+* [VCDA-824] server side exception handling (#175)
+* [VCDA-817] Implement rollback for node creation failure
+* [VCDA-833] Delete faulty/unregistered node from cse
+* [VCDA-792] Implement CSE server installation tests (#168)
+* [VCDA-798] Create cluster server exception enhancement (#167)
+* [VCDA-816] Implement POC for rollback
+
+1.2.5
+-----
+
+* [VCDA-828] K8s vulnerability patching
+
+1.2.4
+-----
+
+* Update Release Notes for 1.2.4 (#165)
+* Updated ChangeLog for 1.2.4 (#164)
+* [VCDA-822] Updated changelog (#162)
+* get\_vsphere() requires a VApp refresh, or cluster creation fails (#163)
+
+1.2.3
+-----
+
+* [VCDA-806] Full list of required rights for limited account for CSE (#152)
+* [VCDA-789] Refactor CSE Installation - template creation (#148)
+* [VCDA-789] Refactor CSE Installation - AMQP, registration, catalog (#141)
+* Enable NFS support for Photon OS template based CSE clusters (#154)
+* [VCDA-790] Implement basic framework that will be used to run system tests related to installation of cse server. (#150)
+* Add os import back to utils.py (#155)
+* Refactor config validation and cse check (#136)
+* Fix static data file installation (#146)
+* [VCDA-809] Exception Handling Implementation For Create Cluster
+* [VCDA-809] Exception Handling Implementation For Create Cluster
+* Update CSE main documentation (#140)
+* ChangeLog after push to pypi (#143)
+
+1.2.2
+-----
+
+* VCDA 799 vcd cse help commands should not require login to display help (#137)
+* VCDA-739: Fix SSL support for vCenter 6.7 (#135)
+
+1.2.1
+-----
+
+* Changing requirements of Pyvcloud to >= 20.0.1 (#138)
+* Update CSE main documentation (#132)
+* Improve how get\_data\_file() searches for data files (#123)
+* Update docstrings for commands (#133)
+* [VCDA-695] Returns the server status code when there is no server response content
+* Add \`status\` display for \`vcd cse cluster list\` (#117)
+* switched from click.secho to click.echo and from the %s operator to f-strings
+* Updated help text during cluster creation
+* Create AMQP exchange even if settings are the same
+* Refactor sample config responsibilities
+* [VCD-743] Documentation fix on incorrect command usage example
+* Fix paths in data section of setup.cfg for windows
+
+1.2.0
+-----
+
+* Requirement change of pyvcloud and vcd-cli versions & known-issue doc update (#121)
+* Fix AMQP settings display
+* Upload License files for CSE (#116)
+* [VCDA-745] Add --ssh-key option for cse install (#114)
+* [Doc] Privileges required for VCD service account & CSE-VCD compatibility matrix (#109)
+* Skip AMQP configuration if current is same as config file (#110)
+* [VCDA-755] Ensure templates catalog is always shared (#108)
+* Comment out problematic lines in ubuntu customization script (#107)
+* Fix for loop to iterate over a list (#106)
+* Update ova file hashing to use SHA256 instead of SHA1 (#105)
+* [VCDA-710] Replace yaml.load() with yaml.safe\_load() (#102)
+* Restrict permissions when setting up iptables-ports service (#103)
+* VCDA-611: Documentation on Known issues (#104)
+* [VCDA-566] Force users to provide vCenter service account (#91)
+
+1.1.0
+-----
+
+* VCDA-558: NFS PV documentation (#87)
+* VCDA-564 Restrict config file permissions (#85)
+* VCDA-608 & VCDA-609: Enhance cluster and node commands to support NFS (#81)
+* VCDA-557 & VCDA-607: Basic NFS PV support (#78)
+* sha1 fixed
+* updated photon
+* initial upgrade to 1.10
+* initial upgrade to 1.10
+
+1.0.0
+-----
+
+* 1.0.0-GA (#76)
+* Fix template customization (#75)
+* VCDA-356: Add code of conduct and pull request template
+
+0.4.2
+-----
+
+* Vesion 0.4.2 (#70)
+* doc
+* updated docs
+
+0.4.1
+-----
+
+* template preparation fix and cluster info (#69)
+* updated docs
+
+0.4.0
+-----
+
+* Fix travis CI
+* Fix travis CI
+* Fix travis CI
+* Fix travis CI
+* Fix travis CI
+* Fix travis CI
+* Updated travis CI info (#66)
+* VCDA-415: validate settings before creating template (#65)
+* docs
+* test scripts
+* docs
+* fixed issue joining cluster
+* update scripts
+* fixed error in system command
+* fixed error in system command
+* scripts
+* updated doc
+* updated doc
+* updated doc
+* updated doc
+* VCDA-354: Support multiple vCenters
+* #63 vCD version compatibility
+* doc
+* updated docs
+* doc
+* doc
+* doc
+* Updated release notes
+
+0.3.0
+-----
+
+* added node and system commands
+* added CLA
+* updated doc for 0.3.0
+* node create/delete/list
+* create/delete node(s)
+* Markdown cosmetic/doc fixes
+* changelog
+
+0.2.0
+-----
+
+* docs
+* readme
+* fixed run issue
+* changed validation order
+* download
+* download
+* setup.cfg
+* wip
+* scripts
+* doc
+* doc
+* Update \_config.yml
+* rearchitect
+* refactor
+* refactoring
+* refactored config
+* cleanup
+* pv
+* wip
+* delete pvc
+* add PV as ID
+* fixed PV provider files location
+* customization directory
+* docs
+* docs
+* ubuntu template
+* path
+* wip
+* setup.cfg
+* pv
+* removed comments
+* pep8
+* using additional disk
+* debug
+* template
+* template
+* storage profile
+* network during create, ubuntu ova
+* license
+* license
+* license
+* readme
+* readme
+
+0.1.2
+-----
+
+* docs
+* ubuntu template
+* ubuntu
+* config
+* pv
+* optional-pv
+* pv
+* pv
+* fixed-ver
+* version
+* pv
+* pv-broker
+* wkep
+* PV
+* reqs
+* docs
+* docs
+* ip allocation mode pool; validate broker config
+* allocation\_mode
+
+0.1.1
+-----
+
+* 0.1.1
+* docs
+* vsphere
+* wip
+
+0.1.0
+-----
+
+* weaver
+* weaver
+* weave
+* flannel-0.9.0
+* flannel-0.9.0
+* flannel-0.8.0
+* root
+* vapp-net
+* encoding
+* encoding
+* encoding
+* catalog-item
+* catalog-item
+* catalog-item
+* wait-for-item-ready
+* refactor
+* automated-template-creation
+* new-config
+* wip
+* wip
+* Add Gitter badge
+* changes
+
+0.0.9
+-----
+
+* tasks
+* docs
+* docs
+* docs
+* docs
+* mem/cpu
+* flake8
+* node customization
+* create task
+* Set theme jekyll-theme-minimal
+* docs
+
+0.0.8
+-----
+
+* deps
+
+0.0.7
+-----
+
+* wip
+* python3 support
+* Closes #29
+* removed sample config file
+* misc
+
+0.0.6
+-----
+
+* test
+
+0.0.5
+-----
+
+* deps
+* flake8
+* readme
+
+0.0.4
+-----
+
+* dependencies
+
+0.0.2
+-----
+
+* 0.0.2
+* template ports; cluster name validation
+* conf
+* doc
+* provisioning
+* templates
+* .ds
+* vsphere
+* flake8
+* added ability to fetch yaml swagger file
+* flake8
+* cluster-crud
+* default-broker
+* migrated to click and new pyvcloud
+* merged
+* moved-to-click
+* pks
+* removed templates
+* flake8 passing
+* removed .DS\_Store
+* full working version, uses pkg\_resources instead of data files
+* moved up swagger for packaging
+* follows flake8 tests
+* fixed issues with datafiles
+* wip
+* templates
+* removed scripts
+* removed deps
+* removed deps
+* removed deps
+* temp fix
+* fixed utils
+* fixes swagger json method
+* follows flake8 tests
+* fixed errors in the cse
+* removed pyc files
+* gitignore
+* allow client to fetch swagger files, packaged swagger with cse
+* flake8
+* doc
+* doc
+* gitignore
+* doc
+* moved-dir-up
+* new-sdk-client
+* new-sdk-client
+* new-sdk-client
+* new-sdk-client
+* new-sdk-client
+* deleted DS Stores
+* update
+* delete all kov-py files
+* created swagger file and deleted all kov-py stuff (swagger code-gen)
+* deps
+* wip
+* new-impl
+* fixed import error
+* deps
+* req
+* readme
+* kov-int
+* doc
+* adapter
+* vc-adapter
+* renamed the folder to pykov and added setup.cfg to get it to work with naming the package pykov
+* created the swagger-codgen generated python-sdk's
+* created the swagger-codgen generated python-sdk's
+* ci
+* wip
+* delete
+* Packer scripts for kub master and worker template creation
+* add-n-list
+* basic-reply
+* docs
+* wip
+* wip
+* wip
+* wip
+* wip
+* wip
+* wip
+* req
+* readme
+* init
+* pika
+* Add DCO information
+* Add DCO information
+* example
+* init
+* wip
+* wip
+* dir-renamed
+* dir-renamed
+* config
+* license
+* license
+* license
+* wip
+* Adding .gitignore template
+* Add CONTRIBUTING template
+* Add README template

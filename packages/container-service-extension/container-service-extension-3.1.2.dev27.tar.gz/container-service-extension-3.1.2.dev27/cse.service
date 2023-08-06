@@ -1,0 +1,14 @@
+[Unit]
+Description=Container Service Extension for VMware vCloud Director
+Wants=network-online.target,rabbitmq-server.service
+After=network-online.target,rabbitmq-server.service
+
+[Service]
+ExecStart=/root/cse.sh
+User=root
+WorkingDirectory=/root
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=default.target
