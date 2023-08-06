@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "django-codemod"
+version = "1.8.0"
+description = "A command line tool to automatically fix Django deprecations."
+authors = ["Bruno Alla <alla.brunoo@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["django", "codemod", "libCST"]
+repository = "https://github.com/browniebroke/django-codemod"
+documentation = "https://django-codemod.readthedocs.io"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+packages = [
+    { include = "django_codemod" },
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/browniebroke/django-codemod/issues"
+"Changelog" = "https://django-codemod.readthedocs.io/en/stable/changelog.html"
+
+[tool.poetry.scripts]
+djcodemod = "django_codemod.cli:djcodemod"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "<9"
+libcst = "==0.4.0"
+pathspec = ">=0.6,<1"
+rich = "<12"
+
+# Docs deps
+Sphinx = {version = "^4.0.0", optional = true}
+sphinx-rtd-theme = {version = "^1.0.0", optional = true}
+myst-parser = {version = "^0.16.0", optional = true}
+
+[tool.poetry.extras]
+docs = [
+    "myst-parser",
+    "sphinx",
+    "sphinx-rtd-theme",
+]
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.1.2"
+black = "^21.11b1"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.3.1"
+tox = "^3.20.1"
+parameterized = "^0.8.0"
+flake8 = "^4.0.0"
+pyupgrade = "^2.29"
+isort = "^5.10"
+mypy = "^0.931"
+
+[tool.semantic_release]
+branch = "main"
+version_toml = "pyproject.toml:tool.poetry.version"
+version_variable = "django_codemod/__init__.py:__version__"
+build_command = "pip install poetry && poetry build"
+
+[tool.pytest.ini_options]
+addopts = "-v -Wdefault --cov=django_codemod --cov-report=term-missing:skip-covered"
+
+[tool.isort]
+profile = "black"
+known_first_party = ["django_codemod", "tests"]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
