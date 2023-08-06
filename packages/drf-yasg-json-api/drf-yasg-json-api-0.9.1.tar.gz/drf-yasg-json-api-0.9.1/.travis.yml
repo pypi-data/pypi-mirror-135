@@ -1,0 +1,49 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+
+dist: xenial
+
+cache: pip
+
+jobs:
+  fast_finish: true
+  include:
+    - python: "3.8"
+      env: TOXENV=lint
+      after_success: skip
+    - stage: publish
+      python: "3.8"
+      before_script: skip
+      script: skip
+      after_success: echo "Success"
+      deploy:
+        provider: pypi
+        user: __token__
+        password:
+          secure: DG/ymwPeujgYJKrf2j9iY7A2J1ZFnjjE2PAtMv858flnh7RWB4j2iCtiP2y7ll5izrz5qkWr2zE1e6XZ5bfXT/VTgrH+cD9YgJ8yvyjj232CiUxXLg7nMZohj3y+EM567UDru5+nH/KmFLpLbYqmqE668TpDgosQ0DOnenb3cU2DKstXW8m+sU2rEh+Ig2Y8oCt2+r9+bCYJ+0kyWMzIu7CCyTUWbsEiJ4X90z8vcX6xKLiflTZAinYhcmtRIswBhsS3k5m8OYVwn9X2lHxZm9k9K1pmJiWXk+/uT6tnfnSucX9dljdPDdu4ypmhougfm1qgHK9SOMvpirLGdJsn7+yWpgSjfB4b0BBHRwfbJ4Je3QyjsLy+K1yqEDiJw3cjAc7oEXELr6UUimF2nhHF4OiHa/Sm+qJ8wWFfLyWc7R6VxvwPB7apLaaLHMlu4Q1gOT3jy58dtppcy3oQO2tMMoOzZ0eow7ID2Lk1smfKvaXDl/xC5uYOZ1J0TpBlnuX3K0o9uluHPsxwm2dYM9jigKUusQ8FBoTvx4O2PS5eZbnh1SezJEZbPgPJEsYS17W+2bBVjcLZxn3jHXeVbbRkZpeFcZlNM0VAKnk10/cKRpfVgnUjEcWtxrB0sv+2omhpYjkh7TaqRoZqn+GOMrsNW+1m22rFSnGejY8Sl18XkP4=
+        on:
+          tags: true
+        distributions: "sdist bdist_wheel"
+
+install:
+  - pip install -r requirements/ci.txt
+
+before_script:
+  - coverage erase || true
+
+script:
+  - tox
+
+after_success:
+  - coverage combine || true
+  - coverage report
+  - codecov
+
+stages:
+  - test
+  - name: publish
+    if: tag IS present
