@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    {% if pdf_title is not none %}
+        <title>{{pdf_title}}</title>
+    {%endif %}
+    <link href="static/style.css" rel="stylesheet">
+    
+<style>
+
+
+@page {
+  margin: 2cm;
+  font-family: sans-serif;
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+  }
+}
+
+@page :first {
+  @bottom-right {
+    content: '';
+  }
+}
+a::after {
+  color: #000000;
+  content: " (page " target-counter(attr(href), page) ")";
+}
+a:link,
+a:visited { color: #000000; text-decoration: none; }
+
+a.missing:link,
+a.missing:visited{ color: #000000; text-decoration: none; }
+
+.page-wrapper {
+  margin: 0;
+  padding:0;
+}
+
+code {
+  font-size: 11pt;
+}
+
+img {
+  box-sizing: border-box;
+  height: 6cm;
+  object-fit: contain;
+  padding: 0;
+  width: 8cm;
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="wrapper">
+        {{ project_header | safe }}
+    </div>
+</header>
+{{ content | safe }}
+<footer class="site-footer" style="page-break-before: always">
+    <div class="wrapper">
+        {{ project_footer | safe }}
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+</body>
+</html>
