@@ -1,0 +1,95 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "types" : {
+      "nullable_string" : {
+        "oneOf" : [
+          {
+            "type" : "null"
+          },
+          {
+            "type" : "string"
+          }
+        ]
+      }
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "string",
+      "description" : "Entity uuid v4 identifier. This identifier is unique"
+    },
+    "type" : {
+      "type" : "string",
+      "description" : "Device type, related to device connector"
+    },
+    "identifier" : {
+      "type" : "string",
+      "description" : "Unique human readable identifier used across services"
+    },
+    "key" : {
+      "type" : "string",
+      "description" : "Unique pub/sub identifier per each entity"
+    },
+    "name" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "comment" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "enabled" : {
+      "type" : "boolean",
+      "default" : false
+    },
+    "hardware_manufacturer" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "hardware_model" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "hardware_version" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "hardware_mac_address" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "firmware_manufacturer" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "firmware_version" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "default" : null
+    },
+    "connector" : {
+      "type" : "string",
+      "description" : "Entity connector uuid v4 identifier"
+    },
+    "owner" : {
+      "$ref" : "#/definitions/types/nullable_string",
+      "description" : "Entity owner uuid v4 identifier"
+    }
+  },
+  "required" : [
+    "id",
+    "identifier",
+    "key",
+    "name",
+    "comment",
+    "enabled",
+    "hardware_manufacturer",
+    "hardware_model",
+    "hardware_version",
+    "hardware_mac_address",
+    "firmware_manufacturer",
+    "firmware_version",
+    "connector"
+  ]
+}
