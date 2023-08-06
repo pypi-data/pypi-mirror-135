@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automation App</title>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://bernii.github.io/gauge.js/dist/gauge.min.js" crossorigin="anonymous"></script>
+    <script>
+
+        let items = null;
+        let metadata = {};
+        let item_index = -1;
+
+        function get_next_item() {
+            if (item_index === metadata['num_for_review']) {
+                document.body.removeChild(document.getElementById("data_table"));
+                return;
+            }
+
+            item_index += 1;
+            let item = {
+                target_value: null,
+                data: {}
+            };
+
+            const columns = items.columns;
+            for (let i = 0; i < columns.length; i++) {
+                if (columns[i] === items.target)
+                    item.target_value = items.data[item_index][i];
+                else if (!columns[i].startsWith('yhat'))
+                    item.data[columns[i]] = items.data[item_index][i];
+            }
+
+            const for_review_summary = document.getElementById("for_review_summary");
+            for_review_summary.innerText = item_index + ' out of ' + metadata['num_for_review'] + ' manually reviewed.';
+            const total_summary = document.getElementById("total_summary");
+            total_summary.innerText = (metadata['num_automated'] + item_index) + ' out of ' + metadata['total_items'] + ' items done.';
+
+            return item;
+        }
+
+        function on_file_upload(element) {
+
+            const status_element = document.getElementById("upload_file_status");
+            status_element.innerText = 'Processing... (This can take a few minutes)';
+
+            const formData = new FormData();
+
+            formData.append('file', element.files[0]);
+
+            fetch('upload_file?api_key={{ api_key }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('upload_file Success:', result);
+                status_element.innerText = "";
+                items = result.items_for_review;
+                metadata['file_id'] = result.file_id;
+                metadata['total_items'] = result.total_items;
+                metadata['num_automated'] = result.num_automated;
+                metadata['num_for_review'] = result.num_for_review;
+                metadata['accuracy'] = result.accuracy;
+                metadata['num_automated_percentage'] = result.num_automated_percentage;
+                metadata['num_for_review_percentage'] = result.num_for_review_percentage;
+
+                draw_guages('gauge_meter_accuracy', result.accuracy); draw_guages('gauge_meter_automation', result.num_automated_percentage)
+
+                const automation_summary = document.getElementById("automation_summary");
+                automation_summary.innerText = result.num_automated + ' out of ' + result.total_items + ' items automated.';
+
+                create_table(get_next_item());
+
+                const download_element = document.getElementById("download_file");
+                download_element.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                status_element.innerText = 'Error: ' + error;
+            });
+        }
+
+        function create_table(item) {
+            const body = document.body, table_element = document.createElement('table');
+            table_element.id = "data_table";
+            table_element.style.border = '1px solid black';
+
+            const select_element = document.createElement("select");
+            for (let i = 0; i < items.labels.length; i++) {
+                const option = document.createElement("option");
+                option.value = items.labels[i];
+                option.text = items.labels[i];
+                select_element.appendChild(option);
+            }
+            select_element.value = item.target_value;
+            select_element.onchange = () => on_answer_selected(select_element);
+            select_element.onfocus = () => select_element.selectedIndex = -1;
+
+            let tr = table_element.insertRow();
+            let td = tr.insertCell();
+            td.appendChild(document.createTextNode(items.target));
+            td = tr.insertCell();
+            td.appendChild(select_element);
+
+            for (const [key, value] of Object.entries(item.data)) {
+                tr = table_element.insertRow();
+                td = tr.insertCell();
+                td.appendChild(document.createTextNode(key));
+                td = tr.insertCell();
+                td.appendChild(document.createTextNode(value));
+            }
+            body.appendChild(table_element);
+        }
+
+        function on_answer_selected(element) {
+            element.disabled = true;
+            const download_element = document.getElementById("download_file");
+            download_element.disabled = true;
+
+            // Send request to update the server
+            fetch('update_file_prediction?api_key={{ api_key }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'file_id': metadata['file_id'],
+                    'row_id': item_index,
+                    'answer': element.value
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('update_file_prediction Success:', result);
+
+                element.disabled = false;
+                download_element.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                element.disabled = false;
+            });
+
+            // get next item
+            const item = get_next_item();
+
+            // Update the table
+            element.value = item.target_value;
+            const table_element = document.getElementById("data_table");
+            const rows = table_element.children[0].children;
+            let row_index = 1;
+            for (const [key, value] of Object.entries(item.data)) {
+                rows[row_index].children[1].innerText = value;
+                row_index += 1;
+            }
+        }
+
+        function draw_guages(id, percentage) {
+            var opts = {
+                angle: 0.27, // The span of the gauge arc
+                lineWidth: 0.13, // The line thickness
+                radiusScale: 1, // Relative radius
+                pointer: {
+                    length: 0.6, // // Relative to gauge radius
+                    strokeWidth: 0.035, // The thickness
+                    color: '#000000' // Fill color
+                },
+                limitMax: false,     // If false, max value increases automatically if value > maxValue
+                limitMin: false,     // If true, the min value of the gauge will be fixed
+                colorStart: '#286CA0',   // Colors
+                colorStop: '#286CA0',    // just experiment with them
+                strokeColor: '#EEEEEE',  // to see which ones work best for you
+                generateGradient: true,
+                highDpiSupport: true,     // High resolution support
+
+            };
+            var target = document.getElementById(id); // your canvas element
+            var gauge = new Donut(target).setOptions(opts); // create sexy gauge!
+            gauge.maxValue = 100; // set max gauge value
+            gauge.setMinValue(0);  // Prefer setter over gauge.minValue = 0
+            gauge.animationSpeed = 32; // set animation speed (32 is default value)
+            gauge.set(percentage); // set actual value
+
+            const text_element = document.getElementById(id + "_text");
+            text_element.innerText = Math.round(percentage) + '%';
+        }
+
+    </script>
+</head>
+<input type="file" id="upload_file" accept=".csv" onchange="on_file_upload(this)">
+<div id="upload_file_status"></div>
+<button id="download_file" disabled onclick="location.href='download_file.csv?api_key={{ api_key }}&file_id=' + metadata['file_id'];">Download File</button>
+<br/>
+<div style="display: flex;">
+    <div style="display: flex; justify-content: center; width: 300px; height: 150px;">
+        <canvas id="gauge_meter_accuracy" style="position: absolute; width: 300px; height: 150px;"></canvas>
+        <div id="gauge_meter_accuracy_text" style="position: relative; font-size: 37px; left: 40px; top: 130px; transform: translate(-50%, -50%);"></div>
+    </div>
+    <div style="display: flex; justify-content: center; width: 300px; height: 150px;">
+        <canvas id="gauge_meter_automation" style="position: absolute; width: 300px; height: 150px;"></canvas>
+        <div id="gauge_meter_automation_text" style="position: relative; font-size: 37px; left: 40px; top: 130px; transform: translate(-50%, -50%);"></div>
+    </div>
+</div>
+
+<div id="automation_summary"></div>
+<div id="for_review_summary"></div>
+<div id="total_summary"></div>
+
+</body>
+</html>

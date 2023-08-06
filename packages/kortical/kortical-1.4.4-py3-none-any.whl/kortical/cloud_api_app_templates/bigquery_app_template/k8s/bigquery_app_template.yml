@@ -1,0 +1,52 @@
+kind: Service
+metadata:
+  name: bigquery-app-template-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: bigquery-app-template
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: webapp
+---
+kind: StatefulSet
+metadata:
+  name: bigquery-app-template
+  labels:
+    app: bigquery-app-template
+spec:
+  selector:
+    matchLabels:
+      app: bigquery-app-template
+  securityContext:
+    runAsUser: kortical
+  replicas: 1
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: bigquery-app-template
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: bigquery-app-template
+          image: eu.gcr.io/cloud_container_repo_placeholder/bigquery_app_template:v0
+          imagePullPolicy: Always
+          command: [ "run-cmd.sh" ]
+          args: [ "uwsgi",
+                  "--lazy-apps",
+                  "--master",
+                  "--http", ":5000",
+                  "--http-keepalive",
+                  "--http-timeout", "1800000",
+                  "--die-on-term",
+                  "--buffer-size", "32768",
+                  "--reload-on-rss", "4096",
+                  "--mount", "/=module_placeholder.main:app",
+                  "--wsgi-disable-file-wrapper" ]
+          ports:
+            - containerPort: 5000
+              name: webapp
+              protocol: TCP
