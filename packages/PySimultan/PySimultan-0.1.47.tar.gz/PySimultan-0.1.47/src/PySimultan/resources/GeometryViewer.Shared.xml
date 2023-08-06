@@ -1,0 +1,588 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GeometryViewer.Shared</name>
+    </assembly>
+    <members>
+        <member name="T:GeometryViewer.Controls.ClickRouteScrollViewer">
+            <summary>
+            Scrollviewer which routes all mouse events to the element directly below
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnPreviewMouseDown(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnPreviewMouseUp(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnPreviewMouseMove(System.Windows.Input.MouseEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnMouseDown(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnMouseUp(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.ClickRouteScrollViewer.OnMouseMove(System.Windows.Input.MouseEventArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GeometryViewer.Controls.ColorButton">
+            <summary>
+            Provides a button to display (and change) DerivedColor instances.
+            Double click opens a color selection dialog
+            </summary>
+            <summary>
+            ColorButton
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorButton.ManagedColor">
+            <summary>
+            Gets or sets the color managed by this button
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorButton.ManagedColorProperty">
+            <summary>
+            Gets or sets the color managed by this button
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorButton.PopupStaysOpen">
+            <summary>
+            Sets if the the color button should set the StaysOpen of a parent popup to true while the dialog is open.
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorButton.PopupStaysOpenProperty">
+            <summary>
+            Sets if the the color button should set the StaysOpen of a parent popup to true while the dialog is open.
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorButton.IsEditable">
+            <summary>
+            Gets or sets whether this button can edit the color
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorButton.IsEditableProperty">
+            <summary>
+            Gets or sets whether this button can edit the color
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorButton.#ctor">
+            <summary>
+            Initializes a new instance of the ColorButton class
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorButton.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Controls.IColorPickerButtonItem">
+            <summary>
+            Interface for ViewModels which are editable by a ColorPickerButton
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.IColorPickerButtonItem.Color">
+            <summary>
+            The current color of this instance
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.IColorPickerButtonItem.ChangeColor(GeometryViewer.Model.DerivedColor)">
+            <summary>
+            Returns an undo item for changing the color of this instance
+            </summary>
+            <param name="color">The new color</param>
+            <returns>A undo item that sets the color of this instance</returns>
+        </member>
+        <member name="T:GeometryViewer.Controls.ColorPickerButton">
+            <summary>
+            A button which shows a DerivedColor and allows to change it.
+            The button supports DerivedColors or IColorPickerButtonItem. If Values is set, this values are used. Otherwise Value is used.
+            </summary>
+            <summary>
+            ColorPickerButton
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.ValuesProperty">
+            <summary>
+            A list of either DerivedColor or IColorPickerButtonItem instances
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.Values">
+            <summary>
+            A list of either DerivedColor or IColorPickerButtonItem instances
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.ValueProperty">
+            <summary>
+            A single DerivedColor or IColorPickerButtonItem instance. Only used when Values is null
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.Value">
+            <summary>
+            A single DerivedColor or IColorPickerButtonItem instance. Only used when Values is null
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.IsReadOnlyProperty">
+            <summary>
+            When set to True, the Button doesn't allow changes by the user
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.IsReadOnly">
+            <summary>
+            When set to True, the Button doesn't allow changes by the user
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.UndoRedoManagerProperty">
+            <summary>
+            The undo manager for this button
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.UndoRedoManager">
+            <summary>
+            The undo manager for this button
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.HasSameValuePropertyKey">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.HasSameValueProperty">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.HasSameValue">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.DisplayColorPropertyKey">
+            <summary>
+            The color which should be displayed on the button
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ColorPickerButton.DisplayColorProperty">
+            <summary>
+            The color which should be displayed on the button
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ColorPickerButton.DisplayColor">
+            <summary>
+            The color which should be displayed on the button
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorPickerButton.#ctor">
+            <summary>
+            Initializes a new instance of the ColorPickerButton class
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorPickerButton.OnApplyTemplate">
+            <inheritdoc />
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorPickerButton.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Controls.ColorToSolidColorBrushValueConverter">
+            <summary>
+            Converts a Color into a SolidColorBrush
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorToSolidColorBrushValueConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:GeometryViewer.Controls.ColorToSolidColorBrushValueConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:GeometryViewer.Controls.DoubleMinusConverter">
+            <summary>
+            Converter that subtracts a constant from the value (constant is given as converter parameter)
+            Supports only forward conversions
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.DoubleMinusConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.DoubleMinusConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GeometryViewer.Controls.EnumBooleanConverter">
+             <summary>
+             A converter which converts enums into booleans depending on the converter parameter.
+             </summary>
+             <example>
+             Usage example:
+             <code>
+            	<StackPanel >
+            		<RadioButton IsChecked = "{Binding Path=VeryLovelyEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=FirstSelection}" > first selection</RadioButton>
+            		<RadioButton IsChecked = "{Binding Path=VeryLovelyEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=TheOtherSelection}" > the other selection</RadioButton>
+            		<RadioButton IsChecked = "{Binding Path=VeryLovelyEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=YetAnotherOne}" > yet another one</RadioButton>
+            	</StackPanel>
+            </code>
+            </example>
+        </member>
+        <member name="M:GeometryViewer.Controls.EnumBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.EnumBooleanConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GeometryViewer.Controls.InverseBooleanToVisibilityConverter">
+            <summary>
+            Converts booleans to visibilities. False means visible
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.InverseBooleanToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GeometryViewer.Controls.InverseBooleanToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GeometryViewer.Controls.IParentGeometryEditorItem">
+            <summary>
+            Interface for ViewModels that should be edited by the ParentGeometryEditor control
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.IParentGeometryEditorItem.Parent">
+            <summary>
+            The current parent reference
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.IParentGeometryEditorItem.Unparent">
+            <summary>
+            Returns an undo item for resetting the parent
+            </summary>
+            <returns>An undo item for resetting the parent</returns>
+        </member>
+        <member name="T:GeometryViewer.Controls.ParentGeometryEditor">
+            <summary>
+            Control for showing/editing a parent reference in the PropertyEditor
+            </summary>
+            <summary>
+            ParentGeometryEditor
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.ValuesProperty">
+            <summary>
+            The values that shoudld be displayed/edited. Have to be instances of IParentGeometryEditorItem.
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.Values">
+            <summary>
+            The values that shoudld be displayed/edited. Have to be instances of IParentGeometryEditorItem.
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.IsReadOnlyProperty">
+            <summary>
+            When set to True, the control is displayed in readonly mode
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.IsReadOnly">
+            <summary>
+            When set to True, the control is displayed in readonly mode
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.HasSameValuePropertyKey">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.HasSameValueProperty">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.HasSameValue">
+            <summary>
+            Determines if all instances have the same value
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.HasParentPropertyKey">
+            <summary>
+            Determines if there is a parent instance
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.HasParentProperty">
+            <summary>
+            Determines if there is a parent instance
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.HasParent">
+            <summary>
+            Determines if there is a parent instance
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.ParentNamePropertyKey">
+            <summary>
+            Determines the name of the parent object (if there is any)
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.ParentNameProperty">
+            <summary>
+            Determines the name of the parent object (if there is any)
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.ParentName">
+            <summary>
+            Determines the name of the parent object (if there is any)
+            </summary>
+        </member>
+        <member name="F:GeometryViewer.Controls.ParentGeometryEditor.UndoRedoManagerProperty">
+            <summary>
+            The undo manager for this instance
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Controls.ParentGeometryEditor.UndoRedoManager">
+            <summary>
+            The undo manager for this instance
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ParentGeometryEditor.#ctor">
+            <summary>
+            Initializes a new instance of the ParentGeometryEditor class
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Controls.ParentGeometryEditor.OnApplyTemplate">
+            <inheritdoc />
+        </member>
+        <member name="M:GeometryViewer.Controls.ParentGeometryEditor.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.DebugBrowsableAttribute">
+            <summary>
+            Properties annotated with this attribute are displayed in the PropertyViewer when the debugging plugin is active.
+            This attribute overrides the Browsable attribute when debugging is enabled
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.ExporterPluginAttribute">
+            <summary>
+            Use this attribute to mark exporter plugins 
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IExporterPlugin">
+            <summary>
+            Interface for exporter plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IExporterPlugin.FileDialogFilterText">
+            <summary>
+            The text that is displayed in the save file dialog
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IExporterPlugin.FileDialogFilterExtensions">
+            <summary>
+            The filter extensions for the save file dialog
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IExporterPlugin.Export(System.IO.FileInfo,GeometryViewer.Plugins.IExporterPluginData)">
+            <summary>
+            Called when the data should be exported with this exporter
+            </summary>
+            <param name="file">Target file</param>
+            <param name="data">The data to export</param>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IExporterPlugin.Initialize">
+            <summary>
+            Called when the plugin gets loaded. Use this to initialize, e.g., language files
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IExporterPluginData">
+            <summary>
+            Data for exporter plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IExporterPluginData.Models">
+            <summary>
+            A list of all loaded GeometryModels
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IExporterPluginData.MainWindow">
+            <summary>
+            The current mainwindow
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IGeneralPlugin">
+            <summary>
+            Interface for plugin entry points
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IGeneralPlugin.Initialize">
+            <summary>
+            Initializes the plugin. Called once at startup. Use this to register language files, etc.
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IGeneralPlugin.Load(GeometryViewer.Plugins.IGeneralPluginData)">
+            <summary>
+            Called whenever a window is opened that uses this plugin
+            </summary>
+            <param name="data">The data for the plugin</param>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IGeneralPluginData">
+            <summary>
+            Provides access points and other data for plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IGeneralPluginData.MainWindowRibbon">
+            <summary>
+            The ribbon control in the main window
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IGeneralPluginData.Models">
+            <summary>
+            List of all loaded models
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IGeneralPluginData.UndoManager">
+            <summary>
+            The undo-Manager for this window
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IImporterPlugin">
+            <summary>
+            Interface for implementing importer plugins.
+            A importer plugin has to be assignable to IImporterPlugin and has to be attributed with the ImporterPlugin attribute
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IImporterPlugin.FileDialogFilterText">
+            <summary>
+            The text that is displayed in the open file dialog
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IImporterPlugin.FileDialogFilterExtensions">
+            <summary>
+            The filter extensions for the open file dialog
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IImporterPlugin.Import(System.IO.FileInfo,GeometryViewer.Plugins.IImporterPluginData)">
+            <summary>
+            Called when a file should be imported with this importer
+            </summary>
+            <param name="file">The file</param>
+            <param name="data">The accessable data from the application</param>
+        </member>
+        <member name="M:GeometryViewer.Plugins.IImporterPlugin.Initialize">
+            <summary>
+            Called once when the plugin is loaded. Can be used, e.g., for loading language resources
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IImporterPluginData">
+            <summary>
+            Interface to access appliation data
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IImporterPluginData.Models">
+            <summary>
+            Returns a list of all GeometryModels in the application
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IImporterPluginData.MainWindow">
+            <summary>
+            Returns a reference to the MainWindow
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.IImporterPluginData.UndoManager">
+            <summary>
+            Returns the UndoManager for this Plugin
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.ImporterPluginAttribute">
+            <summary>
+            Attribute to mark importer plugins
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.PropertyShowEventArgs">
+            <summary>
+            Event Arguments for the PropertyShowing event
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PropertyShowEventArgs.Property">
+            <summary>
+            The property that might be displayed
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PropertyShowEventArgs.Show">
+            <summary>
+            Determines if the property will be displayed (True = Displayed, False = Hidden)
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.PropertyShowEventArgs.#ctor(System.Reflection.PropertyInfo,System.Boolean)">
+            <summary>
+            Initializes a new instance of the PropertyShowEventArgs class
+            </summary>
+            <param name="property">The property</param>
+            <param name="show">True when the property will be displayed by default, False otherwise</param>
+        </member>
+        <member name="T:GeometryViewer.Plugins.PropertyShowEventHandler">
+            <summary>
+            EventHandler for the PropertyShowing event
+            </summary>
+            <param name="sender">The sending property viewer</param>
+            <param name="args">The arguments. Use Show to hide/show properties</param>
+        </member>
+        <member name="T:GeometryViewer.Plugins.IPropertyViewerVM">
+            <summary>
+            Interface for the property viewer viewmodel
+            </summary>
+        </member>
+        <member name="E:GeometryViewer.Plugins.IPropertyViewerVM.PropertyShowing">
+            <summary>
+            Called whenever a property should be displayed. Use this to hide/show additional properties
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Plugins.PluginManager">
+            <summary>
+            Manages plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PluginManager.Instance">
+            <summary>
+            The singleton instance
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.PluginManager.#cctor">
+            <summary>
+            Initializes the instance
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PluginManager.ImporterPlugins">
+            <summary>
+            Returns a list of all importer plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PluginManager.ExporterPlugins">
+            <summary>
+            Returns a list of all exporter plugins
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Plugins.PluginManager.Plugins">
+            <summary>
+            Stores all plugins
+            </summary>
+        </member>
+        <member name="M:GeometryViewer.Plugins.PluginManager.#ctor">
+            <summary>
+            Initializes a new instance of the PluginManager class
+            </summary>
+        </member>
+        <member name="T:GeometryViewer.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:GeometryViewer.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>
