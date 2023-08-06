@@ -1,0 +1,74 @@
+commands:
+  0c8b9094-2e05-4aac-894f-3619e6b87fa3:
+    command: whereis python
+    freq: 0
+    id: 0c8b9094-2e05-4aac-894f-3619e6b87fa3
+    prompts: []
+    tags:
+    - location
+    - python
+  354766df-e4ab-4293-b9dc-b1dd48236bf9:
+    command: python -m pip install --upgrade $1
+    freq: 0
+    id: 354766df-e4ab-4293-b9dc-b1dd48236bf9
+    prompts:
+    - package name
+    tags:
+    - python
+    - pip
+    - update
+    - upgrade
+    - package
+  428f6586-00ed-497a-94d9-01ec705743d3:
+    command: find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
+    freq: 0
+    id: 428f6586-00ed-497a-94d9-01ec705743d3
+    prompts: []
+    tags:
+    - python
+    - pycache
+    - cache
+    - delete
+    - remove
+  4c3b7a6e-37c8-44a3-a6e7-baa309829d9d:
+    command: pip install -e .; poetry build
+    freq: 0
+    id: 4c3b7a6e-37c8-44a3-a6e7-baa309829d9d
+    prompts: []
+    tags:
+    - poetry
+    - build
+  9ce971d1-f934-49a5-9de7-681e6a2389c7:
+    command: git reset --$1 HEAD~1
+    freq: 0
+    id: 9ce971d1-f934-49a5-9de7-681e6a2389c7
+    prompts:
+    - soft/hard
+    tags:
+    - git
+    - undo
+    - commit
+    - rollback
+    - last
+  f7fb54d0-9908-4a53-8e57-0d0fd3481b78:
+    command: "if val, ok := dict[\"foo\"]; ok {\n  //do something here\n}\n"
+    freq: 0
+    id: f7fb54d0-9908-4a53-8e57-0d0fd3481b78
+    prompts: []
+    tags:
+    - go
+    - map
+    - dict
+    - check
+    - key
+  5d503c66-eff4-4982-8b7c-789d0c67d928:
+    command: pip freeze > unins && pip uninstall -y -r unins && rm unins
+    freq: 0
+    id: 5d503c66-eff4-4982-8b7c-789d0c67d928
+    prompts: []
+    tags:
+    - pip
+    - uninstall
+    - all
+    - remove
+    - package
