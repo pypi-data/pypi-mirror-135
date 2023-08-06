@@ -1,0 +1,71 @@
+Metadata-Version: 2.1
+Name: pywaggle
+Version: 0.52.7
+Summary: Official Waggle Python module.
+Home-page: https://github.com/waggle-sensor/pywaggle
+Author: Sean Shahkarami
+Author-email: sean.shahkarami@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/waggle-sensor/pywaggle/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pika (>=1.2.0)
+Requires-Dist: pywagglemsg (>=0.3.0)
+Provides-Extra: all
+Requires-Dist: numpy (>=1.18.0) ; extra == 'all'
+Requires-Dist: soundcard (>=0.4.1) ; extra == 'all'
+Requires-Dist: soundfile (>=0.9.0) ; extra == 'all'
+Requires-Dist: opencv-python (>=4.5.0) ; extra == 'all'
+Provides-Extra: audio
+Requires-Dist: numpy (>=1.18.0) ; extra == 'audio'
+Requires-Dist: soundcard (>=0.4.1) ; extra == 'audio'
+Requires-Dist: soundfile (>=0.9.0) ; extra == 'audio'
+Provides-Extra: vision
+Requires-Dist: numpy (>=1.18.0) ; extra == 'vision'
+Requires-Dist: opencv-python (>=4.5.0) ; extra == 'vision'
+
+# Waggle Python Module
+
+pywaggle is a Python module for implementing [Waggle](https://github.com/waggle-sensor/waggle) plugins and system services.
+
+## Installation Guides
+
+Most users getting started with pywaggle will want to install latest version with all optional dependencies using:
+
+```sh
+pip install -U pywaggle[all]
+```
+
+Advanced users can install specific subsets of functionality using the following extras flags:
+
+* `audio` - Audio and microphone support for plugins.
+* `vision` - Image, video and camera support for plugins.
+
+```sh
+# install only core plugin features
+pip install pywaggle
+
+# install only audio features
+pip install pywaggle[audio]
+
+# install only vision features
+pip install pywaggle[vision]
+
+# install both audio and vision features
+pip install pywaggle[audio,vision]
+```
+
+## Usage Guides
+
+* [Writing a plugin](https://github.com/waggle-sensor/pywaggle/blob/main/docs/writing-a-plugin.md)
+
+
