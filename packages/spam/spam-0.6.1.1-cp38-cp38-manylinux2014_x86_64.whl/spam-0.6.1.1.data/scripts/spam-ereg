@@ -1,0 +1,77 @@
+#!python
+
+"""
+This python script is a graphical tool for aligning 3D images by eye using QT5 and SPAM functions
+Copyright (C) 2020 SPAM Contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import spam.visual.visualClass as visual
+import spam.helpers
+
+import sys
+import os
+from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog, QGridLayout
+import numpy
+numpy.seterr(all='ignore')
+import tifffile
+
+def main():
+    app = QApplication(sys.argv)
+    # load parameters from sys.argv and if none have been called open a file manager to select them
+
+    Phi = numpy.eye(4)
+
+    if len(sys.argv) == 1:
+        # do the windows
+        images = []
+        fileName1 = QFileDialog.getOpenFileName(None, 'Open Image 1', os.getcwd())[0]
+        images.append(tifffile.imread(fileName1))
+        print(fileName1)
+        print(os.path.splitext(os.path.basename(fileName1)))
+        fileName2 = QFileDialog.getOpenFileName(None, 'Open Image 2', os.path.dirname(os.path.realpath(fileName1)))[0]
+        images.append(tifffile.imread(fileName2))
+        #f = QFileDialog.getOpenFileName(None, '(optional) Open Phi TSV', os.path.dirname(os.path.realpath(fileName1)))[0]
+        #if os.path.isfile(f):
+            #Phi = spam.helpers.readCorrelationTSV(f)['PhiField'][0]
+
+    elif len(sys.argv) == 3:
+        fileName1 = sys.argv[1]
+        fileName2 = sys.argv[2]
+        images = [tifffile.imread(fileName1), tifffile.imread(fileName2)]
+
+    elif len(sys.argv) == 4:
+        fileName1 = sys.argv[1]
+        fileName2 = sys.argv[2]
+        images = [tifffile.imread(fileName1), tifffile.imread(fileName2)]
+        Phi = spam.helpers.readCorrelationTSV(sys.argv[3])['PhiField'][0]
+
+    else:
+        print("usage:")
+        print("  - spam-ereg (by itself to have a popup window to select files)")
+        print("  - spam-ereg /path/to/Im1.tif /path/to/Im2.tif")
+        print("  - spam-ereg /path/to/Im1.tif /path/to/Im2.tif /path/to/PhiFile.tsv")
+
+    window = QWidget()
+    mainWindowGrid = QGridLayout(window)
+    eregWidget = visual.ereg(images, Phi, [fileName1, fileName2], binning=None)
+    mainWindowGrid.addWidget(eregWidget, 1, 1)
+    window.show()
+    eregWidget.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()

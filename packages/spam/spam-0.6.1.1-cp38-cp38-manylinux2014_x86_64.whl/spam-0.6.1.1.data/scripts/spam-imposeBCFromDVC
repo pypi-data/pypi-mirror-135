@@ -1,0 +1,105 @@
+#!python
+
+
+"""
+This python script imposes displacement boundary conditions on a finite element mesh using SPAM functions
+Copyright (C) 2020 SPAM Contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+
+import spam.mesh
+import spam.helpers
+
+import tifffile
+import numpy
+numpy.seterr(all='ignore')
+import argparse
+
+# Define argument parser object
+parser = argparse.ArgumentParser()
+
+# Parse arguments with external helper function
+args = spam.helpers.optionsParser.BCFromDVCParser(parser)
+
+print("\nCurrent Settings:")
+argsDict = vars(args)
+for key in sorted(argsDict):
+    print("\t{}: {}".format(key, argsDict[key]))
+
+print("\nLoading data...")
+# Get the meshNodes
+if args.GMSHFILE is not None:
+    import meshio
+    print("Read gmsh file: {}".format(args.GMSHFILE.name))
+    gmsh = meshio.read(args.GMSHFILE.name)
+    meshNodes = numpy.zeros((gmsh.points.shape[0], 4))
+    for i, node in enumerate(gmsh.points):
+        meshNodes[i] = [i+1, node[2], node[1], node[0]] #zyx
+elif args.VTKFILE is not None:
+    points, connectivity, _ ,_ = spam.helpers.readUnstructuredVTK(args.VTKFILE.name)
+    meshNodes = numpy.zeros((points.shape[0], 4))
+    for i, node in enumerate(points):
+        meshNodes[i] = [i+1, node[0], node[1], node[2]] #zyx
+else:
+    print("You need to input an unstructured mesh")
+    exit()
+
+# Get dvc field
+if args.TSVDVCFILE is not None:
+    dvcField = spam.helpers.readCorrelationTSV(args.TSVDVCFILE.name)
+    fieldCoords = dvcField["fieldCoords"]
+    fieldDisp = dvcField["Ffield"][:, :3, -1]
+    mask = None
+    if args.MASK:
+        mask = numpy.ones(fieldCoords.shape[0])
+        mask[numpy.where(dvcField["returnStatus"]<-4)] = 0
+    dvcField = numpy.hstack((fieldCoords, fieldDisp))
+else:
+    print("You need to input a dvc grid displacement")
+    exit()
+
+print("\nGetting the boundary conditions...")
+# Get boundary conditions
+bc = spam.mesh.BCFieldFromDVCField(meshNodes, dvcField, mask = mask, pixelSize=args.PIXEL_SIZE,
+                                   meshType=args.MESHTYPE, centre=args.CYLCENTRE, radius=args.CYLRADIUS,
+                                   topBottom=args.TOP_BOTTOM, neighbours=args.NEIGHBOURS_INT, tol=args.TOL)
+
+# write BC conditions in FEAP format
+if args.FEAPBC:
+    feapBC = args.OUT_DIR+"/"+args.PREFIX+"Itail"
+    with open(feapBC, "w") as f:
+        f.write("\nBOUN\n")
+        for d in bc:
+            f.write("{:.0f}, 0, 1, 1, 1\n".format(d[0]))
+        f.write("\nDISP\n")
+        for d in bc:
+            f.write("{:.0f}, 0, {:.6f}, {:.6f}, {:.6f}\n".format(d[0], d[6], d[5], d[4])) #xyz
+        f.write("\nPROP\n")
+        for d in bc:
+            f.write("{:.0f}, 0, 1, 1, 1\n".format(d[0]))
+        f.write("\nEND\n")
+
+# save mesh with BC as vtk
+if args.SAVE_VTK:
+    if not args.VTKFILE:
+        points, connectivity, _ ,_ = spam.helpers.readUnstructuredVTK(args.GMSHFILE.name)
+    nodeDisp = numpy.zeros((points.shape[0], 3))
+    bc[:, 0] -= 1
+    edgeNodes = bc[:, 0].astype(int).tolist()
+    nodeDisp[edgeNodes] = bc[:, 4:]
+
+    spam.helpers.writeUnstructuredVTK(points, connectivity, pointData = {"BCdisp": nodeDisp}, fileName=args.OUT_DIR+"/"+args.PREFIX+".vtk")
+

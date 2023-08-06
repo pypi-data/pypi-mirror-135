@@ -1,0 +1,215 @@
+#!python
+
+"""
+This python script (under development) performs Global Digital Image Correlation using SPAM functions
+Copyright (C) 2020 SPAM Contributors
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import spam.mesh
+import spam.DIC
+import spam.deformation
+import spam.label
+import spam.helpers
+
+import numpy
+numpy.seterr(all='ignore')
+import tifffile
+import argparse
+import pickle
+import scipy.ndimage
+
+
+# parser
+import spam.helpers.optionsParser
+parser = argparse.ArgumentParser(description="spam-gdic "+spam.helpers.optionsParser.GLPv3descriptionHeader +\
+                                             "This BETA TEST script performs Global Digital Image Correlations between two 3D greyscale images."+\
+                                             "Displacements are solved as a global problems of nodal displacements on a mesh",
+                                 formatter_class=argparse.RawTextHelpFormatter)
+
+args = spam.helpers.optionsParser.gdicParser(parser)
+
+print("spam-gdic -- Current Settings:")
+argsDict = vars(args)
+for key in sorted(argsDict):
+    print("\t{}: {}".format(key, argsDict[key]))
+
+# load images
+if len(args.inFiles) < 2:
+    print("\nspam-gdic: Did not receive enough input images... you need (at least) two to tango...")
+    exit()
+
+# Load reference image
+im1 = tifffile.imread(args.inFiles[0].name).astype('<f4')
+im2 = tifffile.imread(args.inFiles[1].name).astype('<f4')
+
+prefix = args.PREFIX
+
+# Load masks
+im1mask = tifffile.imread(args.MASK1.name).astype('<f4') == 0 if args.MASK1 else None
+im2mask = tifffile.imread(args.MASK2.name).astype('<f4') == 0 if args.MASK2 else None
+
+#################################
+# STEP 1: intital registration  #
+#################################
+registrationSuccessful = False
+if args.REG:
+    print("\tspam-gdic: Starting registration")
+    # Check whetehr we should downscale the images for initial registration
+    if args.REG_BIN == 1:
+        im1Reg = im1
+        im2Reg = im2
+    else:
+        im1Reg = scipy.ndimage.zoom(im1, 1.0 / float(args.REG_BIN))
+        im2Reg = scipy.ndimage.zoom(im2, 1.0 / float(args.REG_BIN))
+
+    regMargin = int(args.REG_MARGIN * min(im1Reg.shape))
+
+    # Run registration
+    regReturns = spam.DIC.correlate.register(   im1Reg, im2Reg,
+                                                margin=regMargin,
+                                                interpolationOrder=1,
+                                                maxIterations=500,
+                                                deltaPhiMin=0.0001,
+                                                updateGradient=args.REG_UPDATE,
+                                                interpolator='C',
+                                                verbose=True,
+                                                imShowProgress=None)
+    if regReturns['returnStatus'] != 2:
+        print("\tspam-gdic: Registration did not converge.")
+    else:
+        print("\tspam-gdic: Registration converged beautifully...")
+        registrationSuccessful = True
+        print("\tTranslations (px): {}".format(spam.deformation.decomposePhi(regReturns['Phi'])['t']))
+        print("\tRotations (deg): {}".format(  spam.deformation.decomposePhi(regReturns['Phi'])['r']))
+
+        regPhi = regReturns['Phi']
+        regCentre = (numpy.array(im1Reg.shape) - 1) / 2.0
+
+        # Also disactive loading further guesses.
+        spam.helpers.writeRegistrationTSV("{}/{}-registration-bin{:d}.tsv".format(args.OUT_DIR, prefix, args.REG_BIN), regCentre, regReturns)
+
+        # HACK: overwrite variables regPhi, regCentre with binning 1 versions
+        if args.REG_BIN != 1:
+            regPhi[0:3, 3] *= float(args.REG_BIN)
+            regCentre *= float(args.REG_BIN)
+
+elif args.PHIFILE is not None:
+    phiFromFile = spam.helpers.readCorrelationTSV(args.PHIFILE.name, fieldBinRatio=args.PHIFILE_BIN_RATIO)
+
+    # If the read F-file has only one line -- it's a single point registration!
+    if phiFromFile['fieldCoords'].shape[0] == 1:
+        regPhi = phiFromFile['PhiField'][0]
+        regCentre = phiFromFile['fieldCoords'][0]
+        registrationSuccessful = True
+        print("\tI read a registration from a file.")
+
+        print("\tTranslations (px)")
+        print("\t\t", spam.deformation.decomposePhi(regPhi)['t'])
+        print("\tRotations (deg)")
+        print("\t\t", spam.deformation.decomposePhi(regPhi)['r'])
+
+
+#################
+# STEP 2: mesh  #
+#################
+if args.MESH_FILE is not None:
+    print("spam-gdic: read mesh: {}".format(args.MESH_FILE.name))
+    inputMesh = pickle.load(args.MESH_FILE)
+    # meshCoordinates, meshTetra, _, _ = spam.helpers.readUnstructuredVTK(args.MESH_FILE.name, swapAxes=True)
+
+elif args.MESH_CUBOID is not None:
+    print("spam-gdic: create cuboid mesh with parameters:")
+    lengths = args.MESH_CUBOID[3:6]
+    origin = args.MESH_CUBOID[0:3]
+    lcar = args.MESH_CUBOID[6]
+    print("\tlengths: {}".format(lengths))
+    print("\torigin: {}".format(origin))
+    print("\tlcar: {}".format(lcar))
+    meshCoordinates, meshTetra = spam.mesh.createCuboid(lengths, lcar, origin=origin, vtkFile="{}/{}-mesh".format(args.OUT_DIR, prefix))
+    lab = spam.label.labelTetrahedra(im1.shape, meshCoordinates, meshTetra)
+    inputMesh = {"points": meshCoordinates, "tetra": meshTetra, "lab": lab}
+    pickle.dump(inputMesh, open("{}/{}-mesh.p".format(args.OUT_DIR, prefix), 'wb'))
+    tifffile.imsave("{}/{}-lab.tif".format(args.OUT_DIR, prefix), lab)
+
+else:
+    print("\tspam-gdic: a mesh is needed. Use one of this option: -Mcube or -Mfile.")
+    print("\tspam-gdic: note for devs... this should be checked in optionParsers.")
+    print("\tspam-gdic: exiting.")
+
+initialDisplacements = numpy.zeros_like(inputMesh["points"])
+
+# Apply registration (just done or loaded) to mesh
+if registrationSuccessful:
+    print("spam-gdic: use registration to set initial displacements.")
+    for i, node in enumerate(inputMesh["points"]):
+        initialDisplacements[i] = spam.deformation.decomposePhi(regPhi.copy(), PhiCentre=regCentre, PhiPoint=node)["t"]
+
+# spam.helpers.writeGlyphsVTK(meshCoordinates, {'disp': initialDisplacements})
+
+
+# # HACK: load im1mask, generate a labelled tetrahedron volume, and check whether each cell is inside
+# # Assumption mask = True where it's good and False where it's bad.
+# # WARNING: Innocent victim: cell 0, since the background is labelled 0
+# if args.MASK1:
+#     goodTets = numpy.ones(inputMesh['tetra'].shape[0], dtype='bool')
+#     lab = inputMesh['lab']
+#     labTetBB = spam.label.boundingBoxes(lab)
+#     labTetCOM = spam.label.centresOfMass(lab, boundingBoxes=labTetBB)
+#     # Let's keep only tets that are more than X% in a
+#     for tetNumber in range(1, inputMesh['tetra'].shape[0]):
+#         getLab = spam.label.getLabel(lab, tetNumber, boundingBoxes=labTetBB, centresOfMass=labTetCOM)
+#         if numpy.mean(im1mask[getLab['slice']][getLab['subvol']]) < 0.01:
+#             goodTets[tetNumber] = False
+#     # replace connectivity matrix with only good points
+#     print("\tspam-gdic: goodTets = {}%".format(100. * goodTets.sum() / inputMesh['tetra'].shape[0]))
+#     inputMesh['tetra'] = inputMesh['tetra'][goodTets]
+#     # recompute labelled tetrahedron image
+#     inputMesh['lab'] = spam.label.labelTetrahedra(im1.shape, meshCoordinates, inputMesh['tetra'])
+
+
+################################
+# STEP 3: global correlation   #
+################################
+# boundaryConditions = numpy.zeros_like(initialDisplacements).astype(bool)
+# boundaryConditions[numpy.where(inputMesh["points"][:, 0] < 20.0001), :] = True
+# initialDisplacements[numpy.where(inputMesh["points"][:, 0] < 20.0001), :] = 4.0
+# boundaryConditions[0, 0] = True
+boundaryConditions = None
+displacements = spam.DIC.globalCorrelation(im1, im2,
+                                           inputMesh,
+                                           initialDisplacements=initialDisplacements,
+                                           boundaryConditions=boundaryConditions,
+                                           maxIterations=args.MAX_ITERATIONS,
+                                           convergenceCriterion=args.CONVERGENCE_CRITERION,
+                                           debugFiles=args.DEBUG_FILES,
+                                           prefix="{}/{}".format(args.OUT_DIR, prefix))
+
+pointData = {'displacements': displacements}
+cellData = dict({})
+if args.STRAIN:
+    print("spam-gdic: Computing strains", end='...')
+    Ffield = spam.deformation.FfieldBagi(inputMesh['points'], inputMesh['tetra'], displacements)
+    if  (not args.SMALL_STRAINS):
+        components = ['vol', 'dev']
+    else:
+        components = ['volss', 'devss']
+    decomposedFfield = spam.deformation.decomposeFfield(Ffield, components)
+
+    for component in components:
+        cellData[component] = decomposedFfield[component]
+    print("done")
+
+spam.helpers.writeUnstructuredVTK(inputMesh['points'], inputMesh['tetra'], pointData=pointData, cellData=cellData, fileName="{}/{}.vtk".format(args.OUT_DIR, prefix))
