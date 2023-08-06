@@ -1,0 +1,109 @@
+Metadata-Version: 2.1
+Name: ofxstatement-revolut
+Version: 2.0.2
+Summary: Bank statement parser for Revolut
+Home-page: https://github.com/mlaitinen/ofxstatement-revolut
+Author: Miku Laitinen
+Author-email: miku@avoin.systems
+License: GPLv3
+Keywords: ofx,ofxstatement,banking,statement,revolut
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 3
+Classifier: Natural Language :: English
+Classifier: Topic :: Office/Business :: Financial :: Accounting
+Classifier: Topic :: Utilities
+Classifier: Environment :: Console
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Description-Content-Type: text/markdown
+Provides-Extra: test
+License-File: LICENSE
+
+# ofxstatement-revolut
+
+![badge](https://github.com/mlaitinen/ofxstatement-revolut/actions/workflows/build-and-publish.yml/badge.svg)
+
+
+This is a plugin for [ofxstatement](https://github.com/kedder/ofxstatement). It implements
+a parser for the Revolut CSV-formatted bank statement.
+
+Issue reports and pull requests are welcome.
+
+## Installation
+
+### From PyPI repositories
+```
+pip3 install ofxstatement-revolut
+```
+
+### From source
+```
+git clone https://github.com/mlaitinen/ofxstatement-revolut.git
+python3 setup.py install
+```
+
+## Configuration options
+
+| Option        | Description                                                                                                                                    |
+|---------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `account`     | Define the account of this bank statement                                                                                                      |
+| `currency`    | The base currency of the account                                                                                                               |
+| `date_format` | The date format in the bank statement. Note that you have to use double `%`-marks in the settings file like this: `date_format = %%b %%d, %%Y` |
+
+
+2.0.2
+-----
+- Ignore other than COMPLETED transactions. Pending transactions have their own structure in OFX
+  called STMTTRNP, but ofxstatement doesn't support it.
+- Include the "Started Date" as the date the user initiated the transaction.
+
+2.0.1
+-----
+- Version 2.0.0 republished due to some issues with PyPI
+
+2.0.0
+-----
+
+- Complete backwards-incompatible refactoring, support the new CSV format
+- Requires ofxstatement >= 0.7.2
+- Any transactions with a fee will generate an additional fee transaction where the payee is "Revolut"
+
+1.6.0
+-----
+
+- Since version 0.6.5 ofxstatement requires a statement line to have either id, refnum or check_no. To avoid failing
+  the conversion, there's now a unique MD5 hashed ID computed from the date, payee, amount and balance.
+
+1.5.0
+-----
+
+- Improved the parser by making the column header verification less strict.
+
+1.4.0
+-----
+
+- Support September 2019 iOS CSV format
+
+1.3.0
+-----
+
+- Date format is now configurable in the settings
+- "Payment from " is now also counted as a deposit
+
+1.2.0
+-----
+
+- Support May 2018 CSV format
+
+1.1.0
+-----
+
+- Support April 2018 CSV format
+
+1.0.0
+-----
+
+- First release
+
+
