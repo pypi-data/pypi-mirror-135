@@ -1,0 +1,63 @@
+[tool]
+[tool.poetry]
+name = "techlib-nr-datasets"
+version = "1.1.18"
+description = "Czech National Repository datasets data model."
+license = "MIT"
+keywords = ["Czech", "Nation", "Repository", "Invenio", "datasets"]
+classifiers = ["Environment :: Web Environment", "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent", "Programming Language :: Python", "Topic :: Internet :: WWW/HTTP :: Dynamic Content", "Topic :: Software Development :: Libraries :: Python Modules", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3.7", "Development Status :: 3 - Alpha"]
+authors = ["Miroslav Bauer <Miroslav.Bauer@cesnet.cz>"]
+readme = "README.md"
+packages = [{include='nr_datasets'}]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+techlib-nr-datasets-metadata  = "^3.0"
+oarepo = "^3.3.59"
+oarepo-tokens = "^0.1.9"
+oarepo-doi-generator = "^1.0.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dev-dependencies]
+oarepo = "^3.3"
+oarepo-invenio-model = "^3.0"
+oarepo-multilingual = "^2.6.1"
+oarepo-taxonomies = "^3.0.0a4"
+oarepo-records-draft = "^5.0.0a7"
+oarepo-references = "^1.9.0"
+oarepo-validate = "^1.2.8"
+pytest = "^5.0.0"
+pytest-cov = "^2.10.1"
+pytest-runner = "^5.2"
+oarepo-fsm = "^2.0"
+oarepo-communities = "^3.0"
+oarepo-model-builder = "^0.1.7"
+
+[tool.poetry.plugins]
+[tool.poetry.plugins."invenio_base.apps"]
+'nr_datasets' = 'nr_datasets:NRDatasets'
+
+[tool.poetry.plugins."invenio_base.api_apps"]
+'nr_datasets' = 'nr_datasets:NRDatasets'
+
+[tool.poetry.plugins.'invenio_jsonschemas.schemas']
+'nr_datasets' = 'nr_datasets.jsonschemas'
+
+[tool.poetry.plugins.'invenio_search.mappings']
+'nr_datasets' = 'nr_datasets.mappings'
+
+[tool.poetry.plugins.'oarepo_mapping_includes']
+'nr_datasets' = 'nr_datasets.mapping_includes'
+
+[tool.poetry.plugins."invenio_pidstore.minters"]
+'nr_datasets' = 'nr_datasets.minters:nr_datasets_id_minter'
+
+[tool.poetry.plugins."invenio_pidstore.fetchers"]
+'nr_datasets' = 'nr_datasets.fetchers:nr_datasets_id_fetcher'
+
+[tool.poetry.plugins.'oarepo_model_builder.datamodels']
+'nr_datasets' = 'nr_datasets.datamodels'

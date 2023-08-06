@@ -1,0 +1,32 @@
+{
+  "aliases": {
+    "{PREFIX}nr-all": {},
+    "{PREFIX}nr-all-datasets": {}
+  },
+  "mappings": {
+    "date_detection": false,
+    "numeric_detection": false,
+    "dynamic": false,
+    "oarepo:extends": [
+      "nr-datasets-metadata-v3.0.0.json#/mappings",
+      "communities-v3.0.0.json#/Communities",
+      "fsm-record-v2.0.0.json#/FSMRecord",
+      "invenio-v3.0.0.json#/InvenioRecord"
+    ],
+    "properties": {
+      "oarepo:doirequest": {
+        "properties": {
+          "publisher": {
+            "type": "text"
+          },
+          "requestedBy": {
+            "type": "integer"
+          },
+          "requestedDate": {
+            "type": "date"
+          }
+        }
+      }
+    }
+  }
+}
