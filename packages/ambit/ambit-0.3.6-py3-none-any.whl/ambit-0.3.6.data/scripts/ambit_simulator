@@ -1,0 +1,18 @@
+#!python
+
+import ambit
+import ambit.simulator
+
+
+def main():
+    config = ambit.StandardConfiguration()
+    ctrl = ambit.simulator.Controller(config)
+    ctrl.open()
+    ctrl.connect()
+    ctrl.communicate()
+    ctrl.close()
+    ctrl.print_stats()
+
+
+if __name__ == '__main__':
+    main()
