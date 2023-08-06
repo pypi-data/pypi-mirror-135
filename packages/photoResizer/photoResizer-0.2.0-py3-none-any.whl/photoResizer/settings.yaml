@@ -1,0 +1,31 @@
+---
+# Settings for the application...
+output_image:
+  width: 600
+  height: 800
+  quality: 90
+  type: jpeg
+
+logging:
+  version: 1
+  disable_existing_loggers: false
+  formatters:
+    simple:
+      format: '{levelname}::{name}::{message}'
+      style: '{'
+    complete:
+      format: '{asctime} {levelname}::{name}::{message}'
+      style: '{'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: simple
+      level: DEBUG
+      stream: ext://sys.stdout
+  loggers:
+    photoResizer:
+      handlers:
+        - console
+      level: DEBUG
+      propagate: true
+      qualname: photoResizer
