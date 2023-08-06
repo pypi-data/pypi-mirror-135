@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "ikea_api"
+version = "1.1.5"
+description = "Client for several IKEA's APIs"
+authors = ["Lev Vereshchagin <mail@vrslev.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/vrslev/ikea-api-client"
+keywords = ["ikea", "ikea api", "api", "api client"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Natural Language :: English",
+  "Typing :: Typed"
+]
+include = ["src/ikea_api/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.26.0"
+typing-extensions = {version = "^4.0.0", python = "<3.9"}
+pytest = {version = "6.2.5", optional = true}
+pytest-cov = {version = "3.0.0", optional = true}
+pytest-randomly = {version = "3.11.0", optional = true}
+responses = {version = "0.17.0", optional = true}
+pydantic = {version = "^1.8.2", optional = true}
+
+[tool.poetry.dev-dependencies]
+black = {version = "21.12b0", allow-prereleases = true}
+pre-commit = "2.16.0"
+
+[tool.poetry.extras]
+wrappers = ["pydantic"]
+test = ["pytest", "pytest-cov", "pytest-randomly", "responses"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ["py37", "py38", "py39", "py310"]
+
+[tool.isort]
+profile = "black"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.10"
+reportMissingTypeStubs = false
+reportPrivateUsage = false
+reportImportCycles = false
+
+[tool.semantic_release]
+branch = "main"
+version_toml = "pyproject.toml:tool.poetry.version"
+build_command = "pip install build && python -m build"
+commit_subject = "сhore: Update version to {version}"
+commit_author = "github-actions <github-actions@github.com>"
+changelog_sections = "feature, fix, build, refactor, test, ci, chore"
+
+[tool.coverage.report]
+skip_covered = true
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if sys.version_info",
+    "if TYPE_CHECKING",
+]
