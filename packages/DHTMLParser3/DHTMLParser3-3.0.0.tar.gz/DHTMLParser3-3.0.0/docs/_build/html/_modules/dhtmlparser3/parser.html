@@ -1,0 +1,235 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dhtmlparser3.parser &#8212; dhtmlparser3 3.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../dhtmlparser3.html" accesskey="U">dhtmlparser3</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for dhtmlparser3.parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">gc</span>
+
+<span class="kn">from</span> <span class="nn">dhtmlparser3.tokens</span> <span class="kn">import</span> <span class="n">TextToken</span>
+<span class="kn">from</span> <span class="nn">dhtmlparser3.tokens</span> <span class="kn">import</span> <span class="n">CommentToken</span>
+<span class="kn">from</span> <span class="nn">dhtmlparser3.tokenizer</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span> <span class="nn">dhtmlparser3.specialdict</span> <span class="kn">import</span> <span class="n">SpecialDict</span>
+
+<span class="kn">from</span> <span class="nn">dhtmlparser3.tags.tag</span> <span class="kn">import</span> <span class="n">Tag</span>
+<span class="kn">from</span> <span class="nn">dhtmlparser3.tags.comment</span> <span class="kn">import</span> <span class="n">Comment</span>
+
+
+<div class="viewcode-block" id="Parser"><a class="viewcode-back" href="../../api/dhtmlparser3.parser.html#dhtmlparser3.parser.Parser">[docs]</a><span class="k">class</span> <span class="nc">Parser</span><span class="p">:</span>
+    <span class="n">NONPAIR_TAGS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;br&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;img&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;link&quot;,</span>
+        <span class="s2">&quot;meta&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;spacer&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;frame&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">case_insensitive_parameters</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># remove UTF BOM (prettify fails if not)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">string</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\xef\xbb\xbf</span><span class="s2">&quot;</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">case_insensitive_parameters</span><span class="p">:</span>
+            <span class="n">Tag</span><span class="o">.</span><span class="n">_DICT_INSTANCE</span> <span class="o">=</span> <span class="n">SpecialDict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Tag</span><span class="o">.</span><span class="n">_DICT_INSTANCE</span> <span class="o">=</span> <span class="nb">dict</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Parser.parse_dom"><a class="viewcode-back" href="../../api/dhtmlparser3.parser.html#dhtmlparser3.parser.Parser.parse_dom">[docs]</a>    <span class="k">def</span> <span class="nf">parse_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tag</span><span class="p">:</span>
+        <span class="n">gc</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
+        <span class="n">root_elem</span> <span class="o">=</span> <span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">top_element</span> <span class="o">=</span> <span class="n">root_elem</span>
+        <span class="n">element_stack</span> <span class="o">=</span> <span class="p">[</span><span class="n">root_elem</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize_iter</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">TextToken</span><span class="p">):</span>
+                <span class="n">top_element</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">CommentToken</span><span class="p">):</span>
+                <span class="n">top_element</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Comment</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+            <span class="k">elif</span> <span class="n">token</span><span class="o">.</span><span class="n">is_non_pair</span><span class="p">:</span>
+                <span class="n">top_element</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">to_tag</span><span class="p">())</span>
+                <span class="k">continue</span>
+
+            <span class="k">elif</span> <span class="n">token</span><span class="o">.</span><span class="n">is_end_tag</span><span class="p">:</span>
+                <span class="n">closed_element</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">element_stack</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">token</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">]</span>
+
+                <span class="c1"># random closing tag which doesn&#39;t match anything</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">closed_element</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">closed_element</span> <span class="o">=</span> <span class="n">closed_element</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># correctly closed element on top of the stack</span>
+                <span class="k">if</span> <span class="n">closed_element</span> <span class="ow">is</span> <span class="n">top_element</span><span class="p">:</span>
+                    <span class="n">element_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">top_element</span> <span class="o">=</span> <span class="n">element_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">continue</span>
+
+                <span class="n">top_element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reshape_non_pair_tags</span><span class="p">(</span><span class="n">element_stack</span><span class="p">,</span> <span class="n">closed_element</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">new_top_element</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">to_tag</span><span class="p">()</span>
+            <span class="n">top_element</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_top_element</span><span class="p">)</span>
+            <span class="n">new_top_element</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">top_element</span>
+            <span class="n">element_stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_top_element</span><span class="p">)</span>
+            <span class="n">top_element</span> <span class="o">=</span> <span class="n">new_top_element</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">element_stack</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reshape_non_pair_tags</span><span class="p">(</span><span class="n">element_stack</span><span class="p">,</span> <span class="n">root_elem</span><span class="p">)</span>
+
+        <span class="n">gc</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">root_elem</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">root_elem</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">root_elem</span></div>
+
+    <span class="k">def</span> <span class="nf">_reshape_non_pair_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_stack</span><span class="p">,</span> <span class="n">closed_element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used for non_pair tags, which are parsed like this:</span>
+
+<span class="sd">        &quot;&lt;div&gt;&lt;br&gt;&lt;img&gt;&lt;hr&gt;&lt;/div&gt;&quot; gets parsed to:</span>
+
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;br&gt;</span>
+<span class="sd">                &lt;img&gt;</span>
+<span class="sd">                    &lt;hr&gt;</span>
+
+<span class="sd">        What this does is that it changes the structure into:</span>
+
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;br&gt;</span>
+<span class="sd">            &lt;img&gt;</span>
+<span class="sd">            &lt;hr&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># find which one was closed and treat all others as nonpair</span>
+        <span class="n">closed_element_index</span> <span class="o">=</span> <span class="n">element_stack</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">closed_element</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">non_pairs</span> <span class="o">=</span> <span class="n">element_stack</span><span class="p">[</span><span class="n">closed_element_index</span><span class="p">:]</span>
+        <span class="n">new_element_stack</span> <span class="o">=</span> <span class="n">element_stack</span><span class="p">[:</span><span class="n">closed_element_index</span><span class="p">]</span>
+        <span class="n">element_stack</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">element_stack</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_element_stack</span><span class="p">)</span>
+
+        <span class="c1"># create list of (element, parent) from the non_pairs</span>
+        <span class="n">shifted_non_pairs</span> <span class="o">=</span> <span class="n">non_pairs</span><span class="p">[:]</span>
+        <span class="n">shifted_non_pairs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">shifted_non_pairs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">element_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">npt</span><span class="p">,</span> <span class="n">parent</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">non_pairs</span><span class="p">,</span> <span class="n">shifted_non_pairs</span><span class="p">))):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_move_content_to_parent</span><span class="p">(</span><span class="n">npt</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+            <span class="n">npt</span><span class="o">.</span><span class="n">is_non_pair</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">npt</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">closed_element</span>
+
+        <span class="k">if</span> <span class="n">element_stack</span><span class="p">:</span>
+            <span class="n">element_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">element_stack</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">element_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">closed_element</span>
+
+    <span class="k">def</span> <span class="nf">_move_content_to_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">non_pair_tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Tag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take `.content` from `non_pair_tag` and move them to `parent` tag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">non_pair_tag</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">npt_index_in_parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">non_pair_tag</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">npt_index_in_parent</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">sub_tag</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">non_pair_tag</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">npt_index_in_parent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sub_tag</span><span class="p">)</span>
+
+        <span class="n">non_pair_tag</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../dhtmlparser3.html" >dhtmlparser3</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Bystroushaak.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

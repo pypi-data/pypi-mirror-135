@@ -1,0 +1,254 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HTMLElement class &#8212; dhtmlparser3 3.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SpecialDict class" href="dhtmlparser.specialdict.html" />
+    <link rel="prev" title="dhtmlparser3 API" href="dhtmlparser3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dhtmlparser.specialdict.html" title="SpecialDict class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dhtmlparser3.html" title="dhtmlparser3 API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="dhtmlparser3.html" accesskey="U">dhtmlparser3 API</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="htmlelement-class">
+<h1>HTMLElement class<a class="headerlink" href="#htmlelement-class" title="Permalink to this headline">¶</a></h1>
+<p>This class can be used for parsing or for creating DOM manually.</p>
+<div class="section" id="dom-building">
+<h2>DOM building<a class="headerlink" href="#dom-building" title="Permalink to this headline">¶</a></h2>
+<p>If you want to create DOM from HTMLElements, you can use one of theese four
+constructors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HTMLElement</span><span class="p">()</span>
+<span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&quot;</span><span class="p">)</span>
+<span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">})</span>
+<span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">},</span> <span class="p">[</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag1&gt;&quot;</span><span class="p">),</span> <span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Tag or parameter specification parts can be omitted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;root&gt;&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag1&gt;&quot;</span><span class="p">),</span> <span class="o">...</span><span class="p">])</span>
+<span class="n">HTMLElement</span><span class="p">(</span>
+   <span class="p">[</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag1&gt;&quot;</span><span class="p">),</span> <span class="o">...</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="blank-element">
+<h4>Blank element<a class="headerlink" href="#blank-element" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dhtmlparser</span> <span class="kn">import</span> <span class="n">HTMLElement</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span>
+<span class="go">&lt;dhtmlparser.HTMLElement instance at 0x7fb2b39ca170&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Usually, it is better to use <code class="docutils literal notranslate"><span class="pre">HTMLElement(&quot;&quot;)</span></code>.</p>
+</div>
+<div class="section" id="nonpair-tag">
+<h4>Nonpair tag<a class="headerlink" href="#nonpair-tag" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;br&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isNonPairTag</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isOpeningTag</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+<span class="go">&lt;br&gt;</span>
+</pre></div>
+</div>
+<p>Notice, that closing tag wasn’t automatically created.</p>
+</div>
+<div class="section" id="pair-tag">
+<h4>Pair tag<a class="headerlink" href="#pair-tag" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isOpeningTag</span><span class="p">()</span> <span class="c1"># this doesn&#39;t check if tag actually is paired, just if it looks like opening tag</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isPairTag</span><span class="p">()</span>    <span class="c1"># this does check if element is actually paired</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">endtag</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;/tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isOpeningTag</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">isPairTag</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+<span class="go">&lt;tag&gt;&lt;/tag&gt;</span>
+</pre></div>
+</div>
+<p>In short:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">endtag</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;/tag&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or you can always use string parser:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&lt;/tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+<span class="go">&lt;tag&gt;&lt;/tag&gt;</span>
+</pre></div>
+</div>
+<p>But don’t forget, that elements returned from parseString() are encapsulated in blank “root” tag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&lt;/tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">getTagName</span><span class="p">()</span>
+<span class="go">&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">childs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tagToString</span><span class="p">()</span>
+<span class="go">&#39;&lt;tag&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">childs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">endtag</span><span class="o">.</span><span class="n">tagToString</span><span class="p">()</span> <span class="c1"># referenced thru .endtag property</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">childs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tagToString</span><span class="p">()</span> <span class="c1"># manually selected entag from childs - don&#39;t use this</span>
+<span class="go">&#39;&lt;/tag&gt;&#39;</span>
+<span class="go">&#39;&lt;/tag&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tags-with-parameters">
+<h4>Tags with parameters<a class="headerlink" href="#tags-with-parameters" title="Permalink to this headline">¶</a></h4>
+<p>Tag (with or without &lt;&gt;) can have as dictionary as second parameter.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span><span class="s2">&quot;value&quot;</span><span class="p">})</span>  <span class="c1"># without &lt;&gt;, because normal text can&#39;t have parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+<span class="go">&lt;tag param=&quot;value&quot;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span><span class="o">.</span><span class="n">params</span>  <span class="c1"># parameters are accessed thru .params property</span>
+<span class="go">{&#39;param&#39;: &#39;value&#39;}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tags-with-content">
+<h4>Tags with content<a class="headerlink" href="#tags-with-content" title="Permalink to this headline">¶</a></h4>
+<p>You can create content manually:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">childs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">endtag</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;&lt;/tag&gt;&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">e</span>
+<span class="go">&lt;tag&gt;content&lt;/tag&gt;</span>
+</pre></div>
+</div>
+<p>But there is also easier way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)])</span>
+<span class="go">&lt;tag&gt;content&lt;/tag&gt;</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;some&quot;</span><span class="p">:</span> <span class="s2">&quot;parameter&quot;</span><span class="p">},</span> <span class="p">[</span><span class="n">HTMLElement</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)])</span>
+<span class="go">&lt;tag some=&quot;parameter&quot;&gt;content&lt;/tag&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="module-dhtmlparser.htmlelement">
+<span id="htmlelement-class-api"></span><h2>HTMLElement class API<a class="headerlink" href="#module-dhtmlparser.htmlelement" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">HTMLElement class</a><ul>
+<li><a class="reference internal" href="#dom-building">DOM building</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#blank-element">Blank element</a></li>
+<li><a class="reference internal" href="#nonpair-tag">Nonpair tag</a></li>
+<li><a class="reference internal" href="#pair-tag">Pair tag</a></li>
+<li><a class="reference internal" href="#tags-with-parameters">Tags with parameters</a></li>
+<li><a class="reference internal" href="#tags-with-content">Tags with content</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-dhtmlparser.htmlelement">HTMLElement class API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dhtmlparser3.html"
+                        title="previous chapter">dhtmlparser3 API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dhtmlparser.specialdict.html"
+                        title="next chapter">SpecialDict class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/dhtmlparser.htmlelement.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dhtmlparser.specialdict.html" title="SpecialDict class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dhtmlparser3.html" title="dhtmlparser3 API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="dhtmlparser3.html" >dhtmlparser3 API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Bystroushaak.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

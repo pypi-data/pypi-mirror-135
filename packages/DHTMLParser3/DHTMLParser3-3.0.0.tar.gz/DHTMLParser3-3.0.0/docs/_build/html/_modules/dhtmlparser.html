@@ -1,0 +1,404 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dhtmlparser &#8212; dhtmlparser3 3.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for dhtmlparser</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Imports =====================================================================</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">specialdict</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">htmlelement</span>
+
+<span class="kn">from</span> <span class="nn">.htmlelement</span> <span class="kn">import</span> <span class="n">HTMLElement</span>
+<span class="kn">from</span> <span class="nn">.htmlelement</span> <span class="kn">import</span> <span class="n">_rotate_buff</span>
+
+
+<span class="c1"># Functions ===================================================================</span>
+<div class="viewcode-block" id="StateEnum"><a class="viewcode-back" href="../api/dhtmlparser.html#dhtmlparser.StateEnum">[docs]</a><span class="k">class</span> <span class="nc">StateEnum</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">_cnt</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+
+    <span class="n">content</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">_cnt</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">_cnt</span><span class="p">)</span>
+    <span class="n">parameter</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">_cnt</span><span class="p">)</span>
+    <span class="n">comment</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">_cnt</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="first"><a class="viewcode-back" href="../api/dhtmlparser.html#dhtmlparser.first">[docs]</a><span class="k">def</span> <span class="nf">first</span><span class="p">(</span><span class="n">inp_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return first element from `inp_data`, or raise StopIteration.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function was created because it works for generators, lists,</span>
+<span class="sd">        iterators, tuples and so on same way, which indexing doesn&#39;t.</span>
+
+<span class="sd">        Also it have smaller cost than list(generator)[0], because it doesn&#39;t</span>
+<span class="sd">        convert whole `inp_data` to list.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        inp_data (iterable): Any iterable object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        StopIteration: When the `inp_data` is blank.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inp_data</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_raw_split</span><span class="p">(</span><span class="n">itxt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse HTML from text into array filled with tags end text.</span>
+
+<span class="sd">    Source code is little bit unintutive, because it is state machine parser.</span>
+
+<span class="sd">    For better understanding, look at http://bit.ly/1rXRcJj</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        &gt;&gt;&gt; dhtmlparser._raw_split(&#39;&lt;html&gt;&lt;tag params=&quot;true&quot;&gt;&lt;/html&gt;&#39;)</span>
+<span class="sd">        [&#39;&lt;html&gt;&#39;, &#39;&lt;tag params=&quot;true&quot;&gt;&#39;, &#39;&lt;/html&gt;&#39;]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        itxt (str): Input HTML text, which will be parsed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of strings (input splitted to tags and text).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">echr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">buff</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">next_state</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">inside_tag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">escaped</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">COMMENT_START</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">]</span>
+    <span class="n">COMMENT_END</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]</span>
+
+    <span class="n">gc</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">itxt</span><span class="p">:</span>
+        <span class="c1"># content</span>
+        <span class="k">if</span> <span class="n">next_state</span> <span class="o">==</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+                <span class="n">content</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">tag</span>
+                <span class="n">inside_tag</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">+=</span> <span class="n">c</span>
+
+        <span class="c1"># html tag</span>
+        <span class="k">elif</span> <span class="n">next_state</span> <span class="o">==</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">tag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span>
+                <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">content</span>
+
+            <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span> <span class="ow">or</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>
+                <span class="n">echr</span> <span class="o">=</span> <span class="n">c</span>
+                <span class="n">content</span> <span class="o">+=</span> <span class="n">c</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">parameter</span>
+
+            <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span> <span class="ow">and</span> <span class="n">buff</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">COMMENT_START</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">content</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]:</span>
+                    <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+
+                <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">+</span> <span class="n">c</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">comment</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>   <span class="c1"># jump back into tag instead of content</span>
+                    <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                    <span class="n">inside_tag</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+                <span class="n">content</span> <span class="o">+=</span> <span class="n">c</span>
+
+        <span class="c1"># quotes &quot;&quot; / &#39;&#39;</span>
+        <span class="k">elif</span> <span class="n">next_state</span> <span class="o">==</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">parameter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">echr</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">escaped</span><span class="p">:</span>  <span class="c1"># end of quotes</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">tag</span>
+
+            <span class="c1"># unescaped end of line - this is good for invalid HTML like</span>
+            <span class="c1"># &lt;a href=something&quot;&gt;..., because it allows recovery</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">escaped</span> <span class="ow">and</span> <span class="n">buff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">content</span>
+                <span class="n">inside_tag</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">content</span> <span class="o">+=</span> <span class="n">c</span>
+            <span class="n">escaped</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">escaped</span> <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+
+        <span class="c1"># html comments</span>
+        <span class="k">elif</span> <span class="n">next_state</span> <span class="o">==</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">comment</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span> <span class="ow">and</span> <span class="n">buff</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">COMMENT_END</span><span class="p">:</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">tag</span> <span class="k">if</span> <span class="n">inside_tag</span> <span class="k">else</span> <span class="n">StateEnum</span><span class="o">.</span><span class="n">content</span>
+                <span class="n">inside_tag</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">+=</span> <span class="n">c</span>
+
+        <span class="c1"># rotate buffer</span>
+        <span class="n">buff</span> <span class="o">=</span> <span class="n">_rotate_buff</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span>
+        <span class="n">buff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="n">gc</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+        <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">array</span>
+
+
+<span class="k">def</span> <span class="nf">_indexOfEndTag</span><span class="p">(</span><span class="n">istack</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Go through `istack` and search endtag. Element at first index is considered</span>
+<span class="sd">    as opening tag.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        istack (list): List of :class:`.HTMLElement` objects.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Index of end tag or 0 if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">istack</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">istack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isOpeningTag</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">opener</span> <span class="o">=</span> <span class="n">istack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">istack</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">isOpeningTag</span><span class="p">()</span> <span class="ow">and</span> \
+           <span class="n">el</span><span class="o">.</span><span class="n">getTagName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">opener</span><span class="o">.</span><span class="n">getTagName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">el</span><span class="o">.</span><span class="n">isEndTagTo</span><span class="p">(</span><span class="n">opener</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">cnt</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">_parseDOM</span><span class="p">(</span><span class="n">istack</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively go through element array and create DOM.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        istack (list): List of :class:`.HTMLElement` objects.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: DOM tree as list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ostack</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">end_tag_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">neither_nonpair_or_end_or_comment</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">isNonPairTag</span><span class="p">()</span> <span class="ow">or</span> <span class="n">el</span><span class="o">.</span><span class="n">isEndTag</span><span class="p">()</span> <span class="ow">or</span> <span class="n">el</span><span class="o">.</span><span class="n">isComment</span><span class="p">())</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">istack</span><span class="p">):</span>
+        <span class="n">el</span> <span class="o">=</span> <span class="n">istack</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="c1"># check if this is pair tag</span>
+        <span class="n">end_tag_index</span> <span class="o">=</span> <span class="n">_indexOfEndTag</span><span class="p">(</span><span class="n">istack</span><span class="p">[</span><span class="n">index</span><span class="p">:])</span>
+
+        <span class="k">if</span> <span class="n">end_tag_index</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">neither_nonpair_or_end_or_comment</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
+            <span class="n">el</span><span class="o">.</span><span class="n">isNonPairTag</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">end_tag_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">el</span><span class="o">.</span><span class="n">isEndTag</span><span class="p">():</span>
+                <span class="n">ostack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">el</span><span class="o">.</span><span class="n">childs</span> <span class="o">=</span> <span class="n">_parseDOM</span><span class="p">(</span><span class="n">istack</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="n">end_tag_index</span> <span class="o">+</span> <span class="n">index</span><span class="p">])</span>
+            <span class="n">el</span><span class="o">.</span><span class="n">endtag</span> <span class="o">=</span> <span class="n">istack</span><span class="p">[</span><span class="n">end_tag_index</span> <span class="o">+</span> <span class="n">index</span><span class="p">]</span>  <span class="c1"># reference to endtag</span>
+            <span class="n">el</span><span class="o">.</span><span class="n">endtag</span><span class="o">.</span><span class="n">openertag</span> <span class="o">=</span> <span class="n">el</span>
+
+            <span class="n">ostack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
+            <span class="n">ostack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">endtag</span><span class="p">)</span>
+
+            <span class="n">index</span> <span class="o">=</span> <span class="n">end_tag_index</span> <span class="o">+</span> <span class="n">index</span>
+
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">ostack</span>
+
+
+<div class="viewcode-block" id="parseString"><a class="viewcode-back" href="../api/dhtmlparser.html#dhtmlparser.parseString">[docs]</a><span class="k">def</span> <span class="nf">parseString</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">cip</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse string `txt` and return DOM tree consisting of single linked</span>
+<span class="sd">    :class:`.HTMLElement`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        txt (str): HTML/XML string, which will be parsed to DOM.</span>
+<span class="sd">        cip (bool, default True): Case Insensitive Parameters. Use special</span>
+<span class="sd">            dictionary to store :attr:`.HTMLElement.params` as case</span>
+<span class="sd">            insensitive.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        obj: Single conteiner HTML element with blank tag, which has whole DOM\</span>
+<span class="sd">             in it&#39;s :attr:`.HTMLElement.childs` property. This element can be\</span>
+<span class="sd">             queried using :meth:`.HTMLElement.find` functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">HTMLElement</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">txt</span>
+
+    <span class="c1"># remove UTF BOM (prettify fails if not)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">txt</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\xef\xbb\xbf</span><span class="s2">&quot;</span><span class="p">:</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">txt</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cip</span><span class="p">:</span>
+        <span class="n">htmlelement</span><span class="o">.</span><span class="n">html_parser</span><span class="o">.</span><span class="n">SpecialDict</span> <span class="o">=</span> <span class="nb">dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">htmlelement</span><span class="o">.</span><span class="n">html_parser</span><span class="o">.</span><span class="n">SpecialDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">htmlelement</span><span class="o">.</span><span class="n">html_parser</span><span class="o">.</span><span class="n">SpecialDict</span> <span class="o">=</span> <span class="n">specialdict</span><span class="o">.</span><span class="n">SpecialDict</span>
+
+    <span class="n">container</span> <span class="o">=</span> <span class="n">HTMLElement</span><span class="p">()</span>
+    <span class="n">container</span><span class="o">.</span><span class="n">childs</span> <span class="o">=</span> <span class="n">_parseDOM</span><span class="p">([</span>
+        <span class="n">HTMLElement</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">_raw_split</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">container</span></div>
+
+
+<div class="viewcode-block" id="makeDoubleLinked"><a class="viewcode-back" href="../api/dhtmlparser.html#dhtmlparser.makeDoubleLinked">[docs]</a><span class="k">def</span> <span class="nf">makeDoubleLinked</span><span class="p">(</span><span class="n">dom</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Standard output from `dhtmlparser` is single-linked tree. This will make it</span>
+<span class="sd">    double-linked.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dom (obj): :class:`.HTMLElement` instance.</span>
+<span class="sd">        parent (obj, default None): Don&#39;t use this, it is used in recursive</span>
+<span class="sd">               call.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dom</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">dom</span><span class="o">.</span><span class="n">childs</span><span class="p">:</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">dom</span>
+        <span class="n">makeDoubleLinked</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">dom</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="removeTags"><a class="viewcode-back" href="../api/dhtmlparser.html#dhtmlparser.removeTags">[docs]</a><span class="k">def</span> <span class="nf">removeTags</span><span class="p">(</span><span class="n">dom</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove all tags from `dom` and obtain plaintext representation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dom (str, obj, array): str, HTMLElement instance or array of elements.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Plain string without tags.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># python 2 / 3 shill</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">string_type</span> <span class="o">=</span> <span class="n">basestring</span>
+    <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+        <span class="n">string_type</span> <span class="o">=</span> <span class="nb">str</span>
+
+    <span class="c1"># initialize stack with proper value (based on dom parameter)</span>
+    <span class="n">element_stack</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]:</span>
+        <span class="n">element_stack</span> <span class="o">=</span> <span class="n">dom</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dom</span><span class="p">,</span> <span class="n">HTMLElement</span><span class="p">):</span>
+        <span class="n">element_stack</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">childs</span> <span class="k">if</span> <span class="n">dom</span><span class="o">.</span><span class="n">isTag</span><span class="p">()</span> <span class="k">else</span> <span class="p">[</span><span class="n">dom</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dom</span><span class="p">,</span> <span class="n">string_type</span><span class="p">):</span>
+        <span class="n">element_stack</span> <span class="o">=</span> <span class="n">parseString</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span><span class="o">.</span><span class="n">childs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">element_stack</span> <span class="o">=</span> <span class="n">dom</span>
+
+    <span class="c1"># remove all tags</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">element_stack</span><span class="p">:</span>
+        <span class="n">el</span> <span class="o">=</span> <span class="n">element_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">el</span><span class="o">.</span><span class="n">isTag</span><span class="p">()</span> <span class="ow">or</span> <span class="n">el</span><span class="o">.</span><span class="n">isComment</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">el</span><span class="o">.</span><span class="n">getTagName</span><span class="p">()):</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="n">el</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">childs</span><span class="p">:</span>
+            <span class="n">element_stack</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">childs</span> <span class="o">+</span> <span class="n">element_stack</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">dhtmlparser3 3.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Bystroushaak.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

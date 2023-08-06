@@ -1,0 +1,545 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>dhtmlparser3 &#8212; dhtmlparser3 3.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="dhtmlparser3" href="api/dhtmlparser3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/dhtmlparser3.html" title="dhtmlparser3"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">dhtmlparser3 3.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dhtmlparser3">
+<span id="index"></span><h1>dhtmlparser3<a class="headerlink" href="#dhtmlparser3" title="Permalink to this headline">¶</a></h1>
+<p>dhtmlparser3 is a lightweight HTML/XML parser created for one purpose - quick and easy
+picking selected tags from DOM.</p>
+<p>It can be very useful when you are in need to write own “guerilla” API for some webpage, or a
+scrapper.</p>
+<p>If you want, you can also create HTML/XML documents more easily than by joining strings.</p>
+<p>The usage is super simple, and allows you to do things like pattern matching in the HTML tree.</p>
+<div class="section" id="sources">
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline">¶</a></h2>
+<p>Source codes can be found here; <a class="reference external" href="https://github.com/Bystroushaak/dhtmlparser3">https://github.com/Bystroushaak/dhtmlparser3</a></p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>dhtmlparser3 is hosted at <a class="reference external" href="https://pypi.python.org/pypi/dhtmlparser3">pypi</a>, so you can install it using pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">dhtmlparser3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="quick-introduction">
+<h1>Quick introduction<a class="headerlink" href="#quick-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="parse-dom">
+<h2>Parse DOM<a class="headerlink" href="#parse-dom" title="Permalink to this headline">¶</a></h2>
+<p>The first thing you’ll need to do in order to work with the HTML code is parse it into the DOM.</p>
+<p>To do that, import the module and then call a <a class="reference internal" href="api/dhtmlparser3.html#dhtmlparser3.parse" title="dhtmlparser3.parse"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse()</span></code></a> on the text you want to parse.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dhtmlparser3</span>
+
+<span class="n">example_html</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;html&gt;</span>
+<span class="s2">&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;</span>
+<span class="s2">&lt;body&gt;</span>
+<span class="s2">&lt;h1&gt;HTML&lt;/h1&gt;</span>
+<span class="s2">&lt;p&gt;Some content. &lt;a href=&quot;https://blog.rfox.eu&quot;&gt;Link&lt;/a&gt;.&lt;/p&gt;</span>
+<span class="s2">&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;&quot;&quot;&quot;</span>
+
+<span class="n">dom</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">example_html</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you have everything parsed in the tree structure of the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag" title="dhtmlparser3.tags.tag.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a> objects.</p>
+</div>
+<div class="section" id="find-links">
+<h2>Find links<a class="headerlink" href="#find-links" title="Permalink to this headline">¶</a></h2>
+<p>Let’s say that you want all links in the HTML. There is a handy method <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tag.find()</span></code></a>, which does exactly that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;https://blog.rfox.eu&#39;)]), nonpair=False)]</span>
+</pre></div>
+</div>
+<p>The parameters are as follows:</p>
+<ol class="arabic simple">
+<li>String name of the tag you want to find.</li>
+<li>Dict with the parameters, to specify for example, class name.</li>
+<li>(Lambda) function, which takes the tag as a parameter and should return <code class="docutils literal notranslate"><span class="pre">True</span></code> if it matches.</li>
+</ol>
+<p>You can get the link from the tag using <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parameters" title="dhtmlparser3.tags.tag.Tag.parameters"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parameters</span></code></a> property:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+<span class="go">&#39;https://blog.rfox.eu&#39;</span>
+</pre></div>
+</div>
+<p>The second important property is <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a>, where the content of the tag is stored.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">content</span>
+<span class="go">[&#39;Link&#39;]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> property consists of either <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag" title="dhtmlparser3.tags.tag.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a>, <a class="reference internal" href="api/dhtmlparser3.comment.html#dhtmlparser3.tags.comment.Comment" title="dhtmlparser3.tags.comment.Comment"><code class="xref py py-class docutils literal notranslate"><span class="pre">Comment</span></code></a>, or <code class="docutils literal notranslate"><span class="pre">str</span></code> objects. This is because the parser is trying to keep all of the information to be able to restore whitespace-perfect original representation of the HTML.</p>
+<p>But in general, if you want a string from the content, call <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content_str" title="dhtmlparser3.tags.tag.Tag.content_str"><code class="xref py py-meth docutils literal notranslate"><span class="pre">content_str()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">content_str</span><span class="p">()</span>
+<span class="go">&#39;Link&#39;</span>
+</pre></div>
+</div>
+<p>Let’s see the same example with the <code class="docutils literal notranslate"><span class="pre">&lt;p&gt;</span></code> tag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content_str</span><span class="p">()</span>
+<span class="go">&#39;Some content. &lt;a href=&quot;https://blog.rfox.eu&quot;&gt;Link&lt;/a&gt;.&#39;</span>
+</pre></div>
+</div>
+<p>If you want the content without tags, you can call <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content_without_tags" title="dhtmlparser3.tags.tag.Tag.content_without_tags"><code class="xref py py-meth docutils literal notranslate"><span class="pre">content_without_tags()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content_without_tags</span><span class="p">()</span>
+<span class="go">&#39;Some content. Link.&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="structure-of-the-in-memory-objects">
+<h2>Structure of the in-memory objects<a class="headerlink" href="#structure-of-the-in-memory-objects" title="Permalink to this headline">¶</a></h2>
+<p>In order to be effective when working with the DOM, it is useful to understand how the tree actually looks in memory.</p>
+<p>For example:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>HTML<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Some content. <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://blog.rfox.eu&quot;</span><span class="p">&gt;</span>Link<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>is parsed to following structure:</p>
+<img alt="_images/dom_structure.png" src="_images/dom_structure.png" />
+<p>Note, that the whitespaces are part of the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> properties.</p>
+</div>
+<div class="section" id="properties-of-the-tag-object">
+<h2>Properties of the Tag object<a class="headerlink" href="#properties-of-the-tag-object" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned before, the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag" title="dhtmlparser3.tags.tag.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a> object basically consist of two properties <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parameters" title="dhtmlparser3.tags.tag.Tag.parameters"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parameters</span></code></a> and <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a>. First one contains dictionary for the tag parameters, second one contains everything that was in the HTML tag as a list.</p>
+<p>Since writing <code class="docutils literal notranslate"><span class="pre">.content</span></code> and <code class="docutils literal notranslate"><span class="pre">.prarameters</span></code> is cumbersome, you can also use shortcuts <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.p" title="dhtmlparser3.tags.tag.Tag.p"><code class="xref py py-attr docutils literal notranslate"><span class="pre">p</span></code></a> and <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.c" title="dhtmlparser3.tags.tag.Tag.c"><code class="xref py py-attr docutils literal notranslate"><span class="pre">c</span></code></a> to access the same data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">&#39;&lt;tag param1=&quot;1&quot; param2=&quot;2&quot;&gt;  &lt;content /&gt;  &lt;/tag&gt;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">p</span>
+<span class="go">SpecialDict([(&#39;param1&#39;, &#39;1&#39;), (&#39;param2&#39;, &#39;2&#39;)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">c</span>
+<span class="go">[&#39;  &#39;, Tag(&#39;content&#39;, parameters=SpecialDict(), is_non_pair=True), &#39;  &#39;]</span>
+</pre></div>
+</div>
+<p>But the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag" title="dhtmlparser3.tags.tag.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a> objects also support dictionary-like interface, so you can access both <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parameters" title="dhtmlparser3.tags.tag.Tag.parameters"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parameters</span></code></a> and <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> using square brackets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="p">[</span><span class="s2">&quot;param1&quot;</span><span class="p">]</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">Tag(&#39;content&#39;, parameters=SpecialDict(), is_non_pair=True)</span>
+</pre></div>
+</div>
+<p>Notice, that <code class="docutils literal notranslate"><span class="pre">dom[0]</span></code> returns expected tag, even though the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> property contains as a first element a whitespace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">c</span>
+<span class="go">[&#39;  &#39;, Tag(&#39;content&#39;, parameters=SpecialDict(), is_non_pair=True), &#39;  &#39;]</span>
+</pre></div>
+</div>
+<p>That is because it is not using the <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a> for access, but <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.tags" title="dhtmlparser3.tags.tag.Tag.tags"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tags</span></code></a> property, which returns only tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">tags</span>
+<span class="go">[Tag(&#39;content&#39;, parameters=SpecialDict(), is_non_pair=True)]</span>
+</pre></div>
+</div>
+<p>Square brackets can be also used for setting and deleting the sub-elements:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;new_content&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;param&quot;</span><span class="p">:</span> <span class="s2">&quot;new_param&quot;</span><span class="p">},</span>  <span class="n">is_non_pair</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span>
+<span class="go">&#39;&lt;tag param1=&quot;1&quot; param2=&quot;2&quot;&gt;  &lt;new_content param=&quot;new_param&quot; /&gt;  &lt;/tag&gt;&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span>
+<span class="go">&#39;&lt;tag param1=&quot;1&quot; param2=&quot;2&quot;&gt;    &lt;/tag&gt;&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="inserting-tags-using-square-brackets">
+<h3>Inserting tags using square brackets<a class="headerlink" href="#inserting-tags-using-square-brackets" title="Permalink to this headline">¶</a></h3>
+<p>To make your life a bit easier, you can also insert tags using square brackets with slices. This is similar to calling <code class="docutils literal notranslate"><span class="pre">.insert()</span></code> method on a list, but it does support <code class="docutils literal notranslate"><span class="pre">-1</span></code> as an index for appending:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="p">[</span><span class="mi">0</span><span class="p">:]</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">is_non_pair</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;another&quot;</span><span class="p">,</span> <span class="n">is_non_pair</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span>
+<span class="go">&#39;&lt;tag param1=&quot;1&quot; param2=&quot;2&quot;&gt;&lt;test /&gt;    &lt;another /&gt;&lt;/tag&gt;&#39;</span>
+</pre></div>
+</div>
+<p>Note that the whitespaces were not affected, as the tags were <cite>inserted</cite>, not replaced.</p>
+</div>
+</div>
+<div class="section" id="looking-for-specific-things">
+<h2>Looking for specific things<a class="headerlink" href="#looking-for-specific-things" title="Permalink to this headline">¶</a></h2>
+<p>Most common usage of the dhtmlparser3 is to look for specific things. For this, there are two handy methods <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a> and <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.wfind" title="dhtmlparser3.tags.tag.Tag.wfind"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wfind()</span></code></a>. First one traverses the tree depth first, second breadth first.</p>
+<p>Usually, you’ll probably use <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a>.</p>
+<p>Let’s see an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dom</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;page-body&quot;&gt;</span>
+<span class="s2">      &lt;figure id=&quot;d4cb77d7-f9fe-4796-b38c-f84ac9efb178&quot; class=&quot;link-to-page&quot;&gt;</span>
+<span class="s2">        &lt;h1&gt;&lt;a class=&quot;unroll_category&quot; href=&quot;en/Weekly_updates.html&quot; title=&quot;Weekly updates&quot;&gt;📂 &lt;u&gt;Category: &lt;em&gt;Weekly updates&lt;/em&gt;&lt;/u&gt;&lt;/a&gt;&lt;/h1&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Weekly_updates/Newsletter_2021-10-29_Monster_post.html&quot; title=&quot;Newsletter 2021-10-29; Monster post&quot;&gt;📄 Newsletter 2021-10-29; Monster post&lt;/a&gt; &lt;time&gt;(@2021-10-29)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Some of the more important points in my year, and also general update regarding the tinySelf, objWiki and other projects of mine. Expect a lot of text.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Weekly_updates/Newsletter_2021-01-08_Defragmentation_in_progress.html&quot; title=&quot;Newsletter 2021-01-08; Defragmentation in progress&quot;&gt;📄 Newsletter 2021-01-08; Defragmentation in progress&lt;/a&gt; &lt;time&gt;(@2021-01-08)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Opensource contributions, book report, improvements, published blogposts and generally progress in my life and work.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Weekly_updates/Newsletter_2020-09-12_Waves_of_productivity.html&quot; title=&quot;Newsletter 2020-09-12; Waves of productivity&quot;&gt;📄 Newsletter 2020-09-12; Waves of productivity&lt;/a&gt; &lt;time&gt;(@2020-09-12)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Some of the stuff I did in last month and a half.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;h4 style=&quot;text-align: right;&quot;&gt;&lt;a href=&quot;en/Weekly_updates.html&quot; title=&quot;Weekly updates&quot;&gt;&amp; 23 more blogposts&lt;/a&gt;&lt;/h4&gt;</span>
+<span class="s2">      &lt;/figure&gt;</span>
+<span class="s2">      &lt;figure id=&quot;aaede967-1ab7-4910-ba42-5ea5f8ee480f&quot; class=&quot;link-to-page&quot;&gt;</span>
+<span class="s2">        &lt;h1&gt;&lt;a class=&quot;unroll_category&quot; href=&quot;en/Technological_marvels.html&quot; title=&quot;Technological marvels&quot;&gt;📂 &lt;u&gt;Category: &lt;em&gt;Technological marvels&lt;/em&gt;&lt;/u&gt;&lt;/a&gt;&lt;/h1&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Technological_marvels/Microtron_under_the_Vitkov_Hill.html&quot; title=&quot;Microtron under the Vítkov Hill&quot;&gt;📄 Microtron under the Vítkov Hill&lt;/a&gt; &lt;time&gt;(last modified @2021-06-26)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Introduction to rare particle accelerator in Prague.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Technological_marvels/LVR-15_research_reactor_near_Prague.html&quot; title=&quot;LVR-15 research reactor near Prague&quot;&gt;📄 LVR-15 research reactor near Prague&lt;/a&gt; &lt;time&gt;(@2019-11-24)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Notes from my visit of Czechoslovakian LVR-15 research nuclear reactor in Řež near Prague.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;div style=&quot;margin-left: 1em&quot;&gt;</span>
+<span class="s2">          &lt;h4&gt;&lt;a class=&quot;&quot; href=&quot;en/Technological_marvels/The_beauty_of_a_fusion_reactor.html&quot; title=&quot;The beauty of a fusion reactor&quot;&gt;📄 The beauty of a fusion reactor&lt;/a&gt; &lt;time&gt;(@2019-06-12)&lt;/time&gt;&lt;/h4&gt;</span>
+<span class="s2">          &lt;p style=&quot;margin-top: -1em;&quot;&gt;&lt;em&gt;Introduction of interesting research fusion reactor built in Germany. Contains a lot of pictures.&lt;/em&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">      &lt;/figure&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s say, that I want to obtain all links that point to the weekly updates category:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;en/Weekly&quot;</span><span class="p">))</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;class&#39;, &#39;unroll_category&#39;), (&#39;href&#39;, &#39;en/Weekly_updates.html&#39;), (&#39;title&#39;, &#39;Weekly updates&#39;)]), is_non_pair=False),</span>
+<span class="go"> Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;class&#39;, &#39;&#39;), (&#39;href&#39;, &#39;en/Weekly_updates/Newsletter_2021-10-29_Monster_post.html&#39;), (&#39;title&#39;, &#39;Newsletter 2021-10-29; Monster post&#39;)]), is_non_pair=False),</span>
+<span class="go"> Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;class&#39;, &#39;&#39;), (&#39;href&#39;, &#39;en/Weekly_updates/Newsletter_2021-01-08_Defragmentation_in_progress.html&#39;), (&#39;title&#39;, &#39;Newsletter 2021-01-08; Defragmentation in progress&#39;)]), is_non_pair=False),</span>
+<span class="go"> Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;class&#39;, &#39;&#39;), (&#39;href&#39;, &#39;en/Weekly_updates/Newsletter_2020-09-12_Waves_of_productivity.html&#39;), (&#39;title&#39;, &#39;Newsletter 2020-09-12; Waves of productivity&#39;)]), is_non_pair=False),</span>
+<span class="go"> Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;en/Weekly_updates.html&#39;), (&#39;title&#39;, &#39;Weekly updates&#39;)]), is_non_pair=False)]</span>
+</pre></div>
+</div>
+<p>As you can see, I am using lambda parameter to match specific part of the URL.</p>
+<p>Note that I am specifically using <code class="docutils literal notranslate"><span class="pre">x.p.get(&quot;href&quot;,</span> <span class="pre">&quot;&quot;)</span></code> to access the <code class="docutils literal notranslate"><span class="pre">href</span></code> parameter, because not every <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code> element has to have it set, in which case it will cause and exception.</p>
+<p>To obtain the URL’s, all I need to do is use simple list comprehension:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">links</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;en/Weekly&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;https://blog.rfox.eu/</span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">links</span><span class="p">]</span>
+<span class="go">[&#39;https://blog.rfox.eu/en/Weekly_updates.html&#39;,</span>
+<span class="go"> &#39;https://blog.rfox.eu/en/Weekly_updates/Newsletter_2021-10-29_Monster_post.html&#39;,</span>
+<span class="go"> &#39;https://blog.rfox.eu/en/Weekly_updates/Newsletter_2021-01-08_Defragmentation_in_progress.html&#39;,</span>
+<span class="go"> &#39;https://blog.rfox.eu/en/Weekly_updates/Newsletter_2020-09-12_Waves_of_productivity.html&#39;,</span>
+<span class="go"> &#39;https://blog.rfox.eu/en/Weekly_updates.html&#39;]</span>
+</pre></div>
+</div>
+<p>If I wanted content of the tags, it would be as simple as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">content_without_tags</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">links</span><span class="p">]</span>
+<span class="go">[&#39;📂 Category: Weekly updates&#39;,</span>
+<span class="go"> &#39;📄 Newsletter 2021-10-29; Monster post&#39;,</span>
+<span class="go"> &#39;📄 Newsletter 2021-01-08; Defragmentation in progress&#39;,</span>
+<span class="go"> &#39;📄 Newsletter 2020-09-12; Waves of productivity&#39;,</span>
+<span class="go"> &#39;&amp; 23 more blogposts&#39;]</span>
+</pre></div>
+</div>
+<p>More complex example may include matching the elements in the tree, for example select all links, which don’t have <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> as a parent, but have <code class="docutils literal notranslate"><span class="pre">class</span></code> parameter set to <code class="docutils literal notranslate"><span class="pre">active</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span> <span class="o">=</span> <span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="go">&lt;div&gt;</span>
+<span class="go">  &lt;a href=&quot;not this&quot; class=&quot;active&quot;&gt;link&lt;/a&gt;</span>
+<span class="go">  &lt;a href=&quot;not this&quot;&gt;link&lt;/a&gt;</span>
+<span class="go">  &lt;span&gt;</span>
+<span class="go">    &lt;a href=&quot;not this&quot;&gt;link&lt;/a&gt;</span>
+<span class="go">    &lt;a href=&quot;this one&quot; class=&quot;active&quot;&gt;this one&lt;/a&gt;</span>
+<span class="go">  &lt;/span&gt;</span>
+<span class="go">&lt;/div&gt;</span>
+<span class="go">&quot;&quot;&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;active&quot;</span><span class="p">},</span> <span class="n">fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;this one&#39;), (&#39;class&#39;, &#39;active&#39;)]), is_non_pair=False)]</span>
+</pre></div>
+</div>
+<div class="section" id="match">
+<h3><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.match" title="dhtmlparser3.tags.tag.Tag.match"><code class="xref py py-meth docutils literal notranslate"><span class="pre">match()</span></code></a><a class="headerlink" href="#match" title="Permalink to this headline">¶</a></h3>
+<p>In addition to <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a>, there is also <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.match" title="dhtmlparser3.tags.tag.Tag.match"><code class="xref py py-meth docutils literal notranslate"><span class="pre">match()</span></code></a>. What it does is that it matches the paths specified by the arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;not this&#39;)]), is_non_pair=True),</span>
+<span class="go"> Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;this one&#39;), (&#39;class&#39;, &#39;active&#39;)]), is_non_pair=False)]</span>
+</pre></div>
+</div>
+<p>As you can see, the elements which are <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code> tags in <code class="docutils literal notranslate"><span class="pre">&lt;span&gt;</span></code> were matched. You can use all arguments that <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a> takes as dictionaries (<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;active&quot;</span><span class="p">}})</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;this one&#39;), (&#39;class&#39;, &#39;active&#39;)]), is_non_pair=False)]</span>
+</pre></div>
+</div>
+<p>or lists (<code class="docutils literal notranslate"><span class="pre">*args</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;active&quot;</span><span class="p">}])</span>
+<span class="go">[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;this one&#39;), (&#39;class&#39;, &#39;active&#39;)]), is_non_pair=False)]</span>
+</pre></div>
+</div>
+<p>This way, you can look for patterns and sub-patterns and so on.</p>
+</div>
+<div class="section" id="wfind">
+<h3><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.wfind" title="dhtmlparser3.tags.tag.Tag.wfind"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wfind()</span></code></a><a class="headerlink" href="#wfind" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.wfind" title="dhtmlparser3.tags.tag.Tag.wfind"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wfind()</span></code></a> implements similar pattern matching to <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.match" title="dhtmlparser3.tags.tag.Tag.match"><code class="xref py py-meth docutils literal notranslate"><span class="pre">match()</span></code></a>, but always wraps the result in the empty container object. This way, it is possible to chain the calls (which is not possible for <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a> and <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.match" title="dhtmlparser3.tags.tag.Tag.match"><code class="xref py py-meth docutils literal notranslate"><span class="pre">match()</span></code></a>, because they return <code class="docutils literal notranslate"><span class="pre">list</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="go">Tag(name=&quot;&quot;, content=[Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;not this&#39;)]), is_non_pair=False), Tag(&#39;a&#39;, parameters=SpecialDict([(&#39;href&#39;, &#39;this one&#39;), (&#39;class&#39;, &#39;active&#39;)]), is_non_pair=False)])</span>
+</pre></div>
+</div>
+<p>BTW, you can check if the returned container matches anything, by using <code class="docutils literal notranslate"><span class="pre">if</span></code> condition on the whole container, because it implements bool magic method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">dom</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bool</span><span class="p">(</span><span class="n">dom</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;blah&quot;</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>So for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">dom</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wfind</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
+  <span class="c1"># .. do something</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="other-useful-things-to-know">
+<h2>Other useful things to know<a class="headerlink" href="#other-useful-things-to-know" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="remove">
+<h3><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.remove" title="dhtmlparser3.tags.tag.Tag.remove"><code class="xref py py-meth docutils literal notranslate"><span class="pre">remove()</span></code></a><a class="headerlink" href="#remove" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.remove" title="dhtmlparser3.tags.tag.Tag.remove"><code class="xref py py-meth docutils literal notranslate"><span class="pre">remove()</span></code></a> will remove given element from the sub-tree. The element has to be an actual element from the tree, that is the result of <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a> call or some other method of traversal of the tree.</p>
+<p>For example, to remove all links:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;href&quot;</span><span class="p">:</span> <span class="s2">&quot;not this&quot;</span><span class="p">}):</span>
+<span class="gp">... </span> <span class="n">dom</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">True</span>
+<span class="go">True</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">dom</span><span class="p">))</span>
+
+<span class="go">&lt;div&gt;</span>
+
+
+<span class="go">  &lt;span&gt;</span>
+
+<span class="go">    &lt;a href=&quot;this one&quot; class=&quot;active&quot;&gt;this one&lt;/a&gt;</span>
+<span class="go">  &lt;/span&gt;</span>
+<span class="go">&lt;/div&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tag-prettify">
+<h3><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.prettify" title="dhtmlparser3.tags.tag.Tag.prettify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tag.prettify()</span></code></a><a class="headerlink" href="#tag-prettify" title="Permalink to this headline">¶</a></h3>
+<p>As you can see, a lot of whitespaces were left. To get rid of them, you can call <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.prettify" title="dhtmlparser3.tags.tag.Tag.prettify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tag.prettify()</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dom</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>
+<span class="go">&lt;div&gt;</span>
+<span class="go">  &lt;span&gt;</span>
+<span class="go">    &lt;a href=&quot;this one&quot; class=&quot;active&quot;&gt;this one&lt;/a&gt;</span>
+<span class="go">  &lt;/span&gt;</span>
+<span class="go">&lt;/div&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="replace-with">
+<h3><a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.replace_with" title="dhtmlparser3.tags.tag.Tag.replace_with"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace_with()</span></code></a><a class="headerlink" href="#replace-with" title="Permalink to this headline">¶</a></h3>
+<p>You can replace tags by calling <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.replace_with" title="dhtmlparser3.tags.tag.Tag.replace_with"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace_with()</span></code></a>, and depending on the <code class="docutils literal notranslate"><span class="pre">keep_content</span></code> parameter (default <code class="docutils literal notranslate"><span class="pre">True</span></code>), it will keep the content same:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dom</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dom</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>
+<span class="go">&lt;div&gt;</span>
+<span class="go">  &lt;p&gt;</span>
+<span class="go">    &lt;a href=&quot;this one&quot; class=&quot;active&quot;&gt;this one&lt;/a&gt;</span>
+<span class="go">  &lt;/p&gt;</span>
+<span class="go">&lt;/div&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-dom">
+<h3>Create DOM<a class="headerlink" href="#create-dom" title="Permalink to this headline">¶</a></h3>
+<p>And you can of course create the DOM from scratch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dhtmlparser3</span> <span class="kn">import</span> <span class="n">Tag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span> <span class="o">=</span> <span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span><span class="p">[</span><span class="mi">0</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;container&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;parameter&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xml</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">Tag</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;parameter&quot;</span><span class="p">:</span> <span class="s2">&quot;another value&quot;</span><span class="p">},</span> <span class="p">[</span><span class="s2">&quot;another content&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>
+<span class="go">&lt;xml&gt;</span>
+<span class="go">  &lt;container&gt;</span>
+<span class="go">    &lt;item parameter=&quot;value&quot;&gt;content&lt;/item&gt;</span>
+<span class="go">    &lt;item parameter=&quot;another value&quot;&gt;another content&lt;/item&gt;</span>
+<span class="go">  &lt;/container&gt;</span>
+<span class="go">&lt;/xml&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="things-that-may-be-useful-to-know">
+<h2>Things that may be useful to know<a class="headerlink" href="#things-that-may-be-useful-to-know" title="Permalink to this headline">¶</a></h2>
+<p>Parsing is case sensitive.</p>
+<p>Matching using <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a> is case insensitive. You can make it case sensitive by setting <code class="docutils literal notranslate"><span class="pre">case_sensitive</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>Instead of <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find" title="dhtmlparser3.tags.tag.Tag.find"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find()</span></code></a>, you can call <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.find_depth_first_iter" title="dhtmlparser3.tags.tag.Tag.find_depth_first_iter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_depth_first_iter()</span></code></a> to get lazy evaluated iterator.</p>
+<p>You can compare elements using <code class="docutils literal notranslate"><span class="pre">==</span></code>, and it will compare only equality of <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.name" title="dhtmlparser3.tags.tag.Tag.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code></a>, <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parameters" title="dhtmlparser3.tags.tag.Tag.parameters"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parameters</span></code></a> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">is_non_pair</span></code>, not the subtree.</p>
+<p>It is possible to iterate over tags in given element by simply using it in <code class="docutils literal notranslate"><span class="pre">for</span></code> loop. This will skip whitespaces.</p>
+<p>If you want <code class="docutils literal notranslate"><span class="pre">bytes</span></code> representation of the DOM string, call <code class="docutils literal notranslate"><span class="pre">bytes(dom)</span></code> and it will work.</p>
+<p>All elements have <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parent" title="dhtmlparser3.tags.tag.Tag.parent"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parent</span></code></a> set by default. If you insert new elements using square brackets operator, it will be correctly set. If you however set new part of the sub-tree manually by inserting it to <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.content" title="dhtmlparser3.tags.tag.Tag.content"><code class="xref py py-attr docutils literal notranslate"><span class="pre">content</span></code></a>, you have to set it manually, or call <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.double_link" title="dhtmlparser3.tags.tag.Tag.double_link"><code class="xref py py-meth docutils literal notranslate"><span class="pre">double_link()</span></code></a> on the element where you’ve inserted it.</p>
+<p><a class="reference internal" href="api/dhtmlparser3.html#dhtmlparser3.parse" title="dhtmlparser3.parse"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse()</span></code></a> returns either root element, or virtual container element, which is <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag" title="dhtmlparser3.tags.tag.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a> with empty name, if there are multiple root elements.</p>
+<p>Non-pair elements are autodetected even if they are not valid HTML, and parser should in general handle gracefully malformed HTML.</p>
+<p>Non-key-value parameters like for example <code class="docutils literal notranslate"><span class="pre">&lt;tag</span> <span class="pre">rectangle&gt;</span></code> are parsed to empty value in <a class="reference internal" href="api/dhtmlparser3.tag.html#dhtmlparser3.tags.tag.Tag.parameters" title="dhtmlparser3.tags.tag.Tag.parameters"><code class="xref py py-attr docutils literal notranslate"><span class="pre">parameters</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&lt;tag rectangle&gt;&quot;</span><span class="p">)</span>
+<span class="go">Tag(&#39;tag&#39;, parameters=SpecialDict([(&#39;rectangle&#39;, &#39;&#39;)]), is_non_pair=True)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">dhtmlparser3</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;&lt;tag rectangle&gt;&quot;</span><span class="p">))</span>
+<span class="go">&#39;&lt;tag rectangle /&gt;&#39;</span>
+</pre></div>
+</div>
+<p>Notice how the tag was correctly recognized as non-pair.</p>
+</div>
+</div>
+<div class="section" id="package-content">
+<h1>Package content<a class="headerlink" href="#package-content" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.html">dhtmlparser3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.tag.html">dhtmlparser3.tags.tag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.comment.html">dhtmlparser3.tags.comment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.parser.html">dhtmlparser3.parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.tokenizer.html">dhtmlparser3.tokenizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.tokens.html">dhtmlparser3.tokens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.quoter.html">dhtmlparser3.quoter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dhtmlparser3.specialdict.html">dhtmlparser3.specialdict</a></li>
+</ul>
+</div>
+<div class="section" id="unittests">
+<h2>Unittests<a class="headerlink" href="#unittests" title="Permalink to this headline">¶</a></h2>
+<p>Almost everything should be tested. You can run the tests like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export PYTHONPATH=&quot;src/:$PYTHONPATH&quot;
+$ py.test
+============================= test session starts ==============================
+platform linux -- Python 3.8.10, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: /home/bystrousak/Desktop/Syncthing/c0d3z/python/libs/pyDHTMLParser3
+collected 101 items
+
+tests/test_comment.py .                                                  [  0%]
+tests/test_escapers.py ..                                                [  2%]
+tests/test_parser.py ..........                                          [ 12%]
+tests/test_specialdict.py ............                                   [ 24%]
+tests/test_tag.py ......................................                 [ 62%]
+tests/test_tokenizer.py ......................................           [100%]
+
+============================= 101 passed in 0.16s ==============================
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">dhtmlparser3</a><ul>
+<li><a class="reference internal" href="#sources">Sources</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quick-introduction">Quick introduction</a><ul>
+<li><a class="reference internal" href="#parse-dom">Parse DOM</a></li>
+<li><a class="reference internal" href="#find-links">Find links</a></li>
+<li><a class="reference internal" href="#structure-of-the-in-memory-objects">Structure of the in-memory objects</a></li>
+<li><a class="reference internal" href="#properties-of-the-tag-object">Properties of the Tag object</a><ul>
+<li><a class="reference internal" href="#inserting-tags-using-square-brackets">Inserting tags using square brackets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#looking-for-specific-things">Looking for specific things</a><ul>
+<li><a class="reference internal" href="#match"><code class="docutils literal notranslate"><span class="pre">match()</span></code></a></li>
+<li><a class="reference internal" href="#wfind"><code class="docutils literal notranslate"><span class="pre">wfind()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-useful-things-to-know">Other useful things to know</a><ul>
+<li><a class="reference internal" href="#remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+<li><a class="reference internal" href="#tag-prettify"><code class="docutils literal notranslate"><span class="pre">Tag.prettify()</span></code></a></li>
+<li><a class="reference internal" href="#replace-with"><code class="docutils literal notranslate"><span class="pre">replace_with()</span></code></a></li>
+<li><a class="reference internal" href="#create-dom">Create DOM</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#things-that-may-be-useful-to-know">Things that may be useful to know</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#package-content">Package content</a><ul>
+<li><a class="reference internal" href="#unittests">Unittests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api/dhtmlparser3.html"
+                        title="next chapter">dhtmlparser3</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/dhtmlparser3.html" title="dhtmlparser3"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">dhtmlparser3 3.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Bystroushaak.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>
