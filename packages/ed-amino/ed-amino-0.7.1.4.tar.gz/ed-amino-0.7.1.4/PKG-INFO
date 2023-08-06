@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: ed-amino
+Version: 0.7.1.4
+Summary: Async library for amino.
+Home-page: https://github.com/SvytDola/edamino
+Author: SvytDola
+License: MIT
+Keywords: edamino
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# edamino
+Async api for amino
+
+## Installation: 
+`pip install ed-amino`
+
+### Example Bot.
+```py
+from edamino import Bot, Context, logger
+
+bot = Bot(email='email', password='password', prefix="/")
+
+
+@bot.on_ready
+async def on_ready():
+    logger.info('Ready.')
+
+
+@bot.command('ping')
+async def echo(ctx: Context):
+    await ctx.reply('Pong!')
+
+
+if __name__ == '__main__':
+    bot.start()
+```
+![](https://media.discordapp.net/attachments/868188677602422804/931159730393591870/anim.gif)
+
+If you have any problems, please write to this discord https://discord.gg/SfzWs5djpT
+
+
