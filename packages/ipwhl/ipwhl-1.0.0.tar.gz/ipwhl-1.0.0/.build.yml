@@ -1,0 +1,20 @@
+image: archlinux
+packages:
+  - go-ipfs
+  - python-pip
+sources:
+  - https://git.sr.ht/~cnx/ipwhl-utils
+tasks:
+  - init: |
+      ipfs init
+      systemctl --user enable --now ipfs.service
+      ipwhl-utils/.pinata.py
+      python -m pip install --no-warn-script-location pip
+      python -m pip install --no-warn-script-location tox
+  - lint: python -m tox -c ipwhl-utils
+environment:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+  PIP_FORCE_REINSTALL: 1
+  PIP_INDEX_URL: >-
+    http://localhost:8080/ipfs/QmZRtxHyp4GtGnXWq6uPhdFTuvataHSLcbKsnw6Zc3Pv7u
+  PIP_QUIET: 1
