@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "ytcomment_trends"
+version = "0.1.1"
+description = "YouTube comment trends analysis tool using oseti"
+authors = ["Kyosuke Miyamura <ask@386.jp>"]
+homepage = "https://www.386.jp/works/ytcomment_trends"
+repository = "https://github.com/386jp/ytcomment_trends"
+readme = "README.md"
+license = "MIT"
+classifiers=[
+    'License :: OSI Approved :: MIT License',
+
+    'Programming Language :: Python :: 3.9',
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+
+google-api-python-client = "^2.36.0"
+google-auth-oauthlib = "^0.4.6"
+google-auth-httplib2 = "^0.1.0"
+oseti = "^0.2"
+pandas = "^1.3.5"
+matplotlib = "^3.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ytcomment_trends = "ytcomment_trends.entrypoint:entrypoint"
