@@ -1,0 +1,19 @@
+{% extends 'lib/base.html' %}
+{% block body %}
+<div class="row">
+    <div class="col-md-6 mr-auto ml-auto">
+        <div class="card">
+            <div class="card-body">
+                <p>Are you sure you want to delete '{{ sport }}' Sport?</p>
+                <form method="post">{% csrf_token %}
+                    <br>
+                    <button class="float-left btn btn-danger btn-space" type="submit">
+                        <i class="fas fa-trash-alt"></i>&nbsp;&nbsp;Delete
+                    </button>
+                    <a href="/sport/{{ sport.slug }}/edit" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

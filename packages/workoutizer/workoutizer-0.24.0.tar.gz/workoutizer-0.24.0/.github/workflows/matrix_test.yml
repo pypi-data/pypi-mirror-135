@@ -1,0 +1,76 @@
+
+name: Matrix Test
+
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - "setup/requirements/**.txt"
+      - ".github/workflows/matrix_test.yml"
+
+  push:
+    branches: main
+
+jobs:
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: black formatting
+      run: |
+        python -m pip install --upgrade pip
+        pip install black
+        black --check .
+    - name: flake8 formatting
+      if: always()
+      run: |
+        pip install flake8
+        flake8 .
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      if: always()
+      run: |
+        pip install pip==21.2.4
+        pip install -r setup/requirements/dev-requirements.txt
+        pip install -e .
+
+    - name: Run Tests
+      if: always()
+      run: |
+        pytest tests/ -vv -n2 --color=yes
+
+    - name: Init
+      if: always()
+      env:
+        WKZ_LOG_LEVEL: DEBUG
+      run: |
+        wkz init --demo
+
+    - name: Check
+      if: always()
+      run: |
+        wkz check

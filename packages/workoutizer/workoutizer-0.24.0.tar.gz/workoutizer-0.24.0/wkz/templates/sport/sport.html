@@ -1,0 +1,31 @@
+{% extends 'lib/base.html' %}
+{% block body %}
+
+<style type="text/css" media="screen">
+    .leaflet-container {
+        height: 395px;
+    }
+</style>
+
+{% include "lib/summary_facts.html" %}
+
+{% if traces or not activities_selected_for_plot %}
+    <div class="row">
+        <div class="col-md-7">
+            {% include 'plotting/plot_history.html' %}
+        </div>
+        <div class="col-md-5">
+            {% include 'map/sport_map.html' %}
+        </div>
+    </div>
+{% else %}
+    {% include 'plotting/plot_history.html' %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+    {% include 'lib/table.html' %}
+    </div>
+</div>
+
+{% endblock %}

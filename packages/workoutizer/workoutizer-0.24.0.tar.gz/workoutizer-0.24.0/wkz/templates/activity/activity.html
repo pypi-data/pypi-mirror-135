@@ -1,0 +1,43 @@
+{% extends 'lib/base.html' %}
+{% load filters %}
+{% block body %}
+
+<style type="text/css" media="screen">
+    .leaflet-container {
+        height: {{ map_height }}px;
+    }
+    .table td {
+        padding: 0.3rem !important;
+    }
+</style>
+
+{% include "activity/activity_facts.html" %}
+
+{% include "activity/activity_best_sections.html" %}
+
+{% if activity.trace_file %}
+    {% if traces %}
+        <div class="row">
+            <div class="col-sm-5">
+                {% if activity.trace_file.latitude_list != "[]" %}
+                    {% include "map/activity_map.html" %}
+                {% endif %}
+            </div>
+            <div class="col-sm-7">
+                {% include "plotting/plot_time_series.html" %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            {% include "plotting/plot_time_series.html" %}
+        </div>
+    {% endif %}
+{% elif not activity.trace_file and traces %}
+    <div class="row">
+        {% include "map/activity_map.html" %}
+    </div>
+{% endif %}
+
+{% include "activity/activity_data.html" %}
+
+{% endblock %}

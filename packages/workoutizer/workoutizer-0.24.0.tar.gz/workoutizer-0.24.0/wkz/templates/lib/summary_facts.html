@@ -1,0 +1,117 @@
+{% load filters %}
+
+<div class="row">
+
+    {% comment %} Trend {% endcomment %}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="fa fa-chart-line" style="color: {{ style.colors.theme_colors.yellow }}"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Trend</p>
+                            <p class="card-title">{{ summary.seven_days_trend|duration }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-calendar"></i>
+                    Duration over last 7 Days
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} Distance {% endcomment %}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="fa fa-road" style="color: {{ style.colors.theme_colors.green }}"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Distance</p>
+                            <p class="card-title">{{ summary.distance }} km<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-arrows-alt-h"></i>
+                    Total Distance of Activities
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} Duration {% endcomment %}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="fas fa-history" style="color: {{ style.colors.theme_colors.red }}"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Duration</p>
+                            <p class="card-title">{{ summary.duration|hours_only }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-arrows-alt-h"></i>
+                    Total Duration of Activities
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} Count {% endcomment %}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="fa fa-hashtag" style="color: {{ style.colors.theme_colors.blue }}"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Count</p>
+                            <p class="card-title">{{ summary.count }}<p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                    <i class="fa fa-arrows-alt-h"></i>
+                    Total Number of Activities
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
