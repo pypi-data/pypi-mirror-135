@@ -1,0 +1,114 @@
+Metadata-Version: 2.1
+Name: imprint
+Version: 0.1.0a2
+Summary: Program for creating MS Word reports from data and content templates
+Home-page: https://github.com/madphysicist/imprint
+Author: Joseph R. Fox-Rabinovitz
+Author-email: jfoxrabinovitz@gmail.com
+Maintainer: Joseph R. Fox-Rabinovitz
+Maintainer-email: jfoxrabinovitz@gmail.com
+License: GNU Affero General Public License v3 or later (AGPLv3+)
+Project-URL: Bugs, https://github.com/madphysicist/imprint/issues
+Project-URL: Documentation, https://imprint.readthedocs.io/en/latest/
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: Intended Audience :: Healthcare Industry
+Classifier: Intended Audience :: Legal Industry
+Classifier: Intended Audience :: Manufacturing
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Other Audience
+Classifier: License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Office/Business
+Classifier: Topic :: Text Processing :: Markup :: XML
+Classifier: Topic :: Utilities
+Provides: imprint
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: python-docx (>=0.8.5)
+Requires-Dist: haggis[docx] (>=0.1a1)
+Provides-Extra: all
+Requires-Dist: haggis[latex,pdf,plot] (>=0.1a1) ; extra == 'all'
+Requires-Dist: pandas (>=0.20) ; extra == 'all'
+Provides-Extra: latex
+Requires-Dist: haggis[latex] (>=0.1a1) ; extra == 'latex'
+Provides-Extra: pdf
+Requires-Dist: haggis[pdf] (>=0.1a1) ; extra == 'pdf'
+
+imprint
+=======
+
+This program is a system for data aggregation and presentation through Microsoft
+Word documents. It uses templates to define dynamically generated portions of
+the document, which the user can construct in arbitrary ways. The content of the
+document is separated from the style information and the content generation.
+
+Using this system does not remove the need to write the initial draft of the
+document you want to create, or the need to generate the data you plan on
+aggregating. This program is only useful if you plan on generating a similarly
+formatted document many times with the same content but different data sources.
+It is not useful for one-off reports or documents.
+
+See the documentation at <https://imprint.readthedocs.io/en/latest> for more
+information, including the history of the project, turorials, and API
+references and installation instructions.
+
+The source and binaries for this program are available on PyPI. The simplest
+installation method is with `pip`:
+
+    pip install imprint[all]
+
+The extra `[all]` is recommended for but not required. Installing from source
+is also an option, by running
+
+    python setup.py install
+
+in the root folder of the project source distribution. The source distribution,
+including documentation can be found at <https://github.com/madphysicist/imprint>.
+
+This program in licensed under the AGPLv3 or later. You should have received a
+copy of the GNU Affero General Public License along with this program. If not,
+see <https://www.gnu.org/licenses/>.
+
+
+Changelog
+=========
+
+0.1.0a2 (?)
+-----------
+
+* Documentation updates
+* Source distribution includes docs
+
+
+0.1.0a1 (2019-04-01)
+--------------------
+
+* Added new haggis optional dependencies
+
+
+0.1a1.dev2 (2019-03-26)
+-----------------------
+
+* Added majority of documentation
+
+
+0.1a1.dev1 (2019-03-20)
+-----------------------
+
+* First release on PyPI.
+* Created Read the Docs pages.
+* Code 95% complete.
+* Documentation 50% complete (reference portion 95% complete).
+* No tests worth speaking of.
+
+
+
