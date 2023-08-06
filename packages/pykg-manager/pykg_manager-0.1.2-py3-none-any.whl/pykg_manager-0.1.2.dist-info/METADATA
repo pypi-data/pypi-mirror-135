@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: pykg-manager
+Version: 0.1.2
+Summary: A proposal Fable Python package manager
+Home-page: https://github.com/thautwarm/reflect
+License: MIT
+Author: thautwarm
+Author-email: twshere@outlook.com
+Requires-Python: >=3.8.0,<4.0.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: diskcache (>=5.4.0,<6.0.0)
+Requires-Dist: dulwich (>=0.20.30,<0.21.0)
+Requires-Dist: lark (>=0.11.3,<0.12.0)
+Requires-Dist: loguru (>=0.5.3,<0.6.0)
+Requires-Dist: tomli-w (>=1.0.0,<2.0.0)
+Requires-Dist: typing-extensions (>=4.0.1,<5.0.0)
+Requires-Dist: wisepy2 (>=1.2.1,<2.0.0)
+Requires-Dist: z3-solver (>=4.8.14,<5.0.0)
+Project-URL: Repository, https://github.com/thautwarm/reflect
+Description-Content-Type: text/markdown
+
+## Pykg
+
+A package manager maintains local/remote dependencies for Fable Python projects.
+
+Write F# and run Python code!
+
+## Installation
+
+```shell
+pip install pykg-manager
+```
+
+## Usage
+
+```shell
+> pykg new myproj && cd myproj
+# or mkdir myproj && cd myproj && pykg new .
+
+> cat ./project.comf
+
+project {
+  name "fspy/testv"
+  mirror "https://raw.githubusercontent.com/thautwarm/comf-index/main"
+  version v0.1.0
+  builder null
+  src {
+    "src/main.fs"
+  }
+  dep {
+    name "lang/python"
+    version ^ v3.8.0
+  }
+  dep {
+    name "lang/net"
+    version >= v5.0.0&&< v7.0.0
+  }
+  exe "src.main"
+}
+
+> cat src/main.fs
+module Main
+
+let _ = printfn "hello world"
+
+> pykg a # resolge packages, compile F# sources, and run main
+
+hello world
+```
+
+
