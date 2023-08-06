@@ -1,0 +1,128 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+  {% block dark-mode-vars %}
+    <link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">
+  {% endblock %}
+  {% if not is_popup and is_nav_sidebar_enabled %}
+    <link rel="stylesheet" href="{% static "admin/css/nav_sidebar.css" %}">
+    <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+  {% endif %}
+  {% block extrastyle %}{% endblock %}
+  {% if LANGUAGE_BIDI %}
+    <link rel="stylesheet" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">
+  {% endif %}
+  {% block extrahead %}{% endblock %}
+  {% block responsive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}
+      <link rel="stylesheet" href="{% static "admin/css/responsive_rtl.css" %}">
+    {% endif %}
+  {% endblock %}
+  {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+  <body
+    class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+    data-admin-utc-offset="{% now "Z" %}"
+  >
+    {% if not is_popup %}
+      {% block header %}
+        <div id="header">
+          {% if is_nav_sidebar_enabled %}
+            {% block nav-sidebar-toggle %}
+              <button
+                class="btn-unstyled"
+                id="toggle-nav-sidebar"
+                aria-controls="nav-sidebar"
+                aria-haspopup="menu"
+                aria-label="{% translate 'Toggle navigation' %}"
+              >
+                <svg viewBox="0 0 100 50" width="24" height="24" id="hamburger">
+                  <rect width="100%" height="8"></rect>
+                  <rect y="30" width="100" height="8"></rect>
+                  <rect y="60" width="100" height="8"></rect>
+                </svg>
+              </button>
+            {% endblock %}
+          {% endif %}
+          <div id="branding">
+            {% block branding %}{% endblock %}
+          </div>
+          {% block usertools %}
+            {% if has_permission %}
+              <div class="dropdown">
+                <button class="btn-unstyled dropdown-toggle" aria-controls="user-tools" aria-haspopup="true">
+                  {% firstof user.get_short_name user.get_username %}
+                  <span class="caret" role="presentation">&#9660;</span>
+                </button>
+                {% block userlinks %}
+                  <ul class="dropdown-menu" id="user-tools">
+                    {% if site_url %}
+                      <li><a href="{{ site_url }}">{% translate 'View site' %}</a></li>
+                    {% endif %}
+                    {% if user.is_active and user.is_staff %}
+                      {% url 'django-admindocs-docroot' as docsroot %}
+                      {% if docsroot %}
+                        <li><a href="{{ docsroot }}">{% translate 'Documentation' %}</a></li>
+                      {% endif %}
+                    {% endif %}
+                    {% if user.has_usable_password %}
+                      <li><a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a></li>
+                  </ul>
+                </div>
+              {% endblock %}
+            {% endif %}
+          {% endblock %}
+          {% block nav-global %}{% endblock %}
+        </div>
+      {% endblock header %}
+    {% endif %}
+
+    {% if not is_popup %}
+      {% if is_nav_sidebar_enabled %}
+        {% block nav-sidebar %}
+          {% include "admin/nav_sidebar.html" %}
+        {% endblock %}
+      {% endif %}
+    {% endif %}
+
+    <div id="main-container">
+      <div id="overlay"></div>
+      {% if not is_popup %}
+        {% block breadcrumbs %}
+          <div class="breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+            {% if title %} &rsaquo; {{ title }}{% endif %}
+          </div>
+        {% endblock %}
+      {% endif %}
+
+      <main>
+        {% block messages %}
+          {% if messages %}
+            <ul class="messagelist">
+                {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        {% endblock messages %}
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+        {% block object-tools %}{% endblock %}
+        <div id="content" class="{% block coltype %}{% endblock %}">
+          {% block content %}{% endblock %}
+          {{ content }}
+          {% block sidebar %}{% endblock %}
+        </div>
+      </main>
+      {% block footer %}<footer id="footer"></div>{% endblock %}
+    </div>
+  </body>
+</html>
