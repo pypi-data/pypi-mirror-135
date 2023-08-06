@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: cpm-cli
+Version: 1.11.1
+Summary: Chromos Package Manager
+Home-page: https://github.com/jorsanpe/cpm
+Author: Jordi Sánchez
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: C++
+Classifier: Programming Language :: C
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Software Development
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Software Development :: Embedded Systems
+Classifier: Topic :: System :: Software Distribution
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: urllib3
+Requires-Dist: requests
+Requires-Dist: docker
+Requires-Dist: ninja
+Requires-Dist: cmake
+Requires-Dist: semver
+Requires-Dist: ruamel.yaml (>=0.17.17)
+Requires-Dist: six
+Provides-Extra: testing
+Requires-Dist: pytest ; extra == 'testing'
+Requires-Dist: mock ; extra == 'testing'
+Requires-Dist: werkzeug ; extra == 'testing'
+Requires-Dist: Flask ; extra == 'testing'
+
+# cpm: A modern project management tool for C/C++ projects  ![CI](https://github.com/jorsanpe/cpm/workflows/CI/badge.svg)
+
+You can find the [documentation](https://cpmbits.com/documentation/getting-started.html) in the [cpmbits website](https://cpmbits.com).
+
+## Installation
+`pip3 install cpm-cli`
+
+CPM depends on [CMake](https://cmake.org/) and [ninja](https://ninja-build.org/) for the build process.
+
+## Getting started
+```
+cpm create DeathStartLaserBackend
+cd DeathStartLaserBackend
+cpm build
+```
+
+After creating the project, the binary will be available in the project `build` directory. 
+```
+./build/DeathStartLaserBackend
+```
+
+### Manage dependencies
+CPM manages your project dependencies through CPM-Hub. In order to install a bit, declare it in the project descriptor:
+
+```yaml
+build:
+  bits:
+    sqlite3: '3.32.3'
+test:
+  bits:
+    cest: '1.0'
+```
+
+Then use the command line to install all dependencies.
+
+```
+cpm install
+```
+
+### Run your tests
+```
+cpm test
+```
+
+Test sources reside in the `tests` directory. `cpm` will consider as test suites any files that match the expression
+`test_*.cpp`.
+
+
