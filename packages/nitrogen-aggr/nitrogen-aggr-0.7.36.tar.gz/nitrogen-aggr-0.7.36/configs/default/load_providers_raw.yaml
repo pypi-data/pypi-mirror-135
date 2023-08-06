@@ -1,0 +1,230 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the providers_raw sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for providers_raw
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  providers_raw_history:
+    type: parquet
+    location: "{aggr_location}/providers_raw_history/"
+  RAFi_in_Providers_Raw:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_in_Providers_Raw/"
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: true
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+    create_local_job_id: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by provider_id order by job_id desc) as r
+#         FROM providers_raw_history)
+#      SELECT
+#        provider_id,
+#        hash_value
+#      FROM allrows
+#      WHERE  r=1
+#    cache: true
+
+  # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         provider_id,
+         hash_value,
+         job_id
+      FROM providers_raw_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  providers_raw:
+    sql: >-
+      SELECT
+        provider_id,
+      	npi,
+      	alt_provider_id,
+      	provider_group_id,
+      	organization_name,
+      	first_name,
+      	last_name,
+      	address_1,
+      	address_2,
+      	city,
+      	state,
+      	zip_code,
+      	tax_id,
+      	specialty_1
+      FROM RAFi_in_Providers_Raw
+
+
+  providers_raw_full:
+    sql: >-
+      SELECT
+        provider_id,
+      	npi,
+      	alt_provider_id,
+      	provider_group_id,
+      	organization_name,
+      	first_name,
+      	last_name,
+      	address_1,
+      	address_2,
+      	city,
+      	state,
+      	zip_code,
+      	tax_id,
+      	specialty_1,
+        hash(
+        provider_id,
+      	npi,
+      	alt_provider_id,
+      	provider_group_id,
+      	organization_name,
+      	first_name,
+      	last_name,
+      	address_1,
+      	address_2,
+      	city,
+      	state,
+      	zip_code,
+      	tax_id,
+      	specialty_1
+        ) as hash_value,
+        ( select cad_job_id from cad_job )  as job_id
+      FROM providers_raw
+
+    cache: true
+
+  providers_raw_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+            a.provider_id,
+      	    a.npi,
+      	    a.alt_provider_id,
+      	    a.provider_group_id,
+      	    a.organization_name,
+      	    a.first_name,
+      	    a.last_name,
+      	    a.address_1,
+      	    a.address_2,
+      	    a.city,
+      	    a.state,
+      	    a.zip_code,
+      	    a.tax_id,
+      	    a.specialty_1
+           FROM providers_raw_full a
+           LEFT JOIN previous_load b
+           ON a.provider_id = b.provider_id
+           WHERE b.provider_id IS NULL),
+      delete_rows as (
+           SELECT
+            a.hash_value,
+            'DELETE' as operation,
+            CAST(NULL AS STRING),
+            ( select cad_job_id from cad_job )  as job_id,
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING),
+      	    CAST(NULL AS STRING)
+           FROM previous_load a
+           LEFT JOIN providers_raw_full b
+           ON a.provider_id = b.provider_id
+           WHERE b.provider_id IS NULL),
+      update_rows as (
+           SELECT
+            a.hash_value,
+            'UPDATE' as operation,
+            a.job_id,
+            a.provider_id,
+      	    a.npi,
+      	    a.alt_provider_id,
+      	    a.provider_group_id,
+      	    a.organization_name,
+      	    a.first_name,
+      	    a.last_name,
+      	    a.address_1,
+      	    a.address_2,
+      	    a.city,
+      	    a.state,
+      	    a.zip_code,
+      	    a.tax_id,
+      	    a.specialty_1
+           FROM providers_raw_full a
+           INNER JOIN previous_load b
+           ON a.provider_id = b.provider_id
+           WHERE a.hash_value <> b.hash_value)
+      SELECT * FROM new_rows
+      UNION
+      SELECT * FROM delete_rows
+      UNION
+      SELECT * FROM update_rows
+
+    cache: true
+#
+### Note: Load tables have to be same as Extract tables.
+Load:
+  providers_raw_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/providers_raw_full'
+      mode: overwrite
+
+  providers_raw_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/providers_raw_incremental'
+      mode: overwrite
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_providers_raw
+      mode: overwrite

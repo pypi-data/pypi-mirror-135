@@ -1,0 +1,46 @@
+debug: true
+
+#    """
+#    Logic:
+#        1- Find epi_member_id for claims (claim_member) in master_member_index files
+#            a. if epi_member_id found - good
+#            b. if epi_member_id not found -
+#                then crete new epi_member_id by creating / adding the member detail to master_member_index files
+#        2- apply select queries to the claim tables and add epi_member_id and then store them to master_claim tables
+#        partitioned by:
+#            a: epi_member_id_par, job_id
+#            b: isa_date, job_id
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  cities:
+    type: parquet
+    location: "{project_root_path}/{client}/cities/"
+#  "{project_root_path}/pull_from_mongo/837/"
+#    location: "{ssd_location}/837_cpt/cad_job_id=810/"
+
+
+Transform:
+
+  cities2:
+    sql: >-
+      SELECT
+        *
+      FROM cities
+
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  cities2:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/cities2'
+      mode: overwrite
