@@ -1,0 +1,26 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'ysfilemanager/css/module.css' %}">
+{% endblock css %}
+{% block breadcrumbs %}
+<li><a href="/filemanager/yangsets/manage/">YANG module sets</a></li>
+<li><a href="/filemanager/yangsets/manage/{{ yangset }}">{{ yangsetname }}</a></li>
+<li><span>YANG modules</span></li>
+<li><span>{{ module }}</span></li>
+{% endblock %}
+{% block page-title %}YANG module <q>{{ module }}</q>{% endblock %}
+{% block body %}
+<div class="content">
+  <div class="container-fluid" style="height: 100%">
+    <table class="table yang-table">
+      {% for line in lines %}
+      <tr>
+        <td class="line-number text-monospace text-muted text-noselect">{{ forloop.counter }}</td>
+        <td class="line text-monospace">{{ line }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock body %}

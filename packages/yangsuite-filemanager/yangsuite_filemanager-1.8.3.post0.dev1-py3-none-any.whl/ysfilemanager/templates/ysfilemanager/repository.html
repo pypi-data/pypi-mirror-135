@@ -1,0 +1,485 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block javascript %}
+<script src="{% static 'ysfilemanager/js/repository.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/upload.js' %}"></script>
+<script src="{% static 'ysdevices/js/devices.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/download.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/git.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/scp.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/yangsets.js' %}"></script>
+{% endblock javascript %}
+{% block breadcrumbs %}<li><span>YANG module repositories</span></li>{% endblock %}
+{% block page-title %}Manage YANG module files and repositories{% endblock %}
+{% block help_url %}{% url 'help' section='ysfilemanager' document='create_repository' %}{% endblock %}
+{% block body %}
+{% csrf_token %}
+<div class="content">
+ <div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <div class="form-group__text select">
+          <label for="ys-repos">Select a YANG module repository</label>
+          <select id="ys-repos"></select>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+    <input type="button" id="ys-new-repo"
+           value="New repository"
+           class="btn btn--small">
+    <input type="button" id="ys-clone-repo"
+           value="Clone this repository"
+           class="btn btn--small ys-repo-ui disabled">
+    <input type="button" id="ys-delete-repo"
+           value="Delete this repository"
+           class="btn btn--small btn--negative ys-repo-ui disabled">
+    </div>
+  </div>
+  <div class="row ys-repo-management" hidden>
+    <div class="col ys-repo-view">
+      <h3>YANG modules in repository</h3>
+      <div class="btn-group">
+        <input id="ys-repo-contents-select-all" type="button"
+               class="btn btn--small"
+               value="Select all">
+        <input id="ys-repo-contents-select-none" type="button"
+               class="btn btn--small"
+               value="Select none">
+      </div>
+      <input type="button" id="ys-repo-contents-delete"
+             value="Delete selected"
+             class="btn btn--small btn--negative">
+      <div class="form-group">
+        <input id="ys-repo-contents-search"
+          type="search" placeholder="Filter"
+          class="form-control" style="width: 100%" />
+      </div>
+      <div>
+        <select id="ys-repo-contents" multiple size="20" style="width:100%">
+        </select>
+      </div>
+    </div>
+    <div class="col-4 ys-repo-view">
+      <h3>Add modules to repository</h3>
+      <div class="secondary-tabs">
+        <ul class="tabs">
+          <li id="tab-upload" class="tab active">
+            <a>
+              <div class="tab__heading">
+                Upload</div>
+            </a>
+          </li>
+          <li id="tab-netconf" class="tab">
+            <a>
+              <div class="tab__heading">
+                NETCONF</div>
+            </a>
+          </li>
+          <li id="tab-scp" class="tab">
+            <a>
+              <div class="tab__heading">
+                SCP</div>
+            </a>
+          </li>
+          <li id="tab-git" class="tab">
+            <a>
+              <div class="tab__heading">
+                Git</div>
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div id="tab-upload-content" class="tab-pane active">
+            <form id="ys-upload-form" class="ui-widget">
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-select-local-files">Select YANG files to upload</label>
+                  <input id="ys-select-local-files" type="file"
+                         accept="application/yang, .yang" multiple>
+                </div>
+              </div>
+              <input type="submit" value="Upload files to repository"
+                     class="btn btn--primary">
+              <ul id="ys-selected-local-files" class="list--unstyled">
+              </ul>
+            </form>
+          </div>
+          <div id="tab-netconf-content" class="tab-pane">
+            <div class="form-group">
+              <div class="form-group__text select">
+                <label for="ys-device-select">Select device profile</label>
+                <select id="ys-device-select">
+                  <option value="" selected></option>
+                  <!-- options are populated dynamically -->
+                </select>
+              </div>
+            </div>
+            <div>
+              <input id="ys-check-device" type="button"
+                     class="btn btn--small"
+                     value="Check device connectivity">
+              <input id="ys-get-device-schemas" type="button"
+                     class="btn btn--small btn--primary"
+                     value="Get schema list">
+            </div>
+            <div class="form-group">
+              <input id="ys-device-schemas-list-search"
+                type="search" placeholder="Filter"
+                class="form-control" style="width: 100%" />
+            </div>
+            <div>
+              <select multiple id="ys-device-schemas-list" size="10"
+                      style="width: 100%">
+                <!-- dynamically populated -->
+              </select>
+            </div>
+            <div class="btn-group">
+              <input id="ys-device-schemas-select-all" type="button"
+                     class="btn btn--small"
+                     value="Select all">
+              <input id="ys-device-schemas-select-none" type="button"
+                     class="btn btn--small"
+                     value="Select none">
+            </div>
+            <div class="divider divider--compressed"></div>
+            <div>
+              <input id="ys-download-schemas" type="button"
+                     class="btn btn--primary"
+                     value="Download selected schemas">
+            </div>
+          </div>
+          <div id="tab-scp-content" class="tab-pane">
+            <form id="ys-scp-form" method="post" action="javascript:;">
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-scp-remote-host">Remote host</label>
+                  <input id="ys-scp-remote-host" class="form-control"
+                         type="text" placeholder="Hostname, IP address, etc."
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-scp-ssh-username">SSH username</label>
+                  <input id="ys-scp-ssh-username" class="form-control"
+                         type="text" placeholder="username"
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-scp-ssh-password">SSH password</label>
+                  <input id="ys-scp-ssh-password" class="form-control"
+                         type="password" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-scp-remote-path">Remote directory path</label>
+                  <input id="ys-scp-remote-path" class="form-control"
+                         type="text" placeholder="/home/username/yangfiles/"
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text select">
+                  <label for="ys-scp-remote-type">Remote directory type</label>
+                  <select id="ys-scp-remote-type">
+                    <option value="">Generic directory</option>
+                    <option value="xe_workspace">IOS XE workspace</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="checkbox">
+                  <input type="checkbox" id="ys-scp-include-subdirectories">
+                  <span class="checkbox__input"></span>
+                  <span class="checkbox__label">Include subdirectories</span>
+                </label>
+              </div>
+              <button type="submit" class="btn btn--primary">Copy YANG files</button>
+            </form>
+          </div>
+          <div id="tab-git-content" class="tab-pane">
+            <form id="ys-git-form" method="post" action="javascript:;">
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-git-url">Repository URL</label>
+                  <input id="ys-git-url" class="form-control"
+                         type="text" placeholder="Example: https://github.com/YangModels/yang.git"
+                         required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-git-branch">Git branch</label>
+                  <input id="ys-git-branch" class="form-control"
+                         type="text" placeholder="master">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-group__text">
+                  <label for="ys-git-subdir">Directory within repository</label>
+                  <input id="ys-git-subdir" class="form-control"
+                         type="text" placeholder="Example: vendor/cisco/xe/">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="checkbox">
+                  <input type="checkbox" id="ys-git-include-subdirectories">
+                  <span class="checkbox__input"></span>
+                  <span class="checkbox__label">Include subdirectories</span>
+                </label>
+              </div>
+              <button type="submit" class="btn btn--primary">Import YANG files</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3>Repository status</h3>
+      <div id="ys-repo-status-container">
+        <div>
+          <div id="ys-repo-status"></div>
+          <ul id="ys-repo-missing-modules" class="list--unstyled"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ys-repo-create-dialog">
+    <form>
+      <div class="form-group">
+        <div class="form-group__text">
+          <label for="ys-new-repo-name">New repository name</label>
+          <input type=text id="ys-new-repo-name">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="ys-repo-clone-dialog">
+    <form>
+      <div class="form-group">
+        <div class="form-group__text">
+          <label for="ys-clone-repo-name">Clone repository as</label>
+          <input type=text id="ys-clone-repo-name">
+        </div>
+      </div>
+    </form>
+  </div>
+ </div>
+</div>
+{% endblock body %}
+{% block script %}
+<script>
+$(function() {
+    $("#ys-repo-create-dialog").dialog({autoOpen: false});
+    $("#ys-repo-clone-dialog").dialog({autoOpen: false});
+
+    $("#ys-repo-contents-search").on("input", function() {
+      var filter = $(this).val().toLowerCase();
+      $('#ys-repo-contents').find('option').each(function() {
+        if ($(this).val().toLowerCase().indexOf(filter) > -1) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
+
+    $("#ys-device-schemas-list-search").on("input", function() {
+      var filter = $(this).val().toLowerCase();
+      $('#ys-device-schemas-list').find('option').each(function() {
+        if ($(this).val().toLowerCase().indexOf(filter) > -1) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
+
+    /* Repository management section */
+    $("#ys-repos").change(function() {
+        const repo = $("#ys-repos").val();
+        const reponame = $('#ys-repos [value="' + repo + '"]').text();
+        if (repo) {
+            $(".ys-repo-management").show();
+            $(".ys-repo-ui").removeClass("disabled");
+            repository
+                .getRepoContents(repo)
+                .done(function() {
+                    repository.pushManageState(repo, reponame);
+                });
+            repository.checkRepo(repo);
+        } else {
+            $(".ys-repo-management").hide();
+            $(".ys-repo-ui").addClass("disabled");
+            repository.pushManageState(repo, reponame);
+        }
+    });
+
+    $("#ys-new-repo").click(function() {
+        /*
+         * Prompt user to name this repo
+         */
+        $("#ys-repo-create-dialog").dialog({
+              title: "YANG Suite",
+              modal: true,
+              width: 500,
+              minWidth: 400,
+              buttons: {
+                  'Create repository': function() {
+                      const reponame = $("#ys-new-repo-name").val();
+                      repository.createRepo(reponame, 'new', null);
+                      $(this).dialog('close');
+                  },
+                  'Cancel': function() {
+                      $(this).dialog('close');
+                  }
+              }
+        })
+            .dialog("open");
+    });
+
+    $("#ys-clone-repo").click(function() {
+        const baserepo = $("#ys-repos").val();
+        /*
+         * Prompt user to name this repo
+         */
+        $("#ys-repo-clone-dialog").dialog({
+              title: "YANG Suite",
+              modal: true,
+              width: 500,
+              minWidth: 400,
+              buttons: {
+                  'Clone repository': function() {
+                      const reponame = $("#ys-clone-repo-name").val();
+                      repository.createRepo(reponame, 'clone', baserepo);
+                      $(this).dialog('close');
+                  },
+                  'Cancel': function() {
+                      $(this).dialog('close');
+                  }
+              }
+        })
+            .dialog("open");
+    });
+
+    $("#ys-delete-repo").click(function() {
+        const repo = $("#ys-repos").val();
+        repository.deleteRepo(repo);
+        $(this).blur();
+    });
+
+    /* File management section */
+    $("#ys-repo-contents-select-all").click(function() {
+        $("#ys-repo-contents option").prop('selected', true);
+    });
+
+    $("#ys-repo-contents-select-none").click(function() {
+        $("#ys-repo-contents option").prop('selected', false);
+    });
+
+    $("#ys-repo-contents-delete").click(function() {
+        const repo = $("#ys-repos").val();
+        const modules = $("#ys-repo-contents").val();
+        repository.deleteModules(repo, modules);
+    });
+
+    /* Upload files section */
+    $("form#ys-upload-form").submit(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        upload.uploadToRepo($("#ys-repos").val())
+            .done(repository.reportRepoModificationResults)
+            .fail(function (retObj) {
+                popDialog("Error " + retObj.status + ": " + retObj.statusText)
+            });
+    });
+
+    $("#ys-select-local-files").change(function() {
+        const listing = $("#ys-selected-local-files");
+        listing.empty();
+        $.each($("#ys-select-local-files")[0].files, function(i, file) {
+            listing.append("<li>" + file.name + "</li>");
+        });
+    });
+
+    $(".tab a").click(function() {
+        $(".tabs .tab").removeClass('active');
+        $(".tab-content .tab-pane").removeClass('active');
+        $(this).parent().addClass('active');
+        $(".tab-content .tab-pane#" + $(this).parent().attr('id') + "-content").addClass('active');
+    });
+
+    /* Download files section */
+    $("#ys-device-select").change(function() {
+        $("#ys-device-schemas-list").empty();
+    });
+
+    $("#ys-check-device").click(function() {
+        devices.checkDevice($("#ys-device-select").val());
+    });
+
+    $("#ys-get-device-schemas").click(function(e) {
+        download.getSchemaList($("#ys-device-select").val());
+    });
+
+    $("#ys-device-schemas-select-all").click(function() {
+        $("#ys-device-schemas-list option").prop('selected', true);
+    });
+
+    $("#ys-device-schemas-select-none").click(function() {
+        $("#ys-device-schemas-list option").prop('selected', false);
+    });
+
+    $("#ys-download-schemas").click(function (e) {
+        /* Download the schemas */
+        download.downloadToRepo($("#ys-device-select").val(),
+                                $("#ys-repos").val())
+            .done(repository.reportRepoModificationResults)
+            .fail(function(retObj) {
+                popDialog("Error " + retObj.status + ": " + retObj.statusText);
+            });
+    });
+
+    /* SCP section */
+    $("#ys-scp-form").submit(function() {
+        scp.scpToRepo(
+            $("#ys-repos").val(),
+            $("#ys-scp-remote-host").val(),
+            $("#ys-scp-ssh-username").val(),
+            $("#ys-scp-ssh-password").val(),
+            $("#ys-scp-remote-path").val(),
+            $("#ys-scp-include-subdirectories").prop("checked"),
+            $("#ys-scp-remote-type").val(),
+        )
+            .done(repository.reportRepoModificationResults)
+            .fail(function(retObj) {
+                popDialog("Error " + retObj.status + ": " + retObj.statusText);
+            });
+    });
+
+    /* Git section */
+    $("#ys-git-form").submit(function() {
+        git.gitToRepo(
+            $("#ys-repos").val(),
+            $("#ys-git-url").val(),
+            $("#ys-git-branch").val(),
+            $("#ys-git-subdir").val(),
+            $("#ys-git-include-subdirectories").prop("checked"))
+            .done(repository.reportRepoModificationResults)
+            .fail(function(retObj) {
+                popDialog("Error " + retObj.status + ": " + retObj.statusText);
+            });
+    });
+
+    /* Actions on page load */
+    repository.getRepos("{{ repository }}");
+    devices.refreshDeviceMenu($("#ys-device-select"));
+    $("#ys-select-local-files").change();
+});
+</script>
+{% endblock script %}

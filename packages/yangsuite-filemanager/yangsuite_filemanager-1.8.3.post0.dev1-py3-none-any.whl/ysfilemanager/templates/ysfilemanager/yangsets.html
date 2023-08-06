@@ -1,0 +1,489 @@
+{% extends 'yangsuite/base-cui.html' %}
+{% load staticfiles %}
+{% block javascript %}
+<script src="{% static 'ysfilemanager/js/repository.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/yangsets.js' %}"></script>
+<script src="{% static 'ysfilemanager/js/jquery.bootstrap-duallistbox.js' %}"></script>
+{% endblock javascript %}
+{% block css %}
+<link rel="stylesheet"
+      href="{% static 'ysfilemanager/css/bootstrap-duallistbox.css' %}"/>
+<link rel="stylesheet" href="{% static 'ysfilemanager/css/ysfilemanager.css' %}">
+{% endblock css %}
+{% block breadcrumbs %}<li><span>YANG module sets</span></li>{% endblock %}
+{% block page-title %}Manage YANG module sets{% endblock %}
+{% block help_url %}{% url 'help' section='ysfilemanager' document='define_yangset' %}{% endblock %}
+{% block body %}
+{% csrf_token %}
+<div class="container-fluid" style="width: 100%">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <div class="form-group__text select">
+          <label for="ys-yangsets">
+            Select a YANG set
+          </label>
+          <select id="ys-yangsets"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-group__text select ys-yangset-mgmt" hidden>
+          <label for="ys-repos">
+            YANG repository for this set
+          </label>
+          <select id="ys-repos"></select>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <ul class="list--inline list--unstyled list--compressed">
+        <li style="margin: 1px; vertical-align: middle;"><input type="button" id="ys-new-yangset"
+                   value="New YANG set"
+                   class="btn btn--small"></li>
+        <li style="margin: 1px; vertical-align: middle;"><input type="button" id="ys-clone-yangset"
+                   value="Clone this YANG set"
+                   class="btn btn--small ys-yangset-ui disabled"></li>
+        <li style="margin: 1px; vertical-align: middle;"><input type="button" id="ys-delete-yangset"
+                   value="Delete this YANG set"
+                   class="btn btn--small btn--negative ys-yangset-ui disabled"></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="content">
+ <div class="container-fluid" style="height: 100%">
+  <div class="row ys-yangset-mgmt" style="height: 100%" hidden>
+    <div class="col-7" style="height: 100%">
+      <div class="container" style="height: 100%">
+        <!-- This will become a bootstrapDualListbox representing
+             the modules in the yangset versus those in the repository. -->
+        <select id="ys-repo-vs-yangset" multiple></select>
+        <div class="row">
+          <div class="col-6">
+            <button id="ys-view-modules" class="btn btn--small btn--wide">
+              View selected module(s)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="height: 100%; overflow: auto">
+      <h3>YANG set and module validation</h3>
+      <p>
+        <input type="button" id="ys-validate-button" class="btn btn--small btn--wide"
+               value="Validate YANG modules in greater depth">
+      </p>
+      <div class="accordion">
+        <h3 class="ys-validation-success-section" hidden>Validation complete</h3>
+        <div class="ys-validation-success-section" hidden>
+          <div id="ys-validation-success" class="text-success">
+            Everything appears to be A-OK with this YANG set.
+          </div>
+        </div>
+        <h3 class="ys-missing-dependencies-section" hidden>
+          Missing dependencies</h3>
+        <div class="ys-missing-dependencies-section" hidden>
+          <div class="text-danger">
+            <p>
+              The modules in the YANG set depend on these additional
+              modules which are not in this YANG set.
+            </p>
+            <p>
+              YANG Suite can search your repository and try to
+              <button id="ys-add-missing-dependencies" class="btn btn-primary">
+                Locate and add missing dependencies
+              </button>
+              or you can manually add the modules as desired.
+            <p>In any case, <strong>
+                you should locate these modules and add them to the set.
+            </strong></p>
+          </div>
+          <ul id="ys-missing-dependencies" class="list-unstyled">
+            <li>(None)</li>
+          </ul>
+        </div>
+        <h3 class="ys-yangset-contents-section" hidden>
+          Module validation errors and warnings</h3>
+        <div class="ys-yangset-contents-section" hidden>
+          <div class="text-warning">
+            The following modules in the YANG set reported errors and warnings
+            when parsed and validated.
+          </div>
+          <ul id="ys-yangset-contents" class="list-unstyled"></ul>
+        </div>
+        <h3 class="ys-identity-deriving-modules-section" hidden>
+          Modules providing derived identities</h3>
+        <div class="ys-identity-deriving-modules-section" hidden>
+          <div class="text-warning">
+            <p>
+              Modules found in the repository that provide additional
+              identities derived from the base identities described by the
+              modules in this set.
+            </p><p>
+              These modules are not required for a self-complete YANG set, but
+              <strong>you should probably add these modules to the YANG set
+              in order to gain more comprehensive data definition</strong>.
+            </p>
+          </div>
+          <button id="ys-add-identity-derivers" class="btn btn-default">
+            Add all identity derivers to the yangset
+          </button>
+          <ul id="ys-identity-deriving-modules-list" class="list-unstyled"></ul>
+        </div>
+        <h3 class="ys-augmenting-modules-section" hidden>
+          Augmenting modules</h3>
+        <div class="ys-augmenting-modules-section" hidden>
+          <div class="text-info">
+            <p>
+              Modules found in the repository that augment the modules in this
+              YANG set.
+            </p><p>
+              These modules are not required for a self-complete YANG set, but
+              you may wish to add these modules to the YANG set
+              in order to gain more comprehensive functionality.
+            </p>
+          </div>
+          <button id="ys-add-augmenters" class="btn btn-default">
+            Add all augmenters to the yangset
+          </button>
+          <ul id="ys-augmenting-modules-list" class="list-unstyled"></ul>
+        </div>
+        <h3 class="ys-upstream-modules-section" hidden>
+          <q>Upstream</q> modules</h3>
+        <div class="ys-upstream-modules-section" hidden>
+          <div class="text-info">
+            <p>
+              Modules found in the repository that make use of the modules in
+              this YANG set, either directly (via <q>import</q> statements) or
+              indirectly (by importing or including other modules that in turn
+              import these modules).
+            </p><p>
+              These modules are not required for a self-complete YANG set, but
+              you may wish to add these modules to the YANG set to expand the
+              scope of features covered by this set.
+            </p>
+          </div>
+          <ul id="ys-upstream-modules-list" class="list-unstyled"></ul>
+        </div>
+        <h3 class="ys-related-modules-section" hidden>
+          Other possibly related modules</h3>
+        <div class="ys-related-modules-section" hidden>
+          <div class="text-info">
+            <p>
+              Suggestions of modules from the repository that appear to be
+              similar to or otherwise indirectly related to the current set
+              contents. This may include alternate revisions of modules that
+              are already in the set.
+            </p><p>
+              These modules are in no way required for a self-complete YANG
+              set; they are merely possibilities you may wish to include to
+              expand the scope of this set.
+            </p>
+          </div>
+          <ul id="ys-related-modules-list" class="list-unstyled"></ul>
+        </div>
+      </div>
+    </div>
+    <div id="ys-yangset-create-dialog">
+      <form>
+        <div class="form-group">
+          <div class="form-group__text">
+            <label for="ys-new-ys-name">Name for new YANG set</label>
+            <input type=text id="ys-new-ys-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-group__text select">
+            <label for="ys-associated-repo">
+              Associated YANG file repository
+            </label>
+            <select id="ys-associated-repo"></select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div id="ys-yangset-clone-dialog">
+      <form class="ui-widget">
+        <label>Enter name for cloned YANG set:
+          <input type=text id="ys-cloned-ys-name"></label>
+      </form>
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock body %}
+{% block script %}
+<script>
+$(function() {
+    $("#ys-yangset-create-dialog").dialog({autoOpen: false});
+    $("#ys-yangset-clone-dialog").dialog({autoOpen: false});
+
+    repository.config.moduleListing = 'select#ys-repo-vs-yangset';
+
+    $("#ys-delete-yangset").click(function() {
+        const yangset = $("#ys-yangsets").val();
+        if (confirm('Really delete YANG set "' + yangset + '"?')) {
+            yangsets.deleteYangSet(yangset);
+        }
+    });
+
+    $("#ys-clone-yangset").click(function() {
+        const baseYangset = $("#ys-yangsets").val();
+        /*
+         * Prompt user to name this set
+         */
+        $("#ys-yangset-clone-dialog").dialog({
+              title: "YANG Suite",
+              modal: true,
+              minWidth: 400,
+              buttons: {
+                  'Clone YANG set': function() {
+                      const setname = $("#ys-cloned-ys-name").val();
+                      const repository = $("#ys-repos").val();
+                      yangsets.createYangSet(setname, repository,
+                                             $("#ys-yangsets").val());
+                      $(this).dialog('close');
+                  },
+                  'Cancel': function() {
+                      $(this).dialog('close');
+                  }
+              }
+        })
+            .dialog("open");
+    });
+
+    $("#ys-new-yangset").click(function() {
+        $("#ys-associated-repo").html($("#ys-repos").html());
+        /*
+         * Prompt user to name this set and select a repository
+         */
+        $("#ys-yangset-create-dialog").dialog({
+              title: "YANG Suite",
+              modal: true,
+              minWidth: 400,
+              buttons: {
+                  'Create YANG set': function() {
+                      const setname = $("#ys-new-ys-name").val();
+                      const repository = $("#ys-associated-repo").val();
+                      yangsets.createYangSet(setname, repository, null);
+                      $(this).dialog('close');
+                  },
+                  'Cancel': function() {
+                      $(this).dialog('close');
+                  }
+              }
+        })
+            .dialog("open");
+    });
+
+    $("#ys-validate-button").click(function() {
+        const yangset = $("#ys-yangsets").val();
+        yangsets.checkYangSet(yangset, false);
+    });
+
+    $("#ys-view-modules").click(function() {
+        const yangset = $("#ys-yangsets").val();
+        const modulesAndRevisions = $("#ys-repo-vs-yangset")
+              .bootstrapDualListbox('getContainer')
+              .find('.box2 select :selected');
+        if (modulesAndRevisions.length == 0) {
+            popDialog("Please select one or more modules in the YANG set to display");
+            return
+        } else if (modulesAndRevisions.length > 5) {
+            popDialog("Too many modules - please select no more than five to display.");
+            return;
+        }
+        const modules = $.map(modulesAndRevisions, x => x.value.split(",")[0])
+        for (let module of modules) {
+            window.open("/filemanager/yangsets/show/" + yangset + "/module/" + module);
+        }
+    });
+
+    $("#ys-yangsets").change(function() {
+        const yangset = $("#ys-yangsets").val();
+        const yangsetname = $('#ys-yangsets option[value="' + yangset + '"]').text();
+        if (yangset) {
+            $(".ys-yangset-mgmt").show();
+            $(".ys-yangset-ui").removeClass("disabled");
+            /*
+             * Get the new yangset contents.
+             * If the yangset has a different repository than previous yangset,
+             * also get the new repository contents.
+             * When both are done, refresh the repo + yangset display.
+             */
+            yangsets.getYangSetContents(yangset)
+                .done(function(retObj) {
+                    yangsets.pushManageState(yangset, yangsetname);
+                    let repo = retObj.repository;
+                    if (repo != $("#ys-repos").val()) {
+                        $("#ys-repos").val(repo);
+                        /* Not trigger 'change' as that'll call updateYangSet */
+                        repository.getRepoContents(repo)
+                            .done(updateRepoVsYangset);
+                    } else {
+                        /* No need to refresh the repo contents */
+                        updateRepoVsYangset();
+                    }
+                    yangsets.getRelatedModules(yangset, repo);
+                });
+            yangsets.checkYangSet(yangset, true);
+        } else {
+            $(".ys-yangset-mgmt").hide();
+            $(".ys-yangset-ui").addClass("disabled");
+            yangsets.pushManageState(yangset, yangsetname);
+        }
+    });
+
+    $("#ys-repos").change(function() {
+        const repo = $(this).val();
+        if (repo) {
+            $(".ys-repo-management").show();
+            /*
+             * Repo assignment changed but not yangset contents.
+             * Update the yangset server-side, then get the new repo's contents,
+             * then refresh the repo + yangset display.
+             */
+            yangsets.updateYangSet($("#ys-yangsets").val(),
+                                   $(this).val(),
+                                   undefined)
+                .done(function() {
+                    repository.getRepoContents(repo)
+                        .done(updateRepoVsYangset);
+                });
+        } else {
+            $(".ys-repo-management").hide();
+        }
+    });
+
+    /*
+     * Change the modules in this yangset.
+     */
+    $("#ys-repo-vs-yangset").change(function() {
+        /*
+         * Yangset contents changed but not repo association.
+         * Update the yangset server-side.
+         * On success, no need to request updated info from the server side.
+         * On failure, need to revert to original state.
+         */
+        yangsets.updateYangSet($("#ys-yangsets").val(),
+                               $("#ys-repos").val(),
+                               $(this).val())
+            .fail(function() {
+                updateRepoVsYangset();
+            });
+    });
+
+    /**
+     * Add the identified missing dependencies to the yangset,
+     * repeating until stabilized.
+     */
+    $("#ys-add-missing-dependencies").click(function() {
+        let yangset = $("#ys-yangsets").val();
+        let needed_modules = $("#ys-missing-dependencies li").map(function() {
+            return $(this).attr("data-value");
+        }).toArray();
+
+        yangsets.updateYangSet(yangset, $("#ys-repos").val(),
+                               needed_modules, 'add')
+            .done(function() {
+                /*
+                 * Now that we've updated and re-verified the yangset,
+                 * are there any missing dependencies now?
+                 */
+                let new_needed_modules = $("#ys-missing-dependencies li")
+                    .map(function() {
+                        return $(this).attr("data-value");
+                    }).toArray();
+                /* Equality check to avoid looping if modules can't be found */
+                if (new_needed_modules.length > 0 &&
+                    JSON.stringify(new_needed_modules) !== JSON.stringify(needed_modules)) {
+                    /* Around we go again! */
+                    $("#ys-add-missing-dependencies").trigger("click");
+                } else {
+                    /* The ride is done, time to disembark */
+                    yangsets.getYangSetContents(yangset)
+                        .done(updateRepoVsYangset);
+                }
+            });
+    });
+
+    /**
+     * Add the given list of identity-derivers to the yangset.
+     */
+    $("#ys-add-identity-derivers").click(function() {
+        let yangset = $("#ys-yangsets").val();
+        let added_modules = $("#ys-identity-deriving-modules-list li").map(function() {
+            return $(this).attr("data-value");
+        }).toArray();
+
+        yangsets.updateYangSet(yangset, $("#ys-repos").val(),
+                               added_modules, 'add')
+            .then(function() {
+                return yangsets.getYangSetContents(yangset);
+            }).then(updateRepoVsYangset);
+    });
+
+    /**
+     * Add the given list of augmenters to the yangset.
+     */
+    $("#ys-add-augmenters").click(function() {
+        let yangset = $("#ys-yangsets").val();
+        let added_modules = $("#ys-augmenting-modules-list li").map(function() {
+            return $(this).attr("data-value");
+        }).toArray();
+
+        yangsets.updateYangSet(yangset, $("#ys-repos").val(),
+                               added_modules, 'add')
+            .then(function() {
+                return yangsets.getYangSetContents(yangset);
+            }).then(updateRepoVsYangset)
+    });
+
+    /*
+     * Update the repo-vs-yangset duallistbox when changing repo and/or yangset.
+     */
+    function updateRepoVsYangset() {
+        if (yangsets.store.yangsetModulesReady &&
+            repository.store.repositoryModulesReady) {
+            $('#ys-repo-vs-yangset option').prop('selected', false);
+            $.each(yangsets.store.yangsetModules, function(i, val) {
+                $('#ys-repo-vs-yangset option[value="' + val + '"]')
+                    .prop('selected', true);
+            });
+            $("#ys-repo-vs-yangset").bootstrapDualListbox('refresh');
+        }
+    };
+
+    yangsets.getYangSets("{{ yangset }}", readOnly=false);
+
+    repository.getRepos();
+
+    /* Set up the magic! */
+    $("#ys-repo-vs-yangset").bootstrapDualListbox({
+        moveOnSelect: false,
+        selectedListLabel: 'YANG modules in this set',
+        btnRemoveText: 'Remove selected',
+        btnRemoveAllText: 'Remove all',
+        nonSelectedListLabel: 'Additional YANG modules in the repository',
+        btnMoveText: 'Add selected',
+        btnMoveAllText: 'Add entire repository',
+        infoText: '{0} module(s)',
+        infoTextEmpty: 'No modules',
+        selectorMinimalHeight: 300,
+    });
+
+    let lastRepoVsYangsetSelection = null;
+
+    /*
+     * Don't allow the user to select multiple revisions of the same
+     * module for inclusion into a yangset.
+     */
+    $("#ys-repo-vs-yangset")
+        .bootstrapDualListbox("getContainer")
+        .find('.box1 select')
+        .change(function () {
+            yangsets.onlyOneRevisionPerModule($(this));
+        });
+});
+</script>
+{% endblock script %}
+
