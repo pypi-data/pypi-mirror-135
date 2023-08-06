@@ -1,0 +1,132 @@
+# Tasks
+#
+
+TOMCAT_INFO:
+  DEPLOY_TOMCAT: True
+  DOWNLOAD_TOMCAT: True #True When Tomcat Is Needed To Be Downloaded.
+  TOMCAT_VERSION: 9.0.55
+  CONFIGURE_TOMCAT: True #If download Tomcat is set to False it will be ignored
+  BACKUP_TOMCAT_WEBAPPS_BEFORE_DEPLOY: False
+  JAVA_HOME: /home/abd/Documents/Java8/jdk1.8.0_301 # If None, we assume that the java is defined globally
+  TOMCAT_SOURCE_PATH: /home/abd/Desktop/TOOL_TEST/ # Tomcath source path; where it will be downloaded or already exist ,,, MANDATORY!
+  TOMCAT_TARGET_PATH: /home/abd/Desktop/TOOL_TEST/all_tomcats # Specify the target path to save the deployed release in ,,, MANDATORY!
+  TOMCAT_REFERENCE:
+    # The Path is Required Where Tomcat Should Be Installed or if download is False and backup is True tomcat root directory must be provided.
+    - 1: {
+          CONNECTER_PORT: 9091,
+          SHUTDOWN_PORT: 9092,
+          TOMCAT_PATH: "/home/abd/Desktop/TOOL_TEST",
+        } #The Path Is Required Where Tomcat Should Be Installed or if download is False and backup is True tomcat root directory must be provided.
+    - 2:
+        {
+          CONNECTER_PORT: 8088,
+          SHUTDOWN_PORT: 8089,
+          TOMCAT_PATH: "/home/abd/Desktop/TOOL_TEST",
+        }
+
+# Application info
+APP_INFO:
+  # Set to True if you need to deploy applications ,,, ONLY if not already deployed!
+  APP_DEPLOY: True
+  # True if the release is not downloaded previously!
+  DOWNLOAD_RELEASE: False
+  # Please fill the data needed to download the release --> TAG_NAME: release version ,,, PROJECT_ID: project ID on GitLab
+  RELEASE_INFO: { TAG_NAME: NULL, PROJECT_ID: NULL }
+  # Please specify the path to download the release or to read the release from is already exist!
+  RELEASE_PATH: /home/abd/Desktop/TOOL_TEST/arbk-ecc-v1.8.2.zip # Only if DOWNLOAD_RELEASE is FALSE!
+  TARGET_PATH: /home/abd/Desktop/TOOL_TEST/
+  LOAD_BALANCER_URL: Null
+  # Please list the application ID's that needs to be deployed!
+  # { 1 => SEC, 2 => SHDW, 10 => ECC, 15 => PDC, 13 => ONUS, 16 => ATM, 10.1 => "INTECC", 15.1 => "INTPDC", 13.1 => "INTONUS", 16.1 => "INTATM"}
+  MODULES:
+    - 1: { TOMCAT_REFERENCE: 1 }
+    - 2: { TOMCAT_REFERENCE: 1 }
+    - 10: { TOMCAT_REFERENCE: 2 }
+  # Here you specify the applications logs path (not integration logs)!
+  APP_NODES:
+    - 1:
+        {
+          NODE_IP: 192.168.0.211,
+        }
+  APPS_LOGS_PATH: ${TARGET_PATH} # user home path will be the default
+  # Here you specify the log level (DEBUG is default)
+  LOG_LEVEL: DEBUG
+  BANK_NAME: BOJ # MANDATORY!
+  BANK_CD: 12 # MANDATORY!
+  ASV_ENABLED: False # Default is False
+
+# Database info
+DB_INFO:
+  # True if deploy DB!
+  DB_DEPLOY: True
+  # If oracle client path not specified, we'll attach and use embeded oracle client!
+  ORACLE_CLIENT_PATH: Null
+  DB_NODES:
+    - 1:
+        {
+          DB_IP: 192.168.0.100,
+          DB_PORT: 1521,
+          DB_SID: orcl,
+        }
+  # Here are the applications schemas info, please duplicate the same based on MODULES mentioned above
+  APPS_SCHEMAS_INFO: # MANDATORY
+    - 1: { USERNAME: ECC_SEC10 } # MANDATORY
+    - 2: { USERNAME: ECC_SHDW10 } # MANDATORY
+    - 10: { USERNAME: ECC_APP10 }
+  # Specify DB deployment methodology {1 => release script, 2 => dumps}
+  DB_DEPLOYMENT_METHODOLOGY: 2
+  IMPORT_DUMPS_INFO:
+    IMPORT_DUMPS: True
+    RECREATE_TABLESPACES: True
+    TABLESPACES_PATH: null
+    RECREATE_USERS: True
+    DATA_PUMP: True
+    CREATE_DIRECTORY: True
+    REMAP_SCHEMAS:
+      {
+        ECCQATARARBKECCMASTEARBK_SEC: ECC_SEC10,
+        ECCQATARARBKECCMASTEARBK_SHDW: ECC_SHDW10,
+        ECCQATARARBKECCMASTEARBK_ECC: ECC_APP10,
+      }
+    DUMPS_REF:
+      - 1:
+          {
+            DUMP_PATH: "/home/abd/Desktop/TOOL_TEST/R1.8.2.dmp",
+            SCHEMAS: [ECC_APP10],
+            CONTENT: ALL,
+            LOGFILE: applications.log,
+            PAR_FILE_PATH: NULL,
+            VERSION: 19.3
+          }
+      - 2:
+          {
+            DUMP_PATH: "/home/abd/Desktop/TOOL_TEST/R1.8.2.dmp",
+            SCHEMAS: [ECC_SEC10, ECC_SHDW10],
+            CONTENT: ALL,
+            LOGFILE: secs.log,
+            PAR_FILE_PATH: NULL,
+            VERSION: 19.3
+          }
+INT_INFO:
+  # Set to True if INT enabled!
+  INT_ENABLED: True
+  # Provide the INT URL, where will be configured in application modules!
+  INT_IP_OR_HOST: 10.1.15.138
+  # Provide the INT port!
+  INT_PORT: 3539
+  # To create an integration war for each module!
+  SEPARATE_MODULE_INT: True
+  # To create integration customer, and integration services!
+  SEPARATE_INT: False
+  # Set the integration type {1 => Gateway, 2 => MQ, 3 => Web Service, 4 => Stored Procedure}
+  INT_TYPE: 1
+  # Fill the needed info, ONLY if type is 1.
+  GATEWAY_TYPE:
+    # Set to True if gatway enabled!
+    GATEWAY_ENABLED: True
+    # Provide the IP if gateway enabled!
+    GATEWAY_IP: 10.1.15.11
+    # Provide the IP if gateway enabled!
+    GATEWAY_PORT: 11500
+    # Provide the core banking IP to connect to!
+    CORE_BANKING_INT: 10.1.15.138
