@@ -1,0 +1,139 @@
+debug: false
+
+#    """
+#    This yaml adds a new partition to each of the sync history tables. This new partition will include the whole  "full" table
+##    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+
+  members_full:
+    type: parquet
+    location: "{aggr_location}/members_full/"
+
+  member_hccs_full:
+    type: parquet
+    location: "{aggr_location}/member_hccs_full/"
+
+  member_details_full:
+    type: parquet
+    location: "{aggr_location}/member_details_full/"
+
+  member_index_full:
+    type: parquet
+    location: "{aggr_location}/member_index_full/"
+
+  providers_full:
+    type: parquet
+    location: "{aggr_location}/providers_full/"
+
+  provider_details_full:
+    type: parquet
+    location: "{aggr_location}/provider_details_full/"
+
+  provider_member_relationships_full:
+    type: parquet
+    location: "{aggr_location}/provider_member_relationships_full/"
+
+  provider_npi_full:
+    type: parquet
+    location: "{aggr_location}/provider_npi_full/"
+
+  member_dx_codes_full:
+    type: parquet
+    location: "{aggr_location}/member_dx_codes_full/"
+
+  suspect_sources_full:
+    type: parquet
+    location: "{aggr_location}/suspect_sources_full/"
+
+  timestamps_full:
+    type: parquet
+    location: "{aggr_location}/timestamps_full/"
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+
+  members_full:
+    members:
+      type: parquet
+      location: '{aggr_location}/members_history'
+      partitions:
+      - job_id
+
+  member_hccs_full:
+    member_hccs:
+      type: parquet
+      location: '{aggr_location}/member_hccs_history'
+      partitions:
+      - job_id
+
+  member_details_full:
+    member_details:
+      type: parquet
+      location: '{aggr_location}/member_details_history'
+      partitions:
+      - job_id
+
+  member_index_full:
+    member_index:
+      type: parquet
+      location: '{aggr_location}/member_index_history'
+      partitions:
+      - job_id
+
+  member_dx_codes_full:
+    member_index:
+      type: parquet
+      location: '{aggr_location}/member_dx_codes_history'
+      partitions:
+      - job_id
+
+  providers_full:
+    providers:
+      type: parquet
+      location: '{aggr_location}/providers_history'
+      partitions:
+      - job_id
+
+  provider_details_full:
+    provider_details:
+      type: parquet
+      location: '{aggr_location}/provider_details_history'
+      partitions:
+      - job_id
+
+  provider_member_relationships_full:
+    provider_member_relationships:
+      type: parquet
+      location: '{aggr_location}/provider_member_relationships_history'
+      partitions:
+      - job_id
+
+  provider_npi_full:
+    providers:
+      type: parquet
+      location: '{aggr_location}/provider_npi_history'
+      partitions:
+      - job_id
+
+  timestamps_full:
+    timestamps:
+      type: parquet
+      location: '{aggr_location}/timestamps_history'
+      partitions:
+      - job_id
+
+  suspect_sources_full:
+    suspect_sources:
+      type: parquet
+      location: '{aggr_location}/suspect_sources_history'
+      partitions:
+      - job_id

@@ -1,0 +1,53 @@
+# The actual configuration is in Vault.
+
+# nitrogen/flexi/sss
+cadmium_postgres_db:
+  hostname: epitest-encrypted-cluster.cluster-cd6nk8avjbps.us-east-1.rds.amazonaws.com
+  port: 5432
+  database_name: Cadmium
+  user: master
+  password: XXXXX
+  table_name: nitrogen.job
+
+epia_medicare_postgres:
+  hostname: epitest-encrypted.cd6nk8avjbps.us-east-1.rds.amazonaws.com
+  port: 5432
+  database_name: EpiAnalytics-Triple-S
+  user: master
+  password: XXXXXX
+  schema: ea
+
+fiscal_month_end: !!int 6
+parent_demo_client: thp
+
+# nitrogen.conf
+has-rafx-dx-source: false
+include-ml-suspects: false
+auto-mmr: false
+epie_client: true
+epia-lite-client: false
+has-mor: true
+has-pcp: true
+
+# infra/sss
+client-id: sss
+rafi-config-id: 17
+client-dbid: 286
+current-year: 2020
+
+has_ingestion_pipeline: true
+anonymize_members: false
+skip-pull-data-epie: true
+postgresql:
+  hostname: epidevpg-serverless.cluster-cd6nk8avjbps.us-east-1.rds.amazonaws.com
+  port: 5432
+  database: EpiAnalytics-Triple-S
+
+rafx-call.rafx.call-url: "https://2u2e8151pc.execute-api.us-east-1.amazonaws.com/RAFxTest"
+rafx-call.rafx.max-retries: 15
+rafx-call.num-parallel-requests: 10
+
+vault:
+  hostname: 10.2.13.197
+  port: 8200
+  token: "<qa-token>"

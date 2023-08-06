@@ -1,0 +1,188 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the dashboard_aggregates sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for dashboard_aggregates
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  dashboard_aggregates_history:
+    type: parquet
+    location: "{aggr_location}/dashboard_aggregates_history/"
+
+  eamd:
+    type: parquet
+    location: "{project_root_path}/{client}/EAMD/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        left join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+  previous_load:
+    sql: >-
+     WITH allrows as (
+        SELECT
+           * , row_number() over(order by  job_id desc ) as r
+        FROM dashboard_aggregates_history)
+     SELECT
+        hash_value,
+        job_id
+     FROM allrows
+     WHERE  r=1
+
+  dashboard_aggregates_full:
+    sql: >-
+      WITH
+      member_hccs_date as (
+            SELECT
+                  d.member_id,
+                  d.dos_year as date_of_service_year,
+                  d.hcc_code,
+                  min(d.dos) AS date_of_service
+                FROM ea_dx d
+                WHERE (d.date_of_service_year IS NOT NULL)
+                GROUP BY d.member_dbid, d.dos_year, d.hcc_code;
+      ),
+       dashboard_by_year  as (
+          Select
+                   ROUND( SUM( CASE WHEN gender = 'M' then 1 ELSE 0 END) / COUNT(*) * 100, 1)   as male_percent,
+                   ROUND( SUM( CASE WHEN gender = 'F' then 1 ELSE 0 END) / COUNT(*) * 100, 1)   as female_percent,
+                   count(*)    as eligible_count,
+                   ROUND(AVG(hcc_captured),3)  as avg_hcc_captured,
+                   ROUND(AVG(raf_captured),3)  as avg_raf,
+                   COUNT(CASE WHEN ifnull(hcc_num_all, 0) = 0 then 1 else 0 end)  as hcc_zero_count,
+                   COUNT(CASE WHEN ifnull(dos_count, 0) = 0 then 1 else 0 end)  as no_dos_count,
+                   ROUND(AVG(Opportunity),3)  as avg_hcc_opp,
+                   ROUND(AVG(raf_projected ),3) as avg_raf_projected,
+                   ROUND(AVG(hcc_suspects_clinical),3) as avg_sus_opp,
+                   ROUND(AVG(raf_demographic),3) as avg_raf_demo,
+                    as jan_avg,
+                    as feb_avg,
+                    as mar_avg,
+                    as apr_avg,
+                    as may_avg,
+                    as jun_avg,
+                    as jul_avg,
+                    as aug_avg,
+                    as sep_avg,
+                    as oct_avg,
+                    as nov_avg,
+                    as dec_avg,
+                    as dual,
+                    as dual_opp,
+                    as recapture,
+                    as no_wellness_visit_count,
+                    as one_dos_and_hcc_sus_count,
+                    as gtr_than_three_sus_count,
+                    as hra_addressable_count,
+                    as top_five_hcc_sus_info,
+                    as top_five_hcc_cap_info,
+                    as top_five_hcc_sus_member_count,
+                    as top_five_hcc_cap_member_count,
+                    year,
+                    year_name
+                  FROM EAMD c on
+                  WHERE is_eligible
+                  group by year
+      )
+      SELECT
+        year(current_date()) as load_year,
+        month(current_date()) as load_month,
+        current_timestamp() as load_timestamp,
+        hash(
+            ) as hash_value,
+         ( select cad_job_id from cad_job )  as job_id
+      FROM  dashboard_by_year  a
+      LEFT JOIN dashboard_by_year  b on   b.year_name = 'prior'
+      LEFT JOIN dashboard_by_year  c on   c.year_name = 'prior2'
+      WHERE a.year_name = 'current'
+
+
+  dashboard_aggregates_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+
+          FROM  dashboard_aggregates_full a
+          LEFT JOIN  previous_load b on a.member_id = b.member_id and a.year = b.year
+          WHERE b.member_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job )  as job_id,
+
+          FROM  previous_load a
+          LEFT JOIN  dashboard_aggregates_full  b on a.member_id = b.member_id and a.year = b.year
+          WHERE b.member_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+
+           FROM   dashboard_aggregates_full  a
+           INNER JOIN previous_load b on a.member_id = b.member_id and a.year = b.year
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  dashboard_aggregates_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/dashboard_aggregates_full'
+      mode: overwrite
+
+  dashboard_aggregates_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/dashboard_aggregates_incremental'
+      mode: overwrite
+    load_to_postgres:
+      type: postgres
+      conn_config_name: epia_medicare_postgres
+      table_name: load_dashboard_aggregates
+      mode: overwrite

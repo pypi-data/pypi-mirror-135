@@ -1,0 +1,225 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the provider_npi sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for provider_npi
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  provider_npi_history:
+    type: parquet
+    location: "{aggr_location}/provider_npi_history/"
+
+#main provider npi data
+  ea_npi:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_NPI/"
+
+  providers_full:
+    type: parquet
+    location: "{aggr_location}/providers_full/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by provider_id order by  job_id desc ) as r
+#         FROM provider_npi_history)
+#      SELECT
+#         provider_id,
+#         hash_value,
+#         job_id
+#      FROM allrows
+#      WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         provider_id,
+         hash_value,
+         job_id
+      FROM provider_npi_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+#  where a.provider_id in (
+#  '1558336552',
+# we generate provider_npi only for the providers we report to PG
+  provider_npi_full:
+    sql: >-
+      WITH
+      provider_npi AS (
+        SELECT
+          a.provider_id,
+          a.npi,
+          a.business_name,
+          a.business_address_1,
+          a.business_address_2,
+          a.business_city,
+          a.business_state,
+          a.business_zip,
+          a.business_country,
+          a.business_phone,
+          a.business_fax,
+          a.taxonomy_code_1  as taxonomy_code,
+          a.taxonomy_desc_1  as taxonomy_desc,
+          a.entity_type_code
+        FROM ea_npi a
+        INNER JOIN  providers_full b on a.provider_id = b.provider_id
+      )
+      SELECT
+      *,
+      hash(
+            provider_id,
+            npi,
+            business_name,
+            business_address_1,
+            business_address_2,
+            business_city,
+            business_state,
+            business_zip,
+            business_country,
+            business_phone,
+            business_fax,
+            taxonomy_code,
+            taxonomy_desc,
+            entity_type_code
+        ) as hash_value,
+        ( select cad_job_id from cad_job )  as job_id
+      FROM
+      provider_npi
+
+  provider_npi_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+             a.hash_value,
+             'INSERT' as operation,
+             a.job_id,
+            a.provider_id,
+            a.npi,
+            a.business_name,
+            a.business_address_1,
+            a.business_address_2,
+            a.business_city,
+            a.business_state,
+            a.business_zip,
+            a.business_country,
+            a.business_phone,
+            a.business_fax,
+            a.taxonomy_code,
+            a.taxonomy_desc,
+            a.entity_type_code
+          FROM  provider_npi_full a
+          LEFT JOIN  previous_load b on a.provider_id = b.provider_id
+          WHERE b.provider_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job ) as job_id,
+             a.provider_id,
+             cast(null as string) as npi,
+            cast(null as string) as business_name,
+            cast(null as string) as business_address_1,
+            cast(null as string) as business_address_2,
+            cast(null as string) as business_city,
+            cast(null as string) as business_state,
+            cast(null as string) as business_zip,
+            cast(null as string) as business_country,
+            cast(null as string) as business_phone,
+            cast(null as string) as business_fax,
+            cast(null as string) as taxonomy_code,
+            cast(null as string) as taxonomy_desc,
+             cast(null as string) as entity_type_code
+          FROM  previous_load a
+          LEFT JOIN  provider_npi_full  b on a.provider_id = b.provider_id
+          WHERE b.provider_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+            a.provider_id,
+            a.npi,
+            a.business_name,
+            a.business_address_1,
+            a.business_address_2,
+            a.business_city,
+            a.business_state,
+            a.business_zip,
+            a.business_country,
+            a.business_phone,
+            a.business_fax,
+            a.taxonomy_code,
+            a.taxonomy_desc,
+            a.entity_type_code
+           FROM   provider_npi_full  a
+           INNER JOIN previous_load b on a.provider_id = b.provider_id
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  provider_npi_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/provider_npi_full'
+      mode: overwrite
+
+  provider_npi_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/provider_npi_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_provider_npi
+#      mode: overwrite
+
