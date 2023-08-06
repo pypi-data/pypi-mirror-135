@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: snackabra
+Version: 0.3.5
+Summary: Snackabra Python Library (Utilities)
+Home-page: https://github.com/snackabra/pylib
+Author: Peter Magnusson
+Author-email: snackabra@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/snackabra/pylib/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cryptography
+Requires-Dist: jwcrypto
+
+# snackabra-pylib
+
+Requires Python >= 3.8
+
+Python utility libraries for snackabra
+
+If you're simply using it, you should just need:
+
+```
+pip install snackabra
+```
+
+The rest of this README is for package maintainers.
+
+# Package development
+
+You'll need:
+
+```
+$ python3 -m pip install --upgrade pip
+$ python3.8 -m venv venv
+$ source venv/bint/activate
+$ pip install build
+$ pip install twine
+$ python -m build
+```
+
+Results will be in 'dist'.
+
+To test deploy to testpypi (you'll need an account and a token, and
+use "__token__" as user). 
+
+```
+python -m twine upload --repository testpypi dist/snackabra-N.N.N*
+```
+
+Remember to bump version number in setup.cfg: "A.B.C" where "A.B"
+should match the overall snackabra version numbers, and "C" simply
+track fixes to the library - ergo the CLI should simply have a
+requirement (for example) ">=0.3.0" if it (the CLI) is version "0.3".
+
+For live update, of course:
+
+```
+python -m twine upload dist/snackabra-N.N.N*
+```
+
+Note: we don't (currently) do "dist/*" because we want to keep on git
+older versions.
+
+# Simple test of package
+
+```
+# (create a scratch directory)
+$ python3 -m pip install --upgrade pip
+$ python3.8 -m venv venv
+$ source venv/bint/activate
+$ python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps snackabra
+```
+
+Note "no-deps" - the test pip server doesn't have all dependencies (in
+our case, last I tried it didn't have jwcrypto), so you manually need
+to:
+
+```
+$ pip install -r ./requirements.txt
+$ python
+>>> import snackabra.crypto
+>>> help(snackabra.crypto)
+```
+
+
+# References
+
+* https://packaging.python.org/en/latest/tutorials/packaging-projects/
+* https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+
+
