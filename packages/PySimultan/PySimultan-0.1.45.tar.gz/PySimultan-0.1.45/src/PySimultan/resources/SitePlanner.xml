@@ -1,0 +1,2887 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SitePlanner</name>
+    </assembly>
+    <members>
+        <member name="T:SitePlanner.Algorithms.GeometryToMeshConverter">
+            <summary>
+            Helper class which transforms geometry into meshes 
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.CreateGridLineGeometry(System.Windows.Media.Media3D.Point3D[0:,0:])">
+            <summary>
+            Create 2D grid line geometry (in x-z plane) from a set of grid vertices
+            </summary>
+            <param name="vertices">Grid vertices</param>
+            <returns>Line geometry</returns>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.CreateGridLineModel(System.Windows.Media.Media3D.Point3D[0:,0:])">
+            <summary>
+            Creates a 2D grid line mesh from grid vertices
+            </summary>
+            <param name="vertices">Grid vertices</param>
+            <returns>Line geometry mesh with white grid lines</returns>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.CreateGridPlaneGeometry(System.Windows.Media.Media3D.Point3D[0:,0:],System.Windows.Point[0:,0:],System.Boolean[0:,0:])">
+            <summary>
+            Generates faces from a given 2D array of vertices and texture coordinates.
+            A quad (4 adjacent vertices) is only converted if all points are valid according to the mask array.
+            </summary>
+            <param name="vertices">2D array of vertices</param>
+            <param name="texCoords">2D array of texture coordinates</param>
+            <param name="mask">2D array of vertex validity</param>
+            <returns>Mesh geometry with faces between adjacent vertices</returns>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.CreateEmptyMeshModel">
+            <summary>
+            Generates empty mesh-models for geometry model
+            </summary>
+            <returns>A point/line/triangle meshmodel</returns>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.CreatePlaneModel(System.Single,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Creates a tessellated mesh plane in the xz-plane centered around the origin with texture coordinates.
+            </summary>
+            <param name="width">Width of the plane</param>
+            <param name="height">Height of the plane</param>
+            <param name="tessX">Number of edges to create on the x-axis</param>
+            <param name="tessY">Number of edges to create on the y-axis</param>
+            <returns>Plane mesh geometry</returns>
+        </member>
+        <member name="M:SitePlanner.Algorithms.GeometryToMeshConverter.UpdateModel(HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D,System.Collections.Generic.List{GeometryViewer.Model.Geometry.Face},System.Func{GeometryViewer.Model.Geometry.Face,System.Collections.Generic.IEnumerable{GeometryViewer.Model.Geometry.Vertex}},System.Object)">
+            <summary>
+            Updates a triangle mesh
+            </summary>
+            <param name="mesh">The mesh</param>
+            <param name="faces">A list of faces which should be displayed in the mesh</param>
+            <param name="VerticesFromFaceLOD">The vertices of the face LOD</param>
+            <param name="dataContext">The DataContext for the mesh</param>
+        </member>
+        <member name="T:SitePlanner.Algorithms.InvalidControlPointsException">
+            <summary>
+            Exception that is thrown if set of control points provided to the ThinPlateSpline class is invalid.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Algorithms.InvalidControlPointsException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of this class.
+            </summary>
+            <param name="message">Message text</param>
+        </member>
+        <member name="T:SitePlanner.Algorithms.ThinPlateSpline">
+            <summary>
+            Implements an analytic solution to Thin-Plate-Spline (2D/2D) used for interpolation purposes.
+            See (https://en.wikipedia.org/wiki/Thin_plate_spline) for more information.
+            Code is based off a C++ implementation (https://launchpad.net/templatedtps).
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Algorithms.ThinPlateSpline.#ctor(System.Collections.Generic.List{System.ValueTuple{System.Windows.Point,System.Windows.Point}})">
+            <summary>
+            Initializes a new instance of this class given a set of control points.
+            Throws an InvalidControlPointsException if control points are invalid (i.e. too few, too close, linearly dependent)
+            </summary>
+            <param name="controlPoints"></param>
+        </member>
+        <member name="M:SitePlanner.Algorithms.ThinPlateSpline.Interpolate(System.Windows.Point)">
+            <summary>
+            Interpolates a value for the given position using the initialized Thin-Plate-Spline
+            </summary>
+            <param name="position">Position</param>
+            <returns>Interpolated value</returns>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.CachedImageSourceConverter">
+            <summary>
+            Converts an image file path to a cached bitmap image
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.CachedImageSourceConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.CachedImageSourceConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Not implemented
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.NormalizedToActualPixelCoordinatesConverter">
+            <summary>
+            Converts normalized image coordinates in the range [0, 1] to actual pixel coordinates
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.NormalizedToActualPixelCoordinatesConverter.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.NormalizedToActualPixelCoordinatesConverter.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Not implemented
+            </summary>
+            <param name="value"></param>
+            <param name="targetTypes"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.GeoReferenceMapRibbonTab">
+            <summary>
+            Interaction logic for GeoReferenceMapRibbonTab.xaml
+            </summary>
+            <summary>
+            GeoReferenceMapRibbonTab
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapRibbonTab.#ctor">
+            <summary>
+            Initializes a new instance of the GeoReferenceMapRibbonTab class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapRibbonTab.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.GeoReferenceMapVM">
+            <summary>
+            ViewModel for the GeoMap tool which allows managing georeference in a map image
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.GeoMap">
+            <summary>
+            GeoMap which stores the image and all georeferences
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.MapImagePath">
+            <summary>
+            Path to the map image
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.GeoReferences">
+            <summary>
+            List of image georeferences associated with this map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.SelectedGeoReference">
+            <summary>
+            Currently seleted georeference which is displayed in the PropertyEditor
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.IsEditingEnabled">
+            <summary>
+            Controls if georeferences can be added or removed. Only possible if an image file is loaded.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.IsGeoReferencingInvalid">
+            <summary>
+            Returns whether the currently stored georeferences are valid
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.ZoomFactor">
+            <summary>
+            ZoomFactor for map navigation
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.HorizontalScroll">
+            <summary>
+            Horizontal scroll offset for scroll viewer to enable panning navigation
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.VerticalScroll">
+            <summary>
+            Vertical scroll offset for scroll viewer to enable panning navigation
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.IsAddingGeoReference">
+            <summary>
+            Returns true if a georeference is currently added (adding in progress)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.AddGeoReferenceCommand">
+            <summary>
+            Command for adding a new georeference on the map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.RemoveGeoReferenceCommand">
+            <summary>
+            Command for removing the currently selected georeference
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.LoadMapCommand">
+            <summary>
+            Command for loading a new map image, replacing the current one and deleting all invalid georeferences
+            </summary>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.AddingGeoReferenceHandler">
+            <summary>
+            EventHandler for OnAddingGeoReferenceStarted event
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="E:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.OnAddingGeoReferenceStarted">
+            <summary>
+            Event which is fired when a new georeference is being added
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.#ctor(SIMULTAN.UI.Services.IServicesProvider,ParameterStructure.SitePlanner.GeoMap,ParameterStructure.SitePlanner.SitePlannerManager)">
+            <summary>
+            Initializes a new instance of the GeoReferenceMapVM class
+            </summary>
+            <param name="geoMap">Path to a map image</param>
+            <param name="servicesProvider">Service Provider</param>
+            <param name="sitePlannerManager">The SitePlannerManager</param>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.OnTabSelected">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.CommitAddingGeoReference">
+            <summary>
+            Commit adding a georeference
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapVM.CancelAddingGeoReference">
+            <summary>
+            Cancel adding a georeference. The currently selected georeference is deleted.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget">
+            <summary>
+            Interaction logic for GeoReferenceMapWidget.xaml
+            </summary>
+            <summary>
+            GeoReferenceMapWidget
+            </summary>
+        </member>
+        <member name="F:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.ZoomFactorProperty">
+            <summary>
+            DependencyProperty for the zoom factor of the map
+            </summary>
+        </member>
+        <member name="F:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.HorizontalScrollProperty">
+            <summary>
+            DependencyProperty for the horizontal scroll offset (panning)
+            </summary>
+        </member>
+        <member name="F:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.VerticalScrollProperty">
+            <summary>
+            DependencyProperty for the vertical scroll offset (panning)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.ZoomFactor">
+            <summary>
+            Getter and setter for zoom factor property
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.HorizontalScroll">
+            <summary>
+            Getter and setter for horizontal scroll offset property
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.VerticalScroll">
+            <summary>
+            Getter and setter for vertical scroll offset property
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.#ctor">
+            <summary>
+            Initializes a new instance of the GeoReferenceMapWidget class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferenceMapWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.GeoReferencePropertyVM">
+            <summary>
+            ViewModel for displaying georeference properties in a PropertyEditor
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.GeoReferencePropertyVM.GeoReferencePosition">
+            <summary>
+            WGS84 georeference position
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.GeoReferencePropertyVM.#ctor(ParameterStructure.SitePlanner.ImageGeoReference)">
+            <summary>
+            Initializes a new instance of the GeoReferencePropertyVM class
+            </summary>
+            <param name="geoReference">An ImageGeoReference which associates an image position with a georeference</param>
+        </member>
+        <member name="T:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM">
+            <summary>
+            ViewModel for displaying georeferences in the map image
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.GeoReference">
+            <summary>
+            The actual georeference
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.ImagePosition">
+            <summary>
+            Forward getter/setter for image position
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.IsSelected">
+            <summary>
+            Getter and setter to select an image georeference. 
+            </summary>
+        </member>
+        <member name="P:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.GeoReferenceText">
+            <summary>
+            Getter for formatted geo reference text
+            </summary>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.#ctor(ParameterStructure.SitePlanner.ImageGeoReference)">
+            <summary>
+            Initializes a new instance of the ImageGeoReferenceVM class
+            </summary>
+            <param name="geoReference"></param>
+        </member>
+        <member name="M:SitePlanner.GeoReferenceMap.ImageGeoReferenceVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.arial_font">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.arial_tex">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.latitude_text">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Properties.Resources.longitude_text">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Services.ISitePlannerService">
+            <summary>
+            Service for opening and closing SitePlanner resources as well as interacting with them
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Services.ISitePlannerService.SitePlannerCommunicator">
+            <summary>
+            The SitePlanner communicator
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.IsOpen(ParameterStructure.Assets.ResourceFileEntry)">
+            <summary>
+            Returns whether a given SitePlanner resource (project or map) is already open
+            </summary>
+            <param name="file">Resource</param>
+            <returns>True, if resource is open</returns>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.OpenSitePlannerProject(ParameterStructure.Assets.ResourceFileEntry)">
+            <summary>
+            Opens the given SitePlanner project and returns its ViewModel.
+            If the given resource is already open, the corresponding tab is focused.
+            </summary>
+            <param name="file">Resource of a SitePlanner project (spdxf)</param>
+            <returns>ViewModel of opened tab</returns>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.OpenSitePlannerMap(ParameterStructure.Assets.ResourceFileEntry)">
+            <summary>
+            Opens the given SitePlanner map and returns its ViewModel.
+            If the given resource is already open, the corresponding tab is focused.
+            </summary>
+            <param name="file">Resource of a SitePlanner map (gmdxf)</param>
+            <returns>ViewModel of opened tab</returns>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.CloseSitePlannerProject(ParameterStructure.Assets.ResourceFileEntry)">
+            <summary>
+            Closes the tab corresponding to the given SitePlanner project resource.
+            </summary>
+            <param name="file">Resource of a SitePlanner project (spdxf)</param>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.CloseSitePlannerMap(ParameterStructure.Assets.ResourceFileEntry)">
+            <summary>
+            Closes the tab corresponding to the given SitePlanner map resource.
+            </summary>
+            <param name="file">Resource of a SitePlanner map (gmdxf)</param>
+        </member>
+        <member name="M:SitePlanner.Services.ISitePlannerService.SelectBuilding(System.Int32,System.UInt64)">
+            <summary>
+            Selects the building with 'buildingID' in the SitePlanner project resource with 'resourceID' and shifts the focus to it.
+            If the SitePlanner project is not already open, this opens a new tab.
+            </summary>
+            <param name="resourceID">Resource key of a SitePlanner project (spdxf)</param>
+            <param name="buildingID">Unique ID of a SitePlannerBuilding</param>
+        </member>
+        <member name="T:SitePlanner.Services.SitePlannerService">
+            <summary>
+            Service for opening and closing SitePlanner resources as well as interacting with them
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Services.SitePlannerService.SitePlannerCommunicator">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.#ctor(SIMULTAN.UI.Services.IServicesProvider,SIMULTAN.DataExchange.ComponentSitePlannerExchange,SIMULTAN.DataExchange.IComponentGeometryExchange)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="servicesProvider">ServicesProvider</param>
+            <param name="sitePlannerCommunicator">SitePlanner communicator</param>
+            <param name="geometryCommunicator">Geometry communicator</param>
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.IsOpen(ParameterStructure.Assets.ResourceFileEntry)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.OpenSitePlannerProject(ParameterStructure.Assets.ResourceFileEntry)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.OpenSitePlannerMap(ParameterStructure.Assets.ResourceFileEntry)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.CloseSitePlannerProject(ParameterStructure.Assets.ResourceFileEntry)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.CloseSitePlannerMap(ParameterStructure.Assets.ResourceFileEntry)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Services.SitePlannerService.SelectBuilding(System.Int32,System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.SitePlannerBuildingVM">
+            <summary>
+            ViewModel for SitePlannerBuilding
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerBuildingVM.Building">
+            <summary>
+            SitePlannerBuilding
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerBuildingVM.Name">
+            <summary>
+            Name of the building
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerBuildingVM.IsSelected">
+            <summary>
+            Returns whether this building is currently selected
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerBuildingVM.#ctor(ParameterStructure.SitePlanner.SitePlannerBuilding)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="building">Building</param>
+        </member>
+        <member name="M:SitePlanner.SitePlannerBuildingVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.SitePlannerRibbonTab">
+            <summary>
+            Interaction logic for SitePlannerRibbonTab.xaml
+            </summary>
+            <summary>
+            SitePlannerRibbonTab
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerRibbonTab.#ctor">
+            <summary>
+            Initializes a new instance of the SitePlannerRibbonTab class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerRibbonTab.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.SitePlannerMainWidget">
+            <summary>
+            Interaction logic for SitePlannerMainWidget.xaml
+            </summary>
+            <summary>
+            SitePlannerMainWidget
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerMainWidget.#ctor">
+            <summary>
+            Initializes a new instance of the SitePlannerMainWidget class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerMainWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.BuildingComponentControlVM">
+            <summary>
+            ViewModel for assigning a component to a SitePlannerBuilding
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.BuildingComponentControlVM.IsEmpty">
+            <summary>
+            States whether this building contains a component or not
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.BuildingComponentControlVM.Name">
+            <summary>
+            The name of the component or an empty string
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.BuildingComponentControlVM.AssociateComponentCommand">
+            <summary>
+            Command to associate component with building
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.BuildingComponentControlVM.DisassociateComponentCommand">
+            <summary>
+            Command to disassociate component with building
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.BuildingComponentControlVM.#ctor(SIMULTAN.UI.Services.IServicesProvider,ParameterStructure.SitePlanner.SitePlannerBuilding,SIMULTAN.DataExchange.ComponentSitePlannerExchange)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="serviceProvider">ServiceProvider</param>
+            <param name="building">The building</param>
+            <param name="sitePlannerCommunicator">SitePlanner component exchange</param>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.BuildingComponentControlVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.ValueMapping.Maps.MarkerColorMapVM">
+            <summary>
+            ViewModel for MultiThresholdColorMap
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Maps.MarkerColorMapVM.ColorMap">
+            <summary>
+            Multi-threshold color map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Maps.MarkerColorMapVM.MarkerMode">
+            <summary>
+            Mode of MultiThresholdColorMapControl
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Maps.MarkerColorMapVM.Markers">
+            <summary>
+            List of color map markers
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.Maps.MarkerColorMapVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.Maps.BaseColorMap{ParameterStructure.SitePlanner.ValueMapping.Maps.MarkerColorMapParameters},System.String)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="cm">Value to color map</param>
+            <param name="name">The name</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.Prefilters.AggregationPrefilterVM">
+            <summary>
+            ViewModel For the AggregationPrefilter
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.Prefilters.AggregationPrefilterVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.Prefilters.AggregationPrefilter)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="prefilter">Aggregation prefilter</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.Prefilters.TimelinePrefilterVM">
+            <summary>
+            ViewModel for TimelinePrefilter
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Prefilters.TimelinePrefilterVM.TimelinePrefilter">
+            <summary>
+            Timeline prefilter
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Prefilters.TimelinePrefilterVM.Headers">
+            <summary>
+            Forward getter for timeline headers
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.Prefilters.TimelinePrefilterVM.Current">
+            <summary>
+            Forward getter/setter for current timeline index
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.Prefilters.TimelinePrefilterVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.Prefilters.TimelinePrefilter)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="prefilter">Timeline prefilter</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueMappingAssociationVM">
+            <summary>
+            ViewMode for value mapping assocations
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingAssociationVM.ValueMappingAssociation">
+            <summary>
+            Value mapping association
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingAssociationVM.Name">
+            <summary>
+            Name of the association
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingAssociationVM.ComponentIndexUsage">
+            <summary>
+            Usage of component parameter
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingAssociationVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.ValueMappingAssociation)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="association">The value mapping association</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueMappingWidget">
+            <summary>
+            Interaction logic for ValueMappingWidget.xaml
+            </summary>
+            <summary>
+            ValueMappingWidget
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingWidget.#ctor">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueMappingWidgetVM">
+            <summary>
+            ViewModel for the ValueMappingWidget
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ValueMap">
+            <summary>
+            Value map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.IsEnabled">
+            <summary>
+            Return true if a value map is set
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ParametersAssociations">
+            <summary>
+            Value map association view models
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ActiveParametersAssociation">
+            <summary>
+            Currently active association
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.IsValueMappingAvailable">
+            <summary>
+            Returns whether an active value mapping association is set or not
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ValueToColorMapVM">
+            <summary>
+            Currently selected value to color map method
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ValuePrefilterVM">
+            <summary>
+            Current value prefilter method
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.IsTimelineAvailable">
+            <summary>
+            Returns whether the timeline control should be displayed or not
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.ColorMaps">
+            <summary>
+            Contains all registered value to color maps.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.Prefilters">
+            <summary>
+            Contains all registered value to color maps.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.LoadTableCommand">
+            <summary>
+            Command to load a table for value mapping
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingWidgetVM.DeleteAssociationCommand">
+            <summary>
+            Command to delete the currently active association
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingWidgetVM.#ctor(SIMULTAN.UI.Services.IServicesProvider,ParameterStructure.SitePlanner.ValueMapping.ValueMap)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="servicesProvider">Service provider</param>
+            <param name="valueMap">Value map</param>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingWidgetVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValuePrefilterParameterChangedEventHandler">
+            <summary>
+            EventHandler for the ValuePrefilterParameterChanged event
+            </summary>
+            <param name="sender">The sender</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValuePrefilterVM">
+            <summary>
+            Base ViewModel for value prefilters
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValuePrefilterVM.Name">
+            <summary>
+            Name of this color map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValuePrefilterVM.ValuePreFilter">
+            <summary>
+            Value prefilter
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValuePrefilterVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.IValuePrefilter,System.String)">
+            <summary>
+            Initializes a new instance of this class with the given value prefilter
+            </summary>
+            <param name="valuePreFilter">Value prefilter</param>
+            <param name="name">Name of the prefilter</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValuePrefilterWidget">
+            <summary>
+            Interaction logic for ValuePrefilterWidget.xaml
+            </summary>
+            <summary>
+            ValuePrefilterWidget
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValuePrefilterWidget.#ctor">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValuePrefilterWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ColorMapParameterChangedEventHandler">
+            <summary>
+            EventHandler for ColorMapParameterChanged event
+            </summary>
+            <param name="sender">The sender</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueToColorMapVM">
+            <summary>
+            Base ViewModel for value to color mappers
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueToColorMapVM.Name">
+            <summary>
+            Name of this color map
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueToColorMapVM.ValueToColorMap">
+            <summary>
+            Value to color map
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueToColorMapVM.#ctor(ParameterStructure.SitePlanner.ValueMapping.IValueToColorMap,System.String)">
+            <summary>
+            Initializes a new instance with the given value to color map
+            </summary>
+            <param name="valueToColorMap">Value to color map</param>
+            <param name="name">Name of the color map</param>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueMappingToolVM">
+            <summary>
+            ViewModel for ValueMappingTool
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingToolVM.ValueMappingWidgetVM">
+            <summary>
+            Active ValueMappingWidget
+            </summary>
+        </member>
+        <member name="P:SitePlanner.ValueMapping.ValueMappingToolVM.IsActiveSitePlannerDocument">
+            <summary>
+            Returns whether a SitePlanner document is currently active
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingToolVM.#ctor(SIMULTAN.UI.Services.IServicesProvider)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="servicesProvider">ServiceProvider</param>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingToolVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingToolVM.Loaded">
+            <summary>
+            Hooks into the ActiveDocumentChanged event.
+            Has to be called once when the IAnchorablesService is available.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueMappingTool">
+            <summary>
+            Interaction logic for ValueMappingToolWidget.xaml
+            </summary>
+            <summary>
+            ValueMappingTool
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingTool.#ctor">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueMappingTool.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.ValueMapping.ValueToColorMapWidget">
+            <summary>
+            Interaction logic for ValueToColorMapWidget.xaml
+            </summary>
+            <summary>
+            ValueToColorMapWidget
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueToColorMapWidget.#ctor">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.ValueMapping.ValueToColorMapWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.BuildingVM">
+            <summary>
+            ViewModel for a single building in the SitePlanner
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.Building">
+            <summary>
+            SitePlannerBuilding data model
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.Meshes">
+            <summary>
+            According meshes in SitePlanner viewport
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.Models">
+            <summary>
+            The GeometryModelData models associated with this building
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.GeometryModelToMesh">
+            <summary>
+            Map that associates a geometry model (identified by its Guid) with its corresponding mesh
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.BoundingBoxWGS">
+            <summary>
+            Total bounding box in WGS space
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingVM.GeometryModel">
+            <summary>
+            The GeomteryModel of this Building.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.BuildingVM.#ctor(ParameterStructure.SitePlanner.SitePlannerBuilding,System.Collections.Generic.List{GeometryViewer.Model.Geometry.GeometryModelData},GeometryViewer.Model.GeometryModel)">
+            <summary>
+            Initializes a new instance of the BuildingVM class
+            </summary>
+            <param name="building">SitePlannerBuilding</param>
+            <param name="models">List of models included in this building</param>
+            <param name="geometryModel">The GeometryModel associateds with this BuildingVM</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.BuildingPropertyVM">
+            <summary>
+            ViewModel for a building in the property editor
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingPropertyVM.BuildingFile">
+            <summary>
+            File name of the geometry file (SimGeo)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingPropertyVM.CustomColor">
+            <summary>
+            Custom color for this building
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.BuildingPropertyVM.Component">
+            <summary>
+            Component for value field mapping
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.BuildingPropertyVM.#ctor(ParameterStructure.SitePlanner.SitePlannerBuilding,SIMULTAN.UI.Services.IServicesProvider,SIMULTAN.DataExchange.ComponentSitePlannerExchange)">
+            <summary>
+            Initializes a new instance of the BuildingPropertyVM class from an instance of the SitePlannerBuilding class
+            </summary>
+            <param name="building">SitePlannerBuilding instance</param>
+            <param name="serviceProvider">The ServiceProvider</param>
+            <param name="sitePlannerCommunicator">The SitePlanner Communicator</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.GeoMapPropertyVM">
+            <summary>
+            ViewModel for a GeoMap in the property editor
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.GeoMapPropertyVM.ElevationProvider">
+            <summary>
+            The Elevation provider for this GeoMap.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.GeoMapPropertyVM.GridSize">
+            <summary>
+            The cell grid size in meters for this GeoMap.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.GeoMapPropertyVM.ServiceProvider">
+            <summary>
+            The ServiceProvider
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.GeoMapPropertyVM.#ctor(ParameterStructure.SitePlanner.SitePlannerMap,SIMULTAN.UI.Services.IServicesProvider)">
+            <summary>
+            Initializes a new instance of the GeoMapPropertyVM class from an instance of the SitePlannerMap class
+            </summary>
+            <param name="map">SitePlannerMap instance</param>
+            <param name="serviceProvider">The ServicesProvider</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DepthRenderCoreCommunicator">
+            <summary>
+            Communicator to be able to communicate with the render core of the DepthMeshGeometryModel3D from the outside.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthRenderCoreCommunicator.Core">
+            <summary>
+            The Rendercore to communicate with.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthRenderCoreCommunicator.MouseClickPoint">
+            <summary>
+            The Mouse Click point to sample the depth value for
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthRenderCoreCommunicator.SamplePointNextFrame">
+            <summary>
+            Set this to true to sample the depth at the next frame
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DepthRenderCoreCommunicator.ReturnNDCPointHandler">
+            <summary>
+            Event Handler for the ReturnNDCPoint event. Returns the clicked location in NDC space.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="ndcPoint">The clicked point in NDC space.</param>
+        </member>
+        <member name="E:SitePlanner.Viewport.DepthRenderCoreCommunicator.ReturnNDCPoint">
+            <summary>
+            The Event that is called when the depth sampling finished to return the clicked point in NDC space.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthRenderCoreCommunicator.OnReturnNDCPoint(System.Windows.Media.Media3D.Point4D)">
+            <summary>
+            Calles the ReturnNDCPoint event.
+            </summary>
+            <param name="ndcPoint">The clicked point in NDC space.</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DepthRenderCore">
+            <summary>
+            The render core for the DepthNode of the DepthMeshGeometryModel3D
+            Injects the depth buffer sampling compute shader invocation in the OnRender Method
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthRenderCore.MouseClickPoint">
+            <summary>
+            The mouse click point where the depth should be sampled
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthRenderCore.SamplePointNextFrame">
+            <summary>
+            Set this to true to sample the depth at the MouseClickPoint on the next rendered frame
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthRenderCore.#ctor(SitePlanner.Viewport.DepthRenderCoreCommunicator)">
+            <summary>
+            Creates a new DepthRenderCore
+            </summary>
+            <param name="communicator">The communicator</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthRenderCore.OnAttach(HelixToolkit.Wpf.SharpDX.IRenderTechnique)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthRenderCore.OnRender(HelixToolkit.Wpf.SharpDX.RenderContext,HelixToolkit.Wpf.SharpDX.Render.DeviceContextProxy)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.DepthNode">
+            <summary>
+            The MeshNode for the DepthGeometryModel3D
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthNode.Communicator">
+            <summary>
+            The Communicator used to communicate with the actual render core.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthNode.#ctor(SitePlanner.Viewport.DepthRenderCoreCommunicator)">
+            <summary>
+            Creates a new instance of the DepthNode
+            </summary>
+            <param name="communicator">The communicator to the render core.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthNode.OnCreateRenderCore">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.DepthMeshGeometryModel3D">
+            <summary>
+            A geometry model used to inject depth sampling copute shader into the HelixToolkit rendering pipeline.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DepthMeshGeometryModel3D.Communicator">
+            <summary>
+            The Communicator used to communicate with the actual render core.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthMeshGeometryModel3D.#ctor">
+            <summary>
+            Creates a new instance of the GeometryModel.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DepthMeshGeometryModel3D.OnCreateSceneNode">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1">
+            <summary>
+            Represents the base class for an dimension input window
+            </summary>
+            <typeparam name="ModeType">Mode enum</typeparam>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.Mode">
+            <summary>
+            Current mode. Changes how many input fields are visible and how input is interpreted.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.ModeText">
+            <summary>
+            Returns the mode abbreviation.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.Header">
+            <summary>
+            Returns the Header. This text is displayed all the time
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.Text">
+            <summary>
+            Returns the Description Text. This text is only displayed when the mouse isn't moved
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.IsTextVisible">
+            <summary>
+            Returns whether the text is visible or not.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.Dimensions">
+            <summary>
+            Collection of input fields
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.PropertyChanged">
+            <summary>
+            Event that is invoked when a property relevant for UI changes
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.ModeChanged">
+            <summary>
+            Event that is invoked when the current mode is changed
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.#ctor(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.List{System.Double},System.Collections.Generic.List{`0},System.Collections.Generic.Dictionary{`0,System.ValueTuple{System.String,System.String,System.String}})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="viewport">Parent viewport VM</param>
+            <param name="initialDimensions">Initial values for input fields</param>
+            <param name="availableModes">List of available modes for this input window</param>
+            <param name="modeTexts">Mapping to retrieve UI texts depending on active mode</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <summary>
+            Handles KeyDown events
+            </summary>
+            <param name="args">The KeyEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.MouseMove">
+            <summary>
+            Handles MouseMove events
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.DimensionInputWindowVM`1.NotifyPropertyChanged(System.String)">
+            <summary>
+            Invokes the PropertyChanged event
+            </summary>
+            <param name="prop">Name or property</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindow">
+            <summary>
+            Interaction logic for PositionInputWindow.xaml
+            </summary>
+            <summary>
+            PositionInputWindow
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindow.#ctor">
+            <summary>
+             Constructor
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum">
+            <summary>
+            Enum for move modes
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum.RelativeNorth">
+            <summary>
+            Positions are relative only in the N/S direction, offset is in meters
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum.RelativeEast">
+            <summary>
+            Positions are relative only in the E/W direction, offset is in meters
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum.Relative">
+            <summary>
+            Positions are relative to the start position
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum.Absolute">
+            <summary>
+            Positions are absolute positions
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindowVM">
+            <summary>
+            Input window for move operation
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindowVM.#ctor(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.List{SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="viewport">Viewport</param>
+            <param name="availableModes">List of available modes</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindowVM.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindowVM.Transform(System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Sets the given move vector and copies it to the input fields
+            </summary>
+            <param name="newPoint">The point where it is transformed to</param>
+            <param name="referencePoint">Reference point for moving</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.PositionInputWindowVM.TransformVector(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Returns the actual move vector depending on the current mode
+            </summary>
+            <param name="referencePoint">Reference point for moving</param>
+            <returns>Actual move vector</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindow">
+            <summary>
+            Interaction logic for ScaleInputWindow.xaml
+            </summary>
+            <summary>
+            RotateInputWindow
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindow.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.RotateModeEnum">
+            <summary>
+            Enum for rotate modes
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DimensionInputWindow.RotateModeEnum.Relative">
+            <summary>
+            Relative rotation around the normal axis
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindowVM">
+            <summary>
+            Input window for rotate operation
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindowVM.#ctor(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.List{SitePlanner.Viewport.DimensionInputWindow.RotateModeEnum})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="viewport">Viewport</param>
+            <param name="availableModes">List of available modes</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindowVM.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindowVM.Transform(System.Double,System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Sets the given rotation parameters and copies them into the input fields
+            </summary>
+            <param name="angleInDeg">Angle in degrees</param>
+            <param name="rotationAxis">Axis of rotation</param>
+            <param name="referencePoint">Origin of axis of rotation</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DimensionInputWindow.RotateInputWindowVM.GetRotation">
+            <summary>
+            Returns the actual rotation parameters depending on current mode
+            </summary>
+            <returns>Returns the actual rotation parameters depending on current mode</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DynamicTileManager">
+            <summary>
+            A DynamicTileManager that automatically fetches tiles visible in the viewport.
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.PropertyChanged">
+            <inheritdoc/>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ErrorEventArgs">
+            <summary>
+            The EventArgs for the ErrorCallback event
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ErrorEventArgs.Message">
+            <summary>
+            The error messages.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ErrorEventArgs.#ctor(System.String)">
+            <summary>
+            Creates a new ErrorEventArgs.
+            </summary>
+            <param name="message">The error message or messages separated by newline.</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ErrorEventHander">
+            <summary>
+            The ErrorHandler delegate.
+            </summary>
+            <param name="sender">This DynamicTileManager.</param>
+            <param name="args">The error event args.</param>
+        </member>
+        <member name="E:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ErrorCallback">
+            <summary>
+            The ErrorCallback that gets called whenever an error occurred and the fetching stopped.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileFinishedEventHandler">
+            <summary>
+            Event handler when a tile finishes.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="args">The empty params.</param>
+        </member>
+        <member name="E:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileFinishedEvent">
+            <summary>
+            The event that is called when a tile finished loading.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.AllowedTileSources">
+            <summary>
+            A whitelist for the Tilesources. Only those will be available to select in the UI.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Tiles">
+            <summary>
+            The visible tiles of the manager.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileTransform">
+            <summary>
+            Transform for all the tiles.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.CameraCenter">
+            <summary>
+            The Camera Center position.
+            After this is set, the TileManager needs to be manually updated.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.CenterTBN">
+            <summary>
+            The Center TBN Matrix.
+            After this is set, the TileManager needs to be manually updated.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileSource">
+            <summary>
+            The TileSource of the DynamicTileManager. Restarts the fetching process if set.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.ElevationProvider">
+            <summary>
+            The IBulkElevationProvider used by the tile manager.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Scale">
+            <summary>
+            The general scaling of all the meshes.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.#ctor(GeometryViewer.Algorithms.Geometric.GeoReferenceAlgorithms.GeoRefPoint,System.Windows.Media.Media3D.Matrix3D,BruTile.ITileSource,SIMULTAN.Util.ElevationProvider.IBulkElevationProvider,System.Single)">
+            <summary>
+            Creates a new DynamicTileManager.
+            </summary>
+            <param name="cameraCenter">The center point of the camera in the Viewport containing its worldspace and WGS space coordinates.</param>
+            <param name="centerTBN">The TBN of the center point.</param>
+            <param name="elevationProvider">The Elevation Provider to use.</param>
+            <param name="tileSource">The Tilesource used by the manager.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Reset">
+            <summary>
+            Resets the DynamicTileManager
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.RecreateGeometry">
+            <summary>
+            Recreates the geometry of all tiles so they are correct again after the camera center changed for example.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileFetcher_DataChanged(System.Object,SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs)">
+            <summary>
+            Called when the fetcher has downloaded a tile.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.TileTracker_TileUpdated(System.Object,SitePlanner.Viewport.DynamicTiles.TileTracker.TileEventArgs)">
+            <summary>
+            Called when the TileTracker finds that a tile or it's surroundings got updated so the textures can be regenerated.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.CreateQuadPoints(BruTile.Extent,System.Single,System.Single)">
+            <summary>
+            Creates the quad corner points in Cartesian space.
+            </summary>
+            <param name="extent">The extent of the tile.</param>
+            <returns>Quad corner points in Cartesian space.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Stop">
+            <summary>
+            Stops the Fetcher.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Resume">
+            <summary>
+            Restarts the fetching process.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.CreateTerrrainMaterial(HelixToolkit.Wpf.SharpDX.TextureModel,HelixToolkit.Wpf.SharpDX.TextureModel)">
+            <summary>
+            Creates the Material for the Terrain.
+            </summary>
+            <param name="texture">The Albedo/Diffuse texture of the tile.</param>
+            <param name="heightmap">The Heightmap of the tile.</param>
+            <returns>The Tile material.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.Update(BruTile.Extent,System.Int32)">
+            <summary>
+            Updates The map to be visible in the in thte given extent and zoom level.
+            </summary>
+            <param name="extent">The extent of the map to load.</param>
+            <param name="zoom">The zoom level to load. Will be clipped to some predefined zoom min and max levels.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.CameraMoved(System.Windows.Media.Media3D.Point3D,System.Windows.Media.Media3D.Point3D,System.Double,System.Int32,GeometryViewer.Algorithms.Geometric.GeoReferenceAlgorithms.GeoRefPoint,System.Windows.Media.Media3D.Matrix3D)">
+            <summary>
+            Called when the vieport camera moved. Updates the visible area of the map.
+            </summary>
+            <param name="Position">The worldspace position of the camera.</param>
+            <param name="Target">The worldspace target of the camera.</param>
+            <param name="farplaneWidth">The width of the farplane at the target position. Needed to calculate the visible area of the map.</param>
+            <param name="viewportWidth">The width of the actual viewport in pixels. Needed to calculate the zoom level.</param>
+            <param name="cameraCenter">The current camera center. Will not update the tile managers camera center, this is only temporary for the viewport calculation.</param>
+            <param name="centerTBN">The current center TBN. Will also not update.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DynamicTileManager.GetBoundingClippingPlanes(System.Windows.Media.Media3D.Point3D,System.Windows.Media.Media3D.Vector3D,GeometryViewer.Algorithms.Geometric.GeoReferenceAlgorithms.GeoRefPoint,System.Windows.Media.Media3D.Matrix3D)">
+            <summary>
+            Calculates the near and far clipping planes to closely fit the elevation tiles.
+            Returns default values when there are currently no tiles displayed.
+            </summary>
+            <param name="cameraPosition">The position of the camera in world space.</param>
+            <param name="cameraDirection">The direction the camera is facing in world space.</param>
+            <returns>The near and far clip plane distances.</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.ElevationTile">
+            <summary>
+            Represents an elevation tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.Index">
+            <summary>
+            The index of the elevation tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.Data">
+            <summary>
+            The data of the tile with size Width*Height. Data is in a row by row format.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.Width">
+            <summary>
+            The width of the tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.Height">
+            <summary>
+            The height of the tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.MinHeight">
+            <summary>
+            The minimum height of this tile.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.ElevationTile.MaxHeight">
+            <summary>
+            The maximum height of this tile.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.ElevationTile.#ctor(BruTile.TileIndex,System.ValueTuple{System.Double[],System.Int32,System.Int32})">
+            <summary>
+            Create a new instance of an elevation tile
+            </summary>
+            <param name="index">The index of the tile.</param>
+            <param name="param">The data of the tile and its width and height.</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.Fetcher">
+            <summary>
+            A Fetcher that dynamically fetches tiles in a given extent and zoom level in separate threads.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.Fetcher.CameraCenterMercator">
+            <summary>
+            The Camera center point in Webmercator coordinates.
+            Used to get the tiles originating from this point.
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.DynamicTiles.Fetcher.DataChanged">
+            <summary>
+            Event that is called when a tile finished downloading.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.#ctor(BruTile.ITileSource,SIMULTAN.Util.ElevationProvider.IBulkElevationProvider,BruTile.Cache.ITileCache{SitePlanner.Viewport.DynamicTiles.Tile},SIMULTAN.Util.Caching.IImageCache{System.Drawing.Image})">
+            <summary>
+            Creates a new Fetcher.
+            </summary>
+            <param name="tileSource">The TileSource to use for the images.</param>
+            <param name="elevationProvider">The ElevationProvider to use.</param>
+            <param name="tileCache">The TileCache to use.</param>
+            <param name="persistentCache">The imageCache to persitently cache the tiles on the hard drive.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.ViewChanged(BruTile.Extent,System.Int32)">
+            <summary>
+            Call when the View Changed.
+            </summary>
+            <param name="extent">The new extent to fetch the tiles for.</param>
+            <param name="level">The new zoom level to fetch the tiles for.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.AbortFetch">
+            <summary>
+            Call to Abort the fetching.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.Fetcher.Retries">
+            <summary>
+            Keeps track of retries per tile. This class doesn't do much interesting work
+            but makes the rest of the code a bit easier to read.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.Retries.ReachedMax(BruTile.TileIndex)">
+            <summary>
+            Checks if the max retires have been reached
+            </summary>
+            <param name="index">The index to check</param>
+            <returns>True if the maximum retries of the index have been reached</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.Retries.PlusOne(BruTile.TileIndex)">
+            <summary>
+            Increases the retries count of the given index by one.
+            </summary>
+            <param name="index">The index</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.Retries.RetryCount(BruTile.TileIndex)">
+            <summary>
+            Returns the retry count of the given tile or -1 if not found.
+            </summary>
+            <param name="index">The index of the tile.</param>
+            <returns>Returns the retry count of the given tile or -1 if not found.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Fetcher.Retries.Clear">
+            <summary>
+            Clears all retry counts
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DataChangedEventHandler">
+            <summary>
+            The Eventhandler of the DataChanged event.
+            </summary>
+            <param name="sender">This Fetcher.</param>
+            <param name="e">The DataChangedEventArgs.</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs">
+            <summary>
+            EventArgs for the DataChanged event.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs.#ctor(System.Exception,System.Boolean,SitePlanner.Viewport.DynamicTiles.Tile)">
+            <summary>
+            Creates an new DataChangedEventArgs.
+            </summary>
+            <param name="error">An error if one occurred.</param>
+            <param name="cancelled">If the fetching got canceled.</param>
+            <param name="tile">The Tile that got changed.</param>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs.Error">
+            <summary>
+            The Error, if one occurred while fetching. null if none occurred.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs.Cancelled">
+            <summary>
+            True if the fetching got cancelled.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.DataChangedEventArgs.Tile">
+            <summary>
+            The tile that got updated.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.IFetchStrategy">
+            <summary>
+            The FetchStrategy interface for the Fetcher.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.IFetchStrategy.GetTilesWanted(BruTile.ITileSchema,BruTile.Extent,System.Int32,System.Windows.Point)">
+            <summary>
+            Returns the tiles that need to be downloaded in the order they are returned in.
+            </summary>
+            <param name="schema">The TileSchema to use.</param>
+            <param name="extent">The Extent to find the tiles in.</param>
+            <param name="level">The zoom level.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.FetchStrategy">
+            <summary>
+            The FetchStrategy for the Fetcher.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.FetchStrategy.GetTilesWanted(BruTile.ITileSchema,BruTile.Extent,System.Int32,System.Windows.Point)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.FetchStrategy.Distance(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the distance between two points.
+            </summary>
+            <param name="x1">X coord of the first point.</param>
+            <param name="y1">Y coord of the first point.</param>
+            <param name="x2">X coord of the second point.</param>
+            <param name="y2">Y coord of the second point.</param>
+            <returns>The distance between the two points.</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.Tile">
+            <summary>
+            Represents an image tile of the terrain
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.Tile.TileInfo">
+            <summary>
+            The tile info of the tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.Tile.Image">
+            <summary>
+            The image of the tile
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.Tile.ElevationTile">
+            <summary>
+            The elevation tile that this tile is part of. may be null if no eleavtion is used.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.Tile.BoundingPoints">
+            <summary>
+            The bounding points of the tile.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.Tile.#ctor(BruTile.TileInfo,System.Drawing.Image,SitePlanner.Viewport.DynamicTiles.ElevationTile)">
+            <summary>
+            Creates a new instance of a tile
+            </summary>
+            <param name="info">The tile info</param>
+            <param name="image">The image</param>
+            <param name="elevationTile">The elevation tile</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.TileTracker">
+            <summary>
+            A TileTracker that keeps track of the finished tiles and emits events for tiles where a surrounding tile updated.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileTracker.#ctor(BruTile.Cache.ITileCache{SitePlanner.Viewport.DynamicTiles.Tile})">
+            <summary>
+            Creates a TileTracker.
+            </summary>
+            <param name="tileCache">The cache that is used for the tiles.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileTracker.TileFinished(BruTile.TileIndex)">
+            <summary>
+            Should be called on any tile that Finished downloading so proper events can be sent for its finished neighbors.
+            </summary>
+            <param name="index">The index of the finished tile.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileTracker.GetSurroundingTiles(BruTile.TileIndex)">
+            <summary>
+            Collects available surrounding tile of a given index.
+            </summary>
+            <param name="index">The index of the tile to find the neighbors for.</param>
+            <returns>A 3x3 Array of tiles containing the tile of the given index in the middle element. Any other elements can be potentially null.</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.TileTracker.TileEventArgs">
+            <summary>
+            Event args for the TileUpdated event.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.TileTracker.TileEventArgs.Index">
+            <summary>
+            Index of the updated tile.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.TileTracker.TileEventArgs.SurroundingTiles">
+            <summary>
+            All the currently available surrounding tiles, size [3,3]
+            Center element [1,1] is the tile of the Index.
+            Surrounding tiles can be null if they are not loaded yet.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileTracker.TileEventArgs.#ctor(BruTile.TileIndex,SitePlanner.Viewport.DynamicTiles.Tile[0:,0:])">
+            <summary>
+            Creates a new TileEventArgs.
+            </summary>
+            <param name="index">The index of the updated tile.</param>
+            <param name="surroundingTiles">The 3x3 array of surrounding tiles.</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.TileTracker.TileUpdatedEventHandler">
+            <summary>
+            Eventhandler for the TileUpdated event.
+            </summary>
+            <param name="sender">This TileTracker.</param>
+            <param name="args">The TileEventArgs.</param>
+        </member>
+        <member name="E:SitePlanner.Viewport.DynamicTiles.TileTracker.TileUpdated">
+            <summary>
+            Called whenever a tile and/or its surrounding tiles finished loading and got updated.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.TileUtils">
+            <summary>
+            Provides static utility functions for the tiles.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.CreatePaddedElevationMap(SitePlanner.Viewport.DynamicTiles.Tile[0:,0:],System.Single)">
+            <summary>
+            Creates a padded elevation texture where additional border pixels are added from the surrounding images for correct interpolation.
+            </summary>
+            <param name="tiles">A 3x3 grid of elevation tiles, the tile on position [1,1] is the center one. The surrounding tiles can be null if not loaded yet.</param>
+            <returns>A an array padded with the surrounding tile border rows, resulting array has the size of width/height+2.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.CreatePaddedDiffuseMap(SitePlanner.Viewport.DynamicTiles.Tile[0:,0:])">
+            <summary>
+            Creates a padded diffuse texture where additional border pixels are added from the surrounding images for correct interpolation.
+            </summary>
+            <param name="images">A 3x3 grid of images, the on on position [1,1] is the center one. The surrounding tiles can be null if not loaded yet.</param>
+            <returns>An image padded with the surrounding images border rows, resulting images has the size of width/height+2.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.GenerateTileGeometry(System.Collections.Generic.List{SharpDX.Vector3},System.Collections.Generic.List{SharpDX.Vector3},System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single)">
+            <summary>
+            Generates the geometry for a terrain tile.
+            </summary>
+            <param name="quadPoints">The points of the quad in absolute cartesian geospatial coordinates. You need to provide four of them (top left, top right, bottom right, bottom left)</param>
+            <param name="vertexNormals">The normals of the points, should point away from the earths center.</param>
+            <param name="size">How many tiles the heightmap tile spans. 1 = one image tile for one heightmap. 2 = 2x2 image tiles for one heightmap. 4 = 4x4 image tiles ... and so on.</param>
+            <param name="xoffset">The x offset of the image tile in relation to the heightmap if size > 1.</param>
+            <param name="yoffset">The y offset of the image tile in relation to the heightmap if size > 1.</param>
+            <param name="pixelPerUnit">1/image width</param>
+            <param name="heightPixelPerUnit">1/heightmap width</param>
+            <returns>Geometry for a terrain tile with each vertex positiond at quadPoints and vertex normals of vertexNormals. Vertex colors contain the offset UV coordinates for padded textures.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.WGStoMERC(System.Collections.Generic.IList{System.Windows.Media.Media3D.Point3D})">
+            <summary>
+            Converts a list of points from the WGS84 corrdinat space to the webmercator coordinate space.
+            </summary>
+            <param name="points">The list of points to convert.</param>
+            <returns>The points in the same order as provided converted to the webmercator space.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.MERCtoWGS(System.Collections.Generic.IList{System.Windows.Media.Media3D.Point3D})">
+            <summary>
+            Converts a list of points from the webmercator coordinate space to the WGS84 coordinate space.
+            </summary>
+            <param name="points">The list of points to convert.</param>
+            <returns>The points in the same order as provided converted to the WGS84 space.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TileUtils.ExtentFromIndex(BruTile.TileIndex,BruTile.ITileSchema)">
+            <summary>
+            Returns the <see cref="T:BruTile.Extent"/> of the given index and <see cref="T:BruTile.TileSchema"/>.
+            </summary>
+            <param name="index">The index of the tile to get the extent for.</param>
+            <param name="schema">The schema that is beeing used.</param>
+            <returns>The Extent of the given index and schema.</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1">
+            <summary>
+            In memory cache for tiles.
+            </summary>
+            <typeparam name="T">The Tile type.</typeparam>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.MinTiles">
+            <summary>
+            Minimum amount of tiles to retain in the cache.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.MaxTiles">
+            <summary>
+            Maximum amount of tiles in the cache. If maximum is reached the oldest cache entries get removed till it reaches <see cref="P:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.MinTiles"/>.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.#ctor(System.Int32,System.Int32,System.Func{BruTile.TileIndex,System.Boolean})">
+            <summary>
+            Creates a new TimestampMemoryCache.
+            </summary>
+            <param name="minTiles">Min number of tiles.</param>
+            <param name="maxTiles">Max number of tiles.</param>
+            <param name="keepTileCallback">Callback for tiles to keep.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.Add(BruTile.TileIndex,`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.Clear">
+            <summary>
+            Clears the cache of all entries.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.Find(BruTile.TileIndex)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SitePlanner.Viewport.DynamicTiles.TimestampMemoryCache`1.Remove(BruTile.TileIndex)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SitePlanner.Viewport.GeoMapVM">
+            <summary>
+            ViewModel for a single map in the SitePlanner
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.GeoMapVM.Map">
+            <summary>
+            GeoMap data model
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.GeoMapVM.Mesh">
+            <summary>
+            Mesh of map
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.GeoMapVM.#ctor(ParameterStructure.SitePlanner.SitePlannerMap,HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D)">
+            <summary>
+            Initializes a new instance of the MapVM class
+            </summary>
+            <param name="map">SitePlannerMap</param>
+            <param name="mesh">Mesh representing the map</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.ShaderHelper">
+            <summary>
+            Helper class for loading pre-compiled shader
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Materials.ShaderHelper.LoadShaderCode(System.String)">
+            <summary>
+            Loads bytecode of a pre-compiled shader from the given path.
+            Resource must be placed in assembly.
+            </summary>
+            <param name="path">Relative path in assembly</param>
+            <returns>bytecode of shader</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomPSShaderDescription">
+            <summary>
+            The custom pixel shader description
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomPSShaderDescription.PSSelectableMap">
+            <summary>
+            The PixelShader for rendering selectable maps
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomPSShaderDescription.PSSelectableBuilding">
+            <summary>
+            The PixelShader for rendering selectable buildings
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomTerrainShaderDescription">
+            <summary>
+            The Custom DomainShader description
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomTerrainShaderDescription.VSTerrainTessellation">
+            <summary>
+            The VertexShader for the terrain tessellation
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomTerrainShaderDescription.HSTerrainTessellation">
+            <summary>
+            The HullShader for the terrain tessellation
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomTerrainShaderDescription.DSTerrainTessellation">
+            <summary>
+            The DomainShader for the terrain tessellation
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomShaderNames">
+            <summary>
+            The Custom shader names
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomShaderNames.SelectableMap">
+            <summary>
+            Shader name for the selectable map shader
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomShaderNames.SelectableBuilding">
+            <summary>
+            Shader name for the selectable building shader
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Materials.CustomShaderNames.TerrainTessellation">
+            <summary>
+            Shader name for the terrain tessellation shader
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomEffectsManager">
+            <summary>
+            Custom effects manager to select custom shaders
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Materials.CustomEffectsManager.#ctor">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomBuildingMeshModel3D">
+            <summary>
+            A custom mesh model for rendering siteplanner buildings
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Materials.CustomBuildingMeshModel3D.OnCreateSceneNode">
+            <inheritdoc/>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomTileModel3D">
+            <summary>
+            A custom mesh model for rendering siteplanner maps
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Materials.CustomTileModel3D.SpatialBounds">
+            <summary>
+            The spatial bounds of this tile mesh.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Materials.CustomTileModel3D.OnCreateSceneNode">
+            <inheritdoc/>
+        </member>
+        <member name="T:SitePlanner.Viewport.Materials.CustomMapMeshModel3D">
+            <summary>
+            A custom mesh model for rendering siteplanner maps
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Materials.CustomMapMeshModel3D.OnCreateSceneNode">
+            <inheritdoc/>
+        </member>
+        <member name="T:SitePlanner.Viewport.MeshBySizeSorter">
+            <summary>
+            Sorts <see cref="T:HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D"/> instances by the size of their bounding box
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.MeshBySizeSorter.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs">
+            <summary>
+            EventArgs for GeometryTransform events
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.IsCommitted">
+            <summary>
+            Returns whether the transform has been commited (True) or aborted (False)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.UndoTransform">
+            <summary>
+            When set to True, the Undo operation reverts it's transform when aborting. (Can be used to prevent clashes when the geometry gets removed anyway)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.RegisterUndo">
+            <summary>
+            Set this value to False to prevent the transform operation from registering an UndoEvent
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.InvokeOperationFinished">
+            <summary>
+            When set to true, the GeometryModel.OperationFinished event is issued on commit
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.AffectedGeoReferences">
+            <summary>
+            Returns the geo references that were affected by the transform
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{GeometryViewer.Model.Geometry.GeoReference})">
+            <summary>
+            Initializes a new instance of the MoveFinishedEventArgs class
+            </summary>
+            <param name="isCommitted">True when the operation was commited, False when aborted</param>
+            <param name="affectedGeoReferences">The geo references affected by the move operation</param>
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.GeometryTransformStartedEventArgs">
+            <summary>
+            EventArgs for GeometryTransformStarted events
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformStartedEventArgs.AffectedGeometry">
+            <summary>
+            List of geometry that is affected by this operation.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformStartedEventArgs.#ctor(System.Collections.Generic.List{GeometryViewer.Model.Geometry.GeometryModelData})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="affectedGeometry"></param>
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.TransformInteractionModeEnum">
+            <summary>
+            Enumeration for the ongoing interaction
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.TransformInteractionModeEnum.None">
+            <summary>
+            No interaction ongoing
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.TransformInteractionModeEnum.Transform">
+            <summary>
+            Currently moving
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.TransformInteractionModeEnum.SetReferencePoint">
+            <summary>
+            Choose reference point
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.GeometryTransformRange">
+            <summary>
+            Enumeration to state which geometry is affected by the transform
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformRange.All">
+            <summary>
+            Everything, including proxy geometry
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformRange.NoProxy">
+            <summary>
+            Only selected geometry, excluding proxy geometry
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.GeometryTransformOperation">
+            <summary>
+            Base class for transform operations such as move, scale and rotate
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformOperation.TransformRange">
+            <summary>
+            States which subset of the selected geometry is affected by the operation
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformOperation.parentVM">
+            <summary>
+            Parent viewport VM
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformOperation.Mode">
+            <summary>
+            Current transform interaction mode
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.GeometryTransformOperation.IsStarted">
+            <summary>
+            States whether the operation has been started
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformOperation.referencePoint">
+            <summary>
+            Current set reference point which is used as origin for transformations.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformOperation.tfBuildings">
+            <summary>
+            Geometry involved in the transform operation.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformOperation.tfModels">
+            <summary>
+            Models involved in the tranform operation.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.Operations.GeometryTransformOperation.initialGeoReferences">
+            <summary>
+            The initial georeferences of the models.
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.Operations.GeometryTransformOperation.TransformStarted">
+            <summary>
+            Event that is invoked when a transform is started
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.Operations.GeometryTransformOperation.TransformFinished">
+            <summary>
+            Event that is invoked when a transform is finished
+            </summary>
+        </member>
+        <member name="E:SitePlanner.Viewport.Operations.GeometryTransformOperation.InteractionModeChanged">
+            <summary>
+            Event that is invoked when the interaction mode changes
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.#ctor(SitePlanner.Viewport.SitePlannerViewportWidgetVM)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parentVM">Parent viewport VM</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.Transform(System.Windows.Point,HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Windows.Media.Media3D.Vector3D)">
+            <summary>
+            Performs the transformation of the current operation according to a given mouse position. This is called every time the mouse moves.
+            </summary>
+            <param name="p">Position of the cursor</param>
+            <param name="viewport">Viewport UI element</param>
+            <param name="mousePointWGS">The current mouse point in WGS coordinates</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.Commit">
+            <summary>
+            Commits the current transform operation and thus invoking the TransformFinished event.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.Abort">
+            <summary>
+            Aborts the current transform operation and thus invoking the TransformFinished event. 
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <summary>
+            Handles KeyDown events while the operation is in progress.
+            </summary>
+            <param name="args">The KeyEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.KeyUp(System.Windows.Input.KeyEventArgs)">
+            <summary>
+            Handles KeyUp events while the operation is in progress.
+            </summary>
+            <param name="args">The KeyEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.MouseDown(System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Handles MouseDown events while the operation is in progress.
+            </summary>
+            <param name="args">The MouseButtonEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.MouseUp(System.Windows.Input.MouseButtonEventArgs,HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <summary>
+            Handles MouseUp events while the operation is in progress.
+            </summary>
+            <param name="args">The MouseButtonEventArgs</param>
+            <param name="viewport">Viewport UI element</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.NotifyTransformStarted(SitePlanner.Viewport.Operations.GeometryTransformStartedEventArgs)">
+            <summary>
+            Invokes the TransformStarted event.
+            </summary>
+            <param name="args">The GeometryTransformStartedEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.NotifyTransformFinished(SitePlanner.Viewport.Operations.GeometryTransformFinishedEventArgs)">
+            <summary>
+            Invokes the TransformFinished event.
+            </summary>
+            <param name="args">The GeometryTransformFinishedEventArgs</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.NotifyInteractionModeChanged">
+            <summary>
+            Invoked the InteractionModeChanged event.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.StartOperation">
+            <summary>
+            Marks the operations as started
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.EndOperation(System.Boolean,GeometryViewer.Model.Geometry.BaseGeometry)">
+            <summary>
+            Ends the current operation by resetting some flags and invoking the TransformFinished event.
+            </summary>
+            <param name="committed"></param>
+            <param name="snapGeometry"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.SwitchToReferencePointMode">
+            <summary>
+            Switches from Move to MoveSetReferencePoint mode
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.SwitchToTransformMode(System.Windows.Point,HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <summary>
+            Switches from MoveSetReferencePoint to Transform mode
+            </summary>
+            <param name="point">The mouse position</param>
+            <param name="viewport">The viewport</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.GeometryTransformOperation.GetTransformBuildings">
+            <summary>
+            Returns all geometry affected by this operation together with an initial reference point.
+            </summary>
+            <returns>List of BaseGeometry involved in this operations and the corresponding reference point</returns>
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.MoveOperation">
+            <summary>
+            Operation for moving buildings
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.MoveOperation.MoveCommand">
+            <summary>
+            Command to start a move operation
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.#ctor(SitePlanner.Viewport.SitePlannerViewportWidgetVM)">
+            <summary>
+            Initializes a new instance of the MoveOperation class
+            </summary>
+            <param name="parentVM">The viewport viewmodel</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <summary>
+            Starts a move operation for all selected vertices
+            </summary>
+            <param name="viewport">The viewport in which the move operation happens</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.IEnumerable{SitePlanner.Viewport.BuildingVM},System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Starts the move operation for a given list of geometries
+            </summary>
+            <param name="viewport">The viewport</param>
+            <param name="movingBuildings">The geometry to move</param>
+            <param name="referencePoint">Reference point for the movement</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.IEnumerable{SitePlanner.Viewport.BuildingVM},System.Windows.Media.Media3D.Point3D,System.Collections.Generic.List{SitePlanner.Viewport.DimensionInputWindow.PositionModeEnum})">
+            <summary>
+            Starts the move operation for a given list of geometries
+            </summary>
+            <param name="viewport">The viewport</param>
+            <param name="movingBuildings">The geometry to move</param>
+            <param name="referencePoint">Reference point for the movement</param>
+            <param name="availableModes">A list of allowed interaction modes. The operation starts with the first mode in this list</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Transform(System.Windows.Point,HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Windows.Media.Media3D.Vector3D)">
+            <summary>
+            Moves the current geometry. This should be called whenever the mouse is moved after Start
+            </summary>
+            <param name="p">The new mouse position</param>
+            <param name="viewport">The viewport</param>
+            <param name="mousePointWGS">The current mouse point in WGS coordinates</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Commit">
+            <summary>
+            Ends the move operation by moving the vertices to their new position
+            </summary> 
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.Abort">
+            <summary>
+            Ends the move operation by resetting all vertices to their initial position
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.KeyUp(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.MouseDown(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.MoveOperation.MouseUp(System.Windows.Input.MouseButtonEventArgs,HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.Operations.RotateOperation">
+            <summary>
+            Operation for rotating buildings
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.Operations.RotateOperation.RotateCommand">
+            <summary>
+            Command to start a rotate operation
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.#ctor(SitePlanner.Viewport.SitePlannerViewportWidgetVM)">
+            <summary>
+            Initializes a new instance of the RotateOperation class
+            </summary>
+            <param name="parentVM">The viewport viewmodel</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <summary>
+            Starts a rotate operation for all selected vertices
+            </summary>
+            <param name="viewport">The viewport in which the rotate operation happens</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.IEnumerable{SitePlanner.Viewport.BuildingVM},System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Starts the rotate operation for a given list of geometries
+            </summary>
+            <param name="viewport">The viewport</param>
+            <param name="buildings">The geometry to rotate</param>
+            <param name="referencePoint">Reference point for the rotation</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Start(HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Collections.Generic.IEnumerable{SitePlanner.Viewport.BuildingVM},System.Windows.Media.Media3D.Point3D,System.Collections.Generic.List{SitePlanner.Viewport.DimensionInputWindow.RotateModeEnum})">
+            <summary>
+            Starts the rotate operation for a given list of geometries
+            </summary>
+            <param name="viewport">The viewport</param>
+            <param name="buildings">The geometry to rotate</param>
+            <param name="referencePoint">Reference point for the rotation</param>
+            <param name="availableModes">A list of allowed interaction modes. The operation starts with the first mode in this list</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Transform(System.Windows.Point,HelixToolkit.Wpf.SharpDX.Viewport3DX,System.Windows.Media.Media3D.Vector3D)">
+            <summary>
+            Rotates the current geometry. This should be called whenever the mouse is moved after Start
+            </summary>
+            <param name="p">The new mouse position</param>
+            <param name="viewport">The viewport</param>
+            <param name="_">Unused</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Commit">
+            <summary>
+            Ends the rotate operation by rotating the vertices
+            </summary> 
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.Abort">
+            <summary>
+            Ends the rotate operation by resetting all vertices to their initial position
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.KeyDown(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.KeyUp(System.Windows.Input.KeyEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.MouseDown(System.Windows.Input.MouseButtonEventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.Viewport.Operations.RotateOperation.MouseUp(System.Windows.Input.MouseButtonEventArgs,HelixToolkit.Wpf.SharpDX.Viewport3DX)">
+            <inheritdoc />
+        </member>
+        <member name="T:SitePlanner.Viewport.SitePlannerViewportWidgetVM">
+            <summary>
+            ViewModel for the SitePlannerViewportWidget
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.Scale">
+            <summary>
+            The overall scale of all meshes, used to mitigate floating point errors.
+            Propagates the change to the TileManager.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SITEPLANNER_KEY">
+            <summary>
+            Property group key
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SitePlannerProject">
+            <summary>
+            Currently opened site planner project
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SitePlannerManager">
+            <summary>
+            Site planner manager
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SitePlannerCommunicator">
+            <summary>
+            Site planner component exchange
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ViewportControl">
+            <summary>
+            Viewport Control
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SelectedBuilding">
+            <summary>
+            Currently selected building (exclusive with selected map)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SelectedBuildingVM">
+            <summary>
+            The VM of the currently selected building.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SelectedMap">
+            <summary>
+            Currently selected map (exclusive with selected building)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.BuildingMeshes">
+            <summary>
+            List of building meshes to render
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GeoMapMeshes">
+            <summary>
+            List of map meshes to render
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GeoMapMeshesView">
+            <summary>
+            View on the GeoMap meshes
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.TileManager">
+            <summary>
+            The tile manager used to fetch terrain tiles
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.DisplayBuildingNames">
+            <summary>
+            If true, building names are displayed above each building
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.BuildingNameBillboards">
+            <summary>
+            Building name billboards
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.Grid">
+            <summary>
+            Grid mesh
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsGridAvailable">
+            <summary>
+            Returns if the grid is available (is initialized)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsGridVisible">
+            <summary>
+            Flag whether the grid is rendered or not
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsGridFading">
+            <summary>
+            Flag whether the grid should fade out after some distance (default: fadeStart 1km, fadeEnd 2km)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GridSpacing">
+            <summary>
+            Spacing of the grid in meters
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GridHeight">
+            <summary>
+            Custom height of the grid in meters (relative to the surface of the earth)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GridLongitudeText">
+            <summary>
+            Indicator text to show longitude direction
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GridLatitudeText">
+            <summary>
+            Indicator text to show latitude direction
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.GridTextWidth">
+            <summary>
+            Width of grid text indicators for longitude and latitude (in meters)
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsTerrainEnabled">
+            <summary>
+            If the dynamic terrain is enabled. Enables and disables Tile fetching.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.TerrainProviderNames">
+            <summary>
+            Collection of the tile provider names for the terrain.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SelectedTerrainProvider">
+            <summary>
+            The name of the selected terrain tile provider.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ElevationProviders">
+            <summary>
+            A collection of elevation providers.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SelectedElevationProvider">
+            <summary>
+            The selected elevation provider.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.Camera">
+            <summary>
+            Returns the camera
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsWaitingForReload">
+            <summary>
+            Shows if the Siteplanner is waiting till it reloads everything again.
+            </summary>
+        </member>
+        <member name="T:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CameraMode">
+            <summary>
+            The camera mode.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CameraMode.Default">
+            <summary>
+            Default camera for when it is "near" the surface.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CameraMode.Pan">
+            <summary>
+            Camera mode where right button is switched to pan the earth.
+            Used when zoomed out more.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CurrentCameraMode">
+            <summary>
+            The current camera mode.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.EffectsManager">
+            <summary>
+            EffectsManager
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CameraCenter">
+            <summary>
+            Center of scene in cartesian world space. This point is subtracted of each vertex position in order to increase precision.
+            Currently the center can only be set once and needs to be set before adding any meshes. 
+            Changing this property would require a complete reload of the scene changing all vertex buffers.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CameraCenterDefaultWGS">
+            <summary>
+            Default center point, currently at the Karlsplatz
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.MoveOperation">
+            <summary>
+            The MoveOperation for the buildings.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.RotateOperation">
+            <summary>
+            The RotateOperation for the buildings.
+            </summary>
+        </member>
+        <member name="F:SitePlanner.Viewport.SitePlannerViewportWidgetVM.modelToMesh">
+            <summary>
+            Used to cache initially loaded geometry while transforming, so it does not need to be loaded every frame.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.DephtTestGeometry">
+            <summary>
+            The Geometry for the DepthMeshGeometryModel3D so that the depth test is performed.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.DepthTestTransform">
+            <summary>
+            The Transform for the DepthMeshGeometryModel3D so that the depth test is performed.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.DepthTestMaterial">
+            <summary>
+            The Material for the DepthMeshGeometryModel3D so that the depth test is performed.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsPanning">
+            <summary>
+            If the viewport is currently panned.
+            </summary>
+        </member>
+        <member name="P:SitePlanner.Viewport.SitePlannerViewportWidgetVM.IsLoading">
+            <summary>
+            If the Siteplanner is currently loading something. Used to show a loading cursor.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.#ctor(SIMULTAN.UI.Services.IServicesProvider,ParameterStructure.SitePlanner.SitePlannerProject,SIMULTAN.DataExchange.ComponentSitePlannerExchange,SIMULTAN.DataExchange.IComponentGeometryExchange)">
+            <summary>
+            Initializes a new instance of the SitePlannerViewportWidgetVM class
+            </summary>
+            <param name="serviceProvider">The ServiceProvider</param>
+            <param name="sitePlannerProject">The SiteplannerProject to open</param>
+            <param name="geometryCommunicator">The geometry communicator</param>
+            <param name="sitePlannerCommunicator">The SitePlanner communicator</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.UpdateTileManagerTileSource">
+            <summary>
+            Updated the TileManagers tilesource to the current selected tile source.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SetCameraTarget(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Directly sets the camera target point without any animation.
+            </summary>
+            <param name="target">The target point in world space.</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.UpdateTileManager">
+            <summary>
+            Updates the TileManager;
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.DisposeViewport">
+            <summary>
+            Disposes the viewport and detaches events
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.StartBatch">
+            <summary>
+            Starts the batch operation.
+            Buildings and maps added in a batch operation will not trigger updates of the grid.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.EndBatch">
+            <summary>
+            Ends the batch operation.
+            Buildings and maps added in a batch operation will not trigger updates of the grid.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.CreatePropertyItems">
+            <summary>
+            Creates property items for the property editor based on current selection
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SetSelectedObject(HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D)">
+            <summary>
+            Selects a mesh in the viewport. This is only called from the code behind.
+            </summary>
+            <param name="obj">Selected mesh or null if it should reset the selection</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ModelDoubleClicked(HelixToolkit.Wpf.SharpDX.MeshGeometryModel3D)">
+            <summary>
+            Called when a Mesh got double clicked
+            </summary>
+            <param name="obj">The mesh that got doubleclicked</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ZoomToSelection">
+            <summary>
+            Zooms the camera to the currently selected building.
+            If no building is selected, nothing happens.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SignedAngle(System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Vector3D,System.Windows.Media.Media3D.Vector3D)">
+            <summary>
+            Computes the signed angle (in counter clockwise direction) between two vectors in 3D.
+            </summary>
+            <param name="v1">vector 1</param>
+            <param name="v2">vector 2</param>
+            <param name="n">The normal vector around which the rotation happens.</param>
+            <returns>Signed angle between two 3D vectors in the range [-pi, pi].</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ProcessGeometryFile(ParameterStructure.SitePlanner.SitePlannerBuilding)">
+            <summary>
+            Processes a geometry file.
+            </summary>
+            <param name="building">The building to process.</param>
+            <returns>true if the georeferences where generated, false if it was just imported.</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.PerformValueMapping(System.Collections.Generic.IEnumerable{ParameterStructure.SitePlanner.SitePlannerBuilding})">
+            <summary>
+            Performs a lookup in the table for each associated building (parameter defines row/column index).
+            Maps all given values for a building to a color and displays it on the mesh.
+            </summary>
+            <param name="affectedBuildings">Affected buildings</param>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.RestoreCustomColors">
+            <summary>
+            Restores the custom color material settings for each mesh
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.SynchronizeEntities">
+            <summary>
+            Synchronizes changes made to external entities (GeoMaps, SimGeo)
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.ReloadEverything">
+            <summary>
+            Reloads all geometry again.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.FromWGSToWS(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Converts a point from WGS space to world space including all the necessary coordinate space and camera center transformations of the Viewport
+            </summary>
+            <param name="wgs">The coordinates in WGS space</param>
+            <returns>The world space coordinates</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.FromWSToWGS(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Converts a point from world space to WGS space including all the necessary coordinate space and camera center transformations of the Viewport
+            </summary>
+            <param name="ws">The coordinates in world space</param>
+            <returns>The WGS space coordinates</returns>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.FinishTempUpdateCamera">
+            <summary>
+            Finishes the temp update of the camera.
+            Reloads all the geometry and restarts the tile manager.
+            Call this after you finished with <see cref="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.TempUpdateCamera(System.Windows.Media.Media3D.Point3D)"/>.
+            </summary>
+        </member>
+        <member name="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.TempUpdateCamera(System.Windows.Media.Media3D.Point3D)">
+            <summary>
+            Temporarily updates the camera to a new location. Only changes the transform of geometry and tiles.
+            When done with the temp updates call <see cref="M:SitePlanner.Viewport.SitePlannerViewportWidgetVM.FinishTempUpdateCamera"/> to reload everything properly again.
+            </summary>
+            <param name="newCenterWGS">The new center position of the camera in WGS coordinates.</param>
+        </member>
+        <member name="T:SitePlanner.SitePlannerViewportWidget">
+            <summary>
+            Interaction logic for SitePlannerViewport.xaml
+            </summary>
+            <summary>
+            SitePlannerViewportWidget
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerViewportWidget.IsRightMouseDown">
+            <summary>
+            If the right mouse button is currently down/held. 
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerViewportWidget.#ctor">
+            <summary>
+            Initializes a new instance of the SitePlannerViewportWidget class
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerViewportWidget.ZoomTo(System.Windows.Media.Media3D.Rect3D,System.Double)">
+            <summary>
+            Zooms to the given bounds.
+            </summary>
+            <param name="bounds">Bound to zoom to</param>
+            <param name="animationTime">The animation time of the zoom</param>
+        </member>
+        <member name="M:SitePlanner.SitePlannerViewportWidget.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SitePlanner.SitePlannerVM">
+            <summary>
+            ViewModel for SitePlanner Tab
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.ViewportVM">
+            <summary>
+            ViewModel of viewport
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.SitePlannerProject">
+            <summary>
+            SitePlannerProject that is openend in this tab
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.SitePlannerManager">
+            <summary>
+            DataManager containing all SitePlannerProjects and GeoMaps
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.SitePlannerCommunicator">
+            <summary>
+            Manages connection to the component world
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.BuildingSearchText">
+            <summary>
+            The search text that is displayed in the building search box
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.IsBuildingSearchPopupOpen">
+            <summary>
+            Returns if the popup of the building search box is currently open
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.SitePlannerBuildingVMs">
+            <summary>
+            Collection of building view models
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.BuildingCollectionView">
+            <summary>
+            Filtered collection view of buildings for search combobox
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.AddGeometryCommand">
+            <summary>
+            Command for adding one or mulitple existing SimGeo files to this project
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.LoadGeoMapCommand">
+            <summary>
+            Command to load an existing GeoMap file
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.RemoveCommand">
+            <summary>
+            Command to remove the currently selected GeoMap file and or geometry from this project
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.OpenValueMappingToolCommand">
+            <summary>
+            Command to open or focus the ValueMappingTool widget
+            </summary>
+        </member>
+        <member name="P:SitePlanner.SitePlannerVM.ZoomToSelectionCommand">
+            <summary>
+            Command to zoom to the selection
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.#ctor(SIMULTAN.UI.Services.IServicesProvider,ParameterStructure.SitePlanner.SitePlannerProject,SIMULTAN.DataExchange.ComponentSitePlannerExchange,SIMULTAN.DataExchange.IComponentGeometryExchange)">
+            <summary>
+            Initializes a new instance of this class
+            </summary>
+            <param name="servicesProvider">ServiceProvider</param>
+            <param name="spProject">SitePlannerProject to be opened in this VM</param>
+            <param name="sitePlannerCommunicator">SitePlanner communicator</param>
+            <param name="geometryCommunicator">Geometry communicator</param>
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.OnTabSelected">
+            <inheritdoc />
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.SelectBuilding(SitePlanner.SitePlannerBuildingVM)">
+            <summary>
+            Selects and zooms to the given building
+            </summary>
+            <param name="buildingVM">Building to select</param>
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.SynchronizeEntities">
+            <summary>
+            Synchronizes changes made to external entities (e.g. geometry models, geomaps)
+            </summary>
+        </member>
+        <member name="M:SitePlanner.SitePlannerVM.OnResourcesDropped(System.Collections.Generic.List{ParameterStructure.Assets.ResourceEntry})">
+            <summary>
+            Called when resources are dropped over the viewport.
+            Adds geometry and geo map files to the project if not already contained.
+            </summary>
+            <param name="resources">List of dropped resources</param>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>
