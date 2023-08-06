@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "rin"
+version = "0.1.1"
+description = "A successor to the Lefi project"
+authors = ["an-dyy <andy.development@protonmail.com>"]
+license = "MIT"
+
+readme = "README.md"
+keywords = ["discord", "discord-api"]
+homepage = "https://github.com/an-dyy/Rin"
+packages = [{include = "rin"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+aiohttp = "^3.8.1"
+typing-extensions = "^4.0.1"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.931"
+black = "^21.12b0"
+flake8 = "^4.0.1"
+pre-commit = "^2.16.0"
+isort = "^5.10.1"
+pytest = "^6.2.5"
+pytest-asyncio = "^0.17.0"
+Sphinx = "^4.3.2"
+furo = "^2022.1.2"
+
+[tool.black]
+line-length = 88
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+implicit_reexport = true
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportImportCycles = false
+reportPrivateUsage = false
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
