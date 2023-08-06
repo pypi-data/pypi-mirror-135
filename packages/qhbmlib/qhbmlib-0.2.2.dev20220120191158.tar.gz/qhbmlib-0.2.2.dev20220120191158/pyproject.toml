@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "qhbmlib"
+version = "0.2.2.dev20220120191158"
+description = "Quantum Hamiltonian-Based Models built on TensorFlow Quantum"
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/google/qhbm-library"
+repository = "https://github.com/google/qhbm-library"
+keywords = ["quantum-computing"]
+authors = ["The QHBM Library Authors <no-reply@google.com>"]
+classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Scientific/Engineering :: Mathematics",
+        "Topic :: Scientific/Engineering :: Physics",
+]
+packages = [
+    { include = "qhbmlib" },
+]
+
+[tool.poetry.dependencies]
+python = "~3.6 || ~3.7 || ~3.8"
+tensorflow-quantum = "0.5.1"
+tensorflow = "2.4.1"
+tensorflow-probability = "0.12.0"
+
+[tool.poetry.dev-dependencies]
+coverage = {extras = ["toml"], version = "5.5"}
+pytest-cov = "2.11.1"
+yapf = "0.31.0"
+pylint = "2.9.3"
+pytest = "6.2.4"
+
+[tool.coverage.paths]
+source = ["qhbmlib"]
+
+[tool.coverage.run]
+branch = true
+source = ["qhbmlib"]
+
+[tool.coverage.report]
+show_missing = true
+
+[build-system]
+requires = ["poetry-core~=1.1.6"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.yapf]
+based_on_style = "yapf"
+indent_width = "2"
