@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: azure-ai-anomalydetector
+Version: 3.0.0b5
+Summary: Microsoft Azure Cognitive Services Anomaly Detector Client Library for Python
+Home-page: https://github.com/Azure/azure-sdk-for-python
+Author: Microsoft Corporation
+Author-email: azpysdkhelp@microsoft.com
+License: MIT License
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: MIT License
+Description-Content-Type: text/markdown
+Requires-Dist: msrest (>=0.6.21)
+Requires-Dist: azure-common (~=1.1)
+Requires-Dist: azure-core (<2.0.0,>=1.6.0)
+Requires-Dist: azure-ai-nspkg ; python_version<'3.0'
+
+# Microsoft Azure SDK for Python
+
+This is the Microsoft Azure Cognitive Services Anomaly Detector Client Library.
+This package has been tested with Python 2.7, 3.5, 3.6, 3.7 and 3.8.
+
+For a more complete set of Azure libraries, see the
+[azure sdk python release](https://aka.ms/azsdk/python/all).
+
+# Usage
+
+For code examples, see [Cognitive Services Anomaly Detector](https://docs.microsoft.com/python/api/overview/azure/cognitive-services)
+on docs.microsoft.com.
+
+
+# Provide Feedback
+
+If you encounter any bugs or have suggestions, please file an issue in the
+[Issues](https://github.com/Azure/azure-sdk-for-python/issues)
+section of the project.
+
+
+![Impressions](https://azure-sdk-impressions.azurewebsites.net/api/impressions/azure-sdk-for-python%2Fazure-cognitiveservices-anomalydetector%2FREADME.png)
+
+
+# Release History
+
+## 3.0.0b5 (2022-01-23)
+
+  - Fix release issues
+
+## 3.0.0b4 (2022-01-18)
+
+  **Features**
+  - Introduced the new API: `AnomalyDetectorClientOperationsMixin.last_detect_anomaly`.
+  - Added 2 new optional properties: `impute_mode` & `impute_fixed_value` to `DetectRequest` object.
+  - Added 1 new optional property: `severity` to the `EntireDetectResponse` & `LastDetectResponse` objects.
+  - Removed the optional property `errors` from the `VariableState` object.
+  - Refactored the optional property `contributors` to `interpretation` from the `AnomalyValue` object.
+  - Modified the `FillNAMethod` object into an extensible enum.
+
+## 3.0.0b3 (2021-04-16)
+
+  **Features**
+  - Added operation AnomalyDetectorClientOperationsMixin.list_multivariate_model
+  - Added operation AnomalyDetectorClientOperationsMixin.train_multivariate_model
+  - Added operation AnomalyDetectorClientOperationsMixin.detect_anomaly
+  - Added operation AnomalyDetectorClientOperationsMixin.get_detection_result
+  - Added operation AnomalyDetectorClientOperationsMixin.get_multivariate_model
+  - Added operation AnomalyDetectorClientOperationsMixin.export_model
+  - Added operation AnomalyDetectorClientOperationsMixin.delete_multivariate_model
+
+## 3.0.0b2 (2020-08-27)
+
+  **Bug Fixes**
+  - Fixed an issue with ChangePointDetect
+
+  **Breaking Changes**
+  - Renamed `entire_detect` to `detect_entire_series`
+  - Renamed `APIError` to `AnomalyDetectorError`
+  - Renamed `Request` to `DetectRequest`
+  - Renamed `last_detect` to `detect_last_point`
+  - Renamed `change_point_detect` to `detect_change_point`
+  - Renamed `Granularity` to `TimeGranularity`
+  - Renamed `minutely` and `secondly` to `per_minute` and `per_second`
+  - Renamed `Point` to `TimeSeriesPoint`
+
+
+## 3.0.0b1 (2020-08-17)
+
+  - Initial Release
+
+
