@@ -1,0 +1,44 @@
+Address: login.esss.dk
+queues:
+  quark:
+    maxhours: 24
+    n_cores: 32
+    python_bin: python3
+    setup_lines:
+    - source /etc/profile.d/modules.sh
+    - module avail
+    - module purge
+    - module load mcstas/2.7
+    - module load gcc/10.2.0
+    - module load openmpi/4.0_gcc1020
+    - module list
+    - which mcrun
+    - source /users/mbertelsen/py_guide_bot/setup_v12/guide_bot/venv/bin/activate
+  newlong:
+    maxhours: 24
+    n_cores: 28
+    python_bin: python3
+    setup_lines:
+    - source /etc/profile.d/modules.sh
+    - module avail
+    - module purge
+    - module load mcstas/2.7
+    - module load gcc/10.2.0
+    - module load openmpi/4.0_gcc1020
+    - module list
+    - which mcrun
+    - source /users/mbertelsen/py_guide_bot/setup_v12/guide_bot/venv/bin/activate
+  verylong:
+    maxhours: 48
+    n_cores: 16
+    python_bin: python3
+    setup_lines:
+    - source /etc/profile.d/modules.sh
+    - module avail
+    - module purge
+    - module load mcstas/2.7
+    - module load gcc/10.2.0
+    - module load openmpi/4.0_gcc1020
+    - module list
+    - which mcrun
+    - source /users/mbertelsen/py_guide_bot/setup_v12/guide_bot/venv/bin/activate
