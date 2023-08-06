@@ -1,0 +1,42 @@
+# systemic_risk
+
+Estimate systematic liquidity in the market using only close and volume data
+https://www.financialresearch.gov/working-papers/files/OFRwp-2015-11_Systemwide-Commonalities-in-Market-Liquidity.pdf
+
+
+## Getting Started
+
+### Dependencies
+
+* See [requirement.txt](requirement.txt)
+
+### Installing
+
+```
+pip install systemic-risk
+```
+or
+```
+pip install -U systemic-risk
+```
+
+### Executing program
+
+```
+import yfinance as yf
+import systemic-risk.Liquidity as Liquidity
+yf_df = yf.download('SPY, ^FTSE, ^N225', start='2003-01-01', end='2022-01-01')
+close, volume = yf_df["Close"].to_numpy(), yf_df["Volume"].to_numpy()
+obj = Liquidity(close, volume)
+obj.fit_transform()
+```
+
+
+## Authors
+
+Flynn Chen (flynn dot chen AT yale dot edu)
+
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
