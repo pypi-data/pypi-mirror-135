@@ -1,0 +1,66 @@
+[package]
+name = "aliyundrive-webdav"
+version = "1.2.0"
+edition = "2021"
+description = "WebDAV server for AliyunDrive"
+license = "MIT"
+homepage = "https://github.com/messense/aliyundrive-webdav"
+repository = "https://github.com/messense/aliyundrive-webdav.git"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.52"
+bytes = "1.0.1"
+clap = { version = "3.0.1", features = ["derive", "env", "wrap_help"] }
+dashmap = "5.0.0"
+futures-util = "0.3"
+headers = "0.3.4"
+hyper = { version = "0.14.11", features = ["server", "http2"] }
+moka = { version = "0.7.1", default-features = false, features = ["future"] }
+openssl-probe = { version = "0.1.4", optional = true }
+reqwest = { version = "0.11.7", default-features = false, features = ["json", "gzip"] }
+serde = { version = "1.0.127", features = ["derive"] }
+time = { version = "0.3", features = ["formatting", "parsing"] }
+tokio = { version = "1.10.0", features = ["rt-multi-thread", "io-util", "net", "time", "sync", "macros", "parking_lot", "fs"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "local-time"] }
+url = "2.2.2"
+dav-server = { version = "0.3.0", default-features = false, features = ["hyper"] }
+
+# TLS server support
+rustls = { version = "0.20.2", optional = true }
+rustls-pemfile = { version = "0.2.1", optional = true }
+tls-listener = { version = "0.3.0", features = ["hyper-h1", "hyper-h2"], optional = true }
+
+[features]
+default = ["rustls-tls", "atomic64"]
+rustls-tls = ["reqwest/rustls-tls", "rustls", "rustls-pemfile", "tls-listener", "hyper/stream"]
+native-tls = ["reqwest/native-tls"]
+native-tls-vendored = ["reqwest/native-tls-vendored", "openssl-probe"]
+atomic64 = ["moka/atomic64"]
+
+[profile.release]
+lto = true
+opt-level = "z"  # Optimize for size
+
+[package.metadata.deb]
+maintainer = "messense <messense@icloud.com>"
+copyright = "2021-present, messense <messense@icloud.com>"
+license-file = ["LICENSE", "4"]
+extended-description = """\
+WebDAV server for AliyunDrive"""
+section = "utility"
+priority = "optional"
+assets = [
+    ["target/release/aliyundrive-webdav", "usr/bin/", "755"],
+    ["systemd.service", "etc/systemd/system/aliyundrive-webdav.service", "644"],
+]
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/aliyundrive-webdav", dest = "/usr/bin/aliyundrive-webdav", mode = "0755" },
+    { source = "LICENSE", dest = "/usr/share/doc/aliyundrive-webdav/LICENSE", doc = true, mode = "0644" },
+    { source = "systemd.service", dest = "/etc/systemd/system/aliyundrive-webdav.service", config = true, mode = "0644" },
+]
