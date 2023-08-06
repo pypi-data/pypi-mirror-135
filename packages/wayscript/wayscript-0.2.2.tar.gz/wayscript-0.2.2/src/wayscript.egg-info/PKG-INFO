@@ -1,0 +1,74 @@
+Metadata-Version: 2.1
+Name: wayscript
+Version: 0.2.2
+Summary: WayScript gives you flexible building blocks to seamlessly integrate, automate and host tools in the cloud.
+Home-page: https://github.com/wayscript/wayscript-python
+Author: Team WayScript
+Author-email: founders@wayscript.com
+License: MIT
+Keywords: wayscript,productivity,software,superpowers,scripts,cloud,tools,backend,visual,low-code,modules,trigger,integration,dev,http,webhook
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Communications
+Classifier: Topic :: Database
+Classifier: Topic :: Office/Business
+Classifier: Topic :: Utilities
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: English
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# wayscript-python
+
+## Context
+
+```
+from wayscript import context
+
+event = context.get_event()
+```
+
+### Checking user by application key
+```
+from wayscript import context, utils
+
+application_key = utils.get_application_key()
+user = context.get_user_by_application_key(application_key)
+```
+## Triggers
+
+### HTTP Triggers
+
+```
+from wayscript.triggers import http_trigger
+
+payload = {"hello": "world"}
+headers = {"content-type": "application/json"}
+status_code = 200
+
+http_trigger.send_response(data=payload, headers=headers, status_code=status_code)
+```
+
+## Integrations
+
+### SQL
+
+To connect to a postgres resource, use the following snippet:
+```
+import psycopg2
+from wayscript.ingegrations import sql
+
+kwargs = sql.get_psycopg2_connection_kwargs(_id)
+connection = psycopg2.connect(**kwargs)
+```
+
+
