@@ -1,0 +1,391 @@
+To Do
+-----
+
+: The actions listed below this introduction are for package developers.
+:
+: If you are a regular user of the program you can ignore this file.
+:
+: [X] indicates a task is complete; [_] indicates it is pending, but pretty
+: much everything on the list that is not complete is pending.
+:
+: #24 is a reference to an issue in the github bug tracker for the project.
+:
+: This is a plain text file, with related items grouped hiearchically.
+: Indentation indicates position in the hierarchy.  While you can view and
+: even edit the file with any text editor, it is designed for use by
+: vimoutliner.
+:
+: vimoutliner is a plugin for vim (a text editor) that colorizes different
+: outline levels, allows easy collapsing or expanding suboutlines and other
+: outline-like manipulation such as moving over outline sections, and has
+: extra facilities such as checkboxes to track completion. Since the file is
+: plain text it works well with version control.
+:
+: https://github.com/vimoutliner/vimoutliner, which requires vim, e.g. from
+: https://github.com/vim/vim/tree/master/runtime
+:
+: bifs is a Python package, and it should be possible to work with it using
+: any tools that can handle Python. There are some project files from Visual
+: Studio 2019, used for some of the development.  You can ignore them if you
+: use a different tool.  Note Visual Studio Code is distinct from Visual
+: Studio, though both are from Microsoft and support Python.
+:
+: Visual Studio 2019 does not formally support versions of Python above 3.7,
+: and probably never will: https://github.com/microsoft/PTVS/issues/5822.  I
+: don't think that actually matters much, especially as long as no 3.8+ syntax
+: appears in the Python files; currently it does not.  Either Visual Studio
+: 2022 or current VS Code do support later versions of Python fully. It would
+: probably be wise to keep the code base compatible with older versions of
+: Python anyway.
+
+
+Other sources of To Do information
+	github project issues
+	Ross's GrandView outline (not in version control)
+	comments in the code (maybe)
+	comments in the git log (maybe)
+	[_] consolidate everything to a single spot
+		: Since each method has particular strengths on weaknesses, and since
+		: consolidation requires work, this may not be that desirable or
+		: practical.  Factors to consider:
+		public visibility
+		ease of access to underlying technology
+		suitability to task
+			vimoutliner and Grandview
+				good at hiearchy
+				can track completion and (GrandView) priority
+				can handle large blocks of text
+				require installation of possibly unfamiliar tools
+				Grandview stores in binary format, bad for version control
+			code comments
+				easy to insert inline
+				requires some standardization
+				requires a way to extract them
+					: VSCode has extensions specifically to pull To Do and
+					: other tags from all project files.
+				can be place right near relevant code
+				not so good for more global changes
+			commit log
+				also convenient
+				good way to note where work stands
+				but not great for producing consolidated, persistent list
+			git hub
+				no need for extra technology
+				must have github account
+				facilitates collaboration
+				allows tags and (I think) priorities
+				no hieararchy
+Release checklist
+	save all files to disk
+	run test suite
+	Update ChangeLog.txt
+	commit all changes
+	git tag with a release number, e.g. v1.4.2
+		: The package versioning machinery gets the number from the git tag,
+		: which must be exactly on the current head.
+		: I've been doing lightweight tags; they seem to suffice.
+	open a terminal (e.g.,  PowerShell) and move to the project top directory
+		J:\source\repos\bifs\ for me
+	python -m build
+		: note this creates its own venv
+		: must be python3
+	python -m pip install --upgrade twine # and maybe pip too.  not sure if same line OK
+	python -m twine check .\dist\bifs-x.x.x.tar.gz  # if paranoid
+	upload source to github, requiring authentication
+	# changes should be on master branch
+	# this ensures new github version will be available as soon as new PyPi version is
+	close or modify github issues as appropriate
+		: Github automatic linking works with issues and pull requests.  If I
+		: directly work on the master branch and upload magic descriptions
+		: don't seem to create any links or close issues.
+	python -m twine upload dist\bifs-x.x.x*
+	# --repository testpypi after upload to do a test run
+	# upload will require authentication
+
+Packaging
+	Settle overall package structure.
+		invocation of test machinery
+	[X] capitalization of project name and class names
+		Python package names should be lower case
+		Class names should be capitalized
+		github project name is 'bifs'
+		having multiple things with the same name is confusing
+		Old scheme was that the project name was 'bifs' in setup.py
+			: but it was under the directory 'BIFS'.  It seems unlikely
+			: the package building machinery would pick up on that.
+			: import directives referred to the module as 'BIFS'.  And the
+			: main class was 'bifs'. -> from BIFS import bifs
+		New scheme switches it: from bifs import BIFS
+	[X] Rename bifs.py -> bifscore.py to avoid import ambiguities.
+	bifs_gui.py should be treated as a binary or installable script
+		Guido considers having executables in packages an anti-pattern
+		hence relative imports, and scripts that might be run as either part of a package or separately work awkwardly if at all.
+		[X] Concretely, this means bifs_gui should not use any relative imports.  
+			That seems to be the case already.
+		How to test
+		How to package and install
+			should be in a different directory?
+			[X] setup should list it as an entry point
+			: http://as.ynchrono.us/2007/12/filesystem-structure-of-python-project_21.html?showComment=1419123890864#c2535793882880782398 
+		 argues entry point machinery is not great.  Note in particular the point
+		 about needing to install to run or test.
+			there are entry points specific for GUIs
+			How and where do I install it?
+			Influential article says scripts in bin should be thin wrappers
+				http://as.ynchrono.us/2007/12/filesystem-structure-of-python-project_21.html
+				but no reason is ever given
+	Other scripts?  Some of the Empirical Scanners might qualify.
+		bifs_util/EmpiricalScanner.py does not; it won't run by itself.
+		bifs_util/util.py also does not
+	[_] Probably need to revive some of the scanner-related scripts
+		In examples/
+			empirical_scan.py
+			scan.py
+	[_] __init__.py
+		[X] should be in every directory to import
+		[X] was not true
+		and yet the imports were working
+		possibly related to relaxation of the __init_.py requirement in Python 3.3.
+		but that relaxation was only for Namespace packages, which this is not
+		[_] What should go in __init__.py? opinions differ
+			https://www.reddit.com/r/Python/comments/1bbbwk/whats_your_opinion_on_what_to_include_in_init_py/
+			Minimalist
+				empty
+				or just the version number
+				maybe __all__, list of symbols to export
+			Maximalist
+				key thing is to regard it as a public interface
+				this means using __all__ and maybe messing with nested modules to hoist some symbols up
+				anything else that is appropriately global
+	version number coordination
+		may appear in 
+			setup.py
+			PKG-INFO
+			__init__.py top level
+			version control tags
+			PyPI
+		available, by convention, as module attributes
+			__version__  (string)
+			__version_info__ (tuple, possibly using numbers when appropriate)
+		convention may be obsolescent with the advent of the metadata library
+			https://docs.python.org/3/library/importlib.metadata.html#distribution-versions
+		must keep them in sync
+		PKG-INFO appears to be generated automatically from other files. 
+			only updated when build the distribution
+		advice on how to handle versions
+			https://stackoverflow.com/questions/458550/standard-way-to-embed-version-into-python-package
+			https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version
+			https://www.python.org/dev/peps/pep-0440/
+		I'm using setuptools-scm
+			version constructed from tag in git or hg
+			only identical to the tag if tag is for current version
+			this is the last alternative suggested in the single-sourcing-package-version above
+			https://pypi.org/project/setuptools-scm/
+			not completely clear to me how to use it as a producer or consumer
+				requested write_to "bifs/_version.py"
+				is that necessary?
+				is it sufficient?
+				bifs.__version__ is NOT defined after this
+		currently __init__.py does not have the version number.
+			: Maybe it should.
+			: https://github.com/spyder-ide/qtpy/blob/master/setup.py provides
+			: an example of hot to info from _version.py into regular
+			: setup.py.
+			: https://github.com/spyder-ide/qtpy/blob/master/qtpy/__init__.py
+			: shows how to get the info into the module __version__.
+		there is a bump... package to coordinate, but seems not worth the trouble
+			since it requires naming the files to update
+			though that info can go in a configuration file
+	[X] tag releases in git
+	[X] changelog
+	[X] convert all relative imports to absolute
+		generally recommended as more robust: The PEP 8 style guide recommends using absolute imports in general. 
+	__main__.py, if present, executed automatically on package load
+		Maybe only if started via `python -m`.
+	Ensure existing tests work with current code.
+		most seem to put tests directory top level
+		http://as.ynchrono.us/2007/12/filesystem-structure-of-python-project_21.html?showComment=1419124050650#c5629056591479709945 argues against that
+	Ensure existing examples work with current code.
+	[_] Consider which materials should be  distributed.
+		things to consider eliminating
+			Visual Studio specific files and dirs
+			some of the example code, i.e., Ross's
+			git files
+			other work files?
+		decide how to eliminate them.  Could use a branch in git or a build script.
+[_] documentation
+	possible things to document
+		The general purpose of the package
+		The theory behind it and supporting literature.
+		tutorial
+			how to use command line << JK says start here
+			how to use GUI
+		How to install the package
+		How to use the package
+		How to get support or report bugs
+		Package internals
+			Overall structure of the package and its directories
+			Key architectural features
+			Functions
+			Data structures
+			Classes
+			Typical interactions
+		Package development
+			How to obtain code
+			How to contribute changes
+			To Do list
+	[_] improve installation instructions
+		maybe cute graphic tricks for Windows vs *nix
+			: Model on the python instructions for venv creation
+		[_] provide explicit instructions with virtual environment
+		make venv the default?
+		[_] link problems more explicitly to their likely causes
+	[_] documentation outside the source code
+		: *If* desirable, e.g., the README used to have what was basically a copy
+		: of the class comment for bifs, consider how to achieve that
+		: automatically.
+	[X] Web documentation consistency
+		github shows README.md
+		testpypi was showing README.rst
+		almost certainly both should show the same thing
+		life would be saner with a single README
+		the 2 files serve quite different purposes now
+			README.md quick intro and how to install
+			README.rst longer intro, how to use, package internals
+		setup.py controls which file is used on PyPI
+			changed it to use README.md with type text/markdown
+			that fixed the problem
+	[_] README.rst
+		[_] formatting of directory hiearchy is messed up
+		[X] instructions are dated
+			[X] bifs_gui can now be launched directly
+			[X] some references to BIFS should be bifs
+		[_] should internal stuff even go here?
+		[_] Use of >>> section problematic
+			clearly VSCode extension can't handle it
+			possibly it needs to have the output too
+			in rst >>> is a doctest block
+			I turned it into a regular block
+				not uploaded yet
+				result not indented, at least in preview
+	[X] link to README.rst doesn't work from testpypi
+		oddly, the following link to the code does work
+		: The link appears to be relative, but PyPI, unlike github, does not
+		: serve individual files.  Perhaps it could be made to.
+		easiest fix probably to make reference absolute
+[_] Handling of multiple image loads in same session
+	could be via GUI or via program, as in  presentation.py
+	define desired functionality, which I think is and was to retain as many settings as possible.
+	current behavior simply blows away previous settings
+[_] Review and possibly remove bifs.copy_params
+[_] Create  some general way to generate and use empirical priors.
+	[_] do not release with hard-coded path to store empirical prior.
+	[X] literally I've done that since there is no path all
+		: That is, the file name is hard-coded, but not the file path.
+	[_] need a GUI to specify the empirical prior file
+		constructing the file
+		reading the file
+		: Note those are 2 separate programs and that currently no program is
+		: provided to construct the prior.
+[_] Move much of the empirical prior logic out of bifs_gui.py.  Doneish?
+[_] feedback to users
+	includes errors, information, etc
+	[_] convert from print to Exceptions
+		[_] bifscore.py
+		[_] elsewhere
+		[_] note if Exception seems wrong solution to particular problem
+	possible ways to give feedback
+		print on terminal
+			: This is the main current practice and it is lousy for a graphic
+			: application, which may not even have a terminal.
+		pop-up window
+		app status bar
+		system notifications
+		python logging facility
+		exceptions
+			when should they be used?
+			how to distinguish severity, e.g., should we exit the app?
+			should all exceptions have a common base class?
+				to facilitate catching them
+				currently modoule raises RuntimeError and AttributeError
+				though failed operations may raise other exceptions
+				: Even if every exception I raise has a common ancestor
+				: other exceptions may arise
+		[_] exception handling
+			installed general exception handler
+				pops up a window
+				[_] maybe too much stuff in window
+				[_] what happens if run from terminal?
+				limitation: handler activates after event loop exited
+					i.e., no way for app to continue
+					unless error happens in 2ndry window
+			catch exceptions at function level
+				this fixes limitation above
+					: Since it happens below the event loop
+				nothing useful to return
+					: So don't do it with functions that return a value
+				functions for Qt Actions are ideal candidates
+				[X] wrappers
+					seemingly simple: wrap a function to catch exceptions
+					problems
+						need arguments of wrapped function to conform to original
+						otherwise Qt sends extra arguments and execution fails
+						: Having the wrapper return a function that takes (*args,
+						: **kwds) seems like a general solution, but it makes Qt
+						: send an extra arg (False).
+					[X] solutions
+						-> make a single argument function to be wrapped
+							may be adequate for me
+							a bit brittle for general release
+						work out appropriate function template
+						use decorator package
+							another dependency
+				[X] remember to delete mre.py test code
+			[_] combine logic for exception hook and wrapper
+				undo the code copying I did
+				formatting message
+				option handling re verbosity
+				maybe displaying window
+					: Though app event loop is dead in one case and not the
+					: other.
+			safe to continue?
+				: Not entirely clear what shape we are in if there is an
+				: exception.  We are relying on judgement of user about
+				: whether to continue.  But user doesn't know details of our
+				: internals, and so may not be a good judge.
+				: Basic idea if something didn't work is to try it again,
+				: possibly after some tweaks.
+		original plan (now I'm not sure this is what to do)
+			[_] BIFS class should throw exceptions rather than print error messages
+			[_] bifs_gui should catch and display the exceptions.
+[_] Continue delegation of model details to components of bifs.
+	material currently stored in bifs should be obtained from
+       objects it holds, e.g., allowed function types, specific parameters.
+	GUI will need to become more dynamic in response.
+	calculation method really depends on combination of prior and likelihood
+[_] Update to components should automatically invalidate the bifs object appropriately.
+	: E.g., reset scale on prior causes bifs object to _invalidate_final().
+	: The right way to do this is probably for the component, e.g., the prior, to hold a reference
+	: to the parent, and send the parent _invalidate_final() as part of component's _mark_dirty().
+	: Alternately, could use Qt signals and slots.
+	: For now we invalidate by default when handing out a prior object, and knowledgeable clients,
+	: as in presentation.py that poke, plot, poke, replot must manually invalidate.
+[_] @Karl Verify that the changes relating to isxcbanded are semantically correct; they are at least syntactically correct now.
+[_] Review: NaNs in input file are now silently converted to 0 by bifs.load_image.
+	Is that desirable?
+	NaNs cause later processing to fail.
+[_] test on different systems
+	[_] 0.9.1
+		[X] Windows
+		[X] Mac
+		[_] Linux: fails
+			#25: Qt mismatch problems
+			#26: testpi problems with Python 3.7 pip
+			both have work-arounds
+			and those are documented
+	[X] 0.9.2
+		[X] is __version_ a package attribute? No
+		but the new metadata library works OK
+		| >>> from importlib.metadata import version
+		| >>> version('bifs')
+		| '0.9.2'

@@ -1,0 +1,121 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>b580896b-29ca-4a24-82be-0c6bf6ae80a8</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>examples\bifs_cl_3D.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>bifs</Name>
+    <RootNamespace>bifs</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+    <TestFramework>pytest</TestFramework>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <UnitTestPattern>test*.py</UnitTestPattern>
+    <UnitTestRootDirectory>.</UnitTestRootDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="bifs\" />
+    <Folder Include="bifs\bases\" />
+    <Folder Include="bifs\bifs_util\" />
+    <Folder Include="bifs\priors\" />
+    <Folder Include="examples\" />
+    <Folder Include="tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ChangeLog.txt" />
+    <Content Include="LICENSE" />
+    <Content Include="MANIFEST.in" />
+    <Content Include="pyproject.toml" />
+    <Content Include="README.md" />
+    <Content Include="README.rst" />
+    <Content Include="requirements.txt" />
+    <Content Include="ToDo.otl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="bifs\bases\fourier.py" />
+    <Compile Include="bifs\bases\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="bifs\bifscore.py" />
+    <Compile Include="bifs\bifsexception.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="bifs\bifs_gui.py" />
+    <Compile Include="bifs\bifs_util\EmpiricalScanner.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="bifs\bifs_util\util.py" />
+    <Compile Include="bifs\bifs_util\__init__.py" />
+    <Compile Include="bifs\priors\AbstractPrior.py" />
+    <Compile Include="bifs\priors\FunctionalPrior.py" />
+    <Compile Include="bifs\priors\EmpiricalPrior.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="bifs\priors\__init__.py" />
+    <Compile Include="bifs\pset_dialogs.py" />
+    <Compile Include="bifs\__init__.py" />
+    <Compile Include="examples\bifs_cl_1D.py" />
+    <Compile Include="examples\bifs_cl_2D.py" />
+    <Compile Include="examples\bifs_cl_3D.py" />
+    <Compile Include="examples\empirical_scan.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\investigate06.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\investigate07.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\investigate08.py" />
+    <Compile Include="examples\investigate09.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\presentation.py" />
+    <Compile Include="examples\presentation04-empirical.py" />
+    <Compile Include="examples\presentation05.py" />
+    <Compile Include="examples\presentation03.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\scan.py" />
+    <Compile Include="examples\segment.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="examples\viewer.py" />
+    <Compile Include="examples\viewer2.py" />
+    <Compile Include="setup.py" />
+    <Compile Include="tests\test_reset.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.9</Version>
+      <Description>env (Python 3.9 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
