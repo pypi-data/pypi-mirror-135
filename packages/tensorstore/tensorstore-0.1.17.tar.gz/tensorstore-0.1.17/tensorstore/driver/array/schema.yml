@@ -1,0 +1,16 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: driver/array
+allOf:
+- $ref: TensorStore
+- type: object
+  properties:
+    driver:
+      const: array
+    array:
+      title: |
+        Nested array of rank equal to `.rank` specifying the initial value.
+  required:
+    - array
+    - dtype
+examples:
+  - {"driver": "array", "array": [[1, 2, 3], [4, 5, 6]], "dtype": "int32"}
