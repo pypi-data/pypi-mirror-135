@@ -1,0 +1,136 @@
+[[bench]]
+harness = false
+name = "csv"
+
+[[bench]]
+harness = false
+name = "groupby"
+
+[[bench]]
+harness = false
+name = "collect"
+
+[[bench]]
+harness = false
+name = "take"
+
+[[bench]]
+harness = false
+name = "sort"
+[dependencies.polars-core]
+default-features = false
+features = ["docs", "private"]
+path = "../polars-core"
+version = "0.19.0"
+
+[dependencies.polars-io]
+default-features = false
+features = ["private"]
+optional = true
+path = "../polars-io"
+version = "0.19.0"
+
+[dependencies.polars-lazy]
+default-features = false
+features = ["private"]
+optional = true
+path = "../polars-lazy"
+version = "0.19.0"
+
+[dev-dependencies]
+ahash = "0.7"
+criterion = "0.3"
+lazy_static = "1.4"
+rand = "0.8"
+
+[features]
+abs = ["polars-core/abs", "polars-lazy/abs"]
+arange = ["polars-lazy/arange"]
+asof_join = ["polars-core/asof_join", "polars-lazy/asof_join"]
+avx512 = ["polars-core/avx512"]
+bench = ["lazy"]
+checked_arithmetic = ["polars-core/checked_arithmetic"]
+concat_str = ["polars-core/concat_str", "polars-lazy/concat_str"]
+cross_join = ["polars-core/cross_join", "polars-lazy/cross_join"]
+csv-file = ["polars-io", "polars-io/csv-file", "polars-lazy/csv-file"]
+cum_agg = ["polars-core/cum_agg", "polars-core/cum_agg"]
+dataframe_arithmetic = ["polars-core/dataframe_arithmetic"]
+decompress = ["polars-io/decompress"]
+decompress-fast = ["polars-io/decompress-fast"]
+default = ["docs", "zip_with", "csv-file", "temporal", "performant", "plain_fmt", "dtype-slim"]
+diagonal_concat = ["polars-core/diagonal_concat"]
+diff = ["polars-core/diff", "polars-lazy/diff"]
+docs = ["polars-core/docs"]
+docs-selection = ["csv-file", "json", "parquet", "ipc", "dtype-full", "is_in", "sort_multiple", "rows", "docs", "strings", "object", "lazy", "temporal", "random", "zip_with", "round_series", "checked_arithmetic", "ndarray", "repeat_by", "is_first", "is_last", "asof_join", "cross_join", "concat_str", "decompress", "mode", "take_opt_iter", "extract_jsonpath", "cum_agg", "rolling_window", "interpolate", "diff", "rank", "list", "arange", "diagonal_concat", "horizontal_concat", "abs", "dot_diagram", "string_encoding", "product"]
+dot_diagram = ["polars-lazy/dot_diagram"]
+dot_product = ["polars-core/dot_product", "polars-lazy/dot_product"]
+dtype-categorical = ["polars-core/dtype-categorical"]
+dtype-date = ["polars-core/dtype-date", "polars-lazy/dtype-date", "polars-io/dtype-date"]
+dtype-datetime = ["polars-core/dtype-datetime", "polars-lazy/dtype-datetime", "polars-io/dtype-datetime"]
+dtype-duration = ["polars-core/dtype-duration", "polars-lazy/dtype-duration"]
+dtype-full = ["dtype-date", "dtype-datetime", "dtype-duration", "dtype-time", "dtype-i8", "dtype-i16", "dtype-u8", "dtype-u16", "dtype-categorical"]
+dtype-i16 = ["polars-core/dtype-i16", "polars-lazy/dtype-i16"]
+dtype-i8 = ["polars-core/dtype-i8", "polars-lazy/dtype-i8"]
+dtype-slim = ["dtype-date", "dtype-datetime", "dtype-duration"]
+dtype-time = ["polars-core/dtype-time", "polars-io/dtype-time"]
+dtype-u16 = ["polars-core/dtype-u16", "polars-lazy/dtype-u16"]
+dtype-u8 = ["polars-core/dtype-u8", "polars-lazy/dtype-u8"]
+dynamic_groupby = ["polars-core/dynamic_groupby", "polars-lazy/dynamic_groupby"]
+ewma = ["polars-core/ewma", "polars-lazy/ewma"]
+extract_jsonpath = ["polars-core/extract_jsonpath", "polars-core/strings"]
+groupby_list = ["polars-core/groupby_list"]
+horizontal_concat = ["polars-core/horizontal_concat"]
+interpolate = ["polars-core/interpolate", "polars-lazy/interpolate"]
+ipc = ["polars-io", "polars-io/ipc", "polars-lazy/ipc"]
+is_first = ["polars-core/is_first", "polars-lazy/is_first"]
+is_in = ["polars-core/is_in", "polars-lazy/is_in"]
+is_last = ["polars-core/is_last"]
+json = ["polars-io", "polars-io/json"]
+lazy = ["polars-core/lazy", "polars-lazy", "polars-lazy/compile"]
+lazy_regex = ["polars-lazy/regex"]
+list = ["polars-core/list", "polars-lazy/list"]
+mode = ["polars-core/mode", "polars-lazy/mode"]
+moment = ["polars-core/moment", "polars-lazy/moment"]
+ndarray = ["polars-core/ndarray"]
+object = ["polars-core/object", "polars-lazy/object"]
+parquet = ["polars-io", "polars-core/parquet", "polars-lazy/parquet", "polars-io/parquet"]
+pct_change = ["polars-core/pct_change", "polars-lazy/pct_change"]
+performant = ["polars-core/performant"]
+plain_fmt = ["polars-core/plain_fmt"]
+pretty_fmt = ["polars-core/pretty_fmt"]
+private = ["polars-lazy/private"]
+product = ["polars-core/product"]
+random = ["polars-core/random", "polars-lazy/random"]
+rank = ["polars-core/rank", "polars-lazy/rank"]
+reinterpret = ["polars-core/reinterpret"]
+repeat_by = ["polars-core/repeat_by", "polars-lazy/repeat_by"]
+rolling_window = ["polars-core/rolling_window", "polars-lazy/rolling_window"]
+round_series = ["polars-core/round_series", "polars-lazy/round_series"]
+row_hash = ["polars-core/row_hash"]
+rows = ["polars-core/rows"]
+serde = ["polars-core/serde"]
+simd = ["polars-core/simd"]
+sort_multiple = ["polars-core/sort_multiple"]
+string_encoding = ["polars-core/string_encoding", "polars-core/strings"]
+strings = ["polars-core/strings"]
+take_opt_iter = ["polars-core/take_opt_iter"]
+temporal = ["polars-core/temporal", "polars-lazy/temporal", "polars-io/temporal"]
+true_div = ["polars-lazy/true_div"]
+zip_with = ["polars-core/zip_with"]
+
+[lib]
+bench = false
+
+[package]
+authors = ["ritchie46 <ritchie46@gmail.com>"]
+description = "DataFrame Library based on Apache Arrow"
+edition = "2021"
+keywords = ["dataframe", "query-engine", "arrow"]
+license = "MIT"
+name = "polars"
+readme = "../README.md"
+repository = "https://github.com/pola-rs/polars"
+version = "0.19.0"
+[package.metadata.docs.rs]
+features = ["docs-selection"]
+rustdoc-args = ["--cfg", "docsrs"]

@@ -1,0 +1,85 @@
+[dependencies]
+ahash = "0.7"
+glob = "0.3"
+rayon = "1.5"
+
+[dependencies.polars-arrow]
+path = "../polars-arrow"
+version = "0.19.0"
+
+[dependencies.polars-core]
+default-features = false
+features = ["lazy", "private", "zip_with"]
+path = "../polars-core"
+version = "0.19.0"
+
+[dependencies.polars-io]
+default-features = false
+features = ["lazy", "csv-file", "private"]
+path = "../polars-io"
+version = "0.19.0"
+
+[dependencies.polars-utils]
+path = "../polars-utils"
+version = "0.1.0"
+
+[dependencies.regex]
+optional = true
+version = "1.5"
+
+[features]
+abs = ["polars-core/abs"]
+arange = []
+asof_join = ["polars-core/asof_join"]
+compile = []
+concat_str = ["polars-core/concat_str"]
+cross_join = ["polars-core/cross_join"]
+csv-file = ["polars-io/csv-file"]
+cum_agg = ["polars-core/cum_agg"]
+default = ["compile"]
+diff = ["polars-core/diff"]
+dot_diagram = []
+dot_product = ["polars-core/dot_product"]
+dtype-categorical = ["polars-core/dtype-categorical"]
+dtype-date = ["polars-core/dtype-date"]
+dtype-datetime = ["polars-core/dtype-datetime"]
+dtype-duration = ["polars-core/dtype-duration"]
+dtype-i16 = ["polars-core/dtype-i16"]
+dtype-i8 = ["polars-core/dtype-i8"]
+dtype-u16 = ["polars-core/dtype-u16"]
+dtype-u8 = ["polars-core/dtype-u8"]
+dynamic_groupby = ["polars-core/dynamic_groupby"]
+ewma = ["polars-core/ewma"]
+fmt = ["polars-core/plain_fmt"]
+future = []
+interpolate = ["polars-core/interpolate"]
+ipc = ["polars-io/ipc"]
+is_first = ["polars-core/is_first"]
+is_in = ["polars-core/is_in"]
+list = ["polars-core/list"]
+mode = ["polars-core/mode"]
+moment = ["polars-core/moment"]
+object = ["polars-core/object"]
+parquet = ["polars-core/parquet", "polars-io/parquet"]
+pct_change = ["polars-core/pct_change"]
+private = []
+random = ["polars-core/random"]
+rank = ["polars-core/rank"]
+repeat_by = ["polars-core/repeat_by"]
+rolling_window = ["polars-core/rolling_window"]
+round_series = ["polars-core/round_series"]
+temporal = ["polars-core/temporal"]
+test = ["rolling_window", "rank", "list", "round_series", "csv-file", "dtype-categorical", "cum_agg", "regex", "polars-core/plain_fmt", "diff", "abs", "parquet", "ipc"]
+true_div = []
+
+[package]
+authors = ["ritchie46 <ritchie46@gmail.com>"]
+description = "Lazy query engine for the Polars DataFrame library"
+edition = "2021"
+license = "MIT"
+name = "polars-lazy"
+repository = "https://github.com/pola-rs/polars"
+version = "0.19.0"
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
