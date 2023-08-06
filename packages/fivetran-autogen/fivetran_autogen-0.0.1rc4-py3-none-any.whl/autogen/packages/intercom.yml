@@ -1,0 +1,34 @@
+name: fivetran/intercom
+version: [">=0.4.0", "<0.5.0"]
+
+# dataset location
+source_data_location:
+  schema_variable: intercom_schema
+  database_variable: intercom_database
+
+# variables that are conditional on tables being present
+enabled_variables:
+  - name: intercom__using_contact_company
+    required_tables:
+      - contact_company_history
+      - company_history
+  - name: intercom__using_company_tags
+    required_tables:
+      - company_tag_history
+  - name: intercom__using_contact_tags
+    required_tables:
+      - contact_tag_history
+  - name: intercom__using_conversation_tags
+    required_tables:
+      - conversation_tag_history
+  - name: intercom__using_team
+    required_tables:
+      - team
+      - team_admin
+
+# variables that should be preset for ease of use
+preset_variables:
+  - name: intercom__company_history_pass_through_columns
+    type: list
+  - name: intercom__contact_history_pass_through_columns
+    type: list
