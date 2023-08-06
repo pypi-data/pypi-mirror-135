@@ -1,0 +1,80 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        tss-version: [master, 2.4.0, 2.4.6, 3.0.0, 3.0.3, 3.1.0]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        env:
+          TPM2_TSS_VERSION: ${{ matrix.tss-version }}
+        run: ./.ci/install-deps.sh
+
+      - name: Check
+        env:
+          TEST: 1
+        run: ./.ci/run.sh
+
+  coverage:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        env:
+          TPM2_TSS_VERSION: 3.0.3
+        run: ./.ci/install-deps.sh
+
+      - name: Check
+        env:
+          TEST: 1
+          ENABLE_COVERAGE: true
+        run: ./.ci/run.sh
+
+  whitespace-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Check
+      env:
+        WHITESPACE: 1
+      run: ./.ci/run.sh
+
+  style-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        python3 -m pip install --user --upgrade pip
+        python3 -m pip install --user --upgrade black==19.10b0
+
+    - name: Check
+      env:
+        STYLE: 1
+      run: ./.ci/run.sh
