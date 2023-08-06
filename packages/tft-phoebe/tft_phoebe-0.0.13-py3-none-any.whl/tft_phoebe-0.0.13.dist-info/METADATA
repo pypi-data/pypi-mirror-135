@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: tft-phoebe
+Version: 0.0.13
+Summary: Data gathering proxy for Prometheus toolkit
+Home-page: https://pypi.org/project/tft-phoebe
+License: BSD-3-Clause
+Author: Jakub Haruda
+Author-email: jharuda@redhat.com
+Requires-Python: >=3.6,<4.0
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Utilities
+Requires-Dist: beautifulsoup4 (>=4.8.1,<5.0.0)
+Requires-Dist: lxml (>=4.4.2,<5.0.0)
+Requires-Dist: prometheus-client (>=0.7.1,<0.8.0)
+Requires-Dist: requests
+Requires-Dist: ruamel.yaml (>=0.17.20,<0.18.0)
+Requires-Dist: stackprinter (>=0.2.3,<0.3.0)
+Project-URL: Repository, https://gitlab.com/testing-farm/phoebe
+Description-Content-Type: text/plain
+
+= Phoebe
+
+Phoebe is a data gathering proxy for https://prometheus.io/[Prometheus] toolkit. Its goal is to gather metrics from systems that don't provide their own native Prometheus export, and make them available for digestion by Prometheus.
+
+
+== How to run an exporter
+
+[source,shell]
+....
+$ pip install tft-phoebe
+$ phoebe-openstack --config=<your config file> --export=<filepath or - for stdout>
+....
+
+Or, after checking out the sources:
+
+[source,shell]
+....
+$ poetry install
+$ poetry run phoebe-openstack --config=<your config file> --export=<filepath or - for stdout>
+....
+
