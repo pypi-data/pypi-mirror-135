@@ -1,0 +1,143 @@
+Metadata-Version: 2.1
+Name: esa
+Version: 1.2.1
+Summary: Easy SimAuto (ESA): An easy-to-use Python connector to PowerWorld Simulator Automation Server (SimAuto).
+Home-page: https://github.com/mzy2240/ESA
+Author: Zeyu Mao, Brandon Thayer, Yijing Liu
+Author-email: zeyumao2@tamu.edu, blthayer@tamu.edu, yiji21@tamu.edu
+License: MIT
+Keywords: Python,PowerWorld,PowerWorld Simulator,Simulator,PowerWorld Simulation Automation Server,SimAuto,Automation,Power Systems,Electric Power,Power,Easy SimAuto,ESA,Smart Grid,Numpy,Pandas
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Win32 (MS Windows)
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Natural Language :: English
+Classifier: Topic :: Education
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Software Development
+Requires-Python: >=3.5
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: pandas (>=0.25)
+Requires-Dist: numpy (>=1.13.3)
+Requires-Dist: scipy
+Requires-Dist: pywin32
+Requires-Dist: pypiwin32
+Requires-Dist: networkx
+Requires-Dist: tqdm
+Requires-Dist: numba (>=0.55)
+Provides-Extra: dev
+Requires-Dist: pythran ; extra == 'dev'
+Provides-Extra: doc
+Requires-Dist: sphinx ; extra == 'doc'
+Requires-Dist: tabulate ; extra == 'doc'
+Provides-Extra: test
+Requires-Dist: networkx ; extra == 'test'
+Requires-Dist: coverage ; extra == 'test'
+Requires-Dist: matplotlib ; extra == 'test'
+
+Easy SimAuto (ESA)
+==================
+.. image:: https://img.shields.io/pypi/v/esa.svg
+   :target: https://pypi.org/project/esa/
+.. image:: https://joss.theoj.org/papers/10.21105/joss.02289/status.svg
+   :target: https://doi.org/10.21105/joss.02289
+.. image:: https://img.shields.io/pypi/l/esa.svg
+   :target: https://github.com/mzy2240/ESA/blob/master/LICENSE
+.. image:: https://static.pepy.tech/personalized-badge/esa?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads
+   :target: https://pepy.tech/project/esa
+.. image:: https://img.shields.io/badge/coverage-100%25-brightgreen
+
+
+Easy SimAuto (ESA) is an easy-to-use Power System Analysis Automation
+Platform atop PowerWorld's Simulator Automation Server (SimAuto).
+ESA wraps all PowerWorld SimAuto functions, supports Auxiliary scripts,
+provides helper functions to further simplify working with SimAuto and
+also turbocharges with native implementation of SOTA algorithms. Wherever
+possible, data is returned as Pandas DataFrames, making analysis a breeze.
+ESA is well tested and fully `documented`_.
+
+`Documentation`_
+----------------
+
+For quick-start directions, installation instructions, API reference,
+examples, and more, please check out ESA's `documentation`_.
+
+If you have your own copy of the ESA repository, you can also view the
+documentation locally by navigating to the directory ``docs/html`` and
+opening ``index.html`` with your web browser.
+
+Citation
+--------
+
+If you use ESA in any of your work, please use the citation below.
+
+.. code:: latex
+
+    @article{ESA,
+      doi = {10.21105/joss.02289},
+      url = {https://doi.org/10.21105/joss.02289},
+      year = {2020},
+      publisher = {The Open Journal},
+      volume = {5},
+      number = {50},
+      pages = {2289},
+      author = {Brandon L. Thayer and Zeyu Mao and Yijing Liu and Katherine Davis and Thomas J. Overbye},
+      title = {Easy SimAuto (ESA): A Python Package that Simplifies Interacting with PowerWorld Simulator},
+      journal = {Journal of Open Source Software}
+    }
+
+Installation
+------------
+
+Please refer to ESA's `documentation <https://mzy2240.github
+.io/ESA/html/installation.html>`__ for full, detailed installation
+directions. In many cases, ESA can simply be installed by:
+
+.. code:: bat
+
+    python -m pip install esa
+
+Testing Coverage
+----------------
+
+The ESA team works hard to ensure ESA is well tested, and we strive for
+100% testing coverage. The table below shows the most up-to-date
+testing coverage data for ESA, using `coverage
+<https://pypi.org/project/coverage/>`__.
+
+.. table:: ESA's testing coverage as of 2022-01-23 (Git commit: 9186641)
+    :widths: auto
+    :align: left
+
+    +-----------------+-------------------+-----------------+-----------------+--------------------+
+    | Name            |   Num. Statements |   Missing Lines |   Covered Lines |   Percent Coverage |
+    +=================+===================+=================+=================+====================+
+    | esa/__init__.py |                 2 |               0 |               2 |                100 |
+    +-----------------+-------------------+-----------------+-----------------+--------------------+
+    | esa/saw.py      |               725 |               0 |             725 |                100 |
+    +-----------------+-------------------+-----------------+-----------------+--------------------+
+
+License
+-------
+
+`MIT <https://choosealicense.com/licenses/mit/>`__
+
+Contributing
+------------
+
+We welcome contributions! Please read ``contributing.md``.
+
+.. _documentation: https://mzy2240.github.io/ESA/
+.. _documented: https://mzy2240.github.io/ESA/
+
+
