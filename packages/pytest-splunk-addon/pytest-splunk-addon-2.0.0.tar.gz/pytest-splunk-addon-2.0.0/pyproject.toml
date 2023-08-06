@@ -1,0 +1,74 @@
+#
+# Copyright 2021 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+[tool.poetry]
+name = "pytest-splunk-addon"
+version = "2.0.0"
+description = "A Dynamic test tool for Splunk Apps and Add-ons"
+authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
+license = "APACHE-2.0"
+classifiers = [
+        "Framework :: Pytest",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Testing",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.7",
+        "Operating System :: OS Independent",
+        "License :: OSI Approved :: Apache Software License",
+]
+include = ["pytest_splunk_addon/**/*.json", "pytest_splunk_addon/**/*.txt"]
+
+[tool.poetry.dependencies]
+httplib2 = "*"
+python = "^3.7"
+pytest = ">5.4.0,<6.3"
+splunk-sdk = "^1.6"
+requests = "^2"
+splunk_appinspect = "^2"
+jsonschema = "^4.2.1"
+faker = ">=4.1,<12.0"
+pytest-xdist = "*"
+filelock = "^3.0"
+pytest-ordering = "*"
+lovely-pytest-docker = { version="^0", optional = true }
+junitparser = "^2.2.0"
+addonfactory-splunk-conf-parser-lib = "^0.3.3"
+
+
+[tool.poetry.extras]
+docker = ['lovely-pytest-docker']
+
+[tool.poetry.dev-dependencies]
+lovely-pytest-docker = "*"
+pytest-mock = "^3.5.1"
+pytest-cov = "^3.0.0"
+requests-mock = "^1.8.0"
+freezegun = "^1.1.0"
+pytz = "^2021.1"
+sphinx-rtd-theme = "^1.0.0"
+sphinx-panels = "^0.6.0"
+
+[tool.poetry.plugins]
+pytest11 = { plugin = "pytest_splunk_addon.plugin", "splunk" = "pytest_splunk_addon.splunk" }
+
+[tool.poetry.scripts]
+cim-report = 'pytest_splunk_addon.standard_lib.utilities.junit_parser:main'
+generate-indextime-conf = 'pytest_splunk_addon.standard_lib.utilities.create_new_eventgen:main'
+cim-field-report = 'pytest_splunk_addon.tools.cim_field_report:main'
+
+[build-system]
+requires = ["poetry>=1.0.2"]
+build-backend = "poetry.masonry.api"
