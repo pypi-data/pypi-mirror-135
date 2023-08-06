@@ -1,0 +1,15 @@
+
+    void {{class_name}}::UpdateTransmembranePotential(double {{free_variable.var_name}})
+    {
+        // Time units: millisecond
+        {{vector_decl}} rY = rGetStateVariables();
+        {% for state_var in state_vars %}
+        {%- if state_var.in_voltage_deriv %}double {{ state_var.var }} = {{state_var.rY_lookup}};
+        // Units: {{state_var.units}}; Initial value: {{state_var.initial_value}}
+        {% endif %}{%- endfor %}
+        {%- set method =  "UpdateTransmembranePotential" %}{% include "Shared/cpp/lookup_table_init" %}
+        {% for deriv in y_derivative_equations %}
+        {%- if deriv.in_membrane_voltage %}const double {{deriv.lhs}} = {{deriv.rhs}}; // {{deriv.units}}
+        {% endif %}{%- endfor %}
+        {% for deriv in y_derivative_equations %}{%- if deriv.is_voltage%}rY[{{membrane_voltage_index}}] += mDt*{{deriv.lhs}};{%- endif %}{%- endfor %}
+    }
