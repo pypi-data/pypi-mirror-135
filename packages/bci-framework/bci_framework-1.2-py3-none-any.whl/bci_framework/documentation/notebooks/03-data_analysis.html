@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data analysis &#8212; BCI-Framework  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="shortcut icon" href="../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data visualization" href="04-data_visualizations.html" />
+    <link rel="prev" title="Interface" href="02-interface.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 0;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+}
+</style><div class="section" id="Data-analysis">
+<h1>Data analysis<a class="headerlink" href="#Data-analysis" title="Permalink to this headline">¶</a></h1>
+<p>This feature able the user to develop real-time data analysis, consist of the complete Python-powered environment, with a set of custom methods for agile development.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Extensions &gt; New Extension &gt; Data analysis
+</pre></div>
+</div>
+<div class="section" id="Bare-minimum">
+<h2>Bare minimum<a class="headerlink" href="#Bare-minimum" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+if __name__ == &#39;__main__&#39;:
+    Analysis()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Data-stream-access">
+<h2>Data stream access<a class="headerlink" href="#Data-stream-access" title="Permalink to this headline">¶</a></h2>
+<p>The data stream is accessed asynchronously with the <code class="docutils literal notranslate"><span class="pre">loop_consumer</span></code> decorator from <code class="docutils literal notranslate"><span class="pre">bci_framework.extensions.data_analysis</span></code>, this decorator requires the Kafka topics to access.</p>
+<p>There is 2 topics availables for <code class="docutils literal notranslate"><span class="pre">loop_consumer</span></code>: <code class="docutils literal notranslate"><span class="pre">eeg</span></code> and <code class="docutils literal notranslate"><span class="pre">marker</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis, loop_consumer
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;, &#39;marker&#39;)
+    def stream(self):
+        print(&#39;Incoming data...&#39;)
+
+if __name__ == &#39;__main__&#39;:
+    Analysis()
+</pre></div>
+</div>
+</div>
+<p>The decorated method receives 3 optional arguments: <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">topic</span></code> and <code class="docutils literal notranslate"><span class="pre">frame</span></code>.</p>
+<div class="line-block">
+<div class="line"><strong>data:</strong> <code class="docutils literal notranslate"><span class="pre">(eeg,</span> <span class="pre">aux)</span></code> if topic is <code class="docutils literal notranslate"><span class="pre">eeg</span></code>, <code class="docutils literal notranslate"><span class="pre">marker_value</span></code> if topic is <code class="docutils literal notranslate"><span class="pre">marker</span></code></div>
+<div class="line"><strong>kafka_stream:</strong> The <code class="docutils literal notranslate"><span class="pre">stream</span></code> object from Kafka.</div>
+<div class="line"><strong>topic:</strong> The topic of the Kafka stream, this object is available too in the object <code class="docutils literal notranslate"><span class="pre">data.topic</span></code></div>
+<div class="line"><strong>frame:</strong> Incremental flag with the counter of streamed data.</div>
+<div class="line"><strong>latency:</strong> The time bewteen acquisition and read.</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self, data, topic, frame, latency):
+    eeg, aux = data
+
+    print(f&#39;Incoming data #{frame}&#39;)
+    print(f&#39;EEG{eeg.shape}&#39;)
+    print(f&#39;AUX{aux.shape}&#39;)
+    print(f&#39;Topic: {topic}&#39;)
+    print(f&#39;Latency: {latency}&#39;)
+</pre></div>
+</div>
+</div>
+<p>The above code will execute every data stream input, and the below code will execute only when a marker is streamed.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;marker&#39;)
+def stream(self, data, topic, frame):
+    marker_value = data
+
+    print(f&#39;Incoming marker: {marker_value}&#39;)
+</pre></div>
+</div>
+</div>
+<p>Is <strong>not possible</strong>, use the decorator <code class="docutils literal notranslate"><span class="pre">loop_consumer</span></code> in more than one place, so the argument <code class="docutils literal notranslate"><span class="pre">topic</span></code> could be used to create a flow control.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;, &#39;marker&#39;)
+def stream(self, data, topic, frame):
+
+    if topic == &#39;eeg&#39;:
+        eeg, aux = data
+        print(&quot;EEG data incomming..&quot;)
+
+    elif topic == &#39;marker&#39;:
+        marker_value = data
+        print(&quot;Marker incomming..&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Simulate-data-stream">
+<h2>Simulate data stream<a class="headerlink" href="#Simulate-data-stream" title="Permalink to this headline">¶</a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">fake_loop_consumer</span></code> instead of <code class="docutils literal notranslate"><span class="pre">loop_consumer</span></code> is possible to create a fake data stream.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis, fake_loop_consumer
+import logging
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stream()
+
+    @fake_loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+        logging.debug(&#39;Incoming data...&#39;)
+
+if __name__ == &#39;__main__&#39;:
+    Analysis()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Built-in-methods">
+<h2>Built in methods<a class="headerlink" href="#Built-in-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Buffer-/-Sliding-window">
+<h3>Buffer / Sliding window<a class="headerlink" href="#Buffer-/-Sliding-window" title="Permalink to this headline">¶</a></h3>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">self.create_buffer</span></code> to implement an automatic buffer with a fixed time view, for example, a buffer of 30 seconds:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_buffer(seconds=30)
+</pre></div>
+</div>
+</div>
+<p>The data can be accesed with <code class="docutils literal notranslate"><span class="pre">self.buffer_eeg</span></code> and <code class="docutils literal notranslate"><span class="pre">self.buffer_aux</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_buffer(seconds=30)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+         eeg = self.buffer_eeg
+         aux = self.buffer_aux
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">self.create_buffer</span></code> method receives other arguments like <code class="docutils literal notranslate"><span class="pre">aux_shape</span></code>, <code class="docutils literal notranslate"><span class="pre">fill</span></code> and <code class="docutils literal notranslate"><span class="pre">samples</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.create_buffer(seconds=30, aux_shape=3, fill=0, resampling=1000)
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>aux_shape:</strong> The dimension of the auxiliary data, 3 by default.</div>
+<div class="line"><strong>fill:</strong> Initialize buffet with this value, 0 by default.</div>
+<div class="line"><strong>resampling:</strong> This value is used to resampling the data.</div>
+</div>
+</div>
+<div class="section" id="Resampling">
+<h3>Resampling<a class="headerlink" href="#Resampling" title="Permalink to this headline">¶</a></h3>
+<p>The resampling is defined when the buffer is created, with the argument <code class="docutils literal notranslate"><span class="pre">resampling</span></code> this value is not strictly used, instead a near and optimal value is calculated based on the sampling rate and the buffer size.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_buffer(seconds=30, resampling=1000)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+         eeg = self.buffer_eeg_resampled
+         aux = self.buffer_aux_resampled
+
+         print(f&#39;EEG{eeg.shape}&#39;)
+         print(f&#39;AUX{aux.shape}&#39;)
+</pre></div>
+</div>
+</div>
+<p>The resampling will not affect the buffer, the both data are accessible all the time.</p>
+</div>
+<div class="section" id="Data-slicing-referenced-by-markers">
+<h3>Data slicing referenced by markers<a class="headerlink" href="#Data-slicing-referenced-by-markers" title="Permalink to this headline">¶</a></h3>
+<p>Consist of a method that crops the available data with a marker reference. The decorator <code class="docutils literal notranslate"><span class="pre">&#64;marker_slicing</span></code> do the trick. Receives the <code class="docutils literal notranslate"><span class="pre">markers</span></code>, a <code class="docutils literal notranslate"><span class="pre">t0</span></code> that indicate how many seconds to crop before the marker and the <code class="docutils literal notranslate"><span class="pre">duration</span></code> of the slice.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis, marker_slicing
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Needs to be greater than the duration of the slice.
+        self.create_buffer(seconds=30, aux_shape=3)
+        self.slicing()
+
+    @marker_slicing([&#39;Right&#39;, &#39;Left&#39;], t0=-2, duration=6)
+    def slicing(self, eeg, aux, timestamp, marker):
+
+        print(eeg.shape)
+        print(aux.shape)
+        print(timestamp.shape)
+        print(marker)
+        print()
+
+if __name__ == &#39;__main__&#39;:
+    Analysis()
+</pre></div>
+</div>
+</div>
+<p>The above code will be executed each time that and slice is available. The <code class="docutils literal notranslate"><span class="pre">buffer</span></code> must be greater than the duration of the desired slice.</p>
+<div class="line-block">
+<div class="line"><strong>eeg:</strong> The EEG data croped (<code class="docutils literal notranslate"><span class="pre">channels,</span> <span class="pre">time</span></code>).</div>
+<div class="line"><strong>aux:</strong> The AUX data croped (<code class="docutils literal notranslate"><span class="pre">aux,</span> <span class="pre">time</span></code>).</div>
+<div class="line"><strong>timestamp:</strong> The <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> vector.</div>
+<div class="line"><strong>marker:</strong> The <code class="docutils literal notranslate"><span class="pre">marker</span></code> that trigger the crop.</div>
+<div class="line"><strong>latency:</strong> The time bewteen acquisition and read.</div>
+</div>
+</div>
+</div>
+<div class="section" id="Receive-markers">
+<h2>Receive markers<a class="headerlink" href="#Receive-markers" title="Permalink to this headline">¶</a></h2>
+<p>The markers can be accessed specifying the topic <code class="docutils literal notranslate"><span class="pre">marker</span></code> in the <code class="docutils literal notranslate"><span class="pre">loop_consumer</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;marker&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Send-commands,-annotations-and-feedbacks">
+<h2>Send commands, annotations and feedbacks<a class="headerlink" href="#Send-commands,-annotations-and-feedbacks" title="Permalink to this headline">¶</a></h2>
+<p>The commands are used to communicate outputs into the real world, or other systems, they can also be read in the <strong>Stimuli delivery</strong> to create neurofeedback applications. To activate this feature just add the <code class="docutils literal notranslate"><span class="pre">enable_produser</span></code> argument as <code class="docutils literal notranslate"><span class="pre">True</span></code> into the <code class="docutils literal notranslate"><span class="pre">DataAnalysis</span></code> subclass.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>if __name__ == &#39;__main__&#39;:
+    Analysis(enable_produser=True)
+</pre></div>
+</div>
+</div>
+<p>Once activate the producer, the methods <code class="docutils literal notranslate"><span class="pre">self.send_command</span></code>, <code class="docutils literal notranslate"><span class="pre">self.send_feedback</span></code> and <code class="docutils literal notranslate"><span class="pre">self.end_annotation</span></code>are available.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>@loop_consumer(&#39;eeg&#39;)
+def stream(self):
+     eeg = self.buffer_eeg_resampled
+     aux = self.buffer_aux_resampled
+
+    [...]  # amazing data analysis
+
+    self.send_command(&#39;MyCommand&#39;, value=45)
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">self.send_annotation</span></code> also receive the optional argument <code class="docutils literal notranslate"><span class="pre">duration</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.send_annotation(&#39;Data record start&#39;)
+self.send_annotation(&#39;The subject yawn&#39;, duration=5)
+</pre></div>
+</div>
+</div>
+<p>The self.send_feedback receive any kind of Python data structure.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>feed = {&#39;var1&#39;: 0,
+        &#39;var2&#39;: True,
+        &#39;var3&#39;: &#39;Right&#39;,
+       }
+self.send_feedback(**feed)
+
+self.send_feedback(a=0, b=2.3, c=&#39;Left&#39;)
+</pre></div>
+</div>
+</div>
+<p>A generic producer also is available:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>self.generic_produser(topic, data)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Communication-between-analysis-process">
+<h2>Communication between analysis process<a class="headerlink" href="#Communication-between-analysis-process" title="Permalink to this headline">¶</a></h2>
+<p>Let’s build a script that will acts like <strong>Kafka transformer</strong>, this script reads the raw EEG data, calculate their EEG spectrum using Fourier and inject back again into the stream. This can be other advanced processing tasks, like classifications using neural networks.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis, loop_consumer
+from bci_framework.extensions import properties as prop
+from gcpds.utils.processing import fourier
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.create_buffer(seconds=30, resampling=1000)
+        self.stream()
+
+    @loop_consumer(&#39;eeg&#39;)
+    def stream(self):
+         W, EEG = fourier(self.buffer_eeg, fs=prop.SAMPLE_RATE, axis=1)
+         data = {&#39;amplitude&#39;: EEG,
+                 &#39;frequency&#39;: W}
+         self.generic_produser(&#39;spectrum&#39;, data)
+
+if __name__ == &#39;__main__&#39;:
+    Analysis(enable_produser=True)
+</pre></div>
+</div>
+</div>
+<p>Now, in another script, we will write a <strong>Kafka consumer</strong> this script will consume from the previously created stream.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from bci_framework.extensions.data_analysis import DataAnalysis, loop_consumer
+from bci_framework.extensions import properties as prop
+from gcpds.utils.processing import fourier
+
+class Analysis(DataAnalysis):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stream()
+
+    @loop_consumer(&#39;spectrum&#39;)
+    def stream(self, data):
+        data = data.value[&#39;data&#39;]
+
+        EEG = data[&#39;amplitude&#39;]
+        W = data[&#39;frequency&#39;]
+
+if __name__ == &#39;__main__&#39;:
+    Analysis()
+</pre></div>
+</div>
+</div>
+<p>This examples are available by default in the framework extensions explorer.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">spectrum</span></code> topic must be created before to use the topic:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>kafka-topics.sh --create --bootstrap-server localhost:2181 --replication-factor 1 --partitions 1 --topic feedback
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Framework-integration">
+<h2>Framework integration<a class="headerlink" href="#Framework-integration" title="Permalink to this headline">¶</a></h2>
+<p>BCI-Framework can execute any number of scripts as an independent process, the system will handle the interruption and show information about the CPU and memory usage.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Data analysis &gt; Data analysis
+</pre></div>
+</div>
+<p><img alt="512fa0c2a94b461886d9bf782a094210" src="../_images/analysis_process.png" /></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="00-installation.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-interface.html">Interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Bare-minimum">Bare minimum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-stream-access">Data stream access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Simulate-data-stream">Simulate data stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Built-in-methods">Built in methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Receive-markers">Receive markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Send-commands,-annotations-and-feedbacks">Send commands, annotations and feedbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Communication-between-analysis-process">Communication between analysis process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Framework-integration">Framework integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="04-data_visualizations.html">Data visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-default_visualizations.html">Examples of data visualizations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-stimuli_delivery.html">Stimuli delivery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-default_stimuli_delivery_paradigms.html">Examples of stimuli delivery paradigms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-event_marker_synchronization.html">Event marker synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-ilustrative_example.html">Illustrative example</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="02-interface.html" title="previous chapter">Interface</a></li>
+      <li>Next: <a href="04-data_visualizations.html" title="next chapter">Data visualization</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, DunderLab SAS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/notebooks/03-data_analysis.ipynb"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
