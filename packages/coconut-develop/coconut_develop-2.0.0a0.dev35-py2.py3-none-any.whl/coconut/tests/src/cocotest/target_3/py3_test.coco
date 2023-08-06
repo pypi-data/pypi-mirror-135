@@ -1,0 +1,36 @@
+def py3_test() -> bool:
+    """Performs Python-3-specific tests."""
+    x = 5
+    assert x == 5
+    def set_x(y):
+        nonlocal x
+        x = y
+    set_x(3)
+    assert x == 3
+    def set_x_again(y):
+        nonlocal x = y
+    set_x_again(10)
+    assert x == 10
+    assert {x:x for x in range(5)} == {0:0, 1:1, 2:2, 3:3, 4:4}
+    def head_tail(l):
+        head, *tail = l
+        return head, tail
+    assert head_tail((|1, 2, 3|)) == (1, [2, 3])
+    assert py_map((x) -> x+1, range(4)) |> tuple == (1, 2, 3, 4)
+    assert py_zip(range(3), range(3)) |> tuple == ((0, 0), (1, 1), (2, 2))
+    e = exec
+    test: dict = {}
+    e("a=1", test)
+    assert test["a"] == 1
+    def keyword_only(*, a) = a
+    assert keyword_only(a=10) == 10
+    čeština = "czech"
+    assert čeština == "czech"
+    class A:
+        a = 1
+    class B(A):
+        def get_super_1(self) = super()
+        def get_super_2(self) = super(B, self)
+    b = B()
+    assert b.get_super_1().a == 1 == b.get_super_2().a
+    return True
