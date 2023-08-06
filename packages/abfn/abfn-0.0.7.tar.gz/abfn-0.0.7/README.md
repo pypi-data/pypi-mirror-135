@@ -1,0 +1,1 @@
+This repo contains code to filter out invalid words in indian language.
