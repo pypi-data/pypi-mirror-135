@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: fact-explorer
+Version: 0.0.15
+Summary: A fast and simple tool to explore facts.
+Home-page: https://gitlab.com/friendly-facts/fact-explorer
+License: Apache-2.0
+Keywords: event-sourcing,factcast,cryptoschredding
+Author: Eduard Thamm
+Author-email: eduard.thamm@thammit.at
+Requires-Python: >=3.8,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Database
+Classifier: Typing :: Typed
+Provides-Extra: crypto
+Provides-Extra: docs
+Provides-Extra: schema
+Requires-Dist: Sphinx (<4); extra == "docs"
+Requires-Dist: aiofiles (>=0.6,<0.7)
+Requires-Dist: asyncpg (>=0.22,<0.23)
+Requires-Dist: cryptoshred (>=0.0,<0.1); extra == "crypto"
+Requires-Dist: fastapi (>=0.65,<0.66)
+Requires-Dist: psycopg2-binary (>=2.8,<3.0)
+Requires-Dist: pyjson5 (==1.6.0)
+Requires-Dist: rich (>=10.4,<11.0)
+Requires-Dist: schema-registry (>=0.0,<0.1); extra == "schema"
+Requires-Dist: sphinx-autodoc-typehints (>=1.12,<2.0); extra == "docs"
+Requires-Dist: sphinx-click (>=3.0,<4.0); extra == "docs"
+Requires-Dist: sphinx-rtd-theme (>=0.5,<0.6); extra == "docs"
+Requires-Dist: typer (>=0,<1)
+Requires-Dist: uvicorn (>=0.13,<0.14)
+Project-URL: Documentation, https://fact-explorer.readthedocs.io/en/stable/
+Project-URL: Repository, https://gitlab.com/friendly-facts/fact-explorer
+Description-Content-Type: text/markdown
+
+# Fact Explorer
+
+Welcome to fact_explorer. You can find more extensive documentation over at [readthedocs](https://fact-explorer.readthedocs.io/en/latest/).
+
+This is a companion project to `factcast <https://github.com/factcast/factcast>`_ an event store written in Java.
+You can also check out other event sourcing related project in python over at `pyfactcast <https://pypi.org/project/pyfactcast/>`_
+as well as `cryptoshred <https://pypi.org/project/cryptoshred/>`_.
+
+This project arose mainly out of the necessity to work with events directly instead of through projections. This is useful to:
+
+- Enable searching for 'random' events quickly during debugging
+- Checking events during migrations
+- Many other things (you should probably not do if you are an event purist)
+
+Contributions are welcome. Just get in touch.
+
+## Quickstart
+
+Simply `pip install fact-exporter` and get going. The cli is available as `fact-exporter` and
+you can run `fact-exporter --help` to get up to speed on what you can do.
+
+## Development
+
+This project uses `poetry` for dependency management and `pre-commit` for local checks.
+

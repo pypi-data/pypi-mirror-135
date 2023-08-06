@@ -1,0 +1,122 @@
+[tool.poetry]
+name = "fact-explorer"
+version = "0.0.15"
+description = "A fast and simple tool to explore facts."
+authors = ["Eduard Thamm <eduard.thamm@thammit.at>"]
+license = "Apache-2.0"
+readme = "README.md"
+documentation = "https://fact-explorer.readthedocs.io/en/stable/"
+repository = "https://gitlab.com/friendly-facts/fact-explorer"
+keywords = ["event-sourcing","factcast","cryptoschredding"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Database",
+    "Typing :: Typed"
+]
+# TODO: Fix once https://github.com/python-poetry/poetry/issues/4583 is resolved
+packages = [
+  {include="fact_explorer", from="src"},
+  ]
+include = [
+  "fact_explorer/app/frontend/static/**/*", # Without this the wheel breaks
+  "src/fact_explorer/app/frontend/static/**/*" # Without this the src package breaks
+]
+exclude = ["src/fact_explorer/frontend"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+sphinx-autodoc-typehints = {version = "^1.12", optional = true}
+sphinx-rtd-theme = {version = "^0.5", optional = true}
+sphinx-click = {version = "^3.0", optional = true}
+Sphinx = {version = "<4", optional = true}
+typer = "^0"
+rich = "^10.4"
+psycopg2-binary = "^2.8"
+fastapi = "^0.65"
+uvicorn = "^0.13"
+asyncpg = "^0.22"
+aiofiles = "^0.6"
+cryptoshred = {version = "^0.0", optional = true}
+schema-registry = {version = "^0.0", optional = true}
+pyjson5 = "1.6.0" # TODO: Upgrade once 1.7 is out
+
+[tool.poetry.extras]
+docs = ["sphinx","sphinx-click","sphinx-rtd-theme","sphinx-autodoc-typehints"]
+crypto = ["cryptoshred"]
+schema = ["schema-registry"]
+
+[tool.poetry.dev-dependencies]
+black = "^21.11b1"
+pytest = "^6.2.5"
+flake8 = "^4.0.1"
+flake8-bugbear = "^21.11.29"
+mypy = "^0.910"
+rstcheck = "^3.3.1"
+sphinx-autobuild = "^2021.3.14"
+pytest-cov = "^3.0.0"
+pytest-randomly = "^3.10.3"
+pre-commit = "^2.16.0"
+pytest-mock = "^3.6.1"
+flake8-annotations = "^2.7.0"
+safety = "^1.10.3"
+flake8-docstrings = "^1.6.0"
+nox = "^2021.10.1"
+sphinx-autodoc-typehints = "^1.12.0"
+sphinx-rtd-theme = "^0.5.2"
+sphinx-click = "^3.0.2"
+pytest-asyncio = "^0.16.0"
+moto = "^2.2.17"
+boto3-stubs = "^1.20.20"
+Sphinx = "<4"
+bandit = "^1.7.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+fact-explorer = 'fact_explorer.cli.main:app'
+
+[tool.coverage.run]
+omit = ["*__init__.py","src/fact_explorer/app/entities/fact.py","*main.py","src/fact_explorer/app/frontend/bridge.py","src/fact_explorer/app/api/constants.py"]
+
+[tool.pytest.ini_options]
+addopts = "-rsxX -l --tb=short --strict-markers --cov-report term --cov-fail-under=70 --cov=fact_explorer --cov-branch"
+# TODO: increase to --cov-fail-under=85 later
+xfail_strict = true
+testpaths = [
+    "tests",
+]
+filterwarnings = "ignore:.*the imp module is deprecated.*:DeprecationWarning"
+markers = [
+  "integration: marks tests that use mock and are therefore slower.",
+  "usecase: marks tests that represent business logic.",
+  "containers: marks tests that will spin up test containers."
+]
+
+[tool.black]
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | \.nox
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | .cache
+  | .venv
+)
+'''
+
+[tool.bandit]
