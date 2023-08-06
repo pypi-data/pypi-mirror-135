@@ -1,0 +1,229 @@
+#!/bin/bash
+
+set -e
+
+ARGS=$@
+
+# . env_setup
+
+usage() {
+    cat << EOF
+USAGE: pymdeploy [--debug] [--no-test] [--no-build] [--no-push] [--no-deploy]
+
+Run the pymacaron deployment pipeline:
+ 1. Checkout the given project's branch and commit in a temporary directory.
+ 2. Run unittests locally.
+ 3. Build a docker image with pymdocker.
+ 4. Run acceptance tests against the docker image started in a local container.
+ 5. Push the docker image to a docker repository.
+ 6. Deploy the docker image to a live environment (Amazon Beanstalk, GKE or GCR).
+ 7. Run the tests again, against the live api.
+
+OPTIONS:
+  --branch BRANCH   Deploy this branch (default: master)
+  --commit COMMIT   Deploy this commit in the given branch (default: HEAD)
+  --env ENV         Deploy the service described in 'pym-config.ENV.yaml'
+                    (defaults to using 'pym-config.yaml')
+  --debug           Be very verbose.
+  --no-test         Skip all tests (steps 2, 4 and 7).
+  --no-unittest     Skip only unittests (step 2).
+  --force-build     Force rebuilding the docker image, even if it already exists.
+  --no-push         Skip pushing the image to docker or gcp registry (step 4).
+  --no-deploy       Skip deploying to live (step 5).
+
+EXAMPLES:
+
+# test, build, push, deploy
+pymdeploy
+
+# same against a staging environment described in pym-config.staging.yaml
+pymdeploy --env staging
+
+# deploy a specific branch and commit, without tests
+pymdeploy --env staging --no-test --branch master --commit ab563f
+
+# chain deploying to multiple environments:
+pymdeploy --env staging && pymdeploy --no-test --env live
+
+EOF
+}
+
+FORCE_BUILD=
+DO_PUSH=1
+DO_DEPLOY=1
+DO_TEST=1
+DO_UNITTEST=1
+CHECKOUT_BRANCH=master
+CHECKOUT_COMMIT=HEAD
+DEPLOY_ARGS=
+WITH_DEBUG=
+TARGET_ENV=
+IMAGE_ID=
+
+parse_args() {
+    while [ "$1" != "" ]; do
+        case $1 in
+            "--branch")        shift; export CHECKOUT_BRANCH=$1;;
+            "--commit")        shift; export CHECKOUT_COMMIT=$1;;
+            "--env")           shift; export TARGET_ENV=$1;;
+            "--debug")         set -x; DEBUG='true'; WITH_DEBUG="--debug";;
+            "--force-build")   export FORCE_BUILD=1;;
+            "--no-push")       export DO_PUSH=;;
+            "--no-deploy")     export DO_DEPLOY=;;
+            "--no-test")       export DO_TEST=; export DO_UNITTEST=; export DEPLOY_ARGS="$DEPLOY_ARGS --no-test";;
+            "--no-unittest")   export DO_UNITTEST=;;
+            "-h" | "--help")   usage; exit 0;;
+            *)                 echo "Unknown argument '$1' (-h for help)"; exit 0;;
+        esac
+        shift
+    done
+}
+
+parse_args $ARGS
+
+WITH_ENV=""
+if [ ! -z "$TARGET_ENV" ]; then
+    WITH_ENV="--env $TARGET_ENV"
+    export PYM_ENV=$TARGET_ENV
+    echo "=> Using PYM_ENV=$PYM_ENV"
+fi
+
+# Check that pymconfig exists
+pymconfig $WITH_ENV
+
+NAME=$(pymconfig $WITH_ENV --name)
+DOCKER_ROOT_REPO=$(pymconfig $WITH_ENV --docker-repo)
+DOCKER_REPO=$DOCKER_ROOT_REPO/$NAME
+DEPLOY_TARGET=$(pymconfig $WITH_ENV --deploy-target)
+ORIGIN_DIR=$(pwd)
+
+echo ""
+echo "******************************************"
+echo "*"
+echo "*   DEPLOYING ${NAME}"
+echo "*"
+echo "******************************************"
+echo ""
+
+do_checkout_git_repo() {
+    REMOTE_URL=$(git config --get remote.origin.url)
+    PROJECT_NAME=$(basename -s .git `git config --get remote.origin.url`)
+    TMPDIR=/tmp/pym-${NAME}-${CHECKOUT_BRANCH}-${CHECKOUT_COMMIT}
+
+    echo "=> Cloning $NAME into $TMPDIR"
+    mkdir -p $TMPDIR
+    cd $TMPDIR
+    rm -rf $PROJECT_NAME
+    git clone $REMOTE_URL
+    cd $PROJECT_NAME
+
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    if [ "$CURRENT_BRANCH" != "$CHECKOUT_BRANCH" ]; then
+        echo "=> Checkout branch ${CHECKOUT_BRANCH}"
+        git checkout -b $CHECKOUT_BRANCH origin/$CHECKOUT_BRANCH
+    fi
+    if [ "$CHECKOUT_COMMIT" != "HEAD" ]; then
+        echo "=> Checkout commit ${CHECKOUT_COMMIT}"
+        git reset --hard $CHECKOUT_COMMIT
+    fi
+
+    CHECKOUT_COMMIT=$(git rev-parse HEAD | cut -c 1-6)
+    echo "=> Checkout commit ${CHECKOUT_COMMIT}"
+
+    # beanstalk project require the .elasticbeanstalk dir
+    if [ -d "$ORIGIN_DIR/.elasticbeanstalk" ]; then
+        echo "=> Copying .elasticbeanstalk to $TMPDIR/$PROJECT_NAME"
+        cp -Rv $ORIGIN_DIR/.elasticbeanstalk $TMPDIR/$PROJECT_NAME
+    fi
+}
+
+do_gen_version() {
+    VERSION=$(pymversion)
+    echo "=> Generating version ${VERSION}"
+}
+
+do_get_image_id() {
+    IMAGE_ID=$(docker images | grep $DOCKER_REPO | grep $CHECKOUT_COMMIT | head -n 1 | awk '{ print $3 }')
+    VERSION=$(docker images | grep $DOCKER_REPO | grep $CHECKOUT_COMMIT | head -n 1 | awk '{ print $2 }')
+}
+
+# Checkout a clean clone of the repo
+do_checkout_git_repo
+
+# Small hack to use symlinks to local clones of pymacaron deps
+export PYTHONPATH=$ORIGIN_DIR
+
+# Run unittests
+if [ ! -z "$DO_UNITTEST" ]; then
+    if [ -d 'test' ]; then
+        echo "=> Running nosetests"
+        nosetests -xv test/
+    fi
+else
+    echo "=> Skip nosetest"
+fi
+
+# Do we already have an image compiled for this branch/commit, or should we build one?
+do_get_image_id
+
+if [ ! -z "$IMAGE_ID" -a -z "$FORCE_BUILD" ]; then
+    echo "=> Re-using docker image ${IMAGE_ID} and version ${VERSION}"
+else
+    do_gen_version $WITH_DEBUG
+
+    pymdocker $WITH_ENV --version $VERSION $WITH_DEBUG
+
+    IMAGE_ID=$(docker images --quiet ${DOCKER_REPO}:${VERSION})
+fi
+
+# Run acceptance tests against the image, started in a container
+if [ ! -z "$DO_TEST" ]; then
+    pymtest $WITH_ENV --image $IMAGE_ID
+else
+    echo "=> Skip running tests against docker image"
+fi
+
+# Push the image to a docker repo
+if [ ! -z "$DO_PUSH" ]; then
+    REGISTRY=gcr.io
+    if [ "$DEPLOY_TARGET" == "aws-beanstalk" ]; then
+        REGISTRY=docker.io
+    fi
+    pymdocker $WITH_ENV --version $VERSION --no-build --push $WITH_DEBUG --registry $REGISTRY
+else
+    echo "=> Skip pushing image to docker repository"
+fi
+
+# Deploy to target environment
+if [ ! -z "$DO_DEPLOY" ]; then
+
+    if [ "$DEPLOY_TARGET" == "aws-beanstalk" ]; then
+        pymaws $VERSION $WITH_DEBUG $DEPLOY_ARGS
+
+        echo "=> Waiting 1 min for cname swap to propagate"
+        sleep 60
+
+    elif [ "$DEPLOY_TARGET" == "gcp-cloud-run" ]; then
+
+        pymgcr $VERSION $WITH_DEBUG $DEPLOY_ARGS
+
+    elif [ "$DEPLOY_TARGET" == "gke" ]; then
+
+        pymgke $WITH_ENV $VERSION $WITH_DEBUG $DEPLOY_ARGS
+
+    else
+        echo "ERROR: don't know how to deploy to target $DEPLOY_TARGET"
+        exit 1
+    fi
+else
+    echo "=> Skip deploying to live environment"
+fi
+
+# And run acceptance tests against live
+if [ ! -z "$DO_TEST" ]; then
+    pymtest $WITH_ENV $WITH_DEBUG
+else
+    echo "=> Skip running tests against live api"
+fi
+
+echo "=> Done."
