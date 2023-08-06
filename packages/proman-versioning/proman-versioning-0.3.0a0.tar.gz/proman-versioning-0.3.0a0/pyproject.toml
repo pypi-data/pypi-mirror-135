@@ -1,0 +1,93 @@
+[tool.poetry]
+name = "proman-versioning"
+version = "0.3.0a0"
+description = "Project Manager Versioning tool."
+authors = ["Jesse P. Johnson <jpj6652@gmail.com>"]
+license = "MPL-2.0"
+readme = "README.md"
+keywords = ["configuration management"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+packages = [
+    { include = "versioning", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+lark-parser = "^0.10.0"
+argufy = "^0.1.1-alpha.12"
+transitions = "^0.8.4"
+pygit2 = "^1.6.1"
+cffi = "^1.15.0"
+packaging = "^21.3"
+compendium = "^0.1.1-beta.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.3"
+docstr-coverage = "^1.2.0"
+pytest-cov = "^2.10.0"
+bandit = "^1.6.2"
+safety = "^1.9.0"
+invoke = "^1.4.1"
+isort = "^5.9.2"
+tox = "^3.24.0"
+mkdocs-material = "^7.2.0"
+mkdocs = "^1.2.2"
+mypy = "^0.910"
+pylint = "^2.9.5"
+black = {version = "^21.11b1", allow-prereleases = true}
+pyfakefs = "^4.5.3"
+mkdocstrings = "^0.16.2"
+pydocstyle = {extras = ["toml"], version = "^6.1.1"}
+pytest = "^6.2.5"
+
+[tool.poetry.scripts]
+version = "versioning.__main__:main"
+
+[[tool.proman.versioning.files]]
+filepath = "src/versioning/__init__.py"
+pattern = "__version__ = '${version}'"
+
+[[tool.proman.versioning.files]]
+filepath = "tests/test_version.py"
+pattern = "__version__ == '${version}'"
+
+[[tool.proman.versioning.files]]
+filepath = "pyproject.toml"
+pattern = "version = \"${version}\""
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+    | \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.vagrant
+    | _build
+    | dist
+  )
+)
+'''
+
+[tool.mypy]
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
