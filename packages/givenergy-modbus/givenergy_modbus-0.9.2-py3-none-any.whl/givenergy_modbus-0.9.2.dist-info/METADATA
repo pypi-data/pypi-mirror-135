@@ -1,0 +1,136 @@
+Metadata-Version: 2.1
+Name: givenergy-modbus
+Version: 0.9.2
+Summary: A python library to access GivEnergy inverters via Modbus TCP, with no dependency on the GivEnergy Cloud.
+Home-page: https://github.com/dewet22/givenergy-modbus
+License: Apache-2.0
+Author: Dewet Diener
+Author-email: givenergy-modbus@dewet.org
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: Flake8
+Classifier: Framework :: Pytest
+Classifier: Framework :: tox
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Home Automation
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: System :: Networking :: Monitoring
+Provides-Extra: dev
+Provides-Extra: doc
+Provides-Extra: test
+Requires-Dist: black (>=21.5b2,<22.0); extra == "test"
+Requires-Dist: bump2version (>=1.0.1,<2.0.0); extra == "dev"
+Requires-Dist: click (==8.0.1)
+Requires-Dist: crccheck (>=1.1,<2.0)
+Requires-Dist: flake8 (>=4.0.0,<5.0.0); extra == "test"
+Requires-Dist: flake8-docstrings (>=1.6.0,<2.0.0); extra == "test"
+Requires-Dist: isort (>=5.8.0,<6.0.0); extra == "test"
+Requires-Dist: loguru (>=0.5.3,<0.6.0)
+Requires-Dist: mkdocs (>=1.1.2,<2.0.0); extra == "doc"
+Requires-Dist: mkdocs-autorefs (>=0.2.1,<0.3.0); extra == "doc"
+Requires-Dist: mkdocs-include-markdown-plugin (>=1.0.0,<2.0.0); extra == "doc"
+Requires-Dist: mkdocs-material (>=6.1.7,<7.0.0); extra == "doc"
+Requires-Dist: mkdocs-material-extensions (>=1.0.1,<2.0.0)
+Requires-Dist: mkdocstrings (>=0.15.2,<0.16.0); extra == "doc"
+Requires-Dist: mypy (>=0.900,<0.901); extra == "test"
+Requires-Dist: pip (>=20.3.1,<21.0.0); extra == "dev"
+Requires-Dist: pydantic (>=1.8.2,<2.0.0)
+Requires-Dist: pymodbus (>=2.5.3,<3.0.0)
+Requires-Dist: pytest (>=6.2.4,<7.0.0); extra == "test"
+Requires-Dist: pytest-cov (>=2.12.0,<3.0.0); extra == "test"
+Requires-Dist: toml (>=0.10.2,<0.11.0); extra == "dev"
+Requires-Dist: tox (>=3.20.1,<4.0.0); extra == "dev"
+Requires-Dist: twine (>=3.3.0,<4.0.0); extra == "dev"
+Requires-Dist: virtualenv (>=20.2.2,<21.0.0); extra == "dev"
+Description-Content-Type: text/markdown
+
+# GivEnergy Modbus
+
+[![pypi](https://img.shields.io/pypi/v/givenergy-modbus.svg)](https://pypi.org/project/givenergy-modbus/)
+[![python](https://img.shields.io/pypi/pyversions/givenergy-modbus.svg)](https://pypi.org/project/givenergy-modbus/)
+[![Build Status](https://github.com/dewet22/givenergy-modbus/actions/workflows/dev.yml/badge.svg)](https://github.com/dewet22/givenergy-modbus/actions/workflows/dev.yml)
+[![codecov](https://codecov.io/gh/dewet22/givenergy-modbus/branch/main/graphs/badge.svg)](https://codecov.io/github/dewet22/givenergy-modbus)
+
+A python library to access GivEnergy inverters via Modbus TCP on a local network, with no dependency on the GivEnergy
+Cloud. This extends [pymodbus](https://pymodbus.readthedocs.io/) by providing a custom framer, decoder and PDUs that are
+specific to the GivEnergy implementation.
+
+> ⚠️ This project makes no representations as to its completeness or correctness. You use it at your own risk — if your
+> inverter mysteriously explodes because you accidentally set the `BOOMTIME` register or you consume a MWh of
+> electricity doing SOC calibration: you **really** are on your own. We make every effort to prevent you from shooting
+> yourself in the foot, so as long as you use the client and its exposed methods, you should be perfectly safe.
+
+* Documentation: <https://dewet22.github.io/givenergy-modbus>
+* GitHub: <https://github.com/dewet22/givenergy-modbus>
+* PyPI: <https://pypi.org/project/givenergy-modbus/>
+* Free software: Apache-2.0
+
+## Features
+
+* Reading all registers and decoding them into their representative datatypes
+* Writing data to holding registers that are deemed to be safe to set configuration on the inverter
+
+## How to use
+
+Use the provided client to interact with the device over the network, and register caches to build combined state of a
+device:
+
+```python
+import datetime
+from givenergy_modbus.client import GivEnergyClient
+from givenergy_modbus.model.battery import Battery
+from givenergy_modbus.model.inverter import Inverter, Model
+from givenergy_modbus.model.register_cache import RegisterCache
+
+client = GivEnergyClient(host="192.168.99.99")
+
+# change configuration on the device:
+client.enable_charge_target(80)
+# set a charging slot from 00:30 to 04:30
+client.set_charge_slot_1((datetime.time(hour=0, minute=30), datetime.time(hour=4, minute=30)))
+# set the inverter to charge when there's excess, and discharge otherwise. it will also respect charging slots.
+client.set_mode_dynamic()
+
+rc = RegisterCache()
+client.update_inverter_registers(rc)
+inverter = Inverter.from_orm(rc)
+assert inverter.inverter_serial_number == 'SA1234G567'
+assert inverter.inverter_model == Model.Hybrid
+assert inverter.v_pv1 == 1.4  # V
+assert inverter.e_battery_discharge_day == 8.1  # kWh
+assert inverter.enable_charge_target
+assert inverter.dict() == {
+    'inverter_serial_number': 'SA1234G567',
+    'device_type_code': '3001',
+    'charge_slot_1': (datetime.time(0, 30), datetime.time(7, 30)),
+    'f_ac1': 49.98,
+    ...
+}
+assert inverter.json() == '{"inverter_serial_number": "SA1234G567", "device_type_code": "3001", ...'
+
+# it is _probably_ a good idea to not share register caches across devices
+rc = RegisterCache()
+client.update_battery_registers(rc, battery_number=0)
+battery = Battery.from_orm(rc)
+
+assert battery.serial_number == 'BG1234G567'
+assert battery.v_battery_cell_01 == 3.117
+assert battery.dict() == {
+    'bms_firmware_version': 3005,
+    'design_capacity': 160.0,
+    ...
+}
+assert battery.json() == '{"battery_serial_number": "BG1234G567", "v_battery_cell_01": 3.117, ...'
+```
+
+## Credits
+
+This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and
+the [waynerv/cookiecutter-pypackage](https://github.com/waynerv/cookiecutter-pypackage) project template.
+
