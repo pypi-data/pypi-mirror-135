@@ -1,0 +1,101 @@
+Metadata-Version: 2.1
+Name: pygsearch
+Version: 0.4.3
+Summary: Python library to get google search results.
+Home-page: https://github.com/Vitaman02/pygsearch
+Author: Vitaman02
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Utilities
+Requires-Python: >=3.6.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# pygsearch
+
+![pypi version info](https://img.shields.io/pypi/v/pygsearch.svg)
+![python version support](https://img.shields.io/pypi/pyversions/pygsearch.svg)
+
+
+`pygsearch` is a python library that let's you use google search.
+Right now you can't search for images. Image support might be added later. PRs are welcome.
+
+
+Installing
+-----------
+
+**Python 3.6.0 or higher is required**
+
+To install the library you can run the following command:
+
+```sh
+# Linux/MacOS
+python3 -m pip install --upgrade pygsearch
+
+# Windows
+py -3 -m pip install --upgrade pygsearch
+```
+
+Quickstart
+----------
+
+You can make a simple search query like this:
+
+```py
+from pygsearch import gsearch
+
+search = gsearch("github")
+print(search.results)
+```
+
+Or you can iterate over the results:
+
+```py
+from pygsearch import gsearch
+
+results = gsearch("github")
+for result in results:
+    print(result)
+```
+
+You can also change how many results you want, pass your own headers, use proxies or even change the language:
+
+```py
+from pygsearch import gsearch
+
+proxies = {
+    "http": "proxy_http",
+    "https": "proxy_https",
+    "ftp": "proxy_ftp"
+}
+
+headers = {
+    "key1": "val1",
+    "key2": "val2",
+    "key3": "val3",
+}
+
+language = "en"
+search = gsearch("github", 20, language, headers, proxies)
+print(search.results)
+```
+
+
+
+
+
+
