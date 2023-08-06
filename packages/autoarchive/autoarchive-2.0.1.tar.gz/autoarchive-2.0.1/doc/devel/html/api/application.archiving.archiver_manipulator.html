@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>AutoArchive._application.archiving._archiver_manipulator &#8212; AutoArchive Developer Manual (ver. 2.0.1)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AutoArchive._infrastructure" href="infrastructure.html" />
+    <link rel="prev" title="AutoArchive._application.archiving.archive_spec" href="application.archiving.archive_spec.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.html" title="AutoArchive._infrastructure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="application.archiving.archive_spec.html" title="AutoArchive._application.archiving.archive_spec"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api_reference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="autoarchive.html" >AutoArchive</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="application.html" >AutoArchive._application</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="application.archiving.html" accesskey="U">AutoArchive._application.archiving</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AutoArchive._application.archiving._archiver_manipulator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-AutoArchive._application.archiving._archiver_manipulator">
+<span id="autoarchive-application-archiving-archiver-manipulator"></span><h1>AutoArchive._application.archiving._archiver_manipulator<a class="headerlink" href="#module-AutoArchive._application.archiving._archiver_manipulator" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator" title="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArchiverManipulator</span></code></a> and its helper classes.</p>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<section id="module-AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator">
+<span id="archiver-manipulator"></span><h3>archiver_manipulator<a class="headerlink" href="#module-AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator" title="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArchiverManipulator</span></code></a> class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.</span></span><span class="sig-name descname"><span class="pre">ArchiverManipulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backupInformationProvider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">componentUi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serviceAccessor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/archiver_manipulator.html#ArchiverManipulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Performs actions with backups.</p>
+<p>Uses <a class="reference internal" href="services.archiver.html#AutoArchive._services.archiver._tar_archiver_provider_base._TarArchiverProviderBase" title="AutoArchive._services.archiver._tar_archiver_provider_base._TarArchiverProviderBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">_TarArchiverProviderBase</span></code></a>-like services to manipulate with or create backups.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">backupInformationProvider</span></code> is not updated by this class.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>backupInformationProvider</strong> – Represents the archive that this instance shall be manipulating with.</p></li>
+<li><p><strong>componentUi</strong> (<a class="reference internal" href="ui.cmdline.html#AutoArchive._ui.cmdline._cmdline_ui.CmdlineUi" title="AutoArchive._ui.cmdline._cmdline_ui.CmdlineUi"><code class="xref py py-class docutils literal notranslate"><span class="pre">CmdlineUi</span></code></a>) – Access to user interface.</p></li>
+<li><p><strong>storage</strong> (<a class="reference internal" href="infrastructure.storage.html#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a>) – Application storage.</p></li>
+<li><p><strong>serviceAccessor</strong> (<a class="reference internal" href="infrastructure.service.html#AutoArchive._infrastructure.service._service_accessor.ServiceAccessor" title="AutoArchive._infrastructure.service._service_accessor.ServiceAccessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServiceAccessor</span></code></a>) – Access to services.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If the archiver service could not be created.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.createBackup">
+<span class="sig-name descname"><span class="pre">createBackup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/archiver_manipulator.html#ArchiverManipulator.createBackup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.createBackup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the <a class="reference internal" href="../glossary.html#term-archiver"><span class="xref std std-term">archiver</span></a> and creates a <a class="reference internal" href="../glossary.html#term-backup"><span class="xref std std-term">backup</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Path to the created backup.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – If the backup operation was aborted due to a fatal error.</p></li>
+<li><p><strong>OSError</strong> – If a system error occurred while making the backup.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.isOptionSupported">
+<span class="sig-name descname"><span class="pre">isOptionSupported</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/archiver_manipulator.html#ArchiverManipulator.isOptionSupported"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.isOptionSupported" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the passed <code class="docutils literal notranslate"><span class="pre">option</span></code> is supported by the current configuration of this instance.</p>
+<p>Whether an option is supported or not depends on the archiver type set in the archive specification file
+that is currently attached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>option</strong> (<a class="reference internal" href="infrastructure.configuration.html#AutoArchive._infrastructure.configuration.options.Option" title="AutoArchive._infrastructure.configuration.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Option</span></code></a>) – The option which shall be tested for support.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the passed <code class="docutils literal notranslate"><span class="pre">option</span></code> is supported; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.saveBackupLevelInfo">
+<span class="sig-name descname"><span class="pre">saveBackupLevelInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backupFilePath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/archiver_manipulator.html#ArchiverManipulator.saveBackupLevelInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.saveBackupLevelInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves all the information required for backup level restarting to the persistent storage.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method should be called only once after the backup was created.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>backupFilePath</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Path to the created backup.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.tryPurgeStoredArchiveData">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">tryPurgeStoredArchiveData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">archiveName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">userConfigDir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serviceAccessor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/archiver_manipulator.html#ArchiverManipulator.tryPurgeStoredArchiveData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator.ArchiverManipulator.tryPurgeStoredArchiveData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all data stored for the archive named <code class="docutils literal notranslate"><span class="pre">archiveName</span></code> if any.</p>
+<p>See also: <a class="reference internal" href="application.archiving.html#AutoArchive._application.archiving._backup_information_provider._BackupInformationProvider.getStoredArchiveNames" title="AutoArchive._application.archiving._backup_information_provider._BackupInformationProvider.getStoredArchiveNames"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_BackupInformationProvider.getStoredArchiveNames()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>archiveName</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of the archive which data shall be purged.</p></li>
+<li><p><strong>userConfigDir</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Path to the user configuration directory.</p></li>
+<li><p><strong>storage</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">IStorage</span></code>) – The application storage.</p></li>
+<li><p><strong>serviceAccessor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">IServiceAccessor</span></code>) – Service accessor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if data was purged; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RuntimeError</strong> – If the archiver service could not be created.</p></li>
+<li><p><strong>OSError</strong> – If an error occurred during the operation of removing data from a physical storage.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations">
+<span id="backup-keeping-manipulations"></span><h3>_backup_keeping_manipulations<a class="headerlink" href="#module-AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations" title="AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations"><code class="xref py py-class docutils literal notranslate"><span class="pre">_BackupKeepingManipulations</span></code></a> class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations.</span></span><span class="sig-name descname"><span class="pre">_BackupKeepingManipulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">archiveSpec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">componentUi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archiverService</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_backup_keeping_manipulations.html#_BackupKeepingManipulations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Operations for keeping old backups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>archiveSpec</strong> (<a class="reference internal" href="application.archiving.archive_spec.html#AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec" title="AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArchiveSpec</span></code></a>) – Archive specification of the backup that this instance will operate on.</p></li>
+<li><p><strong>componentUi</strong> (<a class="reference internal" href="ui.cmdline.html#AutoArchive._ui.cmdline._cmdline_ui.CmdlineUi" title="AutoArchive._ui.cmdline._cmdline_ui.CmdlineUi"><code class="xref py py-class docutils literal notranslate"><span class="pre">CmdlineUi</span></code></a>) – Component UI instance.</p></li>
+<li><p><strong>archiverService</strong> (<a class="reference internal" href="services.archiver.html#AutoArchive._services.archiver._tar_archiver_provider_base._TarArchiverProviderBase" title="AutoArchive._services.archiver._tar_archiver_provider_base._TarArchiverProviderBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">_TarArchiverProviderBase</span></code></a>) – Archiver service to use for operations with the backup.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations.keepOldBackups">
+<span class="sig-name descname"><span class="pre">keepOldBackups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backupDefinition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_backup_keeping_manipulations.html#_BackupKeepingManipulations.keepOldBackups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations.keepOldBackups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keeps old backups according configuration settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>backupDefinition</strong> (<a class="reference internal" href="services.archiver.html#AutoArchive._services.archiver.backup_definition.BackupDefinition" title="AutoArchive._services.archiver.backup_definition.BackupDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackupDefinition</span></code></a>) – Provides information about backup which shall be kept.  It has to be populated
+from the same <a class="reference internal" href="application.archiving.archive_spec.html#AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec" title="AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArchiveSpec</span></code></a> instance as passed to the constructor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations.keepOldIncrementalBackups">
+<span class="sig-name descname"><span class="pre">keepOldIncrementalBackups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backupDefinition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromLevel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_backup_keeping_manipulations.html#_BackupKeepingManipulations.keepOldIncrementalBackups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations._BackupKeepingManipulations.keepOldIncrementalBackups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keeps old incremental backups according configuration settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>backupDefinition</strong> (<a class="reference internal" href="services.archiver.html#AutoArchive._services.archiver.backup_definition.BackupDefinition" title="AutoArchive._services.archiver.backup_definition.BackupDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">BackupDefinition</span></code></a>) – Provides information about backup which shall be kept.  It has to be populated
+from the same <a class="reference internal" href="application.archiving.archive_spec.html#AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec" title="AutoArchive._application.archiving.archive_spec.archive_spec.ArchiveSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArchiveSpec</span></code></a> instance as passed to the constructor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations">
+<span id="keeping-id-operations"></span><h3>_keeping_id_operations<a class="headerlink" href="#module-AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations" title="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations"><code class="xref py py-class docutils literal notranslate"><span class="pre">_KeepingIdOperations</span></code></a> class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations.</span></span><span class="sig-name descname"><span class="pre">_KeepingIdOperations</span></span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_keeping_id_operations.html#_KeepingIdOperations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.getNextKeepingId">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">getNextKeepingId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keepingId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_keeping_id_operations.html#_KeepingIdOperations.getNextKeepingId"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.getNextKeepingId" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.intToKeepingId">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">intToKeepingId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_keeping_id_operations.html#_KeepingIdOperations.intToKeepingId"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.intToKeepingId" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.keepingIdToInt">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">keepingIdToInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keepingId</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_application/archiving/_archiver_manipulator/_keeping_id_operations.html#_KeepingIdOperations.keepingIdToInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.keepingIdToInt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.maxKeepingIdAsInt">
+<span class="sig-name descname"><span class="pre">maxKeepingIdAsInt</span></span><em class="property"> <span class="pre">=</span> <span class="pre">675</span></em><a class="headerlink" href="#AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations._KeepingIdOperations.maxKeepingIdAsInt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AutoArchive._application.archiving._archiver_manipulator</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a><ul>
+<li><a class="reference internal" href="#module-AutoArchive._application.archiving._archiver_manipulator.archiver_manipulator">archiver_manipulator</a></li>
+<li><a class="reference internal" href="#module-AutoArchive._application.archiving._archiver_manipulator._backup_keeping_manipulations">_backup_keeping_manipulations</a></li>
+<li><a class="reference internal" href="#module-AutoArchive._application.archiving._archiver_manipulator._keeping_id_operations">_keeping_id_operations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="application.archiving.archive_spec.html"
+                        title="previous chapter">AutoArchive._application.archiving.archive_spec</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="infrastructure.html"
+                        title="next chapter">AutoArchive._infrastructure</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.html" title="AutoArchive._infrastructure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="application.archiving.archive_spec.html" title="AutoArchive._application.archiving.archive_spec"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api_reference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="autoarchive.html" >AutoArchive</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="application.html" >AutoArchive._application</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="application.archiving.html" >AutoArchive._application.archiving</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AutoArchive._application.archiving._archiver_manipulator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2003 - 2022, Róbert Čerňanský.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>AutoArchive._infrastructure.storage &#8212; AutoArchive Developer Manual (ver. 2.0.1)</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AutoArchive._infrastructure.ui" href="infrastructure.ui.html" />
+    <link rel="prev" title="AutoArchive._infrastructure.service" href="infrastructure.service.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.ui.html" title="AutoArchive._infrastructure.ui"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.service.html" title="AutoArchive._infrastructure.service"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api_reference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="autoarchive.html" >AutoArchive</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="infrastructure.html" accesskey="U">AutoArchive._infrastructure</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AutoArchive._infrastructure.storage</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-AutoArchive._infrastructure.storage">
+<span id="autoarchive-infrastructure-storage"></span><h1>AutoArchive._infrastructure.storage<a class="headerlink" href="#module-AutoArchive._infrastructure.storage" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="../glossary.html#term-Storage"><span class="xref std std-term">Storage</span></a> <a class="reference internal" href="../glossary.html#term-component"><span class="xref std std-term">component</span></a>.</p>
+<p>Implements application’s persistent storage in a form of <a class="reference internal" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a> class.  It should be constructed by some
+infrastructure component and distributed to other components.  Individual components should not instantiate it
+directly.</p>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<section id="module-AutoArchive._infrastructure.storage._file_storage">
+<span id="file-storage"></span><h3>_file_storage<a class="headerlink" href="#module-AutoArchive._infrastructure.storage._file_storage" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a> class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">AutoArchive._infrastructure.storage._file_storage.</span></span><span class="sig-name descname"><span class="pre">FileStorage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Application’s persistent storage.</p>
+<p>Provides access to application’s persistent storage.  Any arbitrary variables can be saved to it.  Data are stored
+in text files.</p>
+<p>This storage implementation utilizes local filesystem, specifically a subdirectory of
+<a class="reference internal" href="../glossary.html#term-user-configuration-directory"><span class="xref std std-term">user configuration directory</span></a> named <code class="docutils literal notranslate"><span class="pre">storage</span></code>.  Data are stored in text files.  The directory is
+automatically created if it does not exists.  Storage content is read upon construction and cached into memory.
+This class does not provide any means to re-read the storage content from disk.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class can be instantiated only once.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>configuration</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">IConfiguration</span></code>) – Application configuration.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.createStoragePortion">
+<span class="sig-name descname"><span class="pre">createStoragePortion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.createStoragePortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.createStoragePortion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns IStoragePortion instance set to <code class="docutils literal notranslate"><span class="pre">section</span></code> and <code class="docutils literal notranslate"><span class="pre">realm</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">section</span></code> or <code class="docutils literal notranslate"><span class="pre">realm</span></code> does not exists the implementation should not create either of them right
+away but rather on first value save.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">IStoragePortion</span></code> instance</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">IStoragePortion</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.getRealms">
+<span class="sig-name descname"><span class="pre">getRealms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.getRealms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.getRealms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all realms that exists in the storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Iterable of realm names.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">Iterable&lt;str&gt;</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.getValue">
+<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.getValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a cached value from the persistent storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name of the variable which value shall be read.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value of the passed <code class="docutils literal notranslate"><span class="pre">variable</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">variable</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code> or <code class="docutils literal notranslate"><span class="pre">realm</span></code> does not
+exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.hasVariable">
+<span class="sig-name descname"><span class="pre">hasVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.hasVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.hasVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the storage contains <code class="docutils literal notranslate"><span class="pre">variable</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of the variable which presence shall be determined.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">variable</span></code> is present in the storage.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.removeRealm">
+<span class="sig-name descname"><span class="pre">removeRealm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">realm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.removeRealm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.removeRealm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the <code class="docutils literal notranslate"><span class="pre">realm</span></code> including all information that contains from the persistent storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">realm</span></code> does not exists.</p></li>
+<li><p><strong>OSError</strong> – If an error occurred during the operation of removing data from a physical storage.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.saveValue">
+<span class="sig-name descname"><span class="pre">saveValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.saveValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.saveValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a value to the persistent storage.</p>
+<p>A value passed as <code class="docutils literal notranslate"><span class="pre">value</span></code> parameter will be saved to the persistent storage under the name passed as
+<code class="docutils literal notranslate"><span class="pre">variable</span></code> argument.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A string representation of the value is saved (str(value)).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name under which the value will be saved.</p></li>
+<li><p><strong>value</strong> (<code class="docutils literal notranslate"><span class="pre">object</span></code>) – The value that shall be saved.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._file_storage.FileStorage.tryRemoveVariable">
+<span class="sig-name descname"><span class="pre">tryRemoveVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_file_storage.html#FileStorage.tryRemoveVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage.tryRemoveVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes variable from the persistent storage.</p>
+<p>If variable existed to be removed, returns <code class="docutils literal notranslate"><span class="pre">True</span></code>; otherwise return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name of the variable which value shall be removed.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a separate storage entity (typically represented by a file).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if variable existed; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">section</span></code> or <code class="docutils literal notranslate"><span class="pre">realm</span></code> does not exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-AutoArchive._infrastructure.storage._storage_portion">
+<span id="storage-portion"></span><h3>_storage_portion<a class="headerlink" href="#module-AutoArchive._infrastructure.storage._storage_portion" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">_StoragePortion</span></code></a> class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">AutoArchive._infrastructure.storage._storage_portion.</span></span><span class="sig-name descname"><span class="pre">_StoragePortion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_storage_portion.html#_StoragePortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provides access to a part of the persistent storage.</p>
+<p>Portion of a storage (which can be any <a class="reference internal" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a>-like class) that can be accessed is defined by
+<a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">realm</span></code></a> and <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section"><code class="xref py py-attr docutils literal notranslate"><span class="pre">section</span></code></a>.  While the <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section"><code class="xref py py-attr docutils literal notranslate"><span class="pre">section</span></code></a> can be changed dynamically, <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">realm</span></code></a> can not
+be changed for entire lifetime of the <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion"><code class="xref py py-class docutils literal notranslate"><span class="pre">_StoragePortion</span></code></a>-type object.</p>
+<p>See also: <a class="reference internal" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<a class="reference internal" href="#AutoArchive._infrastructure.storage._file_storage.FileStorage" title="AutoArchive._infrastructure.storage._file_storage.FileStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileStorage</span></code></a>) – Storage which portion shall this instance provide access to.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Section that shall be accessed by default.</p></li>
+<li><p><strong>realm</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Realm that this portion shall provide access to.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.getValue">
+<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_storage_portion.html#_StoragePortion.getValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a cached value from the persistent storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name of the variable which value shall be read.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">realm</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value of the passed <code class="docutils literal notranslate"><span class="pre">variable</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">variable</span></code> or <code class="docutils literal notranslate"><span class="pre">section</span></code> does not exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.hasVariable">
+<span class="sig-name descname"><span class="pre">hasVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_storage_portion.html#_StoragePortion.hasVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.hasVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the storage contains <code class="docutils literal notranslate"><span class="pre">variable</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of the variable which presence shall be determined.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within a realm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if <code class="docutils literal notranslate"><span class="pre">variable</span></code> is present in the storage.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.saveValue">
+<span class="sig-name descname"><span class="pre">saveValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_storage_portion.html#_StoragePortion.saveValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.saveValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a value to the persistent storage.</p>
+<p>A value passed as <code class="docutils literal notranslate"><span class="pre">value</span></code> parameter will be saved to a persistent storage under the name passed as
+<code class="docutils literal notranslate"><span class="pre">variable</span></code> argument.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A string representation of the value is saved (str(value)).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name under which the value will be saved.</p></li>
+<li><p><strong>value</strong> (<code class="docutils literal notranslate"><span class="pre">object</span></code>) – The value that shall be saved.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">realm</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.tryRemoveVariable">
+<span class="sig-name descname"><span class="pre">tryRemoveVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/AutoArchive/_infrastructure/storage/_storage_portion.html#_StoragePortion.tryRemoveVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.tryRemoveVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes variable from the persistent storage.</p>
+<p>If variable existed to be removed, returns <code class="docutils literal notranslate"><span class="pre">True</span></code>; otherwise return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name of the variable which value shall be removed.</p></li>
+<li><p><strong>section</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Name of a section within <a class="reference internal" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm"><code class="xref py py-attr docutils literal notranslate"><span class="pre">realm</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if variable existed; <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">section</span></code> does not exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">realm</span></span><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.realm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the realm in which this <code class="xref py py-class docutils literal notranslate"><span class="pre">IStoragePortion</span></code> instance operates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">section</span></span><a class="headerlink" href="#AutoArchive._infrastructure.storage._storage_portion._StoragePortion.section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets or sets the section in which this <code class="xref py py-class docutils literal notranslate"><span class="pre">IStoragePortion</span></code> instance operates by default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AutoArchive._infrastructure.storage</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a><ul>
+<li><a class="reference internal" href="#module-AutoArchive._infrastructure.storage._file_storage">_file_storage</a></li>
+<li><a class="reference internal" href="#module-AutoArchive._infrastructure.storage._storage_portion">_storage_portion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="infrastructure.service.html"
+                        title="previous chapter">AutoArchive._infrastructure.service</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="infrastructure.ui.html"
+                        title="next chapter">AutoArchive._infrastructure.ui</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.ui.html" title="AutoArchive._infrastructure.ui"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="infrastructure.service.html" title="AutoArchive._infrastructure.service"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api_reference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="autoarchive.html" >AutoArchive</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="infrastructure.html" >AutoArchive._infrastructure</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AutoArchive._infrastructure.storage</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2003 - 2022, Róbert Čerňanský.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>

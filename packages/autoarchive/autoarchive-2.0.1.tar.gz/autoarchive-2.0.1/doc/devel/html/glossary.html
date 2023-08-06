@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Glossary &#8212; AutoArchive Developer Manual (ver. 2.0.1)</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="aa" href="api/aa.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/aa.html" title="aa"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Glossary</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="glossary">
+<span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<dl class="glossary simple">
+<dt id="term-Archiver-Service-Component">Archiver Service Component<a class="headerlink" href="#term-Archiver-Service-Component" title="Permalink to this term">¶</a></dt><dd><p><a class="reference internal" href="#term-Service-Components"><span class="xref std std-term">Service component</span></a> that provides the backup functionality.</p>
+</dd>
+<dt id="term-ArchiveSpec">ArchiveSpec<a class="headerlink" href="#term-ArchiveSpec" title="Permalink to this term">¶</a></dt><dd><p>The <a class="reference internal" href="#term-component"><span class="xref std std-term">component</span></a> that provides ability to read archive specification from a file.</p>
+</dd>
+<dt id="term-Archiving">Archiving<a class="headerlink" href="#term-Archiving" title="Permalink to this term">¶</a></dt><dd><p>The <a class="reference internal" href="#term-component"><span class="xref std std-term">component</span></a> that provides core functions of <a class="reference internal" href="#term-AutoArchive"><span class="xref std std-term">AutoArchive</span></a> application (i. e. working with
+<a class="reference internal" href="#term-archive"><span class="xref std std-term">archives</span></a> and <a class="reference internal" href="#term-backup"><span class="xref std std-term">backups</span></a>).</p>
+</dd>
+<dt id="term-archive">archive<a class="headerlink" href="#term-archive" title="Permalink to this term">¶</a></dt><dd><p>The primary entity that AutoArchive operates with.  It has a name and holds the configuration used to create the
+corresponding <a class="reference internal" href="#term-backup"><span class="xref std std-term">backup</span></a>.  <a class="reference internal" href="#term-archive"><span class="xref std std-term">Archive</span></a> is represented by the <a class="reference internal" href="#term-archive-specification-file"><span class="xref std std-term">archive specification file</span></a>.</p>
+</dd>
+<dt id="term-archive-specification-file">archive specification file<a class="headerlink" href="#term-archive-specification-file" title="Permalink to this term">¶</a></dt><dd><p>The configuration of an <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a>.  It contains all information needed for creation of a single archive,
+such as: archive name, archive root directory, list of directories and files which should be <strong>included</strong> and
+<strong>excluded</strong>, etc.  It can also contain some of the configuration options.  The file has extension ‘.aa’ and is
+sometimes referred as “.aa file”.  For more information see the user documentation.</p>
+</dd>
+<dt id="term-archive-specifications-directory">archive specifications directory<a class="headerlink" href="#term-archive-specifications-directory" title="Permalink to this term">¶</a></dt><dd><p>Directory where <a class="reference internal" href="#term-archive-specification-file"><span class="xref std std-term">archive specification files</span></a> are stored.  It can be
+configured via the <code class="docutils literal notranslate"><span class="pre">archive-specs-dir</span></code> option.</p>
+</dd>
+<dt id="term-archiver">archiver<a class="headerlink" href="#term-archiver" title="Permalink to this term">¶</a></dt><dd><p>External program or a class that creates an <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a> from given set of files.</p>
+</dd>
+<dt id="term-AutoArchive">AutoArchive<a class="headerlink" href="#term-AutoArchive" title="Permalink to this term">¶</a></dt><dd><p>The application which is being documented here.</p>
+</dd>
+<dt id="term-backup">backup<a class="headerlink" href="#term-backup" title="Permalink to this term">¶</a></dt><dd><p>Result of the backup creation operation.  For example a *.tar.gz file.</p>
+</dd>
+<dt id="term-backup-level">backup level<a class="headerlink" href="#term-backup-level" title="Permalink to this term">¶</a></dt><dd><p>The order of an <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a> in incremental backup, where backup level 0 means full backup, backup level 1 is
+an archive that contains only differences from level 0, and so on.</p>
+</dd>
+<dt id="term-Cmdline-UI">Cmdline UI<a class="headerlink" href="#term-Cmdline-UI" title="Permalink to this term">¶</a></dt><dd><p>The <a class="reference internal" href="#term-component"><span class="xref std std-term">component</span></a> that provides textual user interface.</p>
+</dd>
+<dt id="term-component">component<a class="headerlink" href="#term-component" title="Permalink to this term">¶</a></dt><dd><p>Application part.</p>
+</dd>
+<dt id="term-Configuration">Configuration<a class="headerlink" href="#term-Configuration" title="Permalink to this term">¶</a></dt><dd><p>The <a class="reference internal" href="#term-component"><span class="xref std std-term">component</span></a> that provides configuration options.</p>
+</dd>
+<dt id="term-configured-archive">configured archive<a class="headerlink" href="#term-configured-archive" title="Permalink to this term">¶</a></dt><dd><p>An <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a> that has a valid <a class="reference internal" href="#term-archive-specification-file"><span class="xref std std-term">archive specification file</span></a> recognized by the application.</p>
+</dd>
+<dt id="term-force-option-form">force option form<a class="headerlink" href="#term-force-option-form" title="Permalink to this term">¶</a></dt><dd><p>An option with “force-” prefix.  See also <a class="reference internal" href="#term-normal-option-form"><span class="xref std std-term">normal option form</span></a>.</p>
+</dd>
+<dt id="term-negation-option-form">negation option form<a class="headerlink" href="#term-negation-option-form" title="Permalink to this term">¶</a></dt><dd><p>An option with “no-” prefix.  See also <a class="reference internal" href="#term-normal-option-form"><span class="xref std std-term">normal option form</span></a>.</p>
+</dd>
+<dt id="term-normal-option-form">normal option form<a class="headerlink" href="#term-normal-option-form" title="Permalink to this term">¶</a></dt><dd><p>A standard option wihout any prefix of a special meaning.  See also <a class="reference internal" href="#term-force-option-form"><span class="xref std std-term">force option form</span></a> and
+<a class="reference internal" href="#term-negation-option-form"><span class="xref std std-term">negation option form</span></a>.</p>
+</dd>
+<dt id="term-orphaned-archive">orphaned archive<a class="headerlink" href="#term-orphaned-archive" title="Permalink to this term">¶</a></dt><dd><p>An <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a> which is not <a class="reference internal" href="#term-configured-archive"><span class="xref std std-term">configured</span></a> (anymore) but the application still has
+some information stored about it (is a <a class="reference internal" href="#term-stored-archive"><span class="xref std std-term">stored archive</span></a>).</p>
+</dd>
+<dt id="term-selected-archive">selected archive<a class="headerlink" href="#term-selected-archive" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-configured-archive"><span class="xref std std-term">configured archive</span></a> which is passed to the application for processing either by configuration or as
+an argument (which can be the name of the archive or path to the <a class="reference internal" href="#term-archive-specification-file"><span class="xref std std-term">archive specification file</span></a>.</p>
+</dd>
+<dt id="term-Service-Components">Service Components<a class="headerlink" href="#term-Service-Components" title="Permalink to this term">¶</a></dt><dd><p>Service application level.  Contains all services used in the application.</p>
+</dd>
+<dt id="term-Storage">Storage<a class="headerlink" href="#term-Storage" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-component"><span class="xref std std-term">component</span></a> that provides persistent storage.</p>
+</dd>
+<dt id="term-stored-archive">stored archive<a class="headerlink" href="#term-stored-archive" title="Permalink to this term">¶</a></dt><dd><p>An <a class="reference internal" href="#term-archive"><span class="xref std std-term">archive</span></a> for which the application has stored some information.</p>
+</dd>
+<dt id="term-system-configuration-file">system configuration file<a class="headerlink" href="#term-system-configuration-file" title="Permalink to this term">¶</a></dt><dd><p>System-wide configuration file.  It has syntax similar to other configuration files but its options have lower
+priority.  See also <a class="reference internal" href="#term-user-configuration-file"><span class="xref std std-term">user configuration file</span></a>.</p>
+</dd>
+<dt id="term-UI">UI<a class="headerlink" href="#term-UI" title="Permalink to this term">¶</a></dt><dd><p>User interface.</p>
+</dd>
+<dt id="term-user-configuration-directory">user configuration directory<a class="headerlink" href="#term-user-configuration-directory" title="Permalink to this term">¶</a></dt><dd><p>A per-user directory where the application looks for <a class="reference internal" href="#term-user-configuration-file"><span class="xref std std-term">user configuration file</span></a> and stores some internal
+data.  It is also default path for a subdirectory containing <a class="reference internal" href="#term-archive-specification-file"><span class="xref std std-term">archive specification files</span></a>.</p>
+</dd>
+<dt id="term-user-configuration-file">user configuration file<a class="headerlink" href="#term-user-configuration-file" title="Permalink to this term">¶</a></dt><dd><p>A per-user configuration file.  See also <a class="reference internal" href="#term-system-configuration-file"><span class="xref std std-term">system configuration file</span></a>.</p>
+</dd>
+</dl>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api/aa.html"
+                        title="previous chapter">aa</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/aa.html" title="aa"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AutoArchive Developer Manual (ver. 2.0.1)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Glossary</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2003 - 2022, Róbert Čerňanský.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
+  </body>
+</html>
