@@ -1,0 +1,312 @@
+debug: false
+
+#    """
+#    Adapted from: EASuspectSources.scala , Nitrogen
+#    Logic:
+#        1- load the history table for the suspect_sources sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for suspect_sources
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  suspect_sources_history:
+    type: parquet
+    location: "{aggr_location}/suspect_sources_history/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  RAFxResultDxHCC:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFxResultDxHCC/"
+
+  MOR_Member_HCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/MOR_Member_HCCs/"
+
+  RAFi_HCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_HCCs//"
+
+  RAFx_CPTSuspectHCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFx_CPTSuspectHCCs/"
+
+  aggr_member_hccs_full:
+    type: parquet
+    location: "{aggr_location}/member_hccs_full/"
+
+  ref_icd:
+    type: parquet
+    location: "{project_root_path}/{client}/Ref_ICD/"
+
+  ref_cpt:
+    type: parquet
+    location: "{project_root_path}/{client}/Ref_Cpt/"
+
+  Ref_source_type:
+    type: parquet
+    location: "{project_root_path}/{client}/Ref_source_type/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: true
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+  all_suspect_sources:
+    sql: >-
+      with
+      suspectHCC as (
+          select h.*
+          from rafi_hccs h
+          INNER JOIN EpiAnalyst_Client_Settings s ON  h.year  between   (s.current_year - 2) AND s.current_year
+          where lower(hcc_type) = 'suspect'
+      ),
+      cpts as (
+          select
+          a.member_id, a.dos_year, a.hcc_code, a.cpt_code as data,
+          a.confidence_level,
+          'CPT' as source_type,
+          trim(r.description) as data_description
+          from  RAFx_CPTSuspectHCCs a
+          inner join suspectHCC y on  a.member_id = y.member_id and a.hcc_code = y.hcc_code and a.dos_year = y.year
+          left join ref_cpt r on a.cpt_code = r.cpt_code
+      ),
+      mors as (
+          select
+          a.member_id, a.dos_year,  cast(a.hcc_code as string)  as hcc_code, null as data ,
+          cast(null as double) as confidence_level ,
+          'MOR-YOY' as source_type,
+          '' as  data_description
+          from  mor_member_hccs a
+          inner join suspectHCC y on  a.member_id = y.member_id and cast(a.hcc_code as string)  = y.hcc_code and a.dos_year = y.year
+      ),
+      suspects as (
+          select
+            a.member_id,  a.dos_year, a.hcc as hcc_code,
+            a.dxcode  as data,
+            cast(null as double) as confidence_level ,
+            a.source_type ,
+            trim(i.description) as data_description
+            from RAFxResultDxHCC a
+            inner join suspectHCC b on a.member_id = b.member_id and a.hcc = b.hcc_code and a.dos_year = b.year
+            left join ref_icd i on a.dxcode = i.icd_code
+            where a.dx_substatus not in ('MOR', 'CPT', 'ML')
+          UNION
+            select *
+            from cpts a
+          UNION
+            select *
+            from mors a
+      ),
+      allsuspects as (
+          select  a.member_id,
+            a.dos_year as year,
+            CONCAT('HCC',SUBSTRING(CONCAT('000',CAST(a.HCC_Code AS VARCHAR(3))),-3,3)) as hcc_code,
+            t.short_name as suspect_type,
+            a.data ,
+            coalesce(  a.confidence_level , t.confidence_level ) as confidence_level,
+            a. data_description
+          from suspects a
+          left join  ref_source_type t on  lower(t.type) = 'suspect'  and  UPPER(t.source_type)  = upper(a.source_type)
+       )
+      select
+        d.member_id,
+        d.hcc_code,
+        e.hcc_description,
+        e.raf_suspects  as hcc_coefficient,
+        e.hcc_status,
+        d.year,
+        coalesce(e.trumped_by, '') as trumped_by ,
+        case when left(d.suspect_type,3) = 'MOR' then 'MOR' else d.suspect_type end as suspect_type ,
+        d.data,
+        d.data_description,
+        cast(d.confidence_level as double) as confidence_level,
+        false as hcc_captured,
+        ROW_NUMBER() OVER (PARTITION BY  d.member_id, d.suspect_type, d.hcc_code, d.year
+        ORDER BY  d.confidence_level DESC,  d.data, coalesce(e.trumped_by, '') desc ) AS rnk
+      from AllSuspects d
+      inner join aggr_member_hccs_full e on d.member_id = e.member_id and d.year = e.year and d.hcc_code= e.hcc_code
+      where lower(e.hcc_status) LIKE 'suspect%'
+
+#note: the initial idea of suspect sources was to include all the reasons : dxs, cpts, mor, etc that produced the suspect HCC
+#now EpiA only need ONE reason per suspect type
+#we will store the whole set too for dedugging purposes
+  suspect_sources_full:
+    sql: >-
+      SELECT a.member_id,
+             a.hcc_code,
+             a.hcc_description,
+             a.hcc_coefficient,
+             a.hcc_status,
+             a.year,
+             a.trumped_by ,
+             a.suspect_type,
+             a.data,
+             a.data_description,
+             a.confidence_level,
+             a.hcc_captured ,
+              hash(
+                  a.member_id,
+                  a.hcc_code,
+                  a.hcc_description,
+                  a.hcc_coefficient,
+                  a.hcc_status,
+                  a.year,
+                  a.trumped_by ,
+                  a.suspect_type,
+                  a.data,
+                  a.data_description,
+                  a.confidence_level,
+                  a.hcc_captured      ) as hash_value,
+               ( select cad_job_id from cad_job )  as job_id
+      from  all_suspect_sources a
+      where rnk=1
+    cache: true
+
+  # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         member_id,
+         hcc_code,
+         year,
+         suspect_type,
+         hash_value,
+         job_id
+      FROM suspect_sources_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  suspect_sources_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+            a.member_id,
+            a.hcc_code,
+            a.hcc_description,
+            a.hcc_coefficient,
+            a.hcc_status,
+            a.year,
+            a.trumped_by,
+            a.suspect_type,
+            a.data,
+            a.data_description,
+            a.confidence_level,
+            a.hcc_captured
+           FROM suspect_sources_full a
+           LEFT JOIN previous_load b
+           ON a.member_id = b.member_id
+           AND a.hcc_code = b.hcc_code
+           AND a.year = b.year
+           AND a.suspect_type = b.suspect_type
+           WHERE b.member_id IS NULL
+      ) ,
+      delete_rows as (
+           SELECT
+           a.hash_value,
+           'DELETE' as operation,
+           ( select cad_job_id from cad_job )  as job_id,
+           a.member_id,
+           a.hcc_code,
+           cast(null as string) as hcc_description,
+           cast(null as double) as hcc_coefficient,
+           cast(null as string) as hcc_status,
+           a.year,
+           cast(null as string) as trumped_by,
+           a.suspect_type,
+           cast(null as string) as data,
+           cast(null as string) as data_description,
+           cast(null as double) as confidence_level,
+           cast(null as boolean) as hcc_captured
+           FROM previous_load a
+           LEFT JOIN suspect_sources_full b
+           ON a.member_id = b.member_id
+           AND a.hcc_code = b.hcc_code
+           AND a.year = b.year
+           AND a.suspect_type = b.suspect_type
+           WHERE b.member_id is null),
+      update_rows as (
+            SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+             a.member_id,
+             a.hcc_code,
+             a.hcc_description,
+             a.hcc_coefficient,
+             a.hcc_status,
+             a.year,
+             a.trumped_by,
+             a.suspect_type,
+             a.data,
+             a.data_description,
+             a.confidence_level,
+             a.hcc_captured
+            FROM suspect_sources_full a
+            INNER JOIN previous_load b
+            ON a.member_id = b.member_id
+            AND a.hcc_code = b.hcc_code
+            AND a.year = b.year
+            AND a.suspect_type = b.suspect_type
+            WHERE a.hash_value <> b.hash_value)
+      SELECT * FROM new_rows
+      UNION
+      SELECT * FROM delete_rows
+      UNION
+      SELECT * FROM update_rows
+
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  suspect_sources_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/suspect_sources_full'
+      mode: overwrite
+
+  suspect_sources_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/suspect_sources_incremental'
+      mode: overwrite
+
+  all_suspect_sources:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/all_suspect_sources'
+      mode: overwrite

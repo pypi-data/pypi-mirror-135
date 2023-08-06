@@ -1,0 +1,23 @@
+# ETL Job
+name: close_open_job_id
+step: flexisync
+debug: false
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+# Choose either one of this, close job id or close open job job id.
+Load:
+#  close_job_id:
+#    load_1:
+#      type: close_job_id
+#      conn_config_name: cadmium_postgres_db
+
+  close_open_job_id:
+    load_1:
+      type: close_open_job_id
+      conn_config_name: cadmium_postgres_db

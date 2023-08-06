@@ -1,0 +1,368 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the provider details sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for provider details
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+# 01/10/2022 : Add filter to exclude rows with year that are NOT in the 3 year window
+#    """
+
+## Files to Load / Create View
+variables:
+- project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+- client = {config.client}
+- aggr_location =  {config.aggr_location}
+- debug = False
+
+Extract:
+  provider_details_history:
+    type: parquet
+    location: "{aggr_location}/provider_details_history/"
+
+  #main provider data
+  providers_full:
+    type: parquet
+    location: "{aggr_location}/providers_full/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+  provider_member_relationships:
+    type: parquet
+    location: "{aggr_location}/provider_member_relationships_full/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  eamd:
+    type: parquet
+    location: "{project_root_path}/{client}/EAMD/"
+
+  eam:
+    type: parquet
+    location: "{project_root_path}/{client}/EAM/"
+
+  ea_dx:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_Dx/"
+
+  RAFi_HCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_HCCs/"
+
+Transform:
+
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by provider_id, year order by  job_id desc ) as r
+#         FROM provider_details_history
+#         )
+#      SELECT
+#         provider_id,
+#         year,
+#         hash_value,
+#         job_id
+#      FROM allrows
+#      WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         provider_id,
+         year,
+         hash_value,
+         job_id
+      FROM provider_details_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+#  where a.provider_id in (
+#  '1558336552',
+#  '1912158726',
+#  '1801887559',
+#  '1679557771',
+# '1023190071')
+  provider_details_full:
+    sql: >-
+      WITH
+      provider_member_relationships_by_year as
+      (
+            SELECT
+                member_id ,
+                provider_id,
+                c.dos_year as year
+            FROM   ea_dx c
+            INNER JOIN  epianalyst_client_settings s on c.dos_year between s.current_year-4 and s.current_year
+            GROUP by member_id, provider_id, c.dos_year
+      ),
+      pcp_member_recap_hcc_by_year as
+          (
+              SELECT
+                  h.member_id ,
+                  m.pcp_id as provider_id,
+                  h.year,
+                  h.hcc_code,
+                  max(h.is_recap) as is_recap,
+                  max(h.is_recap_opp) as is_recap_opp
+              FROM   eam m
+              inner join rafi_hccs h on m.member_id = h.member_id
+              INNER JOIN  epianalyst_client_settings s on h.year between s.current_year-4 and s.current_year
+              where ( h.is_recap = 1 OR h.is_recap_opp= 1 )
+              GROUP by h.member_id ,
+                       m.pcp_id,
+                       h.year,
+                       h.hcc_code
+         ),
+      year_providers as (
+                SELECT s.year, p.*
+                FROM providers_full p
+                CROSS JOIN  (
+                    select current_year-4 as year from EpiAnalyst_Client_Settings
+                    union
+                    select current_year-3 as year from EpiAnalyst_Client_Settings
+                    union
+                    select current_year-2 as year from EpiAnalyst_Client_Settings
+                    union
+                    select current_year-1 as year from EpiAnalyst_Client_Settings
+                    union
+                    select current_year as year from EpiAnalyst_Client_Settings
+                    ) s
+      ),
+      non_pcp_members_stats as  (
+                       SELECT a.provider_id,
+                              a.year,
+                              count(*) as num_eligible_non_pcp_members,
+                              Round(Avg(case when wellness_visit  then 100 else 0 end) ,3) as enc_awv_percent
+                       FROM   provider_member_relationships_by_year a
+                       INNER JOIN eam d on a.member_id = d.member_id
+                       INNER JOIN eamd c on  a.member_id =c.member_id and c.year =a.year
+                       WHERE c.is_eligible and a.provider_id <> d.pcp_id
+                       GROUP  BY a.provider_id, a.year
+      ),
+      all_members_stats as  (
+                       SELECT a.provider_id,
+                              a.year,
+                              count(*) as num_eligible_members
+                       FROM   provider_member_relationships_by_year a
+                       INNER JOIN eamd c on  a.member_id =c.member_id and c.year =a.year
+                       WHERE c.is_eligible
+                       GROUP  BY a.provider_id, a.year
+      ),
+      pcp_stats as (
+                       SELECT pcp_id as provider_id,
+                              c.year,
+                              Round(Avg(hcc_captured), 3) as avg_hcc_captured,
+                              Round(Avg(hcc_suspects_asr), 3) as avg_hcc_suspects_asr,
+                              Round(Avg(hcc_suspects_clinical), 3) as avg_hcc_suspects_clin,
+                              Round(Avg(hcc_suspects_yoy), 3) as Avg_HCC_Suspects_YOY,
+                              Round(Avg(hcc_suspects_u), 3) as avg_hcc_suspects_unaccpt,
+                              Round(Avg(raf_demographic), 3) as avg_raf_demo,
+                              Round(Avg(raf_captured), 3) as Avg_RAF_Captured,
+                              Round(Avg(raf_projected), 3) as Avg_RAF_Projected,
+                              Round(Avg(hcc_suspects_all), 3) as Avg_Opportunity,
+                              count(*) as num_eligible_pcp_members,
+                              Round(Avg(case when wellness_visit  then 100 else 0 end) ,3) as pcp_awv_percent
+                       FROM   eam a
+                       INNER JOIN eamd c on  a.member_id =c.member_id
+                       WHERE c.is_eligible
+                       GROUP  BY a.pcp_id, c.year
+      ),
+      RecapRate AS (
+            SELECT
+              h.provider_id ,
+              h.year,
+              cast(
+                    cast(SUM(h.is_recap) as double) / cast(Count(*) as double) * 100
+                     as integer
+                  )  AS recapture_rate
+            FROM  pcp_member_recap_hcc_by_year h
+            INNER  JOIN eamd m   ON h.member_id = m.member_id and h.year = m.year
+            WHERE  m.is_eligible
+            GROUP BY h.provider_id, h.year
+            HAVING count(*) > 0
+      ),
+      stats as (
+            SELECT
+            p.provider_id,
+            p.year,
+            coalesce(a.avg_hcc_captured, 0.000)  as avg_hcc_captured,
+            coalesce(a.avg_raf_demo, 0.000)  as avg_raf_demo,
+            coalesce(a.avg_opportunity, 0.000)  as avg_opportunity,
+            coalesce(a.avg_raf_captured, 0.000)  as avg_raf_captured,
+            coalesce(a.avg_raf_projected, 0.000)  as avg_raf_projected,
+            coalesce(a.avg_hcc_suspects_yoy, 0.000)  as avg_hcc_suspects_yoy,
+            coalesce(a.avg_hcc_suspects_unaccpt, 0.000)  as avg_hcc_suspects_unaccpt,
+            coalesce(a.avg_hcc_suspects_asr, 0.000)  as avg_hcc_suspects_asr,
+            coalesce(a.avg_hcc_suspects_clin, 0.000)  as avg_hcc_suspects_clin,
+            coalesce(d.recapture_rate, 0)  as recapture_rate,
+            coalesce(b.num_eligible_members, 0)  as num_eligible_members,
+            coalesce(a.num_eligible_pcp_members, 0)  as num_eligible_pcp_members,
+            coalesce(c.num_eligible_non_pcp_members, 0)  as  num_eligible_non_pcp_members,
+            coalesce(a.pcp_awv_percent, 0.000)  as pcp_awv_percent,
+            coalesce(c.enc_awv_percent, 0.000)  as enc_awv_percent
+            FROM year_providers p
+            LEFT JOIN pcp_stats a ON a.provider_id = p.provider_id and a.year = p.year
+            LEFT JOIN all_members_stats b ON b.provider_id = p.provider_id  and b.year = p.year
+            LEFT JOIN non_pcp_members_stats  c ON c.provider_id = p.provider_id and c.year = p.year
+            LEFT JOIN RecapRate d ON d.provider_id = p.provider_id and d.year = p.year
+      )
+      SELECT
+      *,
+       hash(
+          provider_id,
+          year,
+          avg_hcc_captured,
+          avg_raf_demo,
+          avg_opportunity,
+          avg_raf_captured,
+          avg_raf_projected,
+          avg_hcc_suspects_yoy,
+          avg_hcc_suspects_unaccpt,
+          avg_hcc_suspects_asr,
+          avg_hcc_suspects_clin,
+          recapture_rate,
+          num_eligible_members,
+          num_eligible_pcp_members,
+          num_eligible_non_pcp_members,
+          pcp_awv_percent,
+          enc_awv_percent
+         ) as hash_value,
+         ( select cad_job_id from cad_job )  as job_id
+      from stats
+
+  provider_details_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+             a.hash_value,
+             'INSERT' as operation,
+             a.job_id,
+            a.provider_id,
+            a.year,
+            a.avg_hcc_captured,
+            a.avg_raf_demo,
+            a.avg_opportunity,
+            a.avg_raf_captured,
+            a.avg_raf_projected,
+            a.avg_hcc_suspects_yoy,
+            a.avg_hcc_suspects_unaccpt,
+            a.avg_hcc_suspects_asr,
+            a.avg_hcc_suspects_clin,
+            a.recapture_rate,
+            a.num_eligible_members,
+            a.num_eligible_pcp_members,
+            a.num_eligible_non_pcp_members,
+            a.pcp_awv_percent,
+            a.enc_awv_percent
+          FROM  provider_details_full a
+          inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 2 and  s.current_year
+          LEFT JOIN  previous_load b on a.provider_id = b.provider_id and a.year =b.year
+          WHERE b.provider_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job ) as job_id,
+             a.provider_id,
+             a.year,
+              cast(null as double ) as  avg_hcc_captured,
+              cast(null as double ) as  avg_raf_demo,
+              cast(null as double ) as  avg_opportunity,
+              cast(null as double ) as  avg_raf_captured,
+              cast(null as double ) as  avg_raf_projected,
+              cast(null as double ) as  avg_hcc_suspects_yoy,
+              cast(null as double ) as  avg_hcc_suspects_unaccpt,
+              cast(null as double ) as  avg_hcc_suspects_asr,
+              cast(null as double ) as  avg_hcc_suspects_clin,
+              cast(null as double ) as  recapture_rate,
+              cast(null as integer ) as  num_eligible_members,
+              cast(null as integer  ) as  num_eligible_pcp_members,
+              cast(null as integer  ) as  num_eligible_non_pcp_members,
+              cast(null as double ) as  pcp_awv_percent,
+              cast(null as double ) as  enc_awv_percent
+          FROM  previous_load a
+          inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 2 and  s.current_year
+          LEFT JOIN  provider_details_full  b on a.provider_id = b.provider_id and a.year =b.year
+          WHERE b.provider_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+            a.provider_id,
+            a.year,
+            a.avg_hcc_captured,
+            a.avg_raf_demo,
+            a.avg_opportunity,
+            a.avg_raf_captured,
+            a.avg_raf_projected,
+            a.avg_hcc_suspects_yoy,
+            a.avg_hcc_suspects_unaccpt,
+            a.avg_hcc_suspects_asr,
+            a.avg_hcc_suspects_clin,
+            a.recapture_rate,
+            a.num_eligible_members,
+            a.num_eligible_pcp_members,
+            a.num_eligible_non_pcp_members,
+            a.pcp_awv_percent,
+            a.enc_awv_percent
+           FROM   provider_details_full  a
+           inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 2 and  s.current_year
+           INNER JOIN previous_load b on a.provider_id = b.provider_id and a.year =b.year
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  provider_details_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/provider_details_full'
+      mode: overwrite
+
+  provider_details_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/provider_details_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_provider_details
+#      mode: overwrite
+
