@@ -1,0 +1,42 @@
+Metadata-Version: 2.1
+Name: dot4dict
+Version: 0.1.0
+Summary: A Python Package to enable dot-notation on dictionaries
+Home-page: https://github.com/zincware/dot4dict
+Author: zincwarecode
+Author-email: zincwarecode@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/zincware/dot4dict/archive/beta.tar.gz
+Keywords: dotdict,dict2dot
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Eclipse Public License 2.0 (EPL-2.0)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
+[![Coverage Status](https://coveralls.io/repos/github/zincware/dot4dict/badge.svg?branch=main)](https://coveralls.io/github/zincware/dot4dict?branch=main)
+# Dot4Dict
+
+Access dictionary keys with a Dot:
+
+```python
+from dot4dict import dotdict
+
+my_dict = dotdict({"foo": "bar"})
+assert my_dict.foo == "bar"
+assert my_dict["foo"] == "bar"
+```
+
+This works also recursively
+
+```python
+from dot4dict import dotdict
+
+my_dict = dotdict({"a": {"b": {"c": "foo"}}})
+
+assert my_dict.a.b.c == "foo"
+```
+
+
