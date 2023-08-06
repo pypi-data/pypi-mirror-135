@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: perfmonitor
+Version: 0.0.2
+Summary: Performance monitor CLI for Windows: parse and display performance counter from 'psutil' and 'nvidia-smi'.
+Home-page: https://github.com/loribonna/PerfMonitorCLI
+Author: Lorenzo Bonicelli
+Author-email: loribonna@gmail.com
+License: MIT
+Download-URL: https://github.com/loribonna/PerfMonitorCLI/archive/refs/tags/v0.0.2.zip
+Keywords: performance,monitor,windows,cli,powershell,commandline,htop
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: psutil
+Requires-Dist: termcolor
+Requires-Dist: xmltodict
+
+# Performance monitor CLI for Windows
+Parse and display performance counter from `psutil` and `nvidia-smi`.
+
+Minimum height:
+- If GPU: 17 + #CPUs/2
+- Else: 9 + #CPUs/2
+
+Unfortunately, temperature reading for CPU is not available.
+
+## Requires
+- `psutil`: load CPU+MEM stats.
+- `termcolor`: color stuff.
+- `xmltodict`: parse `nvidia-smi` output during GPU stats load.
+
+### Parameters:
+- `-t` or `--time`: Change default refresh time to `t` seconds (default: 2).
+- `-d` or `--disable_gpu`: Disable GPU stats load and display.
+- `-c` or `--disable_cpu`: Clear screen every `c` prints (default: 5).
+
+## Run standalone
+- Install `requirements.txt`
+- Run with: `python main.py`
+
+
