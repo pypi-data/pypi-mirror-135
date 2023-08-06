@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools >= 40.9.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["pydantic_yaml"]
+
+[tool.mypy]
+files = 'pydantic_yaml/**/*.py'
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = 'ruamel.*'
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = 'semver.*'
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 88
+include = '^/pydantic_yaml.*\.py' # all .py files
+extend-exclude = '''
+^/setup.py
+|^/docs
+|^/dist
+'''
