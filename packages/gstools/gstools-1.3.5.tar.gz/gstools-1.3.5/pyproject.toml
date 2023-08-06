@@ -1,0 +1,83 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "setuptools_scm[toml]>=3.5",
+    "oldest-supported-numpy",
+    "Cython>=0.28.3,<3.0",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "gstools/_version.py"
+write_to_template = "__version__ = '{version}'"
+local_scheme = "no-local-version"
+fallback_version = "0.0.0.dev0"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 79
+
+[tool.black]
+line-length = 79
+target-version = [
+    "py36",
+    "py37",
+    "py38",
+]
+
+[tool.coverage]
+    [tool.coverage.run]
+    source = ["gstools"]
+    omit = [
+        "*docs*",
+        "*examples*",
+        "*tests*",
+        "*/gstools/covmodel/plot.py",
+        "*/gstools/field/plot.py",
+    ]
+
+    [tool.coverage.report]
+    exclude_lines = [
+        "pragma: no cover",
+        "def __repr__",
+        "def __str__",
+    ]
+
+[tool.pylint]
+    [tool.pylint.master]
+    extension-pkg-whitelist = [
+        "numpy",
+        "scipy",
+    ]
+    ignore = "_version.py"
+
+    [tool.pylint.message_control]
+    disable = [
+        "R0801",
+    ]
+
+    [tool.pylint.reports]
+    output-format = "colorized"
+
+    [tool.pylint.design]
+    max-args = 20
+    max-locals = 50
+    max-branches = 30
+    max-statements = 80
+    max-attributes = 25
+    max-public-methods = 75
+
+[tool.cibuildwheel]
+# Switch to using build
+build-frontend = "build"
+# Disable building PyPy wheels on all platforms, 32bit for py3.10 and musllinux builds
+skip = "pp* cp310-win32 cp310-manylinux_i686 *-musllinux_*"
+# Run the package tests using `pytest`
+test-extras = "test"
+test-command = "pytest -v {package}/tests"
+# Skip trying to test arm64 builds on Intel Macs
+test-skip = "*-macosx_arm64 *-macosx_universal2:arm64"
+# no wheels for linux-32bit anymore for numpy>=1.22
+environment = "PIP_PREFER_BINARY=1"
