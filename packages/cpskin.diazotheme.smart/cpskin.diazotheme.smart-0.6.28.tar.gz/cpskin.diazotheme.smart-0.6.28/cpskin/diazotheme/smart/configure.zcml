@@ -1,0 +1,51 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+           xmlns:plone="http://namespaces.plone.org/plone"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           xmlns:cmf="http://namespaces.zope.org/cmf"
+           i18n_domain="cpskin">
+
+    <!-- Dependencies -->
+    <include package="cpskin.theme" />
+
+    <!-- Profiles -->
+    <genericsetup:registerProfile
+        name="default"
+        title="cpskin.diazotheme.smart"
+        directory="profiles/default"
+        description="Installs cpskin.diazotheme.smart theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="cpskin.diazotheme.smart uninstall"
+        directory="profiles/uninstall"
+        description="Uninstalls cpskin.diazotheme.smart theme"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+    <genericsetup:upgradeStep
+        title="cpskin.diazotheme.smart: upgrade to v0002 (LESS)"
+        description="Upgrade step for cpskin.diazotheme.smart Theme to v0002 (LESS)"
+        handler=".upgradehandlers.upgrade_to_less"
+        source="0001"
+        destination="0002"
+        profile="cpskin.diazotheme.smart:default"
+        />
+
+    <genericsetup:upgradeStep
+        title="cpskin.diazotheme.smart: upgrade to v0003 (LESS)"
+        description="Upgrade step for cpskin.diazotheme.smart Theme to v0003 (LESS)"
+        handler=".upgradehandlers.upgrade_portal_less"
+        source="0002"
+        destination="0003"
+        profile="cpskin.diazotheme.smart:default"
+        />
+
+    <!-- CPSkin theme -->
+    <plone:static directory="static" name="cpskin.diazotheme.smart" type="theme" />
+
+</configure>

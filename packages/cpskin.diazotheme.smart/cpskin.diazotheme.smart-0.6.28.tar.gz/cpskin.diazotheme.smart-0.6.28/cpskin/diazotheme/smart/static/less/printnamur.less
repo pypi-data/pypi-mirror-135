@@ -1,0 +1,248 @@
+/* Removes certain elements when printing, and apply basic font styles
+   for the remaining content. */
+
+body {
+	font-family: "Helvetica Neue", Arial, FreeSans, sans-serif;
+}
+
+
+body #visual-portal-wrapper {
+    float: none;
+    margin: 0 auto;
+    max-width: 1200px;
+    overflow: hidden;
+    width: 100%;
+}
+
+#portal-header {
+    display: block;
+}
+
+#top-logo-navigation-actions {
+    position: relative;
+}
+
+#top-logo-slogan {
+    margin-left: 0;
+    position: relative;
+    width: 100%;
+    padding-left: 0.5em;
+}
+
+div.position-0 {
+    margin-left: 0;
+}
+
+div#top-slogan {
+    margin-top: 0;
+    padding-left: 0.5em;
+}
+
+#top-slogan h1 {
+    color: #000;
+    font-size: 120%;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+
+.coordinates::after {
+    background: #fff none repeat scroll 0 0;
+}
+.coordinates {
+    background: #fff none repeat scroll 0 0;
+    border-left: 0 solid #f1d3ee;
+    padding: 1em;
+}
+
+h1, h2, h3, h4, h5, h6, #top-slogan h1 {
+	font-family: "Helvetica Neue", Arial, FreeSans, sans-serif;
+	font-weight: bold;
+	line-height: 125%;
+	page-break-inside: avoid;
+	page-break-after: avoid;
+}
+h1, h2 {
+	letter-spacing: -0.05em;
+}
+
+.event.summary.details{
+    float:right;
+}
+a {
+	text-decoration: none;
+	border-bottom: 0.1em solid gray;
+	color: black;
+}
+
+label {
+    color: rgb(14, 34, 64) !important;
+}
+
+.field span {
+    color: rgb(14, 34, 64) !important;
+}
+
+#portal-top{
+    margin-bottom:0;
+}
+#portal-column-content {
+	width: 95%;
+    margin-left: 0;
+    border-left: 0px solid transparent !important;
+}
+
+div.position-1\:4 {
+    margin-left: 0;
+}
+
+.documentDescription {
+	font-weight: bold;
+}
+pre {
+	border: 1pt dotted black;
+	white-space: pre;
+	font-size: 8pt;
+	overflow: auto;
+	padding: 1em;
+}
+table.listing,
+table.listing td {
+	border: 1pt solid black;
+	border-collapse: collapse;
+}
+table.listing td,
+table.listing th {
+    padding: 6px;
+}
+
+/* Page break class for use when printing */
+div.pageBreak {
+	page-break-before: always;
+}
+
+/* Basic styles for listing and document views */
+#content dt {
+	margin:1em 0 0.625em;
+}
+#content p, #content table {
+	margin-bottom:0.625em;
+	margin-top:0.625em;
+}
+#content .documentDescription, #content #description {
+    margin:0.5em 0 1.31em;
+}
+
+/* Uncomment these if you want link addresses inserted along with the link text
+   when you print.
+#content a:link:after,
+#content a:visited:after {
+   content: " [" attr(href) "] ";
+}
+*/
+
+/* Hide all the elements that are irrelevant for printing */
+div.top,
+#portal-logo,
+#top-logo,
+#portal-siteactions,
+.hiddenStructure,
+#portal-searchbox,
+#portal-globalnav,
+#container-minisite-globalnav,
+#portal-personaltools,
+#portal-breadcrumbs,
+#portal-column-content::before,
+#portal-column-content::after,
+#edit-bar,
+#portal-column-one,
+#portal-column-two,
+#plone-document-byline,
+#portal-languageselector,
+.contentViews,
+.contentActions,
+.help,
+.legend,
+.portalMessage,
+.documentActions,
+.netscape4,
+#viewlet-below-content .reply,
+#viewlet-below-content .discussion,
+#kss-spinner,
+#review-history,
+#content-history,
+.listingBar,
+#portal-footer,
+#portal-footer-wrapper,
+#portal-colophon,
+.skipnav,
+#kss-spinner,
+#review-history,
+#content-history,
+.listingBar,
+.link-presentation,
+input.standalone,
+.overlay,
+.managePortletsFallback,
+.close,
+.link-parent,
+.draggingHook,
+#foldercontents-order-column,
+input.context,
+.visualNoPrint,
+#top-banner,
+.top-navigation-actions,
+#right-actions-viewlet,
+#map,
+.plone-document-byline,
+#viewlet-below-content-title,
+#visual-portal-wrapper #formfield-form-widgets-date_adoption_historique::after,
+#visual-portal-wrapper #formfield-form-widgets-date_adoption::after,
+#visual-portal-wrapper #formfield-form-widgets-date_publication_historique::after,
+#visual-portal-wrapper #formfield-form-widgets-date_publication::after,
+#visual-portal-wrapper #formfield-form-widgets-date_echeance::after {
+	display: none !important;
+}
+
+/* Image alignment classes */
+.image-left {
+	float: left;
+	clear: both;
+	margin: 0.5em 1em 0.5em 0;
+	border: 0.4pt solid Black;
+}
+.image-inline {
+	float: none;
+}
+.image-right {
+	float: right;
+	clear: both;
+	margin: 0.5em;
+	border: 0.4pt solid Black;
+}
+dd.image-caption {
+	text-align:left;
+	padding: 0; margin:0;
+}
+dl.captioned {
+	padding: 0.8em;
+}
+.newsImageContainer {
+	float:right;
+	margin: 0 0 0.5em 1em;
+	width: 16em;
+}
+
+
+/* Reglement specific template */
+#visual-portal-wrapper #formfield-form-widgets-date_adoption_historique,
+#visual-portal-wrapper #formfield-form-widgets-date_adoption,
+#visual-portal-wrapper #formfield-form-widgets-date_publication_historique,
+#visual-portal-wrapper #formfield-form-widgets-date_publication,
+#visual-portal-wrapper #formfield-form-widgets-date_echeance {
+    background: transparent !important;
+}
+
+body.portaltype-reglement .richTextWidget {
+    padding-top: 6em;
+}
