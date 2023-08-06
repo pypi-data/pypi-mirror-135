@@ -1,0 +1,42 @@
+Metadata-Version: 2.1
+Name: gofile-client
+Version: 1.0.0
+Summary: Interact with the gofile.io API
+Home-page: https://github.com/rdnkarchiver/gofile-client
+Author: rdnkarchiver
+Author-email: rdnkarchiver@protonmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/rdnkarchiver/gofile-client/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# gofile-client
+A wrapper around the [gofile.io API](https://gofile.io/api).
+
+## Installation
+### via [`pip`](https://pip.pypa.io/en/stable/installation/)
+```
+pip install --user gofile-client
+```
+
+## Usage
+```python
+from gofile.client import Gofile
+
+client = Gofile(token='<your-token>')
+
+# Upload a file
+response = client.upload_file('path/to/file')
+print(response)
+
+# Get the link to a file
+folder_contents = client.get_content('<file-id>')
+for _, item in folder_contents:
+    print(item['link'])
+```
+
+
