@@ -1,0 +1,31 @@
+Changes since 1.0.0 onwards.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1.0.3 (2022-01-19)
+~~~~~~~~~~~~~~~~~~~
+* BUG FIX. In dataset.py, decontaminate=True should apply the correction 
+  flux = flux/(1 + contam), not flux = flux*(1 - contam). Fixed.
+* Avoid "Warning: converting a masked element to nan." in starproperties.py
+* Clarified definition of L in EclipseModel and EBLMModel
+* Fixed retrieving psf_file bug in init.py (#255)
+* Updated PSF reference file to average of in-flight PSFs measured at 9 CCD
+  locations during IOC.
+* Added l_3 option to models.py, dataset.py and multivisit.py.
+* Added l_3, f_c and f_s to _make_labels in dataset.py and multivisit.py
+* Fixed "SyntaxWarning: "is" with a literal." from multivisit.py and core.py
+* Update Contamination_33arcsec_aperture.p if older than the reference
+  psf_file in __init__.py
+
+1.0.2 (2021-12-09)
+~~~~~~~~~~~~~~~~~~~
+* Fix problem with SWEET-Cat encoding (#252)
+* Add decontaminate method to dataset (experimental)
+* Fix issue in WASP-189 notebook with missing text files for cds_data_export
+
+1.0.1 (2021-11-21)
+~~~~~~~~~~~~~~~~~~~
+* Attempted fix in 0.9.18 to avoid hidden files in dataset() failed - fixed.
+
+1.0.0 (2021-11-17)
+~~~~~~~~~~~~~~~~~~~
+* Updated readme, notebooks and cookbook for release of version 1.0.0
