@@ -1,0 +1,114 @@
+Metadata-Version: 2.1
+Name: archean
+Version: 3.1.0
+Summary: Extract Information from Wikimedia Dumps
+Home-page: https://gitlab.com/thisisayushg/archean
+License: LICENSE
+Author: Ayush Gupta
+Author-email: 4c4ddc00-742a-4213-8e40-59a5e3b0fbb1@archean.anonaddy.com
+Requires-Python: >=3.6.2,<4.0.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: bs4 (>=0.0.1,<0.0.2)
+Requires-Dist: mwparserfromhell (>=0.6.3,<0.7.0)
+Requires-Dist: pymongo (>=3.12.0,<4.0.0)
+Requires-Dist: requests (>=2.26.0,<3.0.0)
+Requires-Dist: rich (>=10.16.2,<11.0.0)
+Requires-Dist: tqdm (>=4.62.2,<5.0.0)
+Project-URL: Repository, https://gitlab.com/thisisayushg/archean
+Description-Content-Type: text/markdown
+
+# Table of Contents
+- [Supported Systems](#supported-systems)
+- [About](#about)
+- [Installation](#installation)
+- [Usage Notes](#usage-notes)
+- [FAQs](#faqs)
+  - [1. Why is only MongoDB supported as a Database?](#1-why-is-only-mongodb-supported-as-a-database)
+  - [2. The parser only extracts information from the latest version of the pages. Why?](#2-the-parser-only-extracts-information-from-the-latest-version-of-the-pages-why)
+  - [3. The parser is only extracts Film Infobox. Why is that so? Can you extend the support to other parts of Wikipedia articles?](#3-the-parser-is-only-extracts-film-infobox-why-is-that-so-can-you-extend-the-support-to-other-parts-of-wikipedia-articles)
+  - [4. Is there any plan to extend this parser to other Infobox types as well?](#4-is-there-any-plan-to-extend-this-parser-to-other-infobox-types-as-well)
+
+<br/>
+<br/>
+
+# Supported Systems
+- Windows 10
+- Linux (tested on ArchLinux, Manjaro, Ubuntu)
+<br/>
+<br/>
+
+
+# About
+Archean is a tool to process Wikipedia dumps and extract required information from them. The tool contains several files:
+1. wiki_downloader.py
+2. wiki_parser.py
+3. db_writer.py
+4. cleanup.py
+
+`wiki_downloader` is used to download the dumps from a wikipedia dump directory. `wiki_parser` is the brain of the project. The module houses the logic for processing the Wikipedia dumps and extract information.
+`cleanup.py` is the file for cleaning the extracted content to be in structured form. Lastly, `db_writer` is an additional tool in case the JSON file created from the dumps need to be written into the database. The supported database is MongoDB.
+
+<br/>
+<br/>
+
+# Installation
+```
+pip install archean
+```
+<br/>
+<br/>
+
+# Usage Notes
+The parser accepts a few parameters that can be specified during script invokation. These are lised below:
+
+- `archean` : Check if bz2 files are present in the same directory. If yes, it should start unpacking and processing in folder named 'extracts' in present working directory. If not, then ask user to specify remote-directory to download. No DB operations to be done since DB details are not provided.
+  
+- `archean  --version`: Should display the version of the application
+
+- `archean –-remote-dir='REMOTE'`: Should download the bz2 files, from REMOTE, in the present working directory/the folder user executed the command in. processing of files to be done as well and json files to be placed inside a sub-folder named 'extracts'
+
+- `archean –-extraction-dir='EXTRACTION_DIR'`: Check if bz2 files are present in the same directory. If yes, processing of files to be done as well and JSON files are to be placed after creating a subfolder EXTRACTION_DIR in the present working directory. If not, then ask user to specify remote-directory. No DB operations to be done since DB details are not provided.
+
+- `archean –-remote-dir='REMOTE' –-extraction-dir='EXTRACTION_DIR'`: Should download the bz2 files, from REMOTE, in the present working directory/the folder user executed the command in. processing of files to be done as well and JSON files are to be placed after creating a subfolder EXTRACTION_DIR in the present working directory. No DB operations to be done since DB details are not provided.
+
+- `archean –-remote-dir='' –-download-only`: Should download the bz2 files in the present working directory/the folder user executed the command in. No processing of the files and no DB operation to be performed since download-only argument is provided. 
+
+- `archean –-download-only`: Throw an error since no remote directory (remote-dir) is provided.
+
+- `archean --host='HOST' --port='PORT' --db='DB' --collection='COLLECTION' --user='USER' --password='PASSWORD'`: Assume processing of bz2 files is to be done and files are in the present working directory. check if bz2 files are present in the same directory. If yes, it should start unpacking and processing in 'extracts' folder. After JSON files are obtained, connect with the database 'DB' located at HOST using USER and PASSWORD, and insert JSON data into the COLLECTION. 
+
+- `archean --host='HOST' --port='PORT' --db='DB' --collection='COLLECTION' --user='USER' --password='PASSWORD' --extraction-dir='EXTRACTION_DIR'`: Does all operations as above, but JSON files are created in the folder specified in 'extraction-dir' argument.
+<br/>
+<br/>
+
+# FAQs
+## 1. Why is only MongoDB supported as a Database?
+Wikipedia is not a structured information collection. The information extracted from the Wikipedia might be missing some information in case of one article but might be present in another article. In such cases, NoSQL databases become an obvious choice of data storage. Hence MongoDB was chosen.
+
+<br/>
+
+## 2. The parser only extracts information from the latest version of the pages. Why?
+Wikipedia has a lot of information. It keeps the edit history of the pages in its archive but since any project is less likely to involve processing of old version data, the `downloader` has been kept at minimum to download only the latest version.
+
+<br/>
+
+## 3. The parser is only extracts Film Infobox. Why is that so? Can you extend the support to other parts of Wikipedia articles?
+Infoboxes are great summary sections in Wikipedia pages. They can provide answers to most common queries in a giffy. Hence `wiki-parser` is created to parse Infoboxes first.
+Why the choice of Film infobox was made is simply because it is easy to judge the validity of  parsed information during development phase. Also because we all love movies ;)
+
+<br/>
+
+## 4. Is there any plan to extend this parser to other Infobox types as well?
+Definitely! There is so much to be done in the project. Infobox for books information, for countries, for music, for magazines,and so much more are there to cater the project to.
+
+<br/>
+
+
+
