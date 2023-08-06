@@ -1,0 +1,69 @@
+image: python:3.7
+
+variables:
+    MODULE_NAME: "signalboa_python_connector"
+
+cache:
+  paths:
+    - .cache/pip
+
+stages:
+  - test
+  - deploy
+  - github
+
+test:flake8:
+  before_script:
+    - pip install .[test]
+  stage: test
+  script:
+    - flake8 --benchmark
+
+test:pytest:
+  before_script:
+    - pip install .[test]
+  stage: test
+  script:
+    - pytest --suppress-no-test-exit-code $MODULE_NAME
+
+# main is the staging branch
+deploy:staging:
+    stage: deploy
+    only:
+      - main
+    before_script:
+      - pip install build twine
+    script:
+      - python -m build
+      - TWINE_PASSWORD=${CI_JOB_TOKEN} TWINE_USERNAME=gitlab-ci-token python -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
+
+deploy:production:
+    stage: deploy
+    only:
+    - /^[vV][0-9]+\.[0-9]+.*$/
+    before_script:
+      - pip install build twine
+    script:
+      - python -m build
+      - TWINE_PASSWORD=${PYPI_TOKEN} TWINE_USERNAME=__token__ python -m twine upload dist/*
+
+github:production:
+    stage: github
+    only:
+      - /^[vV][0-9]+\.[0-9]+.*$/
+    before_script:
+      - git config --global user.email "${GITLAB_USER_EMAIL}"
+      - git config --global user.name "${GITLAB_USER_NAME}"
+      - git config --global core.sshCommand 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+    script:
+      - find . -mindepth 1 -delete
+      - ls -lisa .
+      - git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/brainalyzed/signalboa.git .
+      - git fetch https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.brainalyzed.com/brainalyzed/signalboa-python-connector.git main:temp
+      - git merge --squash --allow-unrelated-histories temp
+      - cat .gitignore_github >> .gitignore
+      - rm .gitignore_github
+      - rm .gitlab-ci.yml
+      - git add .
+      - git commit -m "$CI_COMMIT_MESSAGE"
+      - git push
