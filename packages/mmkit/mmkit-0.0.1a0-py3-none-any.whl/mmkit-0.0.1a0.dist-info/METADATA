@@ -1,0 +1,69 @@
+Metadata-Version: 2.1
+Name: mmkit
+Version: 0.0.1a0
+Summary: A toolkit for multimodal information processing
+Home-page: https://github.com/dhchenx/mmkit
+Author: Donghua Chen
+Author-email: douglaschan@126.com
+License: MIT
+Project-URL: Bug Reports, https://github.com/dhchenx/mmkit/issues
+Project-URL: Source, https://github.com/dhchenx/mmkit
+Keywords: multimodal data; multimodal machine learning; modal information processing
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Python: >=3.6, <4
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: torch
+Requires-Dist: pandas
+Requires-Dist: sklearn
+Provides-Extra: dev
+Requires-Dist: check-manifest ; extra == 'dev'
+Provides-Extra: test
+Requires-Dist: coverage ; extra == 'test'
+
+## MMKit: Multimodal Kit
+
+A toolkit for multimodal information processing
+
+### Installation
+
+```
+    pip install mmkit
+```
+
+### An example
+
+A Neural Network in PyTorch for Tabular Data with Categorical Embeddings. [Here](https://yashuseth.wordpress.com/2018/07/22/pytorch-neural-network-for-tabular-data-with-categorical-embeddings/#8230)
+
+```python
+from mmk.prediction import MultimodalPredictionModel
+input_features=[ ... ]
+categorical_features = [...]
+output_feature = "..."
+output_error=0
+all_features=input_features+[output_feature]
+mmpm=MultimodalPredictionModel("data/multimodal_data.csv",
+                               all_features,
+                               categorical_features,
+                               output_feature,
+                               output_error)
+mmpm.train()
+acc=mmpm.get_last_accuracy()
+print(acc)
+```
+
+### License
+The `mmkit` project is provided by [Donghua Chen](https://github.com/dhchenx). 
+
+
+
