@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "cft-analysis"
+version = "0.1.0"
+description = "Package for the analysis of Cold Face Test Data."
+authors = [
+    "Robert Richer <robert.richer@fau.de>",
+    "Janis Zenkner <janis.zenkner@fau.de>",
+    "Arne Kuederle <arne.kuederle@fau.de>"
+]
+readme = "README.md"
+homepage = "https://github.com/mad-lab-fau/cft-analysis"
+repository = "https://github.com/mad-lab-fau/cft-analysis"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7.1,<3.10"
+biopsykit = {version="^0.4.0", extras=["jupyter"]}
+tpcp = "^0.3.1"
+
+[tool.poetry.dev-dependencies]
+poethepoet = "^0.11.0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+coverage = "^6.2"
+black = {version = "^21.9b0", extras = ["d", "jupyter"]}
+isort = "^5.10.1"
+prospector = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | docs
+    | build
+    | dist
+    | \.virtual_documents
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+skip_gitignore = true
+
+
+[tool.poe.tasks]
+_black = "black ."
+_black_check = "black . --check"
+_isort = "isort **/*.py"
+_isort_check = "isort **/*.py --check-only"
+
+# Reformat all files using black and sort import
+format = ["_black", "_isort"]
+format_check = ["_black_check", "_isort_check"]
+lint = "prospector"
+test = "pytest --cov=cft-analysis --cov-report=xml"
+docs = {"script" = "_tasks:task_docs"}
+update_version = {"script" = "_tasks:task_update_version"}
+register_ipykernel = "python -m ipykernel install --user --name cft-analysis --display-name cft-analysis"
+default = ["format", "lint", "test"]
