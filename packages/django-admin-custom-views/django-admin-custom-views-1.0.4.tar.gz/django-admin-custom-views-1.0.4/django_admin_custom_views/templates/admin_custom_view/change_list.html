@@ -1,0 +1,10 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+{% block object-tools-items %}
+  {% for _, name, description in extra_views %}
+    <li>
+      <a href="{% url opts|admin_urlname:name %}" class="historylink">{{ description }}</a>
+    </li>
+  {% endfor %}
+  {{ block.super }}
+{% endblock %}
