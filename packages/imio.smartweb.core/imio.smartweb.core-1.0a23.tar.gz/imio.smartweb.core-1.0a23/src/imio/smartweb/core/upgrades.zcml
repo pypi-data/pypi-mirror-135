@@ -1,0 +1,89 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="imio.smartweb">
+
+  <genericsetup:upgradeStep
+      title="Configure first official release"
+      description="Run needed profiles steps and reindex catalog"
+      source="1000"
+      destination="1001"
+      handler=".upgrades.configure_first_official_release"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeStep
+      title="Set scales for listing / summary views"
+      description="Use liste scale for listings and vignette scale for summary / block view"
+      source="1001"
+      destination="1002"
+      handler=".upgrades.set_thumb_scales"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeStep
+      title="Reload actions and remove e_guichet action"
+      description=""
+      source="1002"
+      destination="1003"
+      handler=".upgrades.update_actions"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeSteps
+      source="1003"
+      destination="1004"
+      profile="imio.smartweb.core:default">
+    <genericsetup:upgradeDepends
+        title="Install basic icons set"
+        import_profile="imio.smartweb.core:icons-basic"
+        />
+  </genericsetup:upgradeSteps>
+
+  <genericsetup:upgradeStep
+      title="Update icons and translate names (FR -> EN)"
+      description=""
+      source="1004"
+      destination="1005"
+      handler=".upgrades.update_icons_and_names"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeStep
+      title="Reload registry to add new swiper bundle"
+      description=""
+      source="1005"
+      destination="1006"
+      handler=".upgrades.reload_registry"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeSteps
+      source="1006"
+      destination="1007"
+      profile="imio.smartweb.core:default">
+    <genericsetup:upgradeDepends
+        title="Update last compilation dates of CSS / JS bundles"
+        import_profile="imio.smartweb.core:last-compilation"
+        />
+  </genericsetup:upgradeSteps>
+
+  <genericsetup:upgradeStep
+      title="Reload types info to add shortname behavior on sections"
+      description=""
+      source="1007"
+      destination="1008"
+      handler=".upgrades.reload_types"
+      profile="imio.smartweb.core:default"
+      />
+
+  <genericsetup:upgradeStep
+      title="Reload types info to make HTML section folderish"
+      description=""
+      source="1008"
+      destination="1009"
+      handler=".upgrades.reload_types"
+      profile="imio.smartweb.core:default"
+      />
+
+</configure>
