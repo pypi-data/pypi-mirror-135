@@ -1,0 +1,112 @@
+:root {
+    --background_color: white;
+    --color_primary: black;
+    --color_secondary: #8A8A8E;
+    --color_tertiary: #C4C4C6;
+    --color-link: blue;
+    --color-highlight: cyan;
+    --border_color: var(--color_primary);
+    --background_color_odd: var(--background_color);
+    --background_color_even: var(--color_tertiary);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background_color: white;
+        --color_primary: black;
+        --color_secondary: #8A8A8E;
+        --color_tertiary: #C4C4C6;
+        --color-link: blue;
+        --color-highlight: cyan;
+        --border_color: var(--color_primary);
+        --background_color_odd: var(--background_color);
+        --background_color_even: var(--color_tertiary);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background_color: #1C1C1E;
+        --color_primary: white;
+        --color_secondary: #989899;
+        --color_tertiary: #5A5A5E;
+        --color-link: royalblue;
+        --color-highlight: #00d9ff;
+        --border_color: var(--color_primary);
+        --background_color_odd: var(--background_color);
+        --background_color_even: var(--color_tertiary);
+    }
+}
+
+body {
+    background: var(--background_color);
+    color: var(--color_primary);
+    font-family: -apple-system, Roboto, sans-serif;
+}
+
+input {
+    box-sizing: border-box;
+}
+
+.border {
+    border-collapse: collapse;
+    border: 1px solid var(--border_color);
+}
+
+.border-thick {
+    border-collapse: collapse;
+    border: 2px solid var(--border_color);
+}
+
+.odd {
+    background-image: linear-gradient(0deg, var(--background_color_odd), var(--background_color_odd));
+}
+
+.even {
+    background-image: linear-gradient(0deg, var(--background_color_even), var(--background_color_even));
+}
+
+.overflow {
+    overflow: hidden;
+    white-space: normal;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.hover_highlight:hover {
+    background-blend-mode: multiply;
+    background-color: var(--color-highlight);
+}
+
+.hover_underline:hover {
+    text-decoration: underline;
+}
+
+a:link, a:visited {
+    color: var(--color-link);
+}
+
+a.cell-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    overflow: inherit;
+    text-overflow: inherit;
+    white-space: inherit;
+}
+
+a.nocolor {
+    text-decoration: none;
+    color: inherit;
+}
+
+table td, table th {
+    text-align: center;
+    vertical-align: center;
+}
