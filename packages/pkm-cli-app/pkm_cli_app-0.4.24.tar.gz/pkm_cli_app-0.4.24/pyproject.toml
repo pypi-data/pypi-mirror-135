@@ -1,0 +1,19 @@
+[project]
+name = "pkm-cli-app"
+version = "0.4.24"
+description = "Command line interface for PKM"
+readme = "README.md"
+requires-python = ">=3.8, <4.0"
+license = {text = "MIT License"}
+scripts = {pkm = "pkm_cli_app.pkm:main"}
+
+[[project.authors]]
+name = "bennyl"
+
+[tool.pkm.internal.package]
+type = "application-installer"
+app = "pkm-cli"
+
+[build-system]
+requires = [ "pkm >=0.4.20",  "pkm-cli ==0.4.24"]
+build-backend = "pkm.api.buildsys"
