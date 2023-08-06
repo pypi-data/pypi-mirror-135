@@ -1,0 +1,89 @@
+Metadata-Version: 2.1
+Name: pyramid-cloudflare-access
+Version: 1.0.1
+Summary: A bunch of helpers for successfully running Pyramid on Heroku.
+Home-page: https://github.com/teamniteo/pyramid_cloudflare_access
+License: BSD-3-Clause
+Keywords: pyramid,cloudflare,pylons,web
+Author: Niteo
+Author-email: info@niteo.co
+Requires-Python: >=3.6
+Classifier: Development Status :: 4 - Beta
+Classifier: Framework :: Pylons
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: cryptography
+Requires-Dist: pyjwt
+Requires-Dist: pyramid (>=1.7)
+Description-Content-Type: text/x-rst
+
+pyramid_cloudflare_access
+=========================
+
+Introduction
+------------
+
+
+Installation
+------------
+
+Just do
+
+``pip install pyramid_cloudflare_access``
+
+or
+
+``easy_install pyramid_cloudflare_access``
+
+
+Compatibility
+-------------
+
+pyramid_cloudflare_access runs with pyramid>=1.7 and python>=3.6.
+Other versions might also work.
+
+
+Usage
+-----
+
+Add Cloudfalre config to a production.ini::
+
+    pyramid_cloudflare_access.policy_audience = "my_audience"
+    pyramid_cloudflare_access.team = "https://team.cloudfare-access.com"
+
+
+More information can be found at https://developers.cloudflare.com/cloudflare-one/identity/users/validating-json#python-example
+
+Usage example for the tween::
+
+    def main(global_config, **settings):
+        config = Configurator(settings=settings)
+        config.include('pyramid_cloudflare_access')
+        return config.make_wsgi_app()
+
+
+Releasing
+---------
+
+#. Update CHANGES.rst.
+#. Update pyproject.toml version.
+#. Run ``poetry check``.
+#. Run ``poetry publish --build``.
+
+
+We're hiring!
+-------------
+
+At Niteo we regularly contribute back to the Open Source community. If you do too, we'd like to invite you to `join our team
+<https://niteo.co/careers/>`_!
+
