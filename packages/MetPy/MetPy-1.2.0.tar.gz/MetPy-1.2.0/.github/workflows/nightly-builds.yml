@@ -1,0 +1,175 @@
+name: Nightly Checks
+
+on:
+  schedule:
+  # Runs at 09Z (3am MDT)
+    - cron: "0 9 * * *"
+
+  # Allow a manual run
+  workflow_dispatch:
+
+  # Run if we modify the workflow
+  push:
+    paths:
+      - .github/workflows/nightly-builds.yml
+  pull_request:
+    paths:
+      - .github/workflows/nightly-builds.yml
+
+jobs:
+  Tests:
+    runs-on: ubuntu-20.04
+
+    steps:
+    # We check out only a limited depth and then pull tags to save time
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 100
+
+    - name: Get tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Assemble test requirements
+      run: |
+        cat ci/extra_requirements.txt >> ci/test_requirements.txt
+        echo git+https://github.com/hgrecco/pint@master#egg=pint >> ci/test_requirements.txt
+        echo git+https://github.com/pydata/xarray@main#egg=xarray >> ci/test_requirements.txt
+
+    - name: Install using PyPI
+      uses: ./.github/actions/install-pypi
+      with:
+        need-cartopy: true
+        type: test
+        version-file: Prerelease
+        python-version: "3.10"
+
+    - name: Run tests
+      id: tests
+      uses: ./.github/actions/run-tests
+      with:
+        run-doctests: false
+        key: nightly
+        upload-coverage: false
+
+    - name: Upload test log
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: log-nightly-tests
+        path: tests-nightly.log
+        retention-days: 5
+
+  Docs:
+    runs-on: ubuntu-20.04
+
+    steps:
+    # We check out only a limited depth and then pull tags to save time
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 100
+
+    - name: Get tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Assemble doc requirements
+      run: |
+        cat ci/extra_requirements.txt >> ci/doc_requirements.txt
+        echo git+https://github.com/hgrecco/pint@master#egg=pint >> ci/doc_requirements.txt
+        echo git+https://github.com/pydata/xarray@main#egg=xarray >> ci/doc_requirements.txt
+
+    - name: Install using PyPI
+      uses: ./.github/actions/install-pypi
+      with:
+        need-cartopy: true
+        type: doc
+        version-file: Prerelease
+        python-version: 3.9
+
+    - name: Build docs
+      id: build
+      uses: ./.github/actions/build-docs
+      with:
+        run-linkchecker: true
+        key: nightly
+
+    - name: Upload build log
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: log-nightly-docs
+        path: |
+          build.log
+          linkchecker.log
+        retention-days: 5
+
+  Report:
+    name: Report
+    needs: [Tests, Docs]
+    if: ${{ failure() || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Download logs
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp/workspace/logs
+
+      - name: Grab log files
+        run: |
+          cp /tmp/workspace/logs/log-*/*.log . || true
+          touch tests-nightly.log build.log linkchecker.log
+
+      - name: Report failures
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const fs = require('fs');
+            const title = "Nightly build is failing";
+            const workflow_url = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+            body = `The [Nightly workflow](${workflow_url}) is failing.\n`;
+
+            if ('${{ needs.Tests.result }}' === 'failure') {
+              const test_log = fs.readFileSync('tests-nightly.log', 'utf8').substring(0, 21000);
+              body += `The tests failed.\nLog:\n<details><pre>${test_log}</pre></details>`;
+            }
+            if ('${{ needs.Docs.result }}' === 'failure') {
+              const build_log = fs.readFileSync('build.log', 'utf8').substring(0, 21000);
+              const linkchecker = fs.readFileSync('linkchecker.log', 'utf8').substring(0, 21000);
+              body += `The documentation build failed.\nLog:\n<details><pre>${build_log}</pre></details>`;
+              body += `\nLinkchecker output:\n<details><pre>${linkchecker}</pre></details>`;
+            }
+
+            // See if we have an existing issue
+            const items = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              creator: 'github-actions[bot]'
+            });
+            const existing = items.data.filter(i => i.title === title);
+
+            params = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body,
+              title: title,
+              labels: ['Type: Maintenance']
+            };
+            
+            // On PRs, avoid actually issuing an API request, since we don't have permission
+            if ( context.eventName === 'pull_request' ) {
+              github.hook.wrap('request', (request, options) => { return {}; })
+            }
+            
+            if (existing.length === 0) {
+                console.log('Creating new issue.')
+                github.rest.issues.create(params)
+            } else {
+                params.issue_number = existing[0].number;
+                console.log(`Updating existing issue: ${params.issue_number}`)
+                github.rest.issues.update(params)
+            }

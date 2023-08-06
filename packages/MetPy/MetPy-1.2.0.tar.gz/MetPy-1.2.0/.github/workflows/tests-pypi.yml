@@ -1,0 +1,80 @@
+name: PyPI Tests
+
+# We don't want pushes (or PRs) to gh-pages to kick anything off
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow}}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  #
+  # Run all tests on Linux using standard PyPI packages, including minimum requirements
+  #
+  PyPITests:
+    name: ${{ matrix.python-version }} ${{ matrix.dep-versions }} ${{ matrix.no-extras }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9, "3.10"]
+        dep-versions: [requirements.txt]
+        no-extras: ['']
+        include:
+          - python-version: 3.7
+            dep-versions: Minimum
+            no-extras: 'No Extras'
+          - python-version: 3.9
+            dep-versions: requirements.txt
+            no-extras: 'No Extras'
+
+    steps:
+    # We check out only a limited depth and then pull tags to save time
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 100
+
+    - name: Get tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Add extras to requirements
+      if: ${{ matrix.no-extras != 'No Extras' }}
+      run: cat ci/extra_requirements.txt >> ci/test_requirements.txt
+
+    - name: Generate minimum dependencies
+      if: ${{ matrix.dep-versions == 'Minimum' }}
+      run: |
+        python << EOF
+        import configparser
+        from pathlib import Path
+
+        # Read our setup.cfg
+        config = configparser.ConfigParser()
+        config.read('setup.cfg')
+
+        # Generate a Minimum dependency file
+        with (Path('ci') / 'Minimum').open('wt') as out:
+          for dep in config['options']['install_requires'].split('\n'):
+            if dep:
+              dep = dep.split(';')[0]
+              out.write(dep.replace('>=', '==') + '\n')
+        EOF
+
+    - name: Install from PyPI
+      uses: ./.github/actions/install-pypi
+      with:
+        need-cartopy: ${{ matrix.no-extras != 'No Extras' }}
+        type: 'test'
+        version-file: ${{ matrix.dep-versions }}
+        python-version: ${{ matrix.python-version }}
+
+    - name: Run tests
+      uses: ./.github/actions/run-tests
+      with:
+        run-doctests: ${{ matrix.dep-versions == 'requirements.txt' && matrix.no-extras != 'No Extras' }}
+        key: pypi-${{ matrix.python-version }}-${{ matrix.dep-versions }}-${{ matrix.no-extras }}-${{ runner.os }}

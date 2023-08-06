@@ -1,0 +1,62 @@
+name: Make Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    name: Build Release Packages
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 10
+
+    - name: Get tags
+      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Set up Python
+      id: setup
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install build tools
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade setuptools setuptools_scm wheel
+
+    - name: Build packages
+      run: python setup.py sdist bdist_wheel
+
+    - name: Save built packages as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: packages-${{ runner.os }}-${{ steps.setup.outputs.python-version }}
+        path: dist/
+        if-no-files-found: error
+        retention-days: 5
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    environment:
+      name: PyPI
+      url: https://pypi.org/project/MetPy/
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download packages
+      uses: actions/download-artifact@v2
+
+    - name: Consolidate packages for upload
+      run: |
+        mkdir dist
+        cp packages-*/* dist/
+
+    - name: Publish Package
+      uses: pypa/gh-action-pypi-publish@v1.5.0
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
