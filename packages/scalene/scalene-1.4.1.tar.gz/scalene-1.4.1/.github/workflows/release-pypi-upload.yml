@@ -1,0 +1,114 @@
+# https://docs.github.com/en/actions/guides/building-and-testing-python#publishing-to-package-registries
+
+# To upload to [test]pypi, define the project secrets PYPI_REPOSITORY (set to "pypi" or
+# "testpypi"), PYPI_USERNAME and PYPI_PASSWORD.
+
+# To have files upload to Google Drive rather than [test]pypi, follow the setup
+# instructions at https://github.com/Jodebu/upload-to-drive and define the
+# GOOGLE_DRIVE_FOLDER and GOOGLE_DRIVE_CREDENTIALS secrets in the project.
+
+name: build & upload
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch: # manual execution
+
+jobs:
+  pick-devN:
+    name: create .devN build date coordinated across all matrix jobs
+    runs-on: ubuntu-latest
+    steps:
+      - run: TZ='America/New_York' date '+%Y%m%d%H%M' > devN.txt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: devN
+          path: devN.txt
+
+  build-and-upload:
+    needs: pick-devN
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python_version: ['3.7', '3.8', '3.9', '3.10']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        include:
+          - os: ubuntu-latest
+            container: quay.io/pypa/manylinux_2_24_x86_64  # https://github.com/pypa/manylinux
+          - os: macos-latest
+            python_version: 3.7
+            upload_source: true   # just need ONE of them to do it
+        exclude:
+          - os: windows-latest
+            python_version: 3.7
+
+    container: ${{ matrix.container }}
+    env:
+      # secrets can't be accessed directly in "if:"
+#      GOOGLE_DRIVE_FOLDER: ${{ secrets.GOOGLE_DRIVE_FOLDER }}
+      TWINE_REPOSITORY: ${{ secrets.PYPI_REPOSITORY }}
+
+    steps:
+      - name: get coordinated .devN
+        uses: actions/download-artifact@v2
+        with:
+          name: devN
+
+      - name: set up to use .devN name if a test build (Unix version)
+        if: env.TWINE_REPOSITORY == 'testpypi' && matrix.os != 'windows-latest'
+        run: echo "DEV_BUILD=$(cat devN.txt)" >> $GITHUB_ENV  # for setup.py
+  
+      - name: set up to use .devN name if a test build (Windows version)
+        if: env.TWINE_REPOSITORY == 'testpypi' && matrix.os == 'windows-latest'
+        run: ("DEV_BUILD=" + (get-content devN.txt)) >> $env:GITHUB_ENV  # for setup.py
+
+      - uses: actions/checkout@v2
+  
+      - name: Set up python (script version)
+        if: matrix.container == ''
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version }}
+  
+      - name: Set up python (container version)
+        if: matrix.container != ''
+        run: |
+          PYV=`echo "${{ matrix.python_version }}" | tr -d "."`; ls -d -1 /opt/python/cp$PYV*/bin | head -n 1 >> $GITHUB_PATH
+          cat $GITHUB_PATH
+  
+      - name: Install dependencies
+        run: |
+          pip3 install setuptools wheel twine
+  
+      - name: Work around arm64 support on MacOS
+        # https://github.com/actions/virtual-environments/issues/2557
+        if: matrix.os == 'macos-latest'
+        run: sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*
+  
+      - name: Build source dist
+        if: matrix.upload_source
+        run: make sdist
+  
+      - name: Build binary dist
+        run: make bdist
+  
+      - name: Figure out google drive upload target
+        if: env.GOOGLE_DRIVE_FOLDER != ''
+        run: |
+          echo "UPLOAD_TARGET=$(ls dist/scalene*.whl)" >> $GITHUB_ENV
+  
+      - name: Upload to google drive
+        if: env.GOOGLE_DRIVE_FOLDER != ''
+        uses: Jodebu/upload-to-drive@master
+        with:
+          target: ${{ env.UPLOAD_TARGET }}
+          credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+          folder: ${{ env.GOOGLE_DRIVE_FOLDER }}
+  
+      - name: Upload
+        if: env.GOOGLE_DRIVE_FOLDER == ''
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: twine upload dist/*
