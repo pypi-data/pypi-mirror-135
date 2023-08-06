@@ -1,0 +1,45 @@
+[tool]
+[tool.poetry]
+name = "sphinx_notebook"
+version = "0.5.0"
+homepage = "https://github.com/midwatch/sphinx_notebook"
+description = "Top-level package for Sphinx Notebook."
+authors = ["Justin Stout <midwatch@jstout.us>"]
+readme = "README.rst"
+license = "MIT"
+classifiers=[
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3.8',
+]
+
+packages = [
+    { include = "sphinx_notebook" },
+    { include = "tests", format = "sdist" },
+]
+
+[tool.poetry.dependencies]
+click = "*"
+python = "^3.8"
+nanoid = "^2.0.0"
+anytree = "^2.8.0"
+Jinja2 = "^2.10.1"
+
+[tool.poetry.dev-dependencies]
+bump2version = "*"
+isort = "*"
+pycodestyle = "*"
+pydocstyle = "*"
+pylint = "*"
+pytest = "*"
+yapf = "*"
+Sphinx = "*"
+
+[tool.poetry.scripts]
+sphinx_notebook = 'sphinx_notebook.cli:main'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
