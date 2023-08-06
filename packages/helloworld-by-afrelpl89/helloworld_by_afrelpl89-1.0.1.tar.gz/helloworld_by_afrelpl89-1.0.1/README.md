@@ -1,0 +1,1 @@
+Kot jest w posiadaniu Ali.
