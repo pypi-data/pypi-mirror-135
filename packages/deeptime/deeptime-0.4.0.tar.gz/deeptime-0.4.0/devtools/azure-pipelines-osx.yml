@@ -1,0 +1,27 @@
+jobs:
+- job:
+  displayName: "OS X"
+  pool:
+    vmImage: 'macOS-1015'
+  timeoutInMinutes: 360
+
+  strategy:
+    matrix:
+      Python37:
+        python.version: '3.7'
+      Python38:
+        python.version: '3.8'
+      Python39:
+        python.version: '3.9'
+      Python310:
+        python.version: '3.10'
+
+    maxParallel: 10
+
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python $(python.version)'
+    inputs:
+      versionSpec: '$(python.version)'
+
+  - template: setup+build+test.yml
