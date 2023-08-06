@@ -1,0 +1,120 @@
+Metadata-Version: 2.1
+Name: catie
+Version: 0.2.3
+Summary: Tools to compute and visualize cohort-attention tied entropy, including CATSensitivity, CATSpecificity, and their combination CATmean
+Home-page: https://github.com/jianfeizhang/catie
+Author: Jianfei Zhang
+Author-email: jianfei.zhang@live.ca
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+This is a package to compute cohort-attention tied entropy (CATE), in three forms CATSensitivity, CATSpecificity, and their combination -- CATmean, given the particular cohorts of interest. CATSensitivity and CATSpecificity are, in effect, an enhancement of Specificity and Sensitivity. The package gives the detailed measure wrt every of cohorts as well.  
+
+
+# Cohort-attention Tied Entropy
+
+## CATSensitivity is given by
+
+<img src="https://latex.codecogs.com/png.latex?\text{CATSensitivity} = \left(1-\frac{1}{1+e^{0.5-\alpha}}\right)\frac{1}{|K^+_\star|}\sum_{\forall k\in K^+_\star}A^+_k + \left(\frac{1}{1+e^{0.5-\alpha}}\right)\frac{1}{|K|-|K^+_\star|}\sum_{\forall k \in K/K^+_\star}A^-_k" />
+
+## and CATSpecificity by
+<img src="https://latex.codecogs.com/png.latex?\text{CATSpecificity} = \frac{\alpha}{|K^-_\star|}\sum_{\forall k\in K^\star}A^-_k + \frac{(1-\alpha)}{|K|-|K^-_\star|}\sum_{\forall k \in K/K^-_\star}A^-_k" /> 
+
+* <b>Minimum = 0</b> when all samples are incorrectly identified 
+* <b>Maximal = 1</b> when all samples are correctly identified
+* <b>Medium = 0.5</b> when 50% of samples are correctly predicted if they are identically treated
+
+The TPR and TNR wrt a cohort can be the accuracy on the entropy basis here:
+
+<img src="https://latex.codecogs.com/png.latex?A^\ast_k = \frac{\sum_{\forall i\in C^+_k}(-p^\ast_i\log p^\ast_i)\cdot {Acc}_i}{\sum_{\forall i\in C^+_k}(-p^\ast_i\log p^\ast_i)},\ \ \forall\ast\in\{+,-\}" />
+
+* <img src="https://latex.codecogs.com/png.latex?\alpha\in[0,1]" /> is an user-defined cohort's weight (<img src="https://latex.codecogs.com/png.latex?K^\star" /> here!), value of 0.5 by default
+* <img src="https://latex.codecogs.com/png.latex?Acc_i" /> is the accuracy wrt individual <img src="https://latex.codecogs.com/png.latex?i" />
+* <img src="https://latex.codecogs.com/png.latex?\alpha\in[0,1]" /> is the accuracy wrt individual <img src="https://latex.codecogs.com/png.latex?i" />'s samples only
+
+## CATmean
+
+<img src="https://latex.codecogs.com/png.latex?\text{CATmean}_\beta = \sqrt{\frac{(1+\beta^2)\cdot\text{CATSensitivity}\cdot\text{CATSpecificity}}{\beta^2\cdot\text{CATSensitivity}+\text{CATSpecificity}}}" />
+
+<img src="https://latex.codecogs.com/png.latex?\beta=1" /> by default
+
+
+
+
+## Example
+
+```
+# The result file 'results.csv' looks as below
+
+ID, tied_ID, cohort, true_label, pred_label, pred_proba
+1, A, c1, 1, 1, 0.8
+2, A, c1, 1, 0, 0.2
+3, B, c1, 0, 0, 0.3
+4, C, c2, 1, 1, 0.9
+5, C, c2, 1, 1, 0.7
+6, C, c2, 1, 1, 0.6
+7, D, c2, 0, 1, 0.8
+8, D, c2, 0, 0, 0.3
+9, E, c3, 1, 1, 0.6
+
+# sig: the cohorts of interest, .e.g., c1 and c2, which are the two values of the cohort columns
+
+# alpha is the user-defined weight for sig, alpha=0.5 by default
+
+# Codes: 
+
+
+from cate.metrics import CAT
+import numpy as np
+
+df = np.read_csv('results.csv')
+
+cols = ['ID','tied_ID','cohort', 'true_label', 'pred_label', 'pred_proba']
+col_ID, col_tied_ID, col_cohort, col_true_label, col_pred_label, col_pred_proba = cols[0], cols[1], cols[2], cols[3], cols[4], cols[5]
+
+# cohorts of our interest
+sig = ['c1','c2']
+
+cat = CAT(df_val, 
+	col_ID = col_ID, 
+	col_tied_ID = col_tied_ID, 
+	col_cohort = col_cohort, 
+	col_true_label = col_true_label, 
+	col_pred_label = col_pred_label, 
+	col_pred_proba = col_pred_proba,
+	sig = sig,
+	alpha = 0.7)
+
+# pred_proba: predicted probabilities
+pred_proba = df['pred_proba']
+
+# set prediected probability
+cat.set_proba(pred_proba)
+
+# compute AUC
+cat.get_auc()
+
+# compute Sensitivity and Specificity based on the cutoff
+# cut_proba: probability cutoff, e.g., 0.85 
+cut_proba = 0.5
+cat.get_sen_spe(cut_proba)
+
+# compute the CATE
+cat.score()
+
+# visualize predicted probability (grouped by samples' true label)
+cat.plot_proba()
+
+# statistic of predicted probability
+cat.stat_proba()
+
+# visualize the statistics about tied samples - those who apper twice or more
+cat.plot_cohort_score()
+
+
