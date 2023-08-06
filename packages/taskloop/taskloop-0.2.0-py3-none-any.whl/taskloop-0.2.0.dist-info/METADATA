@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: taskloop
+Version: 0.2.0
+Summary: Taskwarrior utility to continually loop through and add tasks to a project
+Home-page: https://github.com/kellya/taskloop
+License: MIT
+Author: Alex Kelly
+Author-email: kellya@arachnitech.com
+Requires-Python: >=3.10,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Requires-Dist: click (>=8.0.3,<9.0.0)
+Requires-Dist: prompt-toolkit (>=3.0.24,<4.0.0)
+Requires-Dist: rich (>=11.0.0,<12.0.0)
+Requires-Dist: taskw (>=1.3.1,<2.0.0)
+Project-URL: Documentation, https://taskloop.readthedocs.io
+Description-Content-Type: text/markdown
+
+# Taskloop
+
+This utility allows you to create multiple tasks for a
+[Taskwarrior](https://taskwarrior.org) project.
+
+# Installation
+## via PyPi
+` pip install taskloop`
+## via git (development)
+1. Clone this repo
+2. cd taskloop
+3. `poetry run taskloop/loop.py`
+# Running
+> Note: Currently this is in early development and doesn't actually do anything
+> except demo an autocomplete of your projects
+After pip installing, you may run
+
+`taskloop`
+
+This requires you have a taskrc at ~/.config/task/taskrc.
+
+More flexibility is planned for this though.  If you have an old style
+~/.taskrc, you should be able to symlink it with `mkdir -p ~/.config/task/taskrc
+&& ln -s ~/.taskrc ~/.config/task/taskrc`
+
