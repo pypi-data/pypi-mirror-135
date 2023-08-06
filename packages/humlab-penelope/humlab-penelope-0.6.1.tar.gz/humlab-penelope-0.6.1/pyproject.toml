@@ -1,0 +1,184 @@
+[tool.poetry]
+name = "humlab-penelope"
+version = "0.6.1"
+description = "Utilities that simplify enelpeing in Jupyter Lab"
+authors = ["Roger Mähler <roger.mahler@hotmail.com>"]
+packages = [{ include = "penelope" }]
+classifiers = [
+    'License :: OSI Approved :: Apache Software License',
+    'Operating System :: OS Independent',
+    'Topic :: Software Development',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/humlab/penelope"
+repository = "https://github.com/humlab/penelope"
+
+[tool.poetry.dependencies]
+bokeh = "*"
+click = "*"
+ftfy = "*"
+gensim = "*"
+ipyaggrid = "*"
+ipycytoscape = "*"
+ipyfilechooser = "*"
+ipywidgets = "*"
+jupyter_bokeh = "*"
+loguru = "*"
+lxml = "*"
+memoization = "^0.3.1"
+more_itertools = "^8.5.0"
+msgpack = "^1.0.2"
+nltk = "^3.5"
+numpy = "*"
+openpyxl = "^3.0.5"
+pandas = "*"
+perspective-python = "*"
+pyarrow = "*"
+python = "==3.8.*"
+python-louvain = "^0.14"
+PyYAML = "^5.3.1"
+requests = "^2.24.0"
+scipy = "*"
+sklearn = "*"
+spacy = "*"
+textacy = "*"
+toml = "^0.10.2"
+tqdm = "^4.62.3"
+wordcloud = "*"
+itertoolz = "^0.5"
+ipysheet = "*"
+ipydatagrid = "^1.1.8"
+
+[tool.poetry.dev-dependencies]
+black = "==20.*,>=20.8.0.b1"
+coverage = "==5.*,>=5.3.0"
+flake8 = "==3.*,>=3.8.4"
+flake8-black = "==0.*,>=0.2.1"
+flake8-pytest-style = "==1.*,>=1.3.0"
+isort = "==5.*,>=5.5.4"
+memory-profiler = "^0.58.0"
+mypy = "==0.*,>=0.790.0"
+pep8-naming = "==0.*,>=0.11.1"
+pycodestyle = "==2.*,>=2.6.0"
+pyflakes = "==2.*,>=2.2.0"
+pyinstrument = "==3.*,>=3.4.1"
+pylint = "==2.*,>=2.6.0"
+pyright = "^0.0.9"
+pytest = "==6.*,>=6.1.0"
+pytest-cov = "==2.*,>=2.10.1"
+pytest-xdist = "==2.*,>=2.2.0"
+recommonmark = "==0.*,>=0.7.1"
+Sphinx = "==3.*,>=3.5.1"
+tomlkit = "^0.7.2"
+yapf = "==0.*,>=0.30.0"
+pre-commit = "^2.15.0"
+
+[tool.poetry.scripts]
+vectorize = "penelope.scripts.dtm.vectorize:main"
+tm-train = "penelope.scripts.tm.train:click_main"
+tm-train-id = "penelope.scripts.tm.train_id:click_main"
+tm-predict = "penelope.scripts.tm.predict:click_main"
+co-occurrence = "penelope.scripts.co_occurrence:main"
+pos-tag = "penelope.scripts.pos_tag:main"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = [
+    "-rfE",
+    "--no-cov",
+    "--durations=0"
+    # "-q",
+    # "-s",
+    #"-n4",
+]
+log_cli = "False"
+testpaths = ["tests"]
+norecursedirs = [
+    "test_data",
+    "output",
+    "__pycache__",
+    "deprecated",
+    "penelope",
+    "docs",
+    ".git",
+    ".github",
+    ".vscode",
+    "profile-reports",
+    "tmp",
+
+]
+python_files = "*_test.py"
+python_functions = "test_*"
+filterwarnings = [
+    "ignore::_pytest.warning_types.PytestCollectionWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::RuntimeWarning",
+    "ignore::UserWarning",
+]
+# timeout = 300
+
+[tool.black]
+line-length = 120
+target-version = ["py38"]
+skip-string-normalization = true
+# include = '\.pyi?$'
+exclude = '''
+(
+  \.git
+  | \.pypy_cache
+  | \.pytest_cache
+  | \.mypy_cache
+  | deprecated
+)
+'''
+
+[tool.isort]
+# https://github.com/timothycrosley/isort/wiki/isort-Settings
+profile = "black"
+line_length = 120
+py_version = "auto"
+float_to_top = true
+src_paths = ["penelope", "tests"]
+
+# [tool.taskipy.tasks]
+# pytest = "pytest --junitxml=test-results/junit.xml"
+# bandit = "bandit -c .bandit.yml -r penelope/"
+# black = "black penelope"
+# black_ci = "black -check penelope"
+# flake8 = "flake8 penelope/ tests/"
+# generate_requirements = "poetry export -f requirements.txt -o requirements.txt"
+# pre_safety = "task generate_requirements"
+# safety = "safety check  -r requirements.txt"
+# isort = "isort -rc penelope"
+# isort_ci = "isort -rc -c penelope"
+# full = "task pytest && task black && task flake8 && task safety && task bandit && task isort"
+# ci = "task pytest && task black_ci && task flake8 && task safety && task bandit && task isort_ci"
+
+[tool.coverage]
+# https://github.com/nedbat/coveragepy
+
+[tool.coverage.run]
+source = ["penelope"]
+branch = true
+omit = [
+    "**/__init__.py",
+    "tests/*",
+    "interfaces.py",
+    "interface.py",
+    "penelope/notebook/*",
+    "*_gui.py",
+]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+show_missing = true
+sort = "Name"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
