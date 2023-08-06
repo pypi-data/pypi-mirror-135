@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "fastack-cache"
+version = "1.2.0"
+description = "Caching plugin for fastack"
+authors = ["aprilahijriyan <37798612+aprilahijriyan@users.noreply.github.com>"]
+license = "MIT"
+maintainers = ["aprilahijriyan <37798612+aprilahijriyan@users.noreply.github.com>"]
+readme = "README.md"
+homepage = "https://github.com/fastack-dev/fastack-cache"
+repository = "https://github.com/fastack-dev/fastack-cache"
+classifiers = [
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Topic :: Internet",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.10"
+fastack = "^4.0.0"
+redis = {version = "^4.1.1", optional = true}
+aioredis = {version = "^2.0.1", optional = true}
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.30.1"
+pre-commit = "^2.16.0"
+
+[tool.poetry.extras]
+redis = ["redis"]
+aioredis = ["aioredis"]
+
+[tool.poetry.urls]
+
+"Bug Tracker" = "https://github.com/fastack-dev/fastack-cache/issues"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
