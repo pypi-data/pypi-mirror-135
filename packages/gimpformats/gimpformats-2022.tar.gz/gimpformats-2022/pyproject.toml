@@ -1,0 +1,69 @@
+[tool.poetry]
+name = "gimpformats"
+version = "2022"
+license = "lgpl-3.0-only"
+description = "Pure python implementation of the gimp file format(s)"
+authors = ["FredHappyface"]
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Developers",
+	"Intended Audience :: Education",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Topic :: Multimedia :: Graphics",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Utilities"
+]
+homepage = "https://github.com/FHPythonUtils/GimpFormats"
+repository = "https://github.com/FHPythonUtils/GimpFormats"
+documentation = "https://github.com/FHPythonUtils/GimpFormats/blob/master/README.md"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+binaryiotools = "<2023,>=2021.0.3"
+blendmodes = "<2024,>=2022"
+brackettree = "<2,>=0.2.5"
+numpy = "<2,>=1.22.1"
+Pillow = "<10,>=9.0.0"
+
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+indent = "Tab"
+
+[tool.pydocstyle]
+convention = "google"
+ignore = "D205,D415"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.basic]
+argument-naming-style = "camelCase"
+attr-naming-style = "camelCase"
+function-naming-style = "camelCase"
+method-naming-style = "camelCase"
+variable-naming-style = "camelCase"
+module-rgx = "(([A-Z][a-z0-9]+)+)|(([a-z0-9]*_?[a-z0-9]*)*)"
+good-names = "i,j,k,ex,Run,_,x,y,id"
+
+[tool.pylint.format]
+indent-string = "\t"
+
+[tool.pylint.master]
+ignore-patterns = "test_.*?py"
+
+[tool.pylint.messages_control]
+enable = ["F", "E", "W", "R", "C"]
+disable = [
+	"pointless-string-statement",
+	"superfluous-parens",
+	"bad-continuation",
+	"fixme"
+]
