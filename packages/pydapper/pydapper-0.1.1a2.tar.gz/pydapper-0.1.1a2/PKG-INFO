@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: pydapper
+Version: 0.1.1a2
+Summary: A pure python lib inspired by the dotnet lib dapper
+License: MIT
+Author: Zach Schumacher
+Author-email: zschu15@gmail.com
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Environment :: MacOS X
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Database
+Classifier: Topic :: Database :: Database Engines/Servers
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Provides-Extra: psycopg2
+Provides-Extra: pymssql
+Requires-Dist: dsnparse (>=0.1.15,<0.2.0)
+Requires-Dist: psycopg2-binary (>=2.9.2,<3.0.0); extra == "psycopg2"
+Requires-Dist: pymssql (>=2.2.3,<3.0.0); extra == "pymssql"
+Requires-Dist: types-psycopg2 (>=2.9.4,<3.0.0); extra == "psycopg2"
+Requires-Dist: types-pymssql (>=2.1.0,<3.0.0); extra == "pymssql"
+Description-Content-Type: text/markdown
+
+[![CircleCI](https://circleci.com/gh/zschumacher/pydapper/tree/main.svg?style=svg)](https://circleci.com/gh/zschumacher/pydapper/tree/main)
+[![codecov](https://codecov.io/gh/zschumacher/pydapper/branch/main/graph/badge.svg?token=3X1IR81HL2)](https://codecov.io/gh/zschumacher/pydapper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+
+# pydapper
+A pure python library inspired by the NuGet library [dapper](https://dapper-tutorial.net).
+
+*pydapper* is built on top of the [dbapi 2.0 spec](https://www.python.org/dev/peps/pep-0249/)
+to provide more convenient methods for working with databases in python.
+
+## Help
+See the [documentation](https://pydapper.readthedocs.io/en/latest/) for more details.
+
+## Installation
+It is recommended to only install the database apis you need for your use case.  Example below is for psycopg2!
+```bash
+# pip 
+pip install pydapper[psycopg2]
+# poetry
+poetry add pydapper -E psycopg2
+```
+
+## A Simple Example
+```python
+from dataclasses import dataclass
+import datetime
+
+from pydapper import connect
+
+
+@dataclass
+class Task:
+    id: int
+    description: str
+    due_date: datetime.date
+
+    
+with connect("postgresql+psycopg2://pydapper:pydapper@locahost/pydapper") as conn:
+    tasks = conn.query("select id, description, due_date from task;", model=Task)
+    
+print(tasks)
+#> [Task(id=1, description='Add a README!', due_date=datetime.date(2022, 1, 16))]
+```
+(This script is complete, it should run "as is")
+
