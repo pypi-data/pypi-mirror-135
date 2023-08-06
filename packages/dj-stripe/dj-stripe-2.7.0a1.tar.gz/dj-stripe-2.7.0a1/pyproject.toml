@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "dj-stripe"
+version = "2.7.0-alpha.1"
+description = "Django + Stripe made easy"
+license = "MIT"
+authors = [
+    "Alexander Kavanaugh <alex@kavdev.io>",
+    "Jerome Leclanche <jerome@leclan.ch>",
+]
+readme = "docs/README.md"
+repository = "https://github.com/dj-stripe/dj-stripe"
+documentation = "https://dj-stripe.github.io/dj-stripe/"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+]
+
+packages = [
+    { include = "djstripe" }
+]
+include = [
+    "AUTHORS.md",
+    "CONTRIBUTING.md",
+    "HISTORY.md",
+    "LICENSE",
+]
+exclude = [
+    "manage.py"
+]
+
+[tool.poetry.dependencies]
+python = "^3.7.12"
+django = ">=3.2.5"
+jsonfield = ">=3.0"
+stripe = ">=2.48.0"
+mkdocs = {version = "^1.1.2", optional = true}
+mkdocstrings = {version = "^0.16.0", optional = true}
+mkdocs-material = {version = "^7.2.8", optional = true}
+mkdocs-autorefs = {version = "^0.3.0", optional = true}
+mike = {version = "^1.1.2", optional = true}
+
+
+[tool.poetry.dev-dependencies]
+black = "^21.5b1"
+psycopg2 = "^2.8.5"
+mysqlclient = ">=1.4.0"
+flake8 = "^3.9.2"
+isort = "^5.8.0"
+pre-commit = "^2.15.0"
+pytest = "^6.2.4"
+pytest-django = "^4.3.0"
+mypy = "^0.920"
+
+[tool.poetry.extras]
+docs = ["mkdocs", "mkdocstrings", "mkdocs-material", "mkdocs-autorefs", "psycopg2", "mike"]
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
