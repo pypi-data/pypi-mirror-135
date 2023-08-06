@@ -1,0 +1,76 @@
+{%- import 'snippet.j2' as snippet -%}
+{%- import 'axi_inst.j2' as axi -%}
+
+{% set Queue = import_from('pygears.typing', 'Queue') %}
+{% set typeof = import_from('pygears.typing', 'typeof') %}
+
+module {{wrap_module_name}} #(
+{% for name, p in ports.items() if p.t not in ['axilite', 'axis'] %}
+  parameter integer C_AXI_{{name.upper()}}_ID_WIDTH	= 2{{ "" if loop.last else "," }}
+{% endfor %}
+)
+(
+    input         aresetn,
+    input         aclk,
+{{ port_def|join(",\n")|indent(4, True)}}
+);
+
+   logic   aresetn_axi;  
+   logic   rst;  
+
+   always @(posedge aclk)  
+     begin  
+        aresetn_axi <= aresetn;  
+     end  
+
+{% if rst %}
+   always @(posedge aclk)  
+     begin  
+        rst <= ~aresetn_axi;  
+     end  
+{% else %}
+   assign rst = 1'b0;  
+{% endif %}
+
+{{snippet.intf_inst_list(intfs.values())|indent(4, True)}}
+
+{{snippet.module_inst(module_name, param_map, inst_name, sig_map={'clk': pg_clk, 'rst': 'rst'})|indent(4, True)}}
+
+{% for name, p in ports.items() %}
+  {% set araddr = p.comp.get('araddr', None) %}
+  {% set rdata = p.comp.get('rdata', None) %}
+  {% set awaddr = p.comp.get('awaddr', None) %}
+  {% set wdata = p.comp.get('wdata', None) %}
+
+  {% if p.t == 'axidma' %}
+    {% if rdata %}
+    {{axi.dma_read(name, rdata)}}
+    {% elif wdata %}
+    {{axi.dma_write(name, wdata)}}
+    {% else %}
+    {{ "Unexpeced error in {} config".format(name) | debug}}
+    {% endif %}
+  {% elif p.t == 'axi' %}
+    {% if rdata %}
+      {% if araddr.port %}
+        {{axi.slave_read(name, rdata, araddr)}}
+      {% else %}
+        {{axi.slave_read_no_araddr(name, rdata, araddr)}}
+      {% endif %}
+    {% endif %}
+
+    {% if wdata %}
+      {% if awaddr.port == wdata.port %}
+        {{axi.slave_write_combined(module_name, name, wdata, awaddr)}}
+      {% else %}
+        {{axi.slave_write(module_name, name, wdata, awaddr)}}
+      {% endif %}
+    {% endif %}
+  {% elif p.t == 'bram' %}
+    {{axi.bram(name, awaddr, wdata, araddr, rdata)}}
+  {% elif p.t == 'axis' %}
+    {{axi.axis(name, p.direction, p.comp['tdata'])}}
+  {% endif %}
+{% endfor %}
+
+endmodule

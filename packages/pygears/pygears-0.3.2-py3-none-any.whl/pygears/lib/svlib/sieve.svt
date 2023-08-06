@@ -1,0 +1,15 @@
+{%- import 'snippet.j2' as snippet -%}
+{% set svexpr = import_('pygears.hdl.sv.sv_expression') %}
+
+{% call snippet.gear_module(module_name, intfs, comment) %}
+
+{% set slices = svexpr.sieve_slices(_din_t, params["key"]) %}
+{% set concat = snippet.concat(slices|reverse|format_list("din.data[%s]")) %}
+
+{% if slices %}
+   assign dout.data = {{concat}};
+{% endif %}
+
+   assign dout.valid = din.valid;
+   assign din.ready  = dout.ready;
+{% endcall %}

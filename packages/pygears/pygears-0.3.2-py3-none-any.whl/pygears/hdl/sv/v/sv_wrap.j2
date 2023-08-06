@@ -1,0 +1,28 @@
+{%- import 'snippet.j2' as snippet -%}
+
+module {{wrap_module_name}}
+(
+  {% if sigs == None -%}
+    input clk,
+    input rst,
+  {% else %}
+{{snippet.sig_list(sigs)|indent(4, True) }}
+  {% endif %}
+{{snippet.signal_intf_list(intfs, outtype="wire")|indent(4, True)}}
+);
+
+  {% for i in intfs -%}
+    {% set width = i['width'] %}
+    {% if width == 0 %}
+    {% set width = 1 %}
+    {% endif %}
+    dti #(.W_DATA({{width}})) {{i['name']}}(); // {{i['type']}} ({{i['width']}})
+  {% endfor -%}
+
+{{snippet.signal_intf_connect(intfs)|indent(4, True)}}
+
+/*verilator tracing_on*/
+{{snippet.module_inst(module_name, param_map, inst_name)|indent(4, True)}}
+/*verilator tracing_off*/
+
+endmodule

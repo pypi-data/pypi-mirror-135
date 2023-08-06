@@ -1,0 +1,114 @@
+`ifndef SVRAND_TOP_SV
+`define SVRAND_TOP_SV
+
+
+class eot_tcon;
+   bit [31:0] data_size;
+   rand bit [7:0] test[];
+   int       idx[2];
+
+   function new;
+      assert(std::randomize(data_size) with {
+         soft data_size inside {[1:1000]};
+         data_size inside {[1:100]};
+      } );
+   endfunction
+
+   constraint c_eot {
+      test.size inside {[1:data_size]};
+      test.sum() == data_size;
+      foreach (test[j]) {
+         test[j] inside {[1:data_size]};
+      }
+   }
+
+endclass
+
+class din_dflt_tcon;
+
+`include "socket_macros.svh"
+
+   typedef struct packed { // (u16, u32)
+       logic [1:0] eot; // u32
+       logic [15:0] data; // u16
+   } din_t;
+
+   din_t din;
+
+   rand logic [15: 0] data;
+   eot_tcon queue;
+   bit[$bits(din_t)-1 : 0] res;
+
+   constraint c_dflt {
+      data == queue.idx[0];
+   }
+
+   function new;
+      if(queue==null) queue = new;
+      assert(queue.randomize());
+   endfunction
+
+   function void pre_randomize();
+     `verif_info($sformatf("queue: %d", queue.data_size), 2);
+      din.eot = 0;
+
+      if (queue.idx[0] == (queue.test[queue.idx[1]] - 1)) begin
+        din.eot[0] = 1;
+      end
+
+      if (queue.idx[1] == (queue.test.size - 1)) begin
+        din.eot[1] = 1;
+      end
+
+   endfunction
+
+   function void post_randomize();
+      din.data = data;
+      res = din;
+
+      `verif_info($sformatf("dout: %p (%d, %d)", din, queue.idx[0], queue.idx[1]), 2);
+
+      ++queue.idx[0];
+
+      if (queue.idx[0] == queue.test[queue.idx[1]]) begin
+        queue.idx[0] = 0;
+        ++queue.idx[1];
+      end
+   endfunction
+endclass
+
+
+module svrand_top;
+
+   `include "socket_macros.svh"
+
+   import sock::*;
+
+   din_dflt_tcon din_i = new();
+
+   initial begin
+      `verif_info($sformatf("sum: %d, size: %d", din_i.queue.data_size, din_i.queue.test.size), 2);
+      foreach (din_i.queue.test[j]) begin
+         `verif_info($sformatf("val: %d", din_i.queue.test[j]), 2);
+      end
+   end
+
+   function int get_rand(chandle handle, int req);
+      int ret;
+      bit[17:0] din_data;
+
+      case (req[7:0])
+         1: begin
+            assert(din_i.randomize());
+
+            din_data = din_i.res;
+            ret = sock_put(handle, din_data);
+            `verif_info($sformatf("svrand: Sent din value %p", din_i.res), 2);
+         end
+      endcase
+      return ret;
+   endfunction
+
+endmodule
+
+`endif

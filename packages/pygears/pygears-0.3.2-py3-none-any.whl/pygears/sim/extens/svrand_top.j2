@@ -1,0 +1,42 @@
+`ifndef SVRAND_TOP_SV
+`define SVRAND_TOP_SV
+
+`include "socket_macros.svh"
+
+{# parameter CMD_READ_RANDOMIZE  = 8'h00; #}
+{# parameter CMD_READ            = 8'h01; #}
+
+{% for con in tcons %}
+{{con.get_class()}}
+{% endfor %}
+
+module svrand_top;
+
+   import sock::*;
+
+{% for con in tcons %}
+   {{con.name}}_tcon {{con.name}}_i = new();
+{% endfor %}
+
+   function int get_rand(chandle handle, int req);
+      int ret;
+{% for con in tcons %}
+      bit[{{con.dtype.width-1}}:0] {{con.name}}_data;
+{% endfor %}
+
+      case (req[7:0])
+{% for con in tcons %}
+         {{loop.index}}: begin
+            assert({{con.name}}_i.randomize());
+            {{con.name}}_data = {{con.name}}_i.res;
+            ret = sock_put(handle, {{con.name}}_data);
+            `verif_info($sformatf("svrand: Sent {{con.name}} value %p", {{con.name}}_i.res), 2);
+         end
+{% endfor %}
+      endcase
+      return ret;
+   endfunction
+
+endmodule
+
+`endif

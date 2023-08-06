@@ -1,0 +1,44 @@
+{%- import 'snippet.j2' as snippet -%}
+
+{% if comment is defined -%}
+  {% if isinstance(comment, dict) %}
+    {% if 'comment' in comment and comment['comment'] != None %}
+/*
+    {{ comment['comment'] }}
+*/
+    {% endif %}
+    {% if 'attrib' in comment %}
+      {% for i in comment['attrib'] -%}
+        (* {{ i }} *)
+      {% endfor %}
+    {% endif %}
+  {% else %}
+/*
+    {{ comment }}
+*/
+  {% endif %}
+{% endif %}
+
+module {{module_name}}
+{%- if generics|length > 0 %}
+#({{snippet.generic_list(generics)}}
+)
+{%- endif %}
+(
+  {% if sigs == None -%}
+    input logic clk,
+    input logic rst,
+  {% else %}
+{{snippet.sig_list(sigs)|indent(4, True) }}
+  {% endif %}
+{{snippet.intf_list(intfs)|indent(4, True)}}
+);
+
+/*verilator tracing_off*/
+
+{% for i in inst %}
+{{i|indent(4,True)}}
+
+{% endfor %}
+
+endmodule
