@@ -1,0 +1,67 @@
+# The Singularity HPC settings file holds basic information about the
+# module system to use, and where modules are stored. All settings are
+# currently specific to singularity, but can be extended to other technologies.
+
+# set a default module system
+# Currently lmod and tcl are supported. To request an additional system, 
+# please open an issue https://github.com/singularityhub/singularity-hpc
+module_sys: lmod
+
+# config editor
+config_editor: vim
+
+# set a default container technology (singularity or podman)
+container_tech: singularity
+
+# Registry Recipes (order of paths here is honored for search path))
+# Please preserve the flat list format for the yaml loader
+registry: [$root_dir/registry]
+
+# Lmod or Environment Modules settings 
+# The install directory for modules. Defaults to the install directory/modules
+module_base: $root_dir/modules
+
+# Format string for module commands exec,run,shell (not aliases) (can also include:
+# {{registry}} , {{ repository }}, {{tool}}, {{version}}
+# This is where you might add a prefix to your module names, if desired.
+module_name: '{{ tool }}'
+
+# Create a .version file for LMOD in the module folder
+default_version: true
+
+# store containers separately from module files
+container_base:
+
+# if defined, add to lmod script to load this Singularity module first
+singularity_module:
+podman_module:
+
+# string with comma separated list of paths to binds. If set, expored to SINGULARITY_BINDPATH
+bindpaths:
+
+# for container technologies that can specify a tty input (e.g., -t)
+enable_tty: true
+
+# exported to SINGULARITY_SHELL, defaults to /bin/bash.
+singularity_shell: /bin/sh
+podman_shell: /bin/sh
+docker_shell: /bin/sh
+
+# shell for test.sh file
+test_shell: /bin/bash
+
+# the module namespace you want to install from. E.g., if you have ghcr.io/autamus/clingo
+# and you set the namespace to ghcr.io/autamus, you can just do: shpc install clingo.
+namespace:
+
+# THe name of the environment file to bind to the container.
+# This determines order of load
+environment_file: 99-shpc.sh
+
+# container features like gpu will modify generated recipes
+container_features:
+  gpu:      # one of null, amd, or nvidia
+  x11:      # one of null, true, false, or a path
+            # defaults to ~/.Xauthority if set to true and the container has x11: true
+  home:     # one of null, or a single path or src:dest path. 
+            # home: true in a container.yaml will use this path, if defines
