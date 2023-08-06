@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SIMULTAN.Legacy</name>
+    </assembly>
+    <members>
+        <member name="T:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference">
+            <summary>
+            Abstract base class for all references btw component parameters and SimMultiValue fields.
+            </summary>
+        </member>
+        <member name="F:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.DELIMITER">
+            <summary>
+            Serialization delimiter btw. property values.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.ComponentId">
+            <summary>
+            The component's id.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.ParameterId">
+            <summary>
+            The parameter's id.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.MultiValueId">
+            <summary>
+            The multivalue id.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.Type">
+            <summary>
+            The type of the multivalue field.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.ComponentLocationInfo">
+            <summary>
+            Descriptive information about the component (global).
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.ComponentInfo">
+            <summary>
+            Descriptive information about the component (local).
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.ParameterInfo">
+            <summary>
+            Descriptive information about the parameter.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.MultiValueInfo">
+            <summary>
+            Descriptive information about the values.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.#ctor(ParameterStructure.SimObjects.SimId,System.Int64,System.Int64,ParameterStructure.Values.MultiValueType)">
+            <summary>
+            Initializes an instance of ComponentToMultiValueReference.
+            </summary>
+            <param name="componentId">the component id</param>
+            <param name="parameterId">the parameter id</param>
+            <param name="valueId">the id of the value field</param>
+            <param name="type">the type of the value field</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.Serialize">
+            <summary>
+            Serializes the instance to a string.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.SerializeInfo">
+            <summary>
+            Serializes the instance additional info to a string.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.Deserialize(System.String)">
+            <summary>
+            Deserializes the input string to a specific subtype of ComponentToMultiValueReference.
+            </summary>
+            <param name="input">the input string to deserialize</param>
+            <returns>an instance of subtype ComponentToMultiValueReference or null</returns>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.IsMatch(SIMULTAN.Legacy.Repair.ComponentToMultiValueReference,ParameterStructure.Values.SimMultiValue)">
+            <summary>
+            Matches the given reference with the value using name and size, not ids.
+            </summary>
+            <param name="reference">the reference</param>
+            <param name="mv">the value field</param>
+            <returns>true, if it is a match</returns>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueReference.AddInfo(System.String)">
+            <summary>
+            Adds descriptive information from a string.
+            </summary>
+            <param name="_input">the additional information about component, parameter and value</param>
+        </member>
+        <member name="T:SIMULTAN.Legacy.Repair.ComponentToMultiValueBigTableReference">
+            <summary>
+            Reference btw a component parameter and a MultiValueBigTable.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueBigTableReference.RowIndex">
+            <summary>
+            The index of the table row.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueBigTableReference.ColumnIndex">
+            <summary>
+            The index of the table column.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueBigTableReference.#ctor(ParameterStructure.SimObjects.SimId,System.Int64,System.Int64,System.Int32,System.Int32)">
+            <summary>
+            Initializes an instance of type ComponentToMultiValueBigTableReference.
+            </summary>
+            <param name="componentId">the id of the component</param>
+            <param name="parameterId">the id of the parameter</param>
+            <param name="valueId">the id of the value field</param>
+            <param name="rowIndex">the row index of the table</param>
+            <param name="columnIndex">the column index of the table</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueBigTableReference.Serialize">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference">
+            <summary>
+            Reference btw a component parameter and a SimMultiValueFunction.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference.GraphName">
+            <summary>
+            The name of the function graph.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference.AxisValueX">
+            <summary>
+            The value along the X axis.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference.AxisValueY">
+            <summary>
+            The value aong the Y axis.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference.#ctor(ParameterStructure.SimObjects.SimId,System.Int64,System.Int64,System.String,System.Double,System.Double)">
+            <summary>
+            Initializes an instance of type ComponentToMultiValueFunctionReference.
+            </summary>
+            <param name="componentId">the id of the component</param>
+            <param name="parameterId">the id of the parameter</param>
+            <param name="valueId">the id of the value field</param>
+            <param name="graphName">the name of the function graph</param>
+            <param name="axisValueX">the value along the x axis</param>
+            <param name="axisValueY">the value along the y axis</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueFunctionReference.Serialize">
+            <inheritdoc/>
+        </member>
+        <member name="T:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference">
+            <summary>
+            Reference btw a component parameter and a SimMultiValueField3D.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference.AxisValueX">
+            <summary>
+            The value along the X axis.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference.AxisValueY">
+            <summary>
+            The value along the Y axis.
+            </summary>
+        </member>
+        <member name="P:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference.AxisValueZ">
+            <summary>
+            The value along the Z axis.
+            </summary>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference.#ctor(ParameterStructure.SimObjects.SimId,System.Int64,System.Int64,System.Double,System.Double,System.Double)">
+            <summary>
+            Initializes an instance of type ComponentToMultiValueTableReference.
+            </summary>
+            <param name="componentId">the id of the component</param>
+            <param name="parameterId">the id of the parameter</param>
+            <param name="valueId">the id of the value field</param>
+            <param name="axisValueX">the value along the X axis</param>
+            <param name="axisValueY">the value along the Y axis</param>
+            <param name="axisValueZ">the value along the Z axis</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.ComponentToMultiValueTableReference.Serialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.ExportAllRelationshipsToValues(System.IO.FileInfo,ParameterStructure.Components.SimComponentCollection,System.Boolean)">
+            <summary>
+            Saves the references from component parameters to value fields in a text file.
+            </summary>
+            <param name="_file">the file</param>
+            <param name="_component_manager">the component manager of all relevant components</param>
+            <param name="_verbose">if true, add information about the referenced objects</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.ImportSomeRelationshipsToValues(SIMULTAN.Project.Project.HierarchicalProject,System.IO.FileInfo,System.Boolean)">
+            <summary>
+            Imports the relationships between component parameters and values from a text file.
+            </summary>
+            <param name="_project">the project containing the components and values</param>
+            <param name="_file">the text file</param>
+            <param name="_verbose">if true, there are additional infos about the objects in the relationship</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.GetAllReferencesParameterMultiValueDetailed(ParameterStructure.Components.SimComponent,System.Boolean)">
+            <summary>
+            Retrieve all references from parameters to value fields for the calling component. Includes
+            all subcomponents and the <see cref="T:ParameterStructure.Values.SimMultiValuePointer"/> data of the parameter.
+            </summary>
+            <param name="_comp">the calling component</param>
+            <param name="_verbose">if true, include additional information</param>
+            <returns>relationships in detail</returns>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.ReinstateReferencesDetailed(ParameterStructure.Values.SimMultiValueCollection,System.Collections.Generic.IEnumerable{SIMULTAN.Legacy.Repair.ComponentToMultiValueReference})">
+            <summary>
+            Set the references between component parameters and the values according to
+            the given references including the exact pointer coordinates by looking for ids.
+            </summary>
+            <param name="componentFactory">the component manager</param>
+            <param name="_references">the reference records</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.ReinstateReferencesDetailedWoIds(ParameterStructure.Components.SimComponentCollection,ParameterStructure.Values.SimMultiValueCollection,System.Collections.Generic.IEnumerable{SIMULTAN.Legacy.Repair.ComponentToMultiValueReference})">
+            <summary>
+            Set the references between component parameters and the values according to
+            the given references including the exact pointer coordinates by applying matching.
+            </summary>
+            <param name="componentFactory">the component manager</param>
+            <param name="_references">the reference records</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.SetParameterMultiValuePointerAccToRefDetailed(ParameterStructure.Components.SimComponent,SIMULTAN.Legacy.Repair.ComponentToMultiValueReference,ParameterStructure.Values.SimMultiValue,System.Boolean)">
+            <summary>
+            Sets the specific pointer to the parameter in the given reference.
+            </summary>
+            <param name="_comp">the calling component</param>
+            <param name="_reference">the reference details</param>
+            <param name="_mv">the value which the parameter should reference</param>
+            <param name="_use_id">if true, serch the parameter by id, otherwise by a match</param>
+        </member>
+        <member name="M:SIMULTAN.Legacy.Repair.RepairMissingValueFieldReferences.GetMatches(System.Collections.Generic.IEnumerable{ParameterStructure.Components.SimComponent},SIMULTAN.Legacy.Repair.ComponentToMultiValueReference,System.Collections.Generic.List{ParameterStructure.Components.SimComponent})">
+            <summary>
+            Searches the internal cache on all hierarchical levels
+            for the components that match the given reference.
+            </summary>
+            <param name="reference">the reference to compare to</param>
+            <returns>a collection of components</returns>
+        </member>
+    </members>
+</doc>
