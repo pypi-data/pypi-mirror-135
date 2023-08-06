@@ -1,0 +1,55 @@
+trader_id: "MON-001"
+log_level: "INFO"
+log_path: "/var/log/nacre/watcher.log"
+data_clients:
+  "ZB_SPOT":
+    "defaultType": "spot"
+  "ZB_FUTURE":
+    "defaultType": "future"
+  "BINANCE_SPOT":
+    "defaultType": "spot"
+  "BINANCE_FUTURE":
+    "defaultType": "future"
+exec_client_ids:
+  "ZB-001": {}
+  "ZB-002": {}
+
+  "BINANCE-TR006": {}
+  "BINANCE-ZBHDG": {}
+  "BINANCE-BTAM":
+    "socksProxy": "socks5://localhost:8898"
+    "httpProxy": "http://localhost:8899"
+
+timeout_connection: 20
+# timeout_disconnection: 20
+    
+pubsub:
+  "type": "kafka"
+  "bootstrap_servers": "192.168.18.4:19092,192.168.18.4:29092,192.168.18.4:39092"
+  "schema_registry": "http://192.168.18.4:8081"
+  "topic_filter": "events.snapshot"
+
+exposer: 
+  host: "0.0.0.0"
+  port: "8081"
+
+factories:
+  data_clients:
+    "BINANCE_SPOT": "nacre.adapters.binance.factories:BinanceLiveDataClientFactory"
+    "BINANCE_FUTURE": "nacre.adapters.binance.factories:BinanceLiveDataClientFactory"
+    "ZB_FUTURE": "nacre.adapters.zb.factories:ZbLiveDataClientFactory"
+    "ZB_SPOT": "nacre.adapters.zb.factories:ZbLiveDataClientFactory"
+  exec_clients:
+    "ZB_SPOT": "nacre.adapters.zb.factories:ZbLiveExecutionClientFactory"
+    "ZB_FUTURE": "nacre.adapters.zb.factories:ZbLiveExecutionClientFactory"
+    "BINANCE_SPOT": "nacre.adapters.binance.factories:BinanceLiveExecutionClientFactory"
+    "BINANCE_FUTURE": "nacre.adapters.binance.factories:BinanceLiveExecutionClientFactory"
+
+# paths:
+#   - "/Users/sid/Developer/WorkSpace/nacre_stra"
+
+strategies:
+  - path: "nacre.examples.strategies.mon:Mon"
+    config_path: "nacre.examples.strategies.mon:MonConfig"
+    config:
+      venues: "BINANCE_FUTURE,ZB_FUTURE"
