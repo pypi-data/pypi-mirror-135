@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+  <rules if-not="$isinminisitemode">
+      <after css:content="#footer-sitemap">
+          <div id="footer-social">
+              <xsl:copy-of select="//*[@id='social-viewlet']" />
+          </div>
+      </after>
+
+      <drop css:content="#social-viewlet" />
+
+  </rules>
+  
+
+
+</rules>

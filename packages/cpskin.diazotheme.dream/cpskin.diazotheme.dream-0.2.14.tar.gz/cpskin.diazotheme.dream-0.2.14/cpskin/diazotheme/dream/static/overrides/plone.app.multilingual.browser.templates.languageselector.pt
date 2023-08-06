@@ -1,0 +1,21 @@
+<tal:language tal:condition="view/available">
+<ul id="portal-languageselector"
+    tal:define="showFlags view/showFlags;
+                languages view/languages;
+                portal_url view/portal_url;">
+    <tal:language repeat="lang languages">
+    <li tal:define="code lang/code;
+                    selected lang/selected;
+                    codeclass string:language-${code};
+                    current python: selected and 'currentLanguage ' or '';"
+        tal:attributes="class string:${current}${codeclass}">
+        <a href=""
+           tal:define="name lang/native|lang/name;"
+           tal:attributes="href lang/url;
+                           title name">
+            <tal:block replace="python: code.capitalize()">language code</tal:block>
+        </a>
+    </li>
+    </tal:language>
+</ul>
+</tal:language>

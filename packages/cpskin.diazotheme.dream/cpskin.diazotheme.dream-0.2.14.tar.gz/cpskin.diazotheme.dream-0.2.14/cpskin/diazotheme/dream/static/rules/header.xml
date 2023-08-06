@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:css="http://namespaces.plone.org/diazo/css">
+
+  <replace css:content-children="#portaltab-index_html a">
+      <span class="icon-home" />
+  </replace>
+  <before css:content="#portal-top">
+    <xsl:copy-of select="//*[@id='messagesviewlet']" />
+  </before>
+  <after css:content-children="#portal-top > div">
+    <div id="container-portal-breadcrumbs">
+        <xsl:copy-of select="//*[@id='portal-breadcrumbs']" />
+    </div>
+  </after>
+  <after css:content="#portal-top">
+    <xsl:copy-of select="//div[contains(@class, 'slider-top')]" />
+  </after>
+  <drop css:content="#accueil .slider-top" />
+  <!-- Header / banner specific to minisite mode -->
+  <rules if="$isinminisitemode">
+      <replace css:content-children="#portal-header">
+          <xsl:copy-of select="//div[@id='gdpr-consent-banner']" />
+
+          <div id="top-languages">
+            <xsl:copy-of select="//*[@id='portal-languageselector']" />
+          </div>
+
+          <div id="top-actions" class="minisitessss">
+            <div id="top-actions-inner" class="minisites">
+            </div>
+          </div>
+      </replace>
+      <before css:content-children="#cpskin-banner">
+            <div id="top-search">
+              <div id="top-search-inner">
+                <xsl:copy-of select="//*[@id='portal-searchbox']"/>
+              </div>
+            </div>
+           
+        </before>
+      <drop css:content="#viewlet-above-content #viewlet-minisite" />
+      <drop css:content="#portal-breadcrumbs" />
+      <drop css:content="#minisite-searchs" />
+
+  </rules>
+
+  <!-- Standard Header / banner -->
+  <rules if-not="$isinminisitemode">
+      <replace css:content-children="#portal-header">
+          <div id="top-navigation" class="minisite-collapsable">
+            <div id="top-navigation-inner">
+                <div id="top-logo">
+                    <div id="top-logo-inner">
+                        <xsl:apply-templates select="./*[@id='portal-logo']" />
+                    </div>
+                     
+                </div>
+                <xsl:apply-templates select="./*[@id='portal-globalnav']" />
+                <div id="languages-tools">
+                    <div id="languages-tools-inner">
+                        <xsl:copy-of select="./*[@id='top-menu-actions']" />
+                        <div id="div-siteactions">
+                                <xsl:copy-of select="//*[@id='portal-siteactions']" />
+                        </div>
+                        <xsl:if test="$is_search_in_actions">
+                          <div id="search-action">
+                            <a href="#" class="btn-search">
+                                <span class="ico-search"></span>
+                                <xsl:apply-templates select="document('/@@theme-fragment/search')/*"
+                                                     mode="raw"/>
+                            </a>
+                          </div>
+                        </xsl:if>
+                        <xsl:copy-of select="./*[@id='portal-personaltools-wrapper']" />
+                        <xsl:copy-of select="./*[@id='portal-languageselector']" />
+                    </div>
+                    
+                </div>
+                  
+              <xsl:apply-templates select="./*[not(@id) or (@id!='portal-personaltools-wrapper'
+                                                            and @id!='portal-searchbox'
+                                                            and @id!='portal-globalnav'
+                                                            and @id!='portal-languageselector'
+                                                            and @id!='portal-logo'
+                                                            and @id!='messagesviewlet')]"/>
+            </div>
+          </div>
+            <div id="hidden-search" style="display:none;">
+              <xsl:copy-of select="./*[@id='portal-searchbox']"/>
+            </div>   
+      </replace>
+      <after css:content="#portal-globalnav li:last-child">
+         <xsl:if test="$is_search_in_navigation">
+            <li id="portaltab-search">
+                 <a href="#"  class="btn-search">
+                    <span class="ico-search"></span>
+                    <xsl:apply-templates select="document('/@@theme-fragment/search')/*"
+                                         mode="raw"/>
+                </a>
+            </li>             
+         </xsl:if>
+      </after>  
+        <before if="$is_search_in_banner" css:content-children="#cpskin-banner">
+            <div id="top-search">
+              <div id="top-search-inner">
+                <xsl:copy-of select="//*[@id='portal-searchbox']"/>
+              </div>
+            </div> 
+        </before>
+        <after css:content="#portal-globalnav li:last-child">
+         <xsl:if test="$is_search_in_banner">
+            <li class="visible-search">
+                 <a href="#"  class="btn-search">
+                    <span class="ico-search"></span>
+                    <xsl:apply-templates select="document('/@@theme-fragment/search')/*"
+                                         mode="raw"/>
+                </a>
+            </li>             
+         </xsl:if>
+      </after> 
+      
+      <drop css:content="#minisite-search" />
+  </rules>
+  
+  <drop css:content="#portal-siteactions" />
+  <drop css:content="#minisite-globalnav" />
+  <drop css:content="#portal-breadcrumbs" />
+  <drop css:content="#top-menu-actions" />
+  
+    
+    <!-- Logo to minisite horizontal navigation and minisite action-->
+    <rules if="$ms_horizontal_navigation_any_mode">
+        <before css:content-children="#container-minisite-globalnav">
+            <xsl:copy-of select="//*[@id='minisite-actions']" />
+            <div id="minisite-navigation-inner">
+                <div id="minisite-logo-nav">
+                    <xsl:copy-of select="//*[@id='minisite-logo']" />
+                    <xsl:copy-of select="//*[@id='minisite-globalnav']" />
+                    <xsl:copy-of select="//*[@class='minisite-dropdown-menu']" />
+                </div> 
+            </div>   
+        </before>
+        <drop css:content="#minisite-logo" />
+        <drop css:content="#minisite-actions" />
+        <drop css:content=".minisite-dropdown-menu" />
+    </rules>
+  
+</rules>
