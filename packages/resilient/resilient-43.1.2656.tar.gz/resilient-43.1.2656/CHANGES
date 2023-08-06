@@ -1,0 +1,147 @@
+**2022-01: version 43.1**
+
+* Ability to globally check if ``unrecognized arguments`` are allowed
+
+**2021-11: version 43.0**
+
+* Formatted Sphinx documentation and hosted it at https://ibm.biz/soar-python-docs
+
+**2021-11: version 42.3**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2021-10: version 42.2**
+
+* Bug fix for ``pip >= 21.3``
+
+**2021-08: version 42.1**
+
+* Bug fix removing pinned ``urllib3`` dependency
+
+**2021-08: version 42.0**
+
+* Added support for ``HTTP_PROXY``, ``HTTPS_PROXY`` and ``NO_PROXY`` environmental variables. See the App Host Deployment Guide for details.
+* Add new ``User-Agent: soar-app-1.0`` header for API calls to SOAR platform.
+* Bug fixes.
+
+**2021-06: version 41.1**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2021-05: version 41.0**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2021-03: version 40.2**
+
+* Bug fix for to use ``setuptools_scm < 6.0.0`` for Python 2.7 environments
+
+**2021-03: version 40.1**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2021-02: version 40.0**
+
+* Bump minimum ``requests`` version to 2.25.0
+
+**2020-07-15: version 37.2**
+
+* Bug fix for proxy in python 3.
+
+**2020-01-16: version 35.0.195**
+
+* Moved ImportDefinition from ``resilient-circuits``
+* Added --resilient-mock parameter
+
+**2019-08-02: version 33.0.189**
+
+* Minor bug fixes.
+
+**2019-07-03: version 32.0.186**
+
+*  Fix for deprecated log warnings
+*  Other minor bug fixes
+
+**2019-04-12: version 32.0.140**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2019-03-06: version 32.0.126**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2019-01-15: version 32.0**
+
+* No major changes. Just bumping build number to coincide with other builds
+
+**2018-12-05: version 31.0**
+
+* Bug Fixes
+
+**2018-04-15: version 30.0**
+
+* Fix an issue with keyring values outside the ``[resilient]`` config section
+
+**2018-02-22: version 29.1.0**
+
+* Fix an issue with performance receiving STOMP messages
+
+**2017-12-12: version 29.0.1**
+
+* Fix an issue with backward compatibility between ``co3`` and ``resilient`` package names
+
+**2017-12-01: version 29.0.0**
+
+* Refactoring base class to support minimal environments
+
+**2017-09-01: version 28.2.1**
+
+* rename ``co3`` package to ``resilient``
+     .. note::
+          note The module ``co3`` is retained for backward compatibility, and most applications will still work
+          using ``import co3`` after this change.  Applications that import from submodules (``import co3.co3.xxx``)
+          must be changed to import from ``resilient`` instead.
+
+**2017-08-24: version 28.1.**
+
+* add ``patch`` method to ``SimpleClient`` for efficient field-level updates
+
+**2017-06-22: version 28.0.33**
+
+* disable the ConfigParser ``%`` interpolation feature
+
+**2017-06-14: version 28.0.30**
+
+* Add get_const() to get the ConstREST endpoint
+* Add search() to post to the SearchExREST endpoint (only for v28+ servers)
+     (Note: there is no method to call the deprecated ``searchREST`` endpoint from earlier versions)
+* Fix proxy support, adding config options: proxy_host, proxy_port, proxy_user, proxy_password
+* Remove ``stomp.py`` dependency, ``resilient_circuits`` now uses stompest library
+* New ``res-keyring`` command-line utility to store secrets in the keyring
+* Move the keyring and env argument parser from ``resilient_circuits`` into co3,
+     so all config files can make use of ``^xxx`` (keyring) and ``$xxx`` (environment) values
+* Add a dependency on ``keyring`` package
+
+**2017-04-27: version 27.1.22**
+
+* Remove ``dist``, instead releases are available on https://github.com/Co3Systems/co3-api/releases
+* Minor modifications to automated build numbering
+
+**2017-04-21: version 27.1.13**
+
+* Remember the available orgs that the user can log in to
+* Add ``post_artifact_file`` method to support posting file (binary) artifacts
+* Add ``cached_get`` method and ``--cache-ttl`` commandline option
+* Add ``get_client`` helper function to properly construct a SimpleClient from options
+* For Debian OS, specify exact version of the ``keyring`` dependency
+* Use configuration file ($APP_CONFIG_FILE or ./app.config or ~/.resilient/app.config) for utility scripts
+* Move the utility scripts ``gadget`` and ``finfo`` into the co3 module, installed as executables
+* Add support for tests
+
+**2017-02-17: version 27.0.0**
+
+* Support UTF8 strings in co3 module
+* Support UTF8 characters in configuration files
+* Add optional ``timeout`` parameter to REST calls
+* Add ``NoChange`` to optimize get/put
+* Fix ``post_attachment()`` to guess MIME-type based on the filename
