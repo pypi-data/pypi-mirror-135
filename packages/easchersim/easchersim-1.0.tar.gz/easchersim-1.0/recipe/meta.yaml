@@ -1,0 +1,66 @@
+{% set name = "easchersim" %}
+{% set version = environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_') %}
+{% set build_number = environ.get('GIT_DESCRIBE_NUMBER', '0') %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: {{ environ.get('FEEDSTOCK_ROOT', '..') }}
+
+build:
+  number: {{ build_number }}
+  string: {{ [('py' + CONDA_PY), ('h' + PKG_HASH), environ.get('GIT_DESCRIBE_HASH', '')]|join('_') }}
+
+  script: "{{ PYTHON }} -m pip install --no-deps . -vv"
+
+requirements:
+  host:
+    - python {{ python }}
+    - pip
+    - setuptools >=46
+    - setuptools_scm[toml] >=3.4
+    - numpy >=1.20
+    - wheel
+
+  run:
+    - numpy >=1.20
+    - python
+    - scipy
+    - matplotlib
+    - importlib_resources
+    - matplotlib
+    - matplotlib-label-lines
+    - rich
+    # - root
+
+# need more tests
+test:
+  commands:
+    - easchersim -h
+    - easchersim make-config --help
+    - easchersim run -h
+  imports:
+    - EASCherSim
+
+
+about:
+  home: https://gitlab.com/c4341/easchersim
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: 'Calculating Optical Cherenkov profile of Extensive Air Showers'
+  description: |
+    This tool simulates the cherenkov light emission for extensive airshowers with 
+    trajectories below and above the limb as a full Monte Carlo simulation.
+    As a result it provides the photon spatial, time and angular distribution at the 
+    detection plane. The tool has the option to take the effect of a magnetic field 
+    into account.
+  dev_url: https://gitlab.com/c4341/easchersim
+  doc_url: https://c4341.gitlab.io/easchersim
+
+extra:
+  recipe-maintainers:
+    - Austin Cummings
+    - Johannes Eser

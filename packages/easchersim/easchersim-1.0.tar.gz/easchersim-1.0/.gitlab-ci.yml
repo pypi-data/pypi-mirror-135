@@ -1,0 +1,87 @@
+# This file is a template, and might need editing before it works on your project.
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Python.gitlab-ci.yml
+
+# Official language image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/python/tags/
+image: python:latest
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python --version  # For debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+stages:
+  - run
+  - test
+  - deploy
+
+test:
+  script:
+    - python -m pip install --upgrade .
+    - easchersim -h
+    - easchersim make-config test.ini
+
+#run:
+#  script:
+#    - python -m pip install --upgrade
+#    - easchersim -h
+#    - easchersim make-config test.ini
+
+deployPiPy:
+  stage: deploy
+  script:
+    - python -m pip install --upgrade build
+    - python -m pip install --upgrade twine
+    - python -m build
+    - twine check dist/*
+    - python -m twine upload dist/*
+  only:
+    - tags
+
+deployConda:
+  stage: deploy
+  image: continuumio/miniconda3:latest
+  before_script: []
+  script:
+    - conda config --append channels conda-forge
+    - conda install conda-build anaconda-client conda-verify
+    - conda build --no-anaconda-upload --output-folder=dist/ recipe/
+    - conda install -c $PWD/dist easchersim
+    - conda convert --platform osx-64 dist/linux-64/easchersim* -o dist/
+    - anaconda -t "$ANACONDA_TOKEN" upload -u easchersim dist/*/*.tar.bz2
+
+  only:
+    - tags
+
+pages:
+  stage: deploy
+  script:
+    - pip install .
+    - pip install -r docs/requirements
+    - sphinx-build -b html docs public
+  artifacts:
+    paths:
+      - public
+    expire_in: 5 min
+  only:
+    - main
+    - tags
