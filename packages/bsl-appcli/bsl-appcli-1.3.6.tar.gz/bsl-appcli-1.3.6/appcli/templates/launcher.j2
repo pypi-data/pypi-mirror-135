@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+##
+ # Wrapper to launch {{ app_name }}.
+ #
+ # Application version: v{{ app_version }}
+ # _____________________________________________________________________________
+ #
+ # Generated at {{ current_datetime }}
+ ##
+
+# ------------------------------------------------------------------------------
+# VARIABLES
+# ------------------------------------------------------------------------------
+
+# Variables are defaulted so that they can be overridden at runtime if desired
+MOUNTED_CONFIG_DIR="{{ '${' }}{{ app_name }}_CONFIG_DIR:-{{ cli_context.configuration_dir }}{{ '}' }}"
+MOUNTED_GENERATED_CONFIG_DIR="{{ '${' }}{{ app_name }}_GENERATED_CONFIG_DIR:-{{ cli_context.get_generated_configuration_dir() }}{{ '}' }}"
+MOUNTED_DATA_DIR="{{ '${' }}{{ app_name }}_DATA_DIR:-{{ cli_context.data_dir }}{{ '}' }}"
+MOUNTED_BACKUP_DIR="{{ '${' }}{{ app_name }}_BACKUP_DIR:-{{ cli_context.backup_dir }}{{ '}' }}"
+ENVIRONMENT="{{ '${' }}{{ app_name }}_ENVIRONMENT:-{{ cli_context.environment }}{{ '}' }}"
+
+# ------------------------------------------------------------------------------
+# LOGIC
+# ------------------------------------------------------------------------------
+
+function main()
+{
+
+    docker run \
+        --name {{ app_name }}_{{ cli_context.environment }}_launcher_$(date +%s) \
+        --rm \
+        $( [[ "${NO_INTERACTIVE}" != "true" ]] && echo "--interactive") \
+        $( [[ "${NO_TTY}" != "true" ]] && echo "--tty") \
+{% if cli_context.docker_credentials_file %}
+        --volume "{{ cli_context.docker_credentials_file }}:/root/.docker/config.json" \
+{% endif %}
+{% for name, value in cli_context.additional_env_variables %}
+        --env {{ name }}="{{ value }}" \
+{% endfor %}
+{% for name, path in cli_context.additional_data_dirs %}
+        --env {{ name }}="{{ path }}" \
+        --volume "{{ path }}:{{ path }}" \
+{% endfor %}
+        --volume /var/run/docker.sock:/var/run/docker.sock \
+        --env APP_NAME="{{ app_name }}" \
+        --env {{ app_name }}_CONFIG_DIR="${MOUNTED_CONFIG_DIR}" \
+        --volume "${MOUNTED_CONFIG_DIR}:${MOUNTED_CONFIG_DIR}" \
+        --env {{ app_name }}_GENERATED_CONFIG_DIR="${MOUNTED_GENERATED_CONFIG_DIR}" \
+        --volume "${MOUNTED_GENERATED_CONFIG_DIR}:${MOUNTED_GENERATED_CONFIG_DIR}" \
+        --env {{ app_name }}_DATA_DIR="${MOUNTED_DATA_DIR}" \
+        --volume "${MOUNTED_DATA_DIR}:${MOUNTED_DATA_DIR}" \
+        --env {{ app_name }}_BACKUP_DIR="${MOUNTED_BACKUP_DIR}" \
+        --volume "${MOUNTED_BACKUP_DIR}:${MOUNTED_BACKUP_DIR}" \
+        --env {{ app_name }}_ENVIRONMENT="${ENVIRONMENT}" \
+        --network host \
+        {{ configuration.docker_image }}:{{ app_version }} \
+            --configuration-dir "${MOUNTED_CONFIG_DIR}" \
+            --data-dir "${MOUNTED_DATA_DIR}" \
+            --backup-dir "${MOUNTED_BACKUP_DIR}" \
+            --environment "${ENVIRONMENT}" \
+{% for name, path in cli_context.additional_data_dirs %}
+            --additional-data-dir {{ name }}="{{ path }}" \
+{% endfor %}
+{% for name, value in cli_context.additional_env_variables %}
+            --additional-env-var {{ name }}="{{ value }}" \
+{% endfor %}
+{% if cli_context.debug %}
+            --debug \
+{% endif %}
+            $@
+
+}
+
+# ------------------------------------------------------------------------------
+# LOGIC
+# ------------------------------------------------------------------------------
+
+main $@
