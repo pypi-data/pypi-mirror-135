@@ -1,0 +1,165 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html : #}
+<div class="segment">
+  <div class="segment-liner">
+    <h2 id="{{report.taskid}}" class="task_header">
+      {# TODO: Make this a link to the task instructions? #}
+      {# TODO: Task instructions via potluck server? #}
+      {{report.taskid}} tests: {{report.validation}}
+    </h2>
+    (validated {{report.timestamp|at_time}})
+  </div>
+</div>
+<div id="{{report.taskid}}_body" class="task_body with_rubric">
+
+  <!-- The rubric report -->
+  <section class="task_tests_validation segment">
+    <div class="segment-liner">
+      <h3>Rubric report</h3>
+      <div class="validation">
+        Your tests were
+        <span class="eval_{{(report.validation or 'unknown')}}">
+          {{report.validation|safe}}
+        </span>.
+      </div>
+      <div class="summary">
+        {{report.summary|safe}}
+      </div>
+      {% if report.warnings|length > 0 %}
+        <div class="warnings">
+          <h4>Warnings</h4>
+          <p>
+            You should prioritize fixing these major issues. If you don't
+            understand them, ask a tutor or instructor for help.
+          </p>
+          {% for w in report.warnings %}
+          <div class="warning">{{w|safe}}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {{(report.rendered_table or '')|safe}}
+    </div>
+  </section>
+
+  <!-- Rendered test files -->
+  <div class="sticky_context" id="{{report.taskid}}_test_code_context">
+    <section
+     class='sticky_bin segment'
+     id="{{report.taskid}}_test_code"
+     tabindex="0"
+     aria-label="Your testing code"
+     aria-live="polite"
+    >
+      <h3 class="bin_label" tabindex="0">Your testing code</h3>
+      <div class="segment-liner">
+
+        {% for file in report.files %}
+          <h4>File <code>{{file.filename}}</code></h4>
+          {% if "base64" in file %}
+            <a
+             href="data:text/plain;base64,{{file.base64}}"
+             download="{{file.filename}}"
+            >
+              Click here to download your original
+              <code>{{file.filename}}</code>
+            </a>
+          {% else %}
+            (File data is not available.)
+          {% endif %}
+          {% if "code" in file %}
+            {% if "original_code" in file %}
+              <p class="warning">
+                Note: this code was modified during the evaluation
+                process to attempt to fix errors. You should fix those
+                errors yourself and resubmit (see the warnings above).
+              </p>
+            {% endif %}
+            <div
+             class="task_tests_code"
+             id="{{report.taskid}}_tests_{{file.filename|fileslug}}"
+            >
+              <div class="highlight">
+                <div class="eighty_top" aria-hidden="true">
+                  80 characters
+                  <span class="status_symbol">⇥</span>
+                </div>
+                {{file.code_html|safe}}
+                <div class="eighty" aria-hidden="true">
+                  80 characters
+                  <span class="status_symbol">⇥</span>
+                </div>
+              </div>
+            </div>
+          {% elif "raw" in file %}
+            <div
+             class="raw_file"
+             id="{{report.taskid}}_raw_{{file.filename|fileslug}}"
+            >
+              <pre>
+                {{file.raw}}
+              </pre>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <!-- Context results -->
+  <div class="sticky_context" id="{{report.taskid}}_results_context">
+    <section
+     class='sticky_bin segment last-segment'
+     id="{{report.taskid}}_contexts"
+     tabindex="0"
+     aria-label="Test results"
+     aria-live="polite"
+    >
+      <h3 class="bin_label" tabindex="0">Test results</h3>
+      <div class="segment-liner">
+          {{report.rendered_contexts|safe}}
+      </div>
+    </section>
+  </div>
+
+  <!-- Instructions -->
+  <div class="sticky_context" id="{{taskid}}_snippets_context">
+    <section
+     class='sticky_bin instructions segment'
+     id="{{taskid}}_instructions"
+     tabindex="0"
+     aria-label="Instructions"
+     aria-live="polite"
+    >
+      <h3 class="bin_label" tabindex="0">Instructions</h3>
+      <div class="segment-liner">
+        <p>
+          <label for="decorate_goal_links">
+            <input type="checkbox" id="decorate_goal_links" checked>
+            Decorate goal links
+          </label>
+        </p>
+        {{instructions}}
+      </div>
+    </section>
+  </div>
+
+  <!-- Snippets -->
+  {% if snippets|length > 0 %}
+  <div class="sticky_context" id="{{taskid}}_snippets_context">
+    <section
+     class='sticky_bin segment'
+     id="{{taskid}}_snippets"
+     tabindex="0"
+     aria-label="Examples"
+     aria-live="polite"
+    >
+      <h3 class="bin_label" tabindex="0">Examples</h3>
+      <div class="segment-liner">
+          {% for snippet in snippets %}
+            {{snippet|safe}}
+          {% endfor %}
+      </div>
+    </section>
+  </div>
+  {% endif %}
+  
+</div>

@@ -1,0 +1,709 @@
+#!/usr/bin/env python3
+"""
+potluck_tool
+
+Command-line potluck server maintenance entry point; run this file in the
+shell (from the server run directory) to do things like regrading
+submissions or extracting time-spent data. You can also import it and
+call `main` with a list of strings instead. Run with '-h' or '--help' for
+a summary of command-line arguments.
+
+Depends on the `potluck` module.
+
+This script relies on a server configuration file to connect to the
+storage backend and also find the evaluation files. A command-line option
+can control where the server config is found.
+
+The default course and semester from the server configuration will be
+used if no course or semester is specified.
+"""
+
+import sys
+import os
+import json
+
+# To load server config
+import flask
+
+__version__ = "1.0.0"
+
+
+def create_argument_parser():
+    """
+    Creates an argument parser for handling command-line arguments.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="potluck_tool",
+        description=(
+            "Potluck tool: Maintenance tasks for a potluck server. Use"
+            " either 'regrade' or 'timing' as the command, where"
+            " 'regrade' will re-evaluate student submissions in a way"
+            " that will be picked up by the potluck server, and 'timing'"
+            " will print out a summary of timing information collected"
+            " from submissions recorded by the server. Run it in the"
+            " server run directory."
+        )
+    )
+    parser.add_argument(
+        "--version",
+        action='version',
+        version="%(prog)s v{}".format(__version__)
+    )
+
+    parser.add_argument(
+        "command",
+        choices=["regrade", "timing"],
+        help="The command to run, either 'regrade' or 'timing'."
+    )
+
+    parser.add_argument(
+        "--course",
+        default=None,
+        help=(
+            "ID string for course to operate on. Uses default from"
+            " server config if not specified."
+        )
+    )
+    parser.add_argument(
+        "--semester",
+        default=None,
+        help=(
+            "ID string for semester to operate on within course."
+            " Uses default from server config if not specified."
+        )
+    )
+    parser.add_argument(
+        '-t', "--task",
+        help="ID string for task to regrade or fetch times for."
+    )
+    parser.add_argument(
+        "-u", "--user",
+        default=None,
+        help="Use if you only want to regrade one student's submission."
+    )
+    parser.add_argument(
+        "-p", "--phase",
+        default=None,
+        help=(
+            "Use to regrade or get timing for a specific phase (e.g.,"
+            " 'initial' or 'revision`."
+        )
+    )
+    parser.add_argument(
+        "--conf",
+        default="ps_config",
+        help=(
+            "name of server configuration module to load (without the"
+            " .py)"
+        )
+    )
+    parser.add_argument(
+        "--specs",
+        default=None,
+        help="custom specifications directory"
+    )
+    parser.add_argument(
+        "--clean",
+        action='store_true',
+        help="do not use or create reference value caches"
+    )
+    parser.add_argument(
+        "--import-from",
+        default=None,
+        help="use a specific directory for imports (including potluck)"
+    )
+
+    return parser
+
+
+def main(args):
+    """
+    Main entry point for running from the command line.
+    """
+    # Set up argument handling via argparse
+    parser = create_argument_parser()
+    opts = parser.parse_args()
+
+    # Add the current directory to sys.path so we can find config files
+    # there...
+    sys.path.insert(0, '.')
+
+    print("This is potluck_tool version " + __version__)
+
+    # Load the server configuration file
+    loader = flask.Flask("load_config")
+    print("Loading server config from '{}'".format(opts.conf))
+    loader.config.from_object(opts.conf)
+    server_config = loader.config
+
+    # Get course and semester
+    course = opts.course or server_config["DEFAULT_COURSE"]
+    semester = opts.semester or server_config["DEFAULT_SEMESTER"]
+
+    # Figure out evaluation directory from server config
+    eval_base = server_config["EVALUATION_BASE"]
+    eval_dir = os.path.join(
+        eval_base,
+        course,
+        semester
+    )
+
+    # Set up to import a specific potluck install...
+    if opts.import_from:
+        idir = os.path.abspath(os.path.expanduser(opts.import_from))
+        print("Importing from: " + idir)
+        sys.path.insert(0, idir)
+        server_config["POTLUCK_EVAL_IMPORT_FROM"] = idir
+
+    # Actually import the potluck control module after options are parsed
+    # to that -h works even without it being on sys.path.
+    import potluck.control
+
+    # To get inflight info and time-spent info
+    import potluck_server.storage
+
+    # To launch re-evaluations
+    import potluck_server.app # noqa F401
+
+    # Print version numbers of what we imported
+    import potluck
+    print("Imported potluck version {}".format(potluck.__version__))
+    print(
+        "Imported potluck_server version {}".format(
+            potluck_server.app.__version__
+        )
+    )
+
+    # Set up the storage module
+    potluck_server.storage.init(server_config)
+
+    # Change directories to the evaluation directory
+    os.chdir(eval_dir)
+    print("Doing work in '{}'".format(eval_dir))
+    # '.' is already on sys.path from above...
+
+    # Load the default evaluation config file if there is one
+    eval_config = potluck.control.load_configuration("potluck_config")
+
+    # Common setup stuff
+    potluck.control.setup(eval_config, opts.specs)
+
+    # Load tasks data
+    tasks_data = potluck.control.load_tasks_data(eval_config)
+
+    # Assemble listing of relevant submissions
+    if opts.task is None:
+        # 'regrade' task requires a specific task to focus on
+        if opts.command == "regrade":
+            print("You must specify a task to regrade!")
+            parser.print_help()
+            exit(1)
+
+        # Get tasks in pset order (only those that show up in a pset)
+        tasks = []
+        for pset in tasks_data["psets"]:
+            for task in pset["tasks"]:
+                if task["id"] not in tasks:
+                    tasks.append(task["id"])
+    else:
+        # Task was specified...
+        # Is it a valid task?
+        if opts.task not in tasks_data["tasks"]:
+            print(
+                "Task '{}' is not defined in the tasks data.".format(
+                    opts.task
+                )
+            )
+            parser.print_help()
+            exit(1)
+
+        # Must be valid
+        tasks = [ opts.task ]
+
+    if opts.phase is None:
+        phases = [ 'initial', 'revision' ]
+    else:
+        phases = [ opts.phase ]
+
+    # Pick the command to run
+    if opts.command == "regrade":
+        regrade_submissions(
+            potluck.control,
+            eval_config,
+            tasks_data,
+            course,
+            semester,
+            opts.task,
+            phases,
+            opts.user,
+            opts.clean
+        )
+    elif opts.command == "timing":
+        report_timing(
+            eval_config,
+            tasks_data,
+            course,
+            semester,
+            tasks,
+            phases,
+            opts.user
+        )
+    else:
+        print("Invalid command: '{}'".format(opts.command))
+        parser.print_help()
+        exit(1)
+
+
+def fetch_submission_info(
+    course,
+    semester,
+    psid,
+    phase,
+    taskid,
+    user_list
+):
+    """
+    Returns a dictionary mapping usernames to submission info objects
+    loaded from the submission info files for a given pset/phase/task. A
+    list of usernames to check for needs to be provided in addition to
+    a submissions directory to search and the problem set ID, the phase,
+    and the task ID.
+    """
+    import potluck_server.storage
+    import potluck_server.app
+
+    sub_info = {}
+    for user in user_list:
+        record = potluck_server.storage.fetch_time_spent(
+            course,
+            semester,
+            user,
+            phase,
+            psid,
+            taskid
+        )
+        if record is not None:
+            sub_info[user] = record
+
+    return sub_info
+
+
+def percentile(dataset, pct):
+    """
+    Computes the nth percentile of the dataset by a weighted average of
+    the two items on either side of that fractional index within the
+    dataset. pct must be a number between 0 and 100 (inclusive).
+    """
+    fr = pct / 100.0
+    if len(dataset) == 1:
+        return dataset[0]
+    elif len(dataset) == 0:
+        print("Empty dataset in percentile!")
+        return None
+    srt = sorted(dataset)
+    fridx = fr * (len(srt) - 1)
+    idx = int(fridx)
+    if idx == fridx:
+        return srt[idx] # integer index -> no averaging
+    leftover = fridx - idx
+    first = srt[idx]
+    second = srt[idx + 1] # legal index because we can't have hit the end
+    return first * (1 - leftover) + second * leftover
+
+
+def regrade_submissions(
+    m_ctrl,
+    config,
+    tasks_data,
+    course,
+    semester,
+    taskid,
+    phases=["initial", "revision"],
+    user=None,
+    clean=True
+):
+    """
+    Regrades submissions for a task, with one or more phases to regrade
+    and possibly only for a specific user.
+    Arguments are:
+    - `m_ctrl` - The potluck.control module.
+    - `config` - The loaded configuration object.
+    - `tasks_data` - The loaded tasks_data object from tasks.json.
+    - `taskid` - The string ID of the task to regrade.
+    - `phases` - A list of strings naming submission phases to regrade.
+        Defaults to [ 'initial', 'revision' ].
+    - `user` - The specific user to regrade. Defaults to None, meaning
+        regrade all users who have submitted something.
+    - `clean` - Whether to ignore cached solution data when regrading.
+        Defaults to True.
+
+    Note: This doesn't update server status files, so if someone has an
+    error with their submission regrading won't fix that.
+    TODO: Fix that!
+
+    Logs all evaluation changes to `grade_changes.txt` in the evaluation
+    directory for the course/semester being operated on.
+    """
+    import potluck_server.storage
+
+    # Grab task info for this task
+    task_info = tasks_data["tasks"][taskid]
+    task_file = task_info["target"]
+
+    # Set up directories from config
+    submissions_dir = os.path.join(
+        config.BASE_DIR,
+        config.SUBMISSIONS_DIR
+    )
+
+    # List psets where this task appears (should be exactly one)
+    psets = [
+        pset
+        for pset in tasks_data["psets"]
+        if any(task["id"] == taskid for task in pset["tasks"])
+    ]
+    if len(psets) != 1:
+        print(
+            "Aborting: Task '{}' occurs in {} psets!".format(
+                taskid,
+                len(psets)
+            )
+        )
+        exit(1)
+
+    # Grab single pset
+    pset = psets[0]
+
+    # Get a list of all users who have submitted anything ever
+    if user is not None:
+        all_users = [ user ]
+    else:
+        all_users = os.listdir(submissions_dir)
+
+    # Open the grade changes file for appending
+    with open("grade_changes.txt", 'a') as change_log:
+        print("--start--", file=change_log)
+
+        # Process each phase
+        for phase in phases:
+            # Map users who have submitted in this phase to their
+            # submission info objects loaded from info files
+            sub_info = fetch_submission_info(
+                course,
+                semester,
+                pset["id"],
+                phase,
+                taskid,
+                all_users
+            )
+
+            # at this point, only users who have submitted are in our
+            # sub_info dictionary
+            print(
+                "Regrading {} {} {} {} submissions...".format(
+                    len(sub_info),
+                    pset["id"],
+                    phase,
+                    taskid
+                ),
+                file=change_log
+            )
+
+            # Count how many changes occurred
+            changed = 0
+
+            # Consider each user
+            skipped = []
+            for user in sorted(sub_info):
+                (
+                    ts,
+                    log_file,
+                    report_file,
+                    status
+                ) = potluck_server.storage.get_inflight(
+                    course,
+                    semester,
+                    user,
+                    phase,
+                    pset["id"],
+                    taskid
+                )
+                if ts in (None, "error") or log_file is None:
+                    # Data not available
+                    print(
+                        (
+                            "  Error: could not get inflight data for '{}'."
+                            " Skipping this user!"
+                        ).format(user),
+                        file=change_log
+                    )
+                    skipped.append(user)
+                    continue
+
+                if status in ("initial", "in_progress"):
+                    # Another evaluation is ongoing
+                    print(
+                        (
+                            "  Error: evaluation already in-progress for"
+                            " '{}'. Skipping this user!"
+                        ).format(user),
+                        file=change_log
+                    )
+                    skipped.append(user)
+                    continue
+
+                if not os.path.exists(report_file):
+                    print(
+                        (
+                            "  Warning: could not find report file '{}' for"
+                            " user '{}'. Treating grade as '-missing-'."
+                        ).format(report_file, user),
+                        file=change_log
+                    )
+                    original_evaluation = "-missing-"
+                else:
+                    with open(report_file, 'r') as fin:
+                        current_report = json.load(fin)
+
+                    # Grab initial evaluation so we can report only if it
+                    # changes
+                    original_evaluation = current_report["evaluation"]
+
+                # Actually record that we're launching an evaluation
+                # here...
+                ts, logfile, new_report_file, _ = \
+                potluck_server.storage.put_inflight(
+                    course,
+                    semester,
+                    user,
+                    phase,
+                    pset["id"],
+                    taskid
+                )
+
+                # Get path for the existing submitted file
+                # TODO: What here if we support multi-file submissions?
+                existing_submission = os.path.join(
+                    submissions_dir,
+                    user,
+                    "{pset}_{phase}_{target}".format(
+                        pset=pset["id"],
+                        phase=phase,
+                        target=task_file
+                    )
+                )
+
+                # Error putting submission in-flight
+                if ts in (None, "error"):
+                    # Failed to put in-flight
+                    print(
+                        (
+                            "  Error: could not set inflight data for '{}'."
+                            " Skipping this user!"
+                        ).format(user),
+                        file=change_log
+                    )
+                    skipped.append(user)
+                    continue
+
+                # Launch potluck the same way the server does (including
+                # XVFB, etc.) but wait for the process to terminate so we
+                # can read the log immediately...
+                potluck_server.app.launch_potluck(
+                    course,
+                    semester,
+                    user,
+                    taskid,
+                    existing_submission,
+                    logfile,
+                    new_report_file,
+                    wait=True
+                )
+
+                # Open new new report and compare evaluations.
+                with open(new_report_file, 'r') as fin:
+                    new_report = json.load(fin)
+
+                # Grab initial evaluation so we can report only if it
+                # changes
+                new_evaluation = new_report["evaluation"]
+
+                if new_evaluation != original_evaluation:
+                    print(
+                        (
+                            "  Evaluation for '{}': '{}' -> '{}'!"
+                        ).format(
+                            user,
+                            original_evaluation,
+                            new_evaluation
+                        ),
+                        file=change_log
+                    )
+                    changed += 1
+
+            # Done considering each user
+            print(
+                "...changed {} evaluations out of {} regraded{}.".format(
+                    changed,
+                    len(sub_info),
+                    ", skipped {} users".format(len(skipped))
+                        if skipped
+                        else ""
+                ),
+                file=change_log
+            )
+            if skipped:
+                print("...skipped:", file=change_log)
+                for user in skipped:
+                    print(" ", user, file=change_log)
+        # Done regrading each phase
+        print("--done--", file=change_log)
+    # Done with the change_log file
+
+
+def report_timing(
+    config,
+    tasks_data,
+    course,
+    semester,
+    tasks,
+    phases=["initial", "revision"],
+    user=None
+):
+    """
+    Reports summarized timing info for submissions to one or more tasks.
+    Can be filtered to only include a particular phase, or to only look
+    at submissions by a particular user.
+    """
+    # Set up directories from config
+    submissions_dir = os.path.join(
+        config.BASE_DIR,
+        config.SUBMISSIONS_DIR
+    )
+
+    # Get a list of all users who have submitted anything
+    if user is None:
+        all_users = os.listdir(submissions_dir)
+    else:
+        all_users = [ user ]
+
+    # Process each task
+    for taskid in tasks:
+        # List psets where this task appears (should be exactly one)
+        psets = [
+            pset
+            for pset in tasks_data["psets"]
+            if any(task["id"] == taskid for task in pset["tasks"])
+        ]
+        if len(psets) != 1:
+            print(
+                "Aborting: Task '{}' occurs in {} psets!".format(
+                    taskid,
+                    len(psets)
+                )
+            )
+            exit(1)
+
+        # Grab single pset
+        pset = psets[0]
+
+        print(
+            "Timing for task {} in pset {}:".format(taskid, pset["id"])
+        )
+
+        # Process each phase
+        subs_in_phase = {}
+        for phase in phases:
+            # Map users who have submitted in this phase to their
+            # submission info objects loaded from info files
+            sub_info = fetch_submission_info(
+                course,
+                semester,
+                pset["id"],
+                phase,
+                taskid,
+                all_users
+            )
+            subs_in_phase[phase] = len(sub_info)
+
+            # at this point, only users who have submitted are in our
+            # sub_info dictionary
+            if len(sub_info) == 0:
+                print(
+                    "  No data for phase {} (no submissions).".format(
+                        phase
+                    )
+                )
+                continue
+            else:
+                print(
+                    "  {} {} submission(s)...".format(
+                        len(sub_info),
+                        phase
+                    )
+                )
+
+            # Extract task times
+            task_times = [
+                sub_info[user]["time_spent"]
+                for user in sub_info
+            ]
+
+            # Filter out negative values
+            task_times = list(filter(lambda x: x >= 0, task_times))
+            if len(task_times) == 0:
+                print(
+                    (
+                        "  No actual data for phase {} (all entries are"
+                        " negative)."
+                    ).format(phase)
+                )
+                continue
+
+            if phase == "revision" and "initial" in subs_in_phase:
+                total_initial = subs_in_phase["initial"]
+                augmented = (
+                    task_times + [0] * (total_initial - len(sub_info))
+                )
+                print(
+                    "    Average time: {:.2f} ({:.2f} with zeroes)".format(
+                        sum(task_times) / len(task_times),
+                        sum(augmented) / len(augmented)
+                    )
+                )
+                print(
+                    "    Median time: {:.2f} ({:.2f} with zeroes)".format(
+                        percentile(task_times, 50),
+                        percentile(augmented, 50)
+                    )
+                )
+                print(
+                    "    75th percentile: {:.2f} ({:.2f} with zeroes)".format(
+                        percentile(task_times, 75),
+                        percentile(augmented, 75)
+                    )
+                )
+            else:
+                print(
+                    "    Average time: {:.2f}".format(
+                        sum(task_times) / len(task_times)
+                    )
+                )
+                print(
+                    "    Median time: {:.2f}".format(
+                        percentile(task_times, 50)
+                    )
+                )
+                print(
+                    "    75th percentile: {:.2f}".format(
+                        percentile(task_times, 75)
+                    )
+                )
+
+
+# If we're running this file, call main() using arguments from the
+# command line
+if __name__ == "__main__":
+    main(sys.argv)

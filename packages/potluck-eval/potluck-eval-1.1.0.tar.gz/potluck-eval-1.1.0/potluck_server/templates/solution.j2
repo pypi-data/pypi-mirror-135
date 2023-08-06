@@ -1,0 +1,68 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+{% extends "base.j2" %}
+
+{% block head_stuff %}
+{% if fb_css %}
+  <style type="text/css" nonce="{{csp_nonce()}}">
+  {{fb_css|safe}}
+  </style>
+{% endif %}
+
+{% if fb_js %}
+  <script defer type="text/javascript" nonce="{{csp_nonce()}}">
+  {{fb_js|safe}}
+  </script>
+{% endif %}
+{% endblock %}
+
+{% block body_attrs %}
+class="solution fullwidth"
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <a
+   href="{{url_for("route_dash", course=course, semester=semester)}}"
+   title="Click here to go back to the dashboard"
+   tabindex="0"
+  >Back to the dashboard</a>
+
+  <h2>
+    Solution code for
+    <a href="{{ps.url}}" title="View instructions for {{ps.id}}" >
+      {{ps.id}}
+    </a>
+    <a href="{{task.url}}" title="View instructions for {{task.id}}" >
+      {{task.id}}
+    </a>
+  </h2>
+
+  <p>
+  {{ due_at(ps.status) }}
+  {{ countdown(ps.status) }}
+  </p>
+
+{# Commenting out the download link for solutions for now...
+  <p>
+  <a id="dl_link" download="{{task.target}}">
+    Download as {{task.target}}
+  </a>
+<script defer type="text/javascript" nonce="{{csp_nonce()}}">
+{# Code from: https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file # }
+let soln_code = "{{soln_code|escapejs}}";
+let uriContent = (
+  "data:application/octet-stream,"
++ encodeURIComponent(soln_code)
+);
+document.getElementById("dl_link").setAttribute("href", uriContent);
+</script>
+  </p>
+#}
+
+  <div class="task solution highlight">
+    {{rendered_soln|safe}}
+  </div>
+
+</div> <!-- end of entire container -->
+
+{% endblock %}

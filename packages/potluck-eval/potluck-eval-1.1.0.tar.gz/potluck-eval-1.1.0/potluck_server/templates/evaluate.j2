@@ -1,0 +1,423 @@
+{# vim: set shiftwidth=2 tabstop=2 syntax=html: #}
+{% extends "base.j2" %}
+
+{% block head_stuff %}
+{% if fb_css %}
+  <style type="text/css" nonce="{{csp_nonce()}}">
+  {{fb_css|safe}}
+  </style>
+{% endif %}
+
+{% if fb_js %}
+  <script defer type="text/javascript" nonce="{{csp_nonce()}}">
+  {{fb_js|safe}}
+  </script>
+{% endif %}
+{% endblock %}
+
+{% block main_content %}
+{% set target_name=target_user %} {# TODO: Better than this! #}
+{% set your=target_user + "'s" %} {# TODO: Better than this! #}
+<div class="container">
+  <a
+   href="{{url_for("route_dash", course=course, semester=semester)}}"
+   title="Click here to go back to the dashboard"
+   tabindex="0"
+  >Back to the dashboard</a>
+
+  <h2>
+    Evaluation for {{target_name}} ({{target_user}}) on
+    <a href="{{ps.url}}" title="View instructions for {{ps.id}}">
+      {{ps.id}}
+    </a>
+    <a href="{{task.url}}" title="View instructions for {{task.id}}">
+      {{task.id}}
+    </a>
+    {% if phase == "initial" %}
+      (initial submission)
+    {% else %}
+      (revised submission)
+    {% endif %}
+  </h2>
+
+  <p>
+  <a
+   href="{{url_for(
+     "route_solution",
+     course=course,
+     semester=semester,
+     solution=solution,
+     psid=ps.id,
+     taskid=task.id
+   )}}">
+    View the solution for this task.
+  </a>
+  </p>
+
+  <p>
+  {% if phase == "revision" %}
+    {% set other_phase="initial" %}
+    {% set other_name="initial submission" %}
+    {% set item="revision" %}
+  {% else %}
+    {% set other_phase="revision" %}
+    {% set other_name="revised submission" %}
+    {% set item="submission" %}
+  {% endif %}
+  {% set other_link = (
+    '<a href="'
+  + url_for(
+      "route_evaluate",
+      course=course,
+      semester=semester,
+      target_user=target_user,
+      phase=other_phase,
+      psid=ps.id,
+      taskid=task.id
+    )
+  + '" tabindex="0">Edit evaluation for '
+  + target_name + "'s "
+  + other_name
+  + ' instead</a>'
+  )
+  %}
+  {{other_link|safe}}
+  </p>
+
+  <p>
+    <a href="{{url_for(
+      'route_feedback',
+      course=course,
+      semester=semester,
+      target_user=target_user,
+      phase=phase,
+      psid=ps.id,
+      taskid=task.id
+    )}}"
+    >
+      View this feedback as the student will see it.
+    </a>
+  </p>
+
+  {{ due_at(ps.status) }}
+  {{ countdown(ps.status) }}
+
+  {# extension widget for this pset #}
+  {% include 'pset_extensions_form.j2' %}
+
+  <div class="submit">
+    <details>
+      <summary>
+      Click here to upload a new {{task.id}} submission for {{target_name}}.
+      </summary>
+      {% set pset = ps %}
+      {% include 'pset_submission_form.j2' %}
+    </details>
+  </div>
+
+  <p>
+  {% if task.time_spent and task.time_spent.time_spent != "" %}
+    {{target_name}} reported spending {{ task.time_spent.time_spent }}
+    hours on this phase of this task.
+  {% else %}
+    {{target_name}} did not report their time spent on this phase of this
+    task.
+  {% endif %}
+  </p>
+
+  <div class="task {{'submitted' if task.submitted else ''}}" >
+    <p>
+    Pset state: {{ps.status.state}}.
+    </p>
+
+    <p>
+    {% if task.feedback.status == "missing" %}
+      No automatic feedback has been generated.
+      {% if task.eval_status == None %}
+        No submission was found for this phase.
+      {% else %}
+        We received a {{item}} for this task, but it could not be
+        properly evaluated. Check with {{support_link|safe}} to figure
+        out what's going on.
+      {% endif %}
+    {% else %}
+      Feedback exists and is displayed below.
+    {% endif %}
+    </p>
+
+    <p
+     tabindex="0"
+     aria-label="submission timing"
+    >
+      {% if task.submitted %}
+        {{your}} most recent {{item}}
+        {% if task.submitted_at == None %}
+          was received, but we're not sure when.
+        {% else %}
+          was received
+          {{task.submitted_at|fmt_datetime}}
+          <span
+           role="timer"
+           aria-live="off"
+           class="timer"
+           data-time="{{(-task.eval_elapsed)|seconds}}"
+          >
+            ({{task.eval_elapsed|seconds|fuzzy_time}} ago)
+          </span>.
+        {% endif %}
+      {% else %}
+        {{target_name}} does not yet have an evaluated {{item}} for this
+        task.
+      {% endif %}
+    </p>
+
+    <p
+     tabindex="0"
+     aria-label="evaluation status"
+    >
+      Task evaluation status: {{task.eval_status}}<br>
+      {% if task.eval_status in ("initial", "in_progress") %}
+        {{your}} {{item}} is still being evaluated; please
+        refresh this page to see feedback when it's done. Feedback should
+        be ready within at most {{task.eval_timeout|seconds|integer}}
+        seconds
+        <span role="timer" aria-live="off" class="timer" data-time="{{
+             (task.eval_timeout - task.eval_elapsed)|seconds
+         }}"
+        >
+          ({{
+            (task.eval_timeout - task.eval_elapsed)
+            |seconds
+            |integer
+          }} seconds from now)
+        </span>
+        but will hopefully be ready by the time you read this.
+        {% if task.eval_elapsed > task.eval_timeout %}
+          Because the evaluation has taken so long, something may have
+          gone wrong. Consult {{support_link|safe}} for help.
+        {% endif %}
+      {% elif task.eval_status in ("error", "expired") %}
+        Consult {{support_link|safe}} for help.
+      {% elif task.eval_status == None %}
+        {% set eval = task.feedback_summary.evaluation %}
+        {% if eval != "not evaluated" %}
+          {{your}} evaluation for this {{item}} was:
+          <code>{{eval|safe}}</code><br> However, we were unable to
+          retrieve detailed feedback. Please try refreshing this page, or
+          reach out to {{support_link|safe}}.
+        {% else %}
+          {{target_name}} did not submit this phase of this task.
+        {% endif %}
+      {% endif %}
+
+      {# messages about evaluation during times when resubmission is
+      possible #}
+      {% if phase == "revision" %}
+        {% if ps.status.state != "final" %}
+          <br>
+          This task isn't finalized yet, so another revision may be
+          submitted later, which would change the automated feedback, and
+          which might invalidate any comments you make now...
+        {% else %}
+          <br>
+          This task has been finalized, so no further revisions will be
+          submitted and you can enter a final evaluation.
+        {% endif %}
+      {% elif phase == "initial" %}
+        {% if ps.status.state not in ("under_review", "revisable", "final") %}
+          <br>
+          This task's initial deadline hasn't passed yet, so another
+          submission may be made later, which would change the automated
+          feedback, and which might invalidate any comments you make
+          now...
+        {% elif ps.status.state != "final" %}
+          <br>
+          This task's initial deadline has passed, so any new submissions
+          will be counted as revisions, and the initial automated
+          feedback you see below won't change at this point. You can also:
+          {{other_link|safe}}
+        {% else %}
+          <br>
+          This task has been finalized, so no further submissions will be
+          graded, which means that the automatic feedback you see below
+          won't change at this point.
+        {% endif %}
+      {% endif %}
+    </p>
+
+    <ul
+     class="messages"
+     tabindex="0"
+     aria-label="Messages about this feedback."
+    >
+      {% set include_support_link = False %}
+      {% if not task.submitted %}
+        <li class="inflight">
+          {{target_name}} has not yet submitted
+          {% if phase == "revision" %}a revision for{% endif %}
+          this task.
+        </li>
+      {% elif task.feedback_summary in ("missing", None) %}
+        <li class="assurance">
+          No feedback available yet.
+        </li>
+      {% elif task.submission_status == "inflight" %}
+        <li class="inflight">
+          Evaluation is still in-progress.
+        </li>
+      {% elif task.submission_status == "unprocessed" %}
+        <li class="warning">
+          There was an error processing your {{item}}.
+        </li>
+        {% set include_support_link = True %}
+        <li class="warning">
+          Evaluation status: {{task.eval_status|safe}}<br>
+          Submission status: {{task.submission_status|safe}}<br>
+          Feedback summary report: {{task.feedback_summary|safe}}<br>
+        </li>
+      {% elif task.submission_status == "issue" %}
+        {% set include_support_link = True %}
+        {% for message in task.feedback_summary.warnings %}
+          <li class="warning">
+            {{ message|safe }}
+          </li>
+        {% endfor %}
+        {% if task.feedback_summary.warnings|length == 0 %}
+          <li class="warning">
+            There was an unidentified issue with {{your}} {{item}}.
+          </li>
+        {% endif %}
+      {% else %}
+        {% for message in task.feedback_summary.warnings %}
+          <li class="warning">
+            {{ message|safe }}
+          </li>
+        {% endfor %}
+        {% if task.feedback_summary.warnings|length == 0 %}
+          {% if task.feedback.status == "missing" %}
+            <li class="warning">
+              Failed to generate task feedback.
+            </li>
+            {% set include_support_link = True %}
+          {% else %}
+            {% set eval = task.feedback_summary.evaluation %}
+            {% if eval == "not evaluated" %}
+              <li class="warning">
+                {{your}} task has not been evaluated, although it should have
+                been.
+              </li>
+              {% set include_support_link = True %}
+            {% elif eval == "incomplete" %}
+              <li class="warning">
+                {{your}} submission is substantially incomplete.
+              </li>
+              {% set include_support_link = True %}
+            {% else %}
+              <li class="assurance">
+                {{your}} submission is at least partially complete.
+              </li>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      {% if include_support_link %}
+        <li class="warning">
+          Feel free to contact {{support_link|safe}} for help figuring
+          out what's going on.
+        </li>
+      {% endif %}
+    </ul>
+
+
+    <h2>Your custom feedback:</h2>
+    <form
+     action="{{url_for(
+       'route_set_evaluation',
+       course=course,
+       semester=semester,
+       target_user=target_user,
+       phase=phase,
+       psid=ps.id,
+       taskid=task.id
+     )}}"
+     method="POST"
+    >
+      {# CSRF token for flask_seasurf #}
+      <input
+       type="hidden"
+       name="_csrf_token"
+       value="{{csrf_token()}}"
+      >
+      Existing notes for {{target_name}}:<br>
+      <div class="manual_evaluation">
+        {% if task.notes_html == '' %}
+          (no notes)
+        {% else %}
+          {{task.notes_html|safe}}
+        {% endif %}
+      </div>
+      New notes for {{target_name}} (markdown that can include HTML):<br>
+      <textarea id="notes_md" name="notes_md" rows="12" cols="80">{{task.notes}}</textarea><br>
+      Grade override (out of 100; leave blank to use automatic grade):<br>
+      <input type="text" id="override" name="override"
+      {% if task.grade_overridden %}
+        value="{{task.grade}}"
+      {% endif %}
+      ><br>
+      <input type="submit" value="Update evaluation & override">
+    </form>
+
+    <h2>Automatic Feedback that the student will see:</h2>
+
+    {% set show_feedback = ps.status.state in ("revisable", "final") %}
+    {% if (
+        task.feedback.status != "missing"
+    and task.eval_status == "completed"
+      )
+    %}
+      <p>
+      {% if phase == "revision" %}
+        <strong>
+          Note: since this is a revision, no matter what score you enter,
+          the effective score will be capped at
+          {{task.max_score|grade_string}}. The student will see the score
+          you enter along with a message about the grade cap. If you want
+          to set a score above the cap, evaluate the student's initial
+          submission instead.
+        </strong>
+      {% endif %}
+      {% if not show_feedback %}
+        <strong>
+          Note: This feedback (and your evaluation) will not be shown to
+          the student until the initial deadline and review period have
+          passed.
+        </strong>
+      {% else %}
+        <strong>
+          Note: This feedback (and your evaluation) will be shown to the
+          student immediately.
+        </strong>
+      {% endif %}
+      </p>
+
+      {{ task.feedback_html | safe }}
+
+    {% else %}
+      <p>
+      <strong>
+        Note: Full automatic feedback for this user on this task does not
+        exist.
+      </strong><br>
+      The evaluation status for this submission is {{task.eval_status}}.
+      {% if task.feedback.status == "missing" %}
+        <br>
+        The evaluation log:
+        <pre>{{task.feedback.log}}</pre>
+      {% endif %}
+      </p>
+    {% endif %}
+  </div> <!-- end of task div -->
+
+</div> <!-- end of entire container -->
+
+{% endblock %}
