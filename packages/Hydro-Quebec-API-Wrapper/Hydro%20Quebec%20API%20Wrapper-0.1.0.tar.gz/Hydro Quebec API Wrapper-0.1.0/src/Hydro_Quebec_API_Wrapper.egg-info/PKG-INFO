@@ -1,0 +1,101 @@
+Metadata-Version: 2.1
+Name: Hydro-Quebec-API-Wrapper
+Version: 0.1.0
+Summary: Bases to build mqtt daemon compatible with Home Assistant
+Home-page: http://gitlab.com/hydroqc/hydroqc
+Author: Hydroqc Team
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# HydroQC
+
+**Important: this project is not yet stable or fully beginner friendly. But we are working toward it!**
+
+Hydro Quebec API wrapper.
+
+This is a package to access some functionalities of Hydro Quebec API that are not documented.
+
+We started a discord server for the project where you can come to discuss and find help with the project : https://discord.gg/BTPDntfaXH
+
+## Documentation
+
+### Code documentation
+[https://hydroqc.readthedocs.io/](https://hydroqc.readthedocs.io/)
+
+### Architecture / concepts
+If you need more information about the winter credit, the associated terms, documents, ... :
+   [Winter Credit lexicon and concepts](https://hydroqc.readthedocs.io/en/latest/wintercredit/wintercredit.html)
+
+## Credit
+
+Thibault Cohen who wrote [pyhydroquebec](https://github.com/titilambert/pyhydroquebec/) 
+That's where I took most of the inspiration (and some portions of the code)
+
+## Goal
+
+Make it easy to fetch and manipulate data from hydro quebec, especially the winter credit periods
+
+## Example folder
+
+Two example scripts are provided in the example folder. One to fetch the raw data and return it to json with some debug and the other to publish to mqtt.
+
+### Basic setup
+
+This uses python 3 (tested with 3.8)
+
+1. Clone the repo
+
+```
+git clone https://gitlab.com/hydroqc/hydroqc.git
+```
+
+2. Create a virtual-env
+```
+$ python -m venv hydro-env
+$ . hydro-env/bin/activate
+(hydro-env) $ pip install -r requirements.txt
+(hydro-env) $ python setup.py develop 
+```
+
+3. Copy config/config.default.yaml to config/config.yaml and add your hydro account credentials
+
+4. Run ``example/hydro.py``
+
+### Basic MQTT publisher
+
+Configure the MQTT server information in the mqtt.py file and run it.
+
+Will publish next winter peak event and current status to the winterpeaks topic
+winterpeaks/next -> next event
+winterpeaks/state -> current state
+winterpeaks/today -> periods for the current day
+
+datetime format is YYYY-MM-DD HH:MM:SS (can be configured) and {field}_ts is unix epoch
+
+Feel free to tinker with it to suit your needs !
+
+## Available features :
+
+- Services.getWinterCredit() to get raw winter credit data
+- Services.getTodayHourlyConsumption() to get raw hourly consumption for current day
+- Services.getHourlyConsumption(date = 'YYYY-MM-DD') to get hourly consumption for specific day
+- Services.getDailyConsumption(start_date = 'YYYY-MM-DD',end_date = 'YYYY-MM-DD') to get a range of daily consumption
+- WinterCredit.getFutureEvents() to get a list of JSON object with future peak events
+
+An incomplete (so far) list of possible values and their meanings are being documented here : https://hydroqc.readthedocs.io/en/latest/wintercredit/values.html
+
+## NOTES
+
+As per issue https://github.com/zepiaf/hydroqc/issues/11 the certificate chain for service.hydroquebec.com is not 
+downloaded correctly. It has been forced in the code. It will not be used if verification is disabled.
+
+## TODO 
+https://gitlab.com/groups/hydroqc/-/issues
+
+
