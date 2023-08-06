@@ -3,36 +3,10 @@
 This repo contains 40000 packages uploaded to PyPI between 
 2022-01-17 11:56 and 2022-01-25 00:03.
 
-The repo is 35% (14000/40000) complete.
+The repo is 40% (16000/40000) complete.
 
-## Packages:
+Package contents can be found [in the code branch](https://github.com/pypi-data/pypi-mirror-135/tree/code/packages).
 
-| Name  | Count |
-| ----- | ----- |
-| ypricemagic | 240 |
-| multidict | 177 |
-| pyagrum-nightly | 175 |
-| spanishconjugator | 124 |
-| openbank-testkit | 124 |
-| stim | 120 |
-| frozenlist | 118 |
-| cdktf-cdktf-provider-newrelic | 90 |
-| utilmy | 88 |
-| pyzstd | 86 |
-| chickenstats | 86 |
-| pepperize.cdk-organizations | 84 |
-| pyEDFlib | 82 |
-| zenroom | 80 |
-| amplpy | 76 |
-| regex | 74 |
-| ruptures | 73 |
-| power-grid-model | 72 |
-| SQLAlchemy | 72 |
-| retro-pytorch | 70 |
-| jetpack-io | 70 |
-| checkov | 70 |
-| opteryx | 69 |
-| cannai | 69 |
-| seabreeze | 67 |
+A browsable package list for all repositories [all packages here](https://pypi-data.github.io/website/repositories/pypi-mirror-135).
 
 
