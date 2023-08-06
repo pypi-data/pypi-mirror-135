@@ -1,0 +1,52 @@
+Metadata-Version: 2.1
+Name: Connect-to-Server-CPS
+Version: 0.1.1
+Summary: Demo library
+Home-page: https://www.in.tum.de/en/i06/home/
+Author: Houman Heidarabadi
+Author-email: hooman.heidarabadi@gmail.com
+License: UNKNOWN
+Description: ## About The Code
+        
+        This is a part of the project that we are working on it for the Cyber-Physical Group (i6) at the Technical University of Munich. This package would connect to a server, find the LaTeX files, integrate the LaTeX's input and include functions, and save the file at a new directory defined by user. No matter how many files the directory in the server contains. The code will go through each folder and find the LaTeX files and write them at the new directory maintaining the directory structure in the server.
+        ## How to install
+        
+        You can install it by running the following line in your terminal:
+        ```
+        pip install Connect_to_Server-CPS
+        ```
+        
+        ## Getting Started
+        
+        This is an example of how you may give instructions on setting up your project locally.
+        ```Python
+        from Connect_to_Server import Connection
+        
+        host = "archive.cps.in.tum.de" #The host of the server
+        username = "your username"
+        password = "your password"
+        directory = "/mnt/current/BachelorTheses/2014/" #The directory that you want to find the LaTeX files
+        Save_at = "D:/CPS/HiWiProjects/Parse/data" #The new directory that you want to save the integrated LaTeX files
+        
+        C = Connection.Connection(host,username,password) #You are ready to connect to the server.
+        
+        C.Find_and_Integrate(directory,new_directory)
+        
+        #Note: you can also run terminal commands. For example, you can run the following code to find the folders in the directory in the server:
+        
+        # Connect = C.Connect()
+        # ssh_stdin, ssh_stdout, ssh_stderr = Connect.exec_command("ls " + directory)
+        # for line in ssh_stdout: print(line.strip())
+        
+        ```
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
