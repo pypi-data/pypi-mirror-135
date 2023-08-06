@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>profile &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="hit" href="hit.html" />
+    <link rel="prev" title="gene" href="gene.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">profile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#profile-api-reference">profile API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#profilefactory">ProfileFactory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Profile</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>profile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/profile.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="profile">
+<span id="id1"></span><h1>profile<a class="headerlink" href="#profile" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="../overview.html#profile-implementation"><span class="std std-ref">Profile object</span></a> is used for the search of the gene with Hmmer.
+A <em>“Profile”</em> must match a HMM protein profile file, which name is based on the profile name.
+For instance, the <em>gspG</em> gene has the corresponding “gspG.hmm” profile file provided at a dedicated location.</p>
+<div class="section" id="profile-api-reference">
+<span id="profile-api"></span><h2>profile API reference<a class="headerlink" href="#profile-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="profilefactory">
+<h2>ProfileFactory<a class="headerlink" href="#profilefactory" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py class">
+<dt id="macsypy.profile.ProfileFactory">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.profile.</code><code class="sig-name descname">ProfileFactory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#ProfileFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.ProfileFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build and store all Profile objects. Profiles must not be instanciated directly.
+The profile_factory must be used. The profile_factory ensures there is only one instance
+of profile for a given name.
+To get a profile, use the method get_profile. If the profile is already cached, this instance is returned.
+Otherwise a new profile is built, stored in the profile_factory and then returned.</p>
+<dl class="py method">
+<dt id="macsypy.profile.ProfileFactory.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#ProfileFactory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.ProfileFactory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.profile.ProfileFactory.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.profile.ProfileFactory.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.profile.ProfileFactory.get_profile">
+<code class="sig-name descname">get_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">model_location</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#ProfileFactory.get_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.ProfileFactory.get_profile" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.Gene</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.Homolog</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.Analog</span></code> object) – the gene associated to this profile</p></li>
+<li><p><strong>model_location</strong> (<a class="reference internal" href="registries.html#macsypy.registries.ModelLocation" title="macsypy.registries.ModelLocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registries.ModelLocation</span></code></a> object.) – The where to get the profile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the profile corresponding to the name.
+If the profile already exists, return it. Otherwise build it, store it and return it.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#macsypy.profile.Profile" title="macsypy.profile.Profile"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.profile.Profile</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>Profile<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.profile.Profile">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.profile.</code><code class="sig-name descname">Profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a HMM protein profile</p>
+<dl class="py method">
+<dt id="macsypy.profile.Profile.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.secretion.Gene</span></code> object) – the gene corresponding to this profile</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="config.html#id0" title="macsypy.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.config.Config</span></code></a> object) – the configuration</p></li>
+<li><p><strong>path</strong> (<em>string</em>) – the path to the hmm profile.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.profile.Profile.__len__">
+<code class="sig-name descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile.__len__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the length of the HMM protein profile</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.profile.Profile.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the name of the corresponding gene and the path to the HMM profile.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.profile.Profile.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.profile.Profile.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.profile.Profile._profile_features">
+<code class="sig-name descname">_profile_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile._profile_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile._profile_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the HMM profile to extract the length and the presence of GA bit threshold</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the length, presence of ga bit threshold</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int length, bool ga_threshold)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.profile.Profile.execute">
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/profile.html#Profile.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.profile.Profile.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launch the Hmmer search (hmmsearch executable) with this profile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an object storing information on the results of the HMM search (HMMReport)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="report.html#macsypy.report.HMMReport" title="macsypy.report.HMMReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.report.HMMReport</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hit.html" class="btn btn-neutral float-right" title="hit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gene.html" class="btn btn-neutral float-left" title="gene" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

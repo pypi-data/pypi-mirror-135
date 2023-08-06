@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>database &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="errors" href="error.html" />
+    <link rel="prev" title="serialization" href="serialization.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">database</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#database-api-reference">database API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#indexes">Indexes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-macsypy.database">RepliconInfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#replicondb">RepliconDB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fasta-iter">fasta_iter</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>database</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/database.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="database">
+<span id="id1"></span><h1>database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
+<p>The “database” object handles the indexes of the sequence dataset in fasta format,
+and other useful information on the input dataset.</p>
+<p>MacSyFinder needs to have the length of each sequence and its position in the database
+to compute some statistics on Hmmer hits.
+Additionally, for ordered datasets ( db_type = ‘gembase’ or ‘ordered_replicon’ ),
+MacSyFinder builds an internal “database” from these indexes to store information about replicons,
+their begin and end positions, and their topology.</p>
+<p>The begin and end positions of each replicon are computed from the sequence file,
+and the topology from the parsing of the topology file (–topology-file, see <a class="reference internal" href="../../user_guide/gembase_convention.html#topology-files"><span class="std std-ref">Topology files</span></a>).</p>
+<p>Thus it also builds an index (with .idx suffix) that is stored in the same directory as the sequence dataset.
+If this file is found in the same folder than the input dataset, MacSyFinder will use it. Otherwise, it will build it.</p>
+<p>The user can force MacSyFinder to rebuild these indexes with the “–idx” option on the command-line.</p>
+<div class="section" id="database-api-reference">
+<span id="database-api"></span><h2>database API reference<a class="headerlink" href="#database-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="indexes">
+<h2>Indexes<a class="headerlink" href="#indexes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.database.Indexes">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.database.</code><code class="sig-name descname">Indexes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the indexes for macsyfinder:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>find the indexes required by macsyfinder to compute some scores, or build them.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py method">
+<dt id="macsypy.database.Indexes.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>The constructor retrieves the file of indexes in the case they are not present
+or the user asked for build indexes (–idx) 
+Launch the indexes building.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="config.html#id0" title="macsypy.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.config.Config</span></code></a> object) – the configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.Indexes.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="error.html#macsypy.error.MacsypyError" title="macsypy.error.MacsypyError"><strong>MacsypyError</strong></a> – if the indexes are not buid</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an iterator on the indexes</p>
+</dd>
+</dl>
+<p>To use it the index must be build.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.Indexes.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.database.Indexes.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.Indexes._build_my_indexes">
+<code class="sig-name descname">_build_my_indexes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index_dir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes._build_my_indexes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes._build_my_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build macsyfinder indexes. These indexes are stored in a file.</p>
+<dl class="simple">
+<dt>The file format is the following:</dt><dd><ul class="simple">
+<li><p>the first line is the path of the sequence-db indexed</p></li>
+<li><p>one entry per line, with each line having this format:</p></li>
+<li><p>sequence id;sequence length;sequence rank</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.Indexes._index_dir">
+<code class="sig-name descname">_index_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">build</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes._index_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes._index_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>search where to store(build=True) read indexes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>build</strong> (<em>bool</em>) – if check the index-dir permissions to write</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The directory where read or write the indexes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if the directory specify by –index-dir option does not exists
+or if build = True index-dir is not writable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.Indexes.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the indexes from the sequence data set in fasta format,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>boolean</em>) – If True, force the index building even
+if the index files are present in the sequence data set folder</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the path to the index</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.Indexes.find_my_indexes">
+<code class="sig-name descname">find_my_indexes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#Indexes.find_my_indexes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.Indexes.find_my_indexes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the file of macsyfinder indexes if it exists in the dataset folder, None otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-macsypy.database">
+<span id="repliconinfo"></span><h2>RepliconInfo<a class="headerlink" href="#module-macsypy.database" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.database.RepliconInfo">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.database.</code><code class="sig-name descname">RepliconInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">topology</span></em>, <em class="sig-param"><span class="n">min</span></em>, <em class="sig-param"><span class="n">max</span></em>, <em class="sig-param"><span class="n">genes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#macsypy.database.RepliconInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle information about a replicon</p>
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">topology</code></dt>
+<dd><p>The type of replicon topology ‘linear or ‘circular’</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">min</code></dt>
+<dd><p>The position of the last gene of the replicon in the sequence dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">max</code></dt>
+<dd><p>The position of the last gene of the replicon in the sequence dataset.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt>
+<code class="sig-name descname">genes</code></dt>
+<dd><p>A list of genes beloging to the replicon. Each genes is representing by a tuple (str seq_id, int length)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.RepliconInfo.genes">
+<code class="sig-name descname">genes</code><a class="headerlink" href="#macsypy.database.RepliconInfo.genes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.RepliconInfo.max">
+<code class="sig-name descname">max</code><a class="headerlink" href="#macsypy.database.RepliconInfo.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.RepliconInfo.min">
+<code class="sig-name descname">min</code><a class="headerlink" href="#macsypy.database.RepliconInfo.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.RepliconInfo.topology">
+<code class="sig-name descname">topology</code><a class="headerlink" href="#macsypy.database.RepliconInfo.topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="replicondb">
+<h2>RepliconDB<a class="headerlink" href="#replicondb" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.database.RepliconDB">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.database.</code><code class="sig-name descname">RepliconDB</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores information (topology, min, max, [genes]) for all replicons in the sequence_db
+the Replicon object must be instantiated only for sequence_db of type ‘gembase’ or ‘ordered_replicon’</p>
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.__contains__">
+<code class="sig-name descname">__contains__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">replicon_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>replicon_name</strong> (<em>string</em>) – the name of the replicon</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if replicon_name is in the repliconDB, false otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">replicon_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>replicon_name</strong> (<em>string</em>) – the name of the replicon to get information on</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the RepliconInfo for the provided replicon_name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#macsypy.database.RepliconInfo" title="macsypy.database.RepliconInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepliconInfo</span></code></a> object</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>KeyError if replicon_name is not in repliconDB</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="config.html#id0" title="macsypy.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.config.Config</span></code></a> object) – The configuration object</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class can be instanciated only if the db_type is ‘gembase’ or ‘ordered_replicon’</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.database.RepliconDB.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.database.RepliconDB.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB._fill_gembase_min_max">
+<code class="sig-name descname">_fill_gembase_min_max</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">topology</span></em>, <em class="sig-param"><span class="n">default_topology</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB._fill_gembase_min_max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB._fill_gembase_min_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each replicon_name of a gembase dataset, it fills the internal dictionary with a namedtuple RepliconInfo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topology</strong> (<em>dict</em>) – the topologies for each replicon 
+(parsed from the file specified with the option –topology-file)</p></li>
+<li><p><strong>default_topology</strong> (<em>string</em>) – the topology provided by the config.replicon_topology</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB._fill_ordered_min_max">
+<code class="sig-name descname">_fill_ordered_min_max</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">default_topology</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB._fill_ordered_min_max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB._fill_ordered_min_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>default_topology</strong> (<em>string</em>) – the topology provided by config.replicon_topology</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB._fill_topology">
+<code class="sig-name descname">_fill_topology</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB._fill_topology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB._fill_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the internal dictionary with min and max positions for each replicon_name of the sequence_db</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">replicon_name</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>replicon_name</strong> (<em>string</em>) – the name of the replicon to get informations</p></li>
+<li><p><strong>default</strong> (<em>any</em>) – the value to return if the replicon_name is not in the RepliconDB</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default.
+If default is not given, it is set to None, so that this method never raises a KeyError.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#macsypy.database.RepliconInfo" title="macsypy.database.RepliconInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">RepliconInfo</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.items">
+<code class="sig-name descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.items" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.iteritems">
+<code class="sig-name descname">iteritems</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.iteritems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.iteritems" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.replicon_infos">
+<code class="sig-name descname">replicon_infos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.replicon_infos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.replicon_infos" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the RepliconDB as list of replicons info</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>RepliconInfo instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.database.RepliconDB.replicon_names">
+<code class="sig-name descname">replicon_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#RepliconDB.replicon_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.RepliconDB.replicon_names" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the RepliconDB as a list of replicon_names</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="fasta-iter">
+<h2>fasta_iter<a class="headerlink" href="#fasta-iter" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.database.fasta_iter">
+<code class="sig-prename descclassname">macsypy.database.</code><code class="sig-name descname">fasta_iter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fasta_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/database.html#fasta_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.database.fasta_iter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fasta_file</strong> (<em>file object</em>) – the file containing all input sequences in fasta format.</p>
+</dd>
+<dt class="field-even">Author</dt>
+<dd class="field-even"><p><a class="reference external" href="http://biostar.stackexchange.com/users/36/brentp">http://biostar.stackexchange.com/users/36/brentp</a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>for a given fasta file, it returns an iterator which yields tuples
+(string id, string comment, int sequence length)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>iterator</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="error.html" class="btn btn-neutral float-right" title="errors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="serialization.html" class="btn btn-neutral float-left" title="serialization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

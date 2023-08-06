@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>model_conf_parser &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="registries" href="registries.html" />
+    <link rel="prev" title="configuration" href="config.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">model_conf_parser</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model-conf-parser-api-reference">model_conf_parser API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-macsypy.model_conf_parser">ModelConfParser</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>model_conf_parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/model_conf_parser.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="model-conf-parser">
+<span id="id1"></span><h1>model_conf_parser<a class="headerlink" href="#model-conf-parser" title="Permalink to this headline">¶</a></h1>
+<p>The parser of xml file model_cof.xml located at the root of the model package.
+This file is optional in package</p>
+<div class="section" id="model-conf-parser-api-reference">
+<span id="model-conf-api"></span><h2>model_conf_parser API reference<a class="headerlink" href="#model-conf-parser-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-macsypy.model_conf_parser">
+<span id="modelconfparser"></span><h2>ModelConfParser<a class="headerlink" href="#module-macsypy.model_conf_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.model_conf_parser.ModelConfParser">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.model_conf_parser.</code><code class="sig-name descname">ModelConfParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle model_conf.xml configuration file.</p>
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path to the configuration file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.model_conf_parser.ModelConfParser.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser._get_model_conf_node">
+<code class="sig-name descname">_get_model_conf_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser._get_model_conf_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser._get_model_conf_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the root of the document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the document root of model_conf</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser._parse_section">
+<code class="sig-name descname">_parse_section</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">section_node</span></em>, <em class="sig-param"><span class="n">allowed_elements</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser._parse_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser._parse_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a node containing configurations options and value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section_node</strong> – </p></li>
+<li><p><strong>allowed_elements</strong> (<em>a dict with options name as keys and function to parse the element</em>) – The elements allowed in this section
+Only these elements are parsed and in the final dictionnary</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the xml ‘model_conf’ file set at the root of a data package</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The specific configuration for a model family</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict with the name of variables as keys and value as values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser.parse_filtering">
+<code class="sig-name descname">parse_filtering</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filtering_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser.parse_filtering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser.parse_filtering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the node ‘filtering’ containing the filtering options configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filtering_node</strong> (:class”<cite>Et.ElementTree</cite> object) – the node ‘filtering’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the configuration option/value about the filtering</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.model_conf_parser.ModelConfParser.parse_weights">
+<code class="sig-name descname">parse_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/model_conf_parser.html#ModelConfParser.parse_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.model_conf_parser.ModelConfParser.parse_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the node ‘weights’ contening the scoring weight configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>weights_node</strong> (:class”<cite>Et.ElementTree</cite> object) – the node ‘weights’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the configuration option/value about the scores</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="registries.html" class="btn btn-neutral float-right" title="registries" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="config.html" class="btn btn-neutral float-left" title="configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

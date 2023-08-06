@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utils &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="package" href="package.html" />
+    <link rel="prev" title="errors" href="error.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils-api-reference">utils API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-def-to-detect">get_def_to_detect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-replicon-names">get_replicon_names</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils">
+<span id="id1"></span><h1>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<p>Here some useful functions in the rest of macsyfinder code</p>
+<div class="section" id="utils-api-reference">
+<span id="utils-api"></span><h2>utils API reference<a class="headerlink" href="#utils-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="get-def-to-detect">
+<h2>get_def_to_detect<a class="headerlink" href="#get-def-to-detect" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.utils.get_def_to_detect">
+<code class="sig-prename descclassname">macsypy.utils.</code><code class="sig-name descname">get_def_to_detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">model_registry</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/utils.html#get_def_to_detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.utils.get_def_to_detect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models</strong> (<em>list of tuple with the following structure:</em><em>
+[</em><em>(</em><em>'model_fqn'</em><em>, </em><em>(</em><em>'def1</em><em>, </em><em>def2</em><em>, </em><em>..</em><em>)</em><em>)</em><em>, </em><em>(</em><em>'model_2'</em><em>, </em><em>(</em><em>'def1'</em><em>, </em><em>..</em><em>)</em><em>)</em><em>, </em><em>..</em><em>]</em>) – the list of models to detect as returned by config.models.</p></li>
+<li><p><strong>model_registry</strong> (<a class="reference internal" href="registries.html#macsypy.registries.ModelRegistry" title="macsypy.registries.ModelRegistry"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registries.ModelRegistry</span></code></a> object.) – the models registry for this run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the definitions to parse</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="registries.html#macsypy.registries.DefinitionLocation" title="macsypy.registries.DefinitionLocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registries.DefinitionLocation</span></code></a> objects</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if a model name provided in models is not in model_registry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="get-replicon-names">
+<h2>get_replicon_names<a class="headerlink" href="#get-replicon-names" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.utils.get_replicon_names">
+<code class="sig-prename descclassname">macsypy.utils.</code><code class="sig-name descname">get_replicon_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genome_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/utils.html#get_replicon_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.utils.get_replicon_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse gembase file and the list of replicon identifiers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>genome_path</strong> (<em>str</em>) – The path to a file containing sequence in <strong>gembase</strong> format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of replicon identifiers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="package.html" class="btn btn-neutral float-right" title="package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="error.html" class="btn btn-neutral float-left" title="errors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

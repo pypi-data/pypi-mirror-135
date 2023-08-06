@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Macromolecular models &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MacSyFinder’s search engine" href="functioning.html" />
+    <link rel="prev" title="Output format" href="outputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#running-macsyfinder">Running MacSyFinder</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#macsyfinder-functioning">MacSyFinder functioning</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Macromolecular models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-models">Installing  models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-install-new-models">How to install new models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#where-the-models-are-located">Where the models are located</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="functioning.html">MacSyFinder’s search engine</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">User Guide</a> &raquo;</li>
+        
+      <li>Macromolecular models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_guide/model_definition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="macromolecular-models">
+<span id="model-definition"></span><h1>Macromolecular models<a class="headerlink" href="#macromolecular-models" title="Permalink to this headline">¶</a></h1>
+<p>MacSyFinder relies on the definition of models of macromolecular systems as a <strong>set of models’ components</strong>
+to be searched by similarity search, and a <strong>set of rules</strong> regarding their genomic organization and
+their requirement level to make a complete system (mandatory, accessory components, number of components required).</p>
+<p>See <a class="reference internal" href="../modeler_guide/modeling.html#model-definition-grammar-label"><span class="std std-ref">below</span></a> for more details on MacSyFinder’s modelling scheme and the section
+on <a class="reference internal" href="functioning.html#functioning"><span class="std std-ref">Functioning</span></a> for the principles of the MacSyFinder’s search engine.</p>
+<p>A <strong>MacSyFinder model</strong> (macsy-model for short) is the association of several elements:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a <strong>definition</strong> which describes the system to detect with a specific <strong>XML grammar</strong> that is described <a class="reference internal" href="../modeler_guide/modeling.html#model-definition-grammar-label"><span class="std std-ref">below</span></a>.</p></li>
+<li><p>a set of <a class="reference internal" href="../modeler_guide/modeling.html#provide-hmm-label"><span class="std std-ref">HMM profiles</span></a>  (one per component/gene in the model) to enable the similarity search of the systems’ components with the HMMER program.</p></li>
+</ul>
+</div></blockquote>
+<p>The models are grouped by <em>family</em> possibly gathering <em>sub-families</em> (multiple levels allowed), for instance <em>Secretion</em>, <em>Cas-proteins</em>…
+A set of models from a same family (coherent set) of systems to detect is called hereafter a <strong>macsy-model package</strong> <code class="docutils literal notranslate"><span class="pre">NEW</span> <span class="pre">in</span> <span class="pre">V2</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For details on how to create your own macsy-models, have a look at the <a class="reference internal" href="../modeler_guide/index.html#modeler-guide"><span class="std std-ref">Modeller Guide</span></a>.</p>
+</div>
+</div>
+<div class="section" id="installing-models">
+<h1>Installing  models<a class="headerlink" href="#installing-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-to-install-new-models">
+<h2>How to install new models<a class="headerlink" href="#how-to-install-new-models" title="Permalink to this headline">¶</a></h2>
+<p>MacSyFinder does not provide models. You must install models before using it.
+The <code class="docutils literal notranslate"><span class="pre">macsydata</span></code> utility tool is shipped with <cite>MacSyFinder</cite> to deal with macsy-models:</p>
+<p>macsydata &lt;subcommand&gt; [options]</p>
+<p>The main sub-commands are</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">available</span></code> to get the list of macsy-models available</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">search</span></code> to search a model given its name or a pattern in its description</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">install</span></code> to install a macsy-model package (the installed version can be set see –help)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">cite</span></code> to retrieve information on how to cite the model</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">definition</span></code> to display one or a set of model defintion</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">--help</span></code> to get the extended list of available subcommands</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">macsydata</span> <span class="pre">&lt;subcommand&gt;</span> <span class="pre">--help</span></code> to get help about the specified subcommand</p></li>
+</ul>
+<p><em>macsydata</em> is <code class="docutils literal notranslate"><span class="pre">NEW</span> <span class="pre">in</span> <span class="pre">V2</span></code></p>
+</div>
+<div class="section" id="where-the-models-are-located">
+<h2>Where the models are located<a class="headerlink" href="#where-the-models-are-located" title="Permalink to this headline">¶</a></h2>
+<p>MacSyFinder looks at several locations to find macsy-models.</p>
+<div class="section" id="system-wide-installation">
+<h3>system-wide installation<a class="headerlink" href="#system-wide-installation" title="Permalink to this headline">¶</a></h3>
+<p>By default <em>macsydata</em> installs models in a shared location (set by –install-data option) that is
+<cite>/usr/share/macsyfinder/</cite> or <cite>/usr/local/share/macsyfinder</cite> depending on your Operating System distribution.
+If you use a <em>virtualenv</em>, the shared resources are located in the <cite>&lt;virtualenv&gt;/share/macsyfinder</cite> directory.</p>
+</div>
+<div class="section" id="user-wide-installation">
+<h3>user-wide installation<a class="headerlink" href="#user-wide-installation" title="Permalink to this headline">¶</a></h3>
+<p>If you don’t own rights to install system-wide, you can install models in the MacSyFinder’s cache
+located in your home: <cite>$HOME/.macsyfinder/data/</cite>.
+<em>macsydata</em> installs packages in this location when you use the <cite>–user</cite> option.
+The packages installed in user land is added to the system-wide packages.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If two packages have the same name, the package in the user land supersedes the system-wide package.</p>
+</div>
+</div>
+<div class="section" id="project-wide-installation">
+<h3>project-wide installation<a class="headerlink" href="#project-wide-installation" title="Permalink to this headline">¶</a></h3>
+<p>If you cannot install macsy-model packages in system or user land locations,
+you can install models in specific directory with the <cite>–target</cite> option.</p>
+<blockquote>
+<div><p>macsydata install –target &lt;my_models&gt;</p>
+</div></blockquote>
+<p>The specify this specific location with the <code class="docutils literal notranslate"><span class="pre">--models-dir</span></code> <a class="reference internal" href="input.html#path-options"><span class="std std-ref">command-line option</span></a>.</p>
+<blockquote>
+<div><p>macsyfinder –db-type ordered_replicon –models-dir=my_models –models TFF-SF all –sequence-db my_genome.fasta</p>
+</div></blockquote>
+<p>The path must point at a directory that contains macsy-model packages as described <a class="reference internal" href="../modeler_guide/package.html#package-structure"><span class="std std-ref">above</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="functioning.html" class="btn btn-neutral float-right" title="MacSyFinder’s search engine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="outputs.html" class="btn btn-neutral float-left" title="Output format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1000 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>system &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="report" href="report.html" />
+    <link rel="prev" title="cluster" href="cluster.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">system</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-reference-api">system reference api</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#matchmaker">MatchMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#orderedmatchmaker">OrderedMatchMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unorderedmatchmaker">UnorderedMatchMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hitsystemtracker">HitSystemTracker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metasetofhits">MetaSetOfHits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abstractsetofhits">AbstractSetOfHits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abstractclusterizedhits">AbstractClusterizedHits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rejectedclusters">RejectedClusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abstractunordered">AbstractUnordered</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#likelysystem">LikelySystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unlikelysystem">UnlikelySystem</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>system</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/system.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="system">
+<span id="id1"></span><h1>system<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h1>
+<p>This module classes and functions which a given set of hits and a model
+compute if this set satisfy the model or not</p>
+<p>The object which check the compliance of hits to a model is MatchMaker
+which have 2 sub-classes for ordered and unordered replicons</p>
+<p>MatchMaker.match method link hit to a model (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ValidHit</span></code>)
+and then check if these valid hit satisfy the quorum constraints defined
+in the model. According this it instanciate a <a class="reference internal" href="#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a>
+or <a class="reference internal" href="#macsypy.system.RejectedClusters" title="macsypy.system.RejectedClusters"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.RejectedClusters</span></code></a> for ordered replicons
+or <a class="reference internal" href="#macsypy.system.LikelySystem" title="macsypy.system.LikelySystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.LikelySystem</span></code></a> or <a class="reference internal" href="#macsypy.system.UnlikelySystem" title="macsypy.system.UnlikelySystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.UnlikelySystem</span></code></a>
+for unordered replicons</p>
+<p>below the inheritance diagram:</p>
+<div class="graphviz"><img src="../../_images/inheritance-9fdf2241ddaa53c447905c8ab44388f55a831a10.png" alt="Inheritance diagram of macsypy.system.AbstractSetOfHits, macsypy.system.AbstractClusterizedHits, macsypy.system.System, macsypy.system.RejectedClusters, macsypy.system.AbstractUnordered, macsypy.system.LikelySystem, macsypy.system.UnlikelySystem" usemap="#inheritance5b19ac64a7" class="inheritance graphviz" /></div>
+<map id="inheritance5b19ac64a7" name="inheritance5b19ac64a7">
+<area shape="rect" id="node1" href="#macsypy.system.AbstractClusterizedHits" target="_top" title="AbstractClusterizedHits" alt="" coords="192,55,367,80"/>
+<area shape="rect" id="node5" href="#macsypy.system.RejectedClusters" target="_top" title="Handle a set of clusters which has been rejected during the :func:`macsypy.system.match` &#160;step" alt="" coords="415,5,547,31"/>
+<area shape="rect" id="node6" href="#macsypy.system.System" target="_top" title="Modelize as system. a system is an occurrence of a given model on a replicon." alt="" coords="445,55,517,80"/>
+<area shape="rect" id="node2" href="#macsypy.system.AbstractSetOfHits" target="_top" title="Is the mother class of &#160;System, RejectedCluster, LikelySystems UnlikelySystem, ..." alt="" coords="5,80,144,105"/>
+<area shape="rect" id="node3" href="#macsypy.system.AbstractUnordered" target="_top" title="Technical abstract class to factorize code share between" alt="" coords="207,104,351,129"/>
+<area shape="rect" id="node4" href="#macsypy.system.LikelySystem" target="_top" title="&quot;" alt="" coords="426,104,535,129"/>
+<area shape="rect" id="node7" href="#macsypy.system.UnlikelySystem" target="_top" title="Handle components that not fill the quorum requirements defined in model." alt="" coords="419,153,543,179"/>
+</map><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The abstract class <a class="reference internal" href="#macsypy.system.AbstractSetOfHits" title="macsypy.system.AbstractSetOfHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.AbstractSetOfHits</span></code></a> is controlled by the metaclass
+<a class="reference internal" href="#macsypy.system.MetaSetOfHits" title="macsypy.system.MetaSetOfHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.MetaSetOfHits</span></code></a> which inject on the fly several private attributes and
+public properties (see more in <a class="reference internal" href="#macsypy.system.MetaSetOfHits" title="macsypy.system.MetaSetOfHits"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.MetaSetOfHits</span></code></a> documentation)</p>
+</div>
+<div class="graphviz"><img src="../../_images/inheritance-3ac43d13e597b4b8e29eca3251f6da5f4534de8e.png" alt="Inheritance diagram of macsypy.system.MatchMaker, macsypy.system.OrderedMatchMaker, macsypy.system.UnorderedMatchMaker" usemap="#inheritanced8170a739a" class="inheritance graphviz" /></div>
+<map id="inheritanced8170a739a" name="inheritanced8170a739a">
+<area shape="rect" id="node1" href="#macsypy.system.MatchMaker" target="_top" title="Is an abstract class for (Odered/Unordered)MatchMaker" alt="" coords="5,31,108,56"/>
+<area shape="rect" id="node2" href="#macsypy.system.OrderedMatchMaker" target="_top" title="check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)" alt="" coords="164,5,319,31"/>
+<area shape="rect" id="node3" href="#macsypy.system.UnorderedMatchMaker" target="_top" title="UnorderedMatchMaker" alt="" coords="156,55,327,80"/>
+</map><div class="section" id="system-reference-api">
+<span id="system-api"></span><h2>system reference api<a class="headerlink" href="#system-reference-api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="matchmaker">
+<h2>MatchMaker<a class="headerlink" href="#matchmaker" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.MatchMaker">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">MatchMaker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MatchMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MatchMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is an abstract class for (Odered/Unordered)MatchMaker
+the <cite>match</cite> class method must be implemented in concrete classes</p>
+<dl class="py method">
+<dt id="macsypy.system.MatchMaker.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MatchMaker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MatchMaker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.system.MatchMaker.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.system.MatchMaker.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.MatchMaker._create_exchangeable_map">
+<code class="sig-name descname">_create_exchangeable_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MatchMaker._create_exchangeable_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MatchMaker._create_exchangeable_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a map between an exchangeable (formly homolog or analog) gene name and it’s gene reference</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>genes</strong> (list of <a class="reference internal" href="gene.html#macsypy.gene.ModelGene" title="macsypy.gene.ModelGene"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.ModelGene</span></code></a> objects) – The genes to get the exchangeable genes</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>a dict with keys are the exchangeable gene_name and the value the reference gene</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.MatchMaker.present_genes">
+<code class="sig-name descname">present_genes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MatchMaker.present_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MatchMaker.present_genes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the lists of genes name in model which are present in the replicon (included exchangeable)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple of 4 lists for mandatory, accessory, neutral and forbidden
+([str gene_name, ..], [str gene_name], [str gene_name], [str gene_name])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.MatchMaker.sort_hits_by_status">
+<code class="sig-name descname">sort_hits_by_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hits</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MatchMaker.sort_hits_by_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MatchMaker.sort_hits_by_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>sort <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> according the
+the status of the gene the hit code for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hits</strong> – list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the valid hits according their status</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><p>a tuple of 4 lists</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> for MANDATORY genes</p></li>
+<li><p><a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> for ACCESSORY genes</p></li>
+<li><p><a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> for NEUTRAL genes</p></li>
+<li><p><a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> for FORBIDDEN genes</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="orderedmatchmaker">
+<h2>OrderedMatchMaker<a class="headerlink" href="#orderedmatchmaker" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.OrderedMatchMaker">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">OrderedMatchMaker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">redundancy_penalty</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#OrderedMatchMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.OrderedMatchMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)</p>
+<dl class="py method">
+<dt id="macsypy.system.OrderedMatchMaker.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">redundancy_penalty</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#OrderedMatchMaker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.OrderedMatchMaker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.OrderedMatchMaker.match">
+<code class="sig-name descname">match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clusters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#OrderedMatchMaker.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.OrderedMatchMaker.match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check a set of clusters fill model constraints.
+If yes create a <a class="reference internal" href="#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a> otherwise create
+a <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.RejectedClusters</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> objects) – The list of cluster to check if fit the model</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>either a System or a RejectedClusters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.RejectedClusters</span></code> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="unorderedmatchmaker">
+<h2>UnorderedMatchMaker<a class="headerlink" href="#unorderedmatchmaker" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.UnorderedMatchMaker">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">UnorderedMatchMaker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#UnorderedMatchMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.UnorderedMatchMaker" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="macsypy.system.UnorderedMatchMaker.match">
+<code class="sig-name descname">match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hits</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#UnorderedMatchMaker.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.UnorderedMatchMaker.match" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hits</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="hitsystemtracker">
+<h2>HitSystemTracker<a class="headerlink" href="#hitsystemtracker" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.HitSystemTracker">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">HitSystemTracker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#HitSystemTracker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.HitSystemTracker" title="Permalink to this definition">¶</a></dt>
+<dd><p>track in which system is implied each hit</p>
+<dl class="py method">
+<dt id="macsypy.system.HitSystemTracker.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#HitSystemTracker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.HitSystemTracker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.system.HitSystemTracker.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.system.HitSystemTracker.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="metasetofhits">
+<h2>MetaSetOfHits<a class="headerlink" href="#metasetofhits" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.MetaSetOfHits">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">MetaSetOfHits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">bases</span></em>, <em class="sig-param"><span class="n">namespace</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MetaSetOfHits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MetaSetOfHits" title="Permalink to this definition">¶</a></dt>
+<dd><p>This metaclass control the AbstractSetOfHits class creation.
+In this metaclass we inject on the fly several attributes and properties
+two private attributes and one public property corresponding to each value
+of _supported_status class attribute defined in the concrete classes.
+for instance for System class</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>the attributes</dt><dd><ul>
+<li><p>self._mandatory</p></li>
+<li><p>self._mandatory_occ</p></li>
+<li><p>self._accessory</p></li>
+<li><p>self._accessory_occ</p></li>
+<li><p>self._neutral</p></li>
+<li><p>self._neutral_occ</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>and the properties</dt><dd><ul>
+<li><p>mandatory</p></li>
+<li><p>accessory</p></li>
+<li><p>neutral</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>are automatically injected</p>
+<p>The value for attributes <cite>_&lt;status&gt;_occ</cite> are filled by the <cite>count</cite> method
+which is defined in AbstractSetOfHits</p>
+<dl class="py method">
+<dt id="macsypy.system.MetaSetOfHits.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MetaSetOfHits.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MetaSetOfHits.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call self as a function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.MetaSetOfHits.getter_maker">
+<code class="sig-name descname">getter_maker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#MetaSetOfHits.getter_maker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.MetaSetOfHits.getter_maker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a property which allow to access to the gene corresponding of the cat of the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat</strong> (<em>str</em>) – the type of gene category to which we create the getter</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>unbound method</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="abstractsetofhits">
+<h2>AbstractSetOfHits<a class="headerlink" href="#abstractsetofhits" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.AbstractSetOfHits">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">AbstractSetOfHits</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractSetOfHits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractSetOfHits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, …</p>
+<dl class="py method">
+<dt id="macsypy.system.AbstractSetOfHits.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractSetOfHits.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.system.AbstractSetOfHits.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractSetOfHits.count">
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractSetOfHits.count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>fill structures one for supported status mandatory, accessory, …
+each structure count how many hit for each gene of the model
+mandatory_occ = { gene_name : [ModelHit, …]
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractSetOfHits.position">
+<em class="property">property </em><code class="sig-name descname">position</code><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.position" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The position of the first and last hit,
+excluded the hit coding for loners.
+If the system is composed only by loners, used loners to compute position</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple (start: int, end:int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractSetOfHits.replicon_name">
+<em class="property">property </em><code class="sig-name descname">replicon_name</code><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.replicon_name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The name of the replicon</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractSetOfHits.wholeness">
+<em class="property">property </em><code class="sig-name descname">wholeness</code><a class="headerlink" href="#macsypy.system.AbstractSetOfHits.wholeness" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a score indicating the genes ratio of the model which have at least one hit
+by default full system is mandatory + accessory (‘neutral’ genes do not count)
+but for special corner case it can be sepcified in model definition (xml)
+or on the command line</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="abstractclusterizedhits">
+<h2>AbstractClusterizedHits<a class="headerlink" href="#abstractclusterizedhits" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.AbstractClusterizedHits">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">AbstractClusterizedHits</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractClusterizedHits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractClusterizedHits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="macsypy.system.AbstractClusterizedHits.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">clusters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractClusterizedHits.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractClusterizedHits.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractClusterizedHits.fulfilled_function">
+<code class="sig-name descname">fulfilled_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">genes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractClusterizedHits.fulfilled_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractClusterizedHits.fulfilled_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gene</strong> – The genes which must be tested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the common functions between genes and this system.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set of string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>System<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.System">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">System</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modelize as system. a system is an occurrence of a given model on a replicon.</p>
+<dl class="py method">
+<dt id="macsypy.system.System.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">clusters</span></em>, <em class="sig-param"><span class="n">redundancy_penalty</span><span class="o">=</span><span class="default_value">1.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – The model which has ben used to build this system</p></li>
+<li><p><strong>clusters</strong> (list of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> objects) – The list of cluster that form this system</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.get_hits_encoding_multisystem">
+<code class="sig-name descname">get_hits_encoding_multisystem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.get_hits_encoding_multisystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.get_hits_encoding_multisystem" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The hits codding for a gene taged as multi system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>set of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.get_loners">
+<code class="sig-name descname">get_loners</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.get_loners"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.get_loners" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The True Loners (Loner which not colocalize with an other hit) belonging to the systems</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>set of <a class="reference internal" href="hit.html#macsypy.hit.Loner" title="macsypy.hit.Loner"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.Loner</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.get_multisystems">
+<code class="sig-name descname">get_multisystems</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.get_multisystems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.get_multisystems" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The MultiSystem hit (comming from out system (other cluster or loner) and tag as multisystem)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>set of <a class="reference internal" href="hit.html#macsypy.hit.MultiSystem" title="macsypy.hit.MultiSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.MultiSystem</span></code></a> | <a class="reference internal" href="hit.html#macsypy.hit.LonerMultiSystem" title="macsypy.hit.LonerMultiSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.LonerMultiSystem</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.hits">
+<em class="property">property </em><code class="sig-name descname">hits</code><a class="headerlink" href="#macsypy.system.System.hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of all hits that compose this system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ValidHits</span></code> , … ]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.is_compatible">
+<code class="sig-name descname">is_compatible</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.is_compatible"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.is_compatible" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a> object) – the other systems to test compatibility</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>True if other system is compatible with this one. False otherwise.
+Two systems are compatible if they do not share <a class="reference internal" href="hit.html#macsypy.hit.CoreHit" title="macsypy.hit.CoreHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.CoreHit</span></code></a>
+except hit corresponding to a multi_system gene in the model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is used to compute the best combination of systems.</p>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.loci_nb">
+<em class="property">property </em><code class="sig-name descname">loci_nb</code><a class="headerlink" href="#macsypy.system.System.loci_nb" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of loci of this system (loners are not considered)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int &gt;= 0</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.loci_num">
+<em class="property">property </em><code class="sig-name descname">loci_num</code><a class="headerlink" href="#macsypy.system.System.loci_num" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of the corresponding locus for each cluster
+the cluster made of only one Loner are not considered as a loci
+so these clusters have a negative locus_num</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.multi_loci">
+<em class="property">property </em><code class="sig-name descname">multi_loci</code><a class="headerlink" href="#macsypy.system.System.multi_loci" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if the systems is encoded in multiple loci. False otherwise</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.occurrence">
+<code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#System.occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.System.occurrence" title="Permalink to this definition">¶</a></dt>
+<dd><p>sometimes several systems collocates so they form only one cluster
+so macsyfinder build only one system
+the occurrence is an indicator of how many systems are
+it’s based on the number of occurrence of each mandatory genes
+The multi_system genes are not take in account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a predict number of biologic systems</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.System.score">
+<em class="property">property </em><code class="sig-name descname">score</code><a class="headerlink" href="#macsypy.system.System.score" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a score take in account
+* if a hit match for the gene or it is an exchangeable gene
+* if a hit is duplicated and already present in the system or the cluster
+* if a hit match for mandatory/accessory gene of the model</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rejectedclusters">
+<h2>RejectedClusters<a class="headerlink" href="#rejectedclusters" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.RejectedClusters">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">RejectedClusters</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#RejectedClusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.RejectedClusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a set of clusters which has been rejected during the <code class="xref py py-func docutils literal notranslate"><span class="pre">macsypy.system.match()</span></code>  step
+This clusters (can be one) does not fill the requirements or contains forbidden genes.</p>
+<dl class="py method">
+<dt id="macsypy.system.RejectedClusters.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">clusters</span></em>, <em class="sig-param"><span class="n">reasons</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#RejectedClusters.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.RejectedClusters.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – </p></li>
+<li><p><strong>clusters</strong> (list of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> objects) – list of clusters. These Clusters should be created with
+<a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p></li>
+<li><p><strong>reasons</strong> (<em>list of string</em>) – the reason why these clusters have been rejected</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.RejectedClusters.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#RejectedClusters.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.RejectedClusters.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string representation of this RejectedCluster</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.RejectedClusters.hits">
+<em class="property">property </em><code class="sig-name descname">hits</code><a class="headerlink" href="#macsypy.system.RejectedClusters.hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of all hits that compose this system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ValidHits</span></code> , … ]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="abstractunordered">
+<h2>AbstractUnordered<a class="headerlink" href="#abstractunordered" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.AbstractUnordered">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">AbstractUnordered</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractUnordered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractUnordered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Technical abstract class to factorize code share between
+LikelySystem and UnlikelySystem</p>
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">mandatory_hits</span></em>, <em class="sig-param"><span class="n">accessory_hits</span></em>, <em class="sig-param"><span class="n">neutral_hits</span></em>, <em class="sig-param"><span class="n">forbidden_hits</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#AbstractUnordered.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.AbstractUnordered.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.accessory_hits">
+<em class="property">property </em><code class="sig-name descname">accessory_hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.accessory_hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of accesory hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.allowed_hits">
+<em class="property">property </em><code class="sig-name descname">allowed_hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.allowed_hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of allowed (mandatory, accessory, neutral) hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.forbidden_hits">
+<em class="property">property </em><code class="sig-name descname">forbidden_hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.forbidden_hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of forbidden hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.hits">
+<em class="property">property </em><code class="sig-name descname">hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of all hits sorted by their position</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.mandatory_hits">
+<em class="property">property </em><code class="sig-name descname">mandatory_hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.mandatory_hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of mandatory hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.AbstractUnordered.neutral_hits">
+<em class="property">property </em><code class="sig-name descname">neutral_hits</code><a class="headerlink" href="#macsypy.system.AbstractUnordered.neutral_hits" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of neutral hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="likelysystem">
+<h2>LikelySystem<a class="headerlink" href="#likelysystem" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.LikelySystem">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">LikelySystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#LikelySystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.LikelySystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>”
+Handle components that fill the quorum requirements defined in model.
+with no idea about genetic organization (gene cluster)
+so we cannot take in account forbidden genes</p>
+<dl class="py method">
+<dt id="macsypy.system.LikelySystem.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#LikelySystem.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.LikelySystem.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string representation of this LikelySystem</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="unlikelysystem">
+<h2>UnlikelySystem<a class="headerlink" href="#unlikelysystem" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.system.UnlikelySystem">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.system.</code><code class="sig-name descname">UnlikelySystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#UnlikelySystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.UnlikelySystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle components that not fill the quorum requirements defined in model.</p>
+<dl class="py method">
+<dt id="macsypy.system.UnlikelySystem.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">mandatory_hits</span></em>, <em class="sig-param"><span class="n">accessory_hits</span></em>, <em class="sig-param"><span class="n">neutral_hits</span></em>, <em class="sig-param"><span class="n">forbidden_hits</span></em>, <em class="sig-param"><span class="n">reasons</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#UnlikelySystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.UnlikelySystem.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – The model which has ben used to build this system</p></li>
+<li><p><strong>mandatory_hits</strong> (list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects) – The list of mandatory hits (encode for a gene tagged as mandatory)</p></li>
+<li><p><strong>accessory_hits</strong> (list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects) – The list of accessory hits (encode for a gene tagged as accessory)</p></li>
+<li><p><strong>neutral_hits</strong> (list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects) – The list of neutral hits (encode for a gene tagged as neutral)</p></li>
+<li><p><strong>forbidden_hits</strong> (list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects) – The list of hits that are forbidden</p></li>
+<li><p><strong>reasons</strong> (<em>List of str</em>) – the reasons why this set of hits has been rejected</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.UnlikelySystem.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/system.html#UnlikelySystem.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.system.UnlikelySystem.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string representation of this UnlikelySystem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.system.UnlikelySystem.reasons">
+<em class="property">property </em><code class="sig-name descname">reasons</code><a class="headerlink" href="#macsypy.system.UnlikelySystem.reasons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The reasons why it probably not a system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="report.html" class="btn btn-neutral float-right" title="report" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cluster.html" class="btn btn-neutral float-left" title="cluster" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

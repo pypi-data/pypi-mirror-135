@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>macsypy.report &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>macsypy.report</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for macsypy.report</h1><div class="highlight"><pre>
+<span></span><span class="c1">#########################################################################</span>
+<span class="c1"># MacSyFinder - Detection of macromolecular systems in protein dataset  #</span>
+<span class="c1">#               using systems modelling and similarity search.          #</span>
+<span class="c1"># Authors: Sophie Abby, Bertrand Neron                                  #</span>
+<span class="c1"># Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #</span>
+<span class="c1"># See the COPYRIGHT file for details                                    #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># This file is part of MacSyFinder package.                             #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># MacSyFinder is free software: you can redistribute it and/or modify   #</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by  #</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or     #</span>
+<span class="c1"># (at your option) any later version.                                   #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># MacSyFinder is distributed in the hope that it will be useful,        #</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of        #</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #</span>
+<span class="c1"># GNU General Public License for more details .                         #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># You should have received a copy of the GNU General Public License     #</span>
+<span class="c1"># along with MacSyFinder (COPYING).                                     #</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.                          #</span>
+<span class="c1">#########################################################################</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+
+<span class="kn">from</span> <span class="nn">.database</span> <span class="kn">import</span> <span class="n">Indexes</span><span class="p">,</span> <span class="n">RepliconDB</span>
+<span class="kn">from</span> <span class="nn">.hit</span> <span class="kn">import</span> <span class="n">CoreHit</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">MacsypyError</span>
+
+
+<div class="viewcode-block" id="HMMReport"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport">[docs]</a><span class="k">class</span> <span class="nc">HMMReport</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,</span>
+<span class="sd">    after having applied a hit filtering.</span>
+<span class="sd">    This class is an **abstract class**. There are two implementations of this abstract class</span>
+<span class="sd">    depending on whether the input sequence dataset is &quot;ordered&quot; (&quot;gembase&quot; or &quot;ordered_replicon&quot; db_type)</span>
+<span class="sd">    or not (&quot;unordered&quot; db_type).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HMMReport.__init__"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gene</span><span class="p">,</span> <span class="n">hmmer_output</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param gene: the gene corresponding to the profile search reported here</span>
+<span class="sd">        :type gene: :class:`macsypy.gene.CoreGene` object</span>
+<span class="sd">        :param hmmer_output: The path to the raw Hmmer output file</span>
+<span class="sd">        :type hmmer_output: string</span>
+<span class="sd">        :param cfg: the configuration object</span>
+<span class="sd">        :type cfg: :class:`macsypy.config.Config` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gene</span> <span class="o">=</span> <span class="n">gene</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_raw_out</span> <span class="o">=</span> <span class="n">hmmer_output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extract_out</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._get_replicon_name"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._get_replicon_name">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_replicon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is used by extract method and must be implemented by concrete class</span>
+
+<span class="sd">        :param str hit_id: the id of the current hit extract from hmm output.</span>
+<span class="sd">        :return: The name of the replicon</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HMMReport.extract"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the output file of hmmer compute from an unordered genes base</span>
+<span class="sd">        and produced a new synthetic report file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="c1"># so the extract of a given HMM output is executed only once per run</span>
+            <span class="c1"># if this method is called several times the first call induce the parsing of HMM out</span>
+            <span class="c1"># the other calls do nothing</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">Indexes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+            <span class="n">my_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_my_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_raw_out</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fill_my_db</span><span class="p">(</span><span class="n">my_db</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_raw_out</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hmm_out</span><span class="p">:</span>
+                <span class="n">i_evalue_sel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_evalue_sel</span><span class="p">()</span>
+                <span class="n">coverage_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">coverage_profile</span><span class="p">()</span>
+                <span class="n">gene_profile_lg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+                <span class="n">hmm_hits</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">hmm_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hit_start</span><span class="p">))</span>
+                <span class="c1"># drop summary</span>
+                <span class="nb">next</span><span class="p">(</span><span class="n">hmm_hits</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">hmm_hit</span> <span class="ow">in</span> <span class="n">hmm_hits</span><span class="p">:</span>
+                    <span class="n">hit_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_hmm_header</span><span class="p">(</span><span class="n">hmm_hit</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">seq_lg</span><span class="p">,</span> <span class="n">position_hit</span> <span class="o">=</span> <span class="n">my_db</span><span class="p">[</span><span class="n">hit_id</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">my_db</span><span class="p">[</span><span class="n">hit_id</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;hit id &#39;</span><span class="si">{</span><span class="n">hit_id</span><span class="si">}</span><span class="s2">&#39; was not indexed, rebuild sequence &#39;</span><span class="si">{</span><span class="n">idx</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; index&quot;</span>
+                            <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="n">MacsypyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="n">replicon_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_replicon_name</span><span class="p">(</span><span class="n">hit_id</span><span class="p">)</span>
+
+                    <span class="n">body</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">hmm_hits</span><span class="p">)</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_hmm_body</span><span class="p">(</span><span class="n">hit_id</span><span class="p">,</span> <span class="n">gene_profile_lg</span><span class="p">,</span> <span class="n">seq_lg</span><span class="p">,</span> <span class="n">coverage_threshold</span><span class="p">,</span>
+                                             <span class="n">replicon_name</span><span class="p">,</span> <span class="n">position_hit</span><span class="p">,</span> <span class="n">i_evalue_sel</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hits</span> <span class="o">+=</span> <span class="n">h</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hits</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span></div>
+
+
+<div class="viewcode-block" id="HMMReport.__str__"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: string representation of this report</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# gene: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> extract from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_raw_out</span><span class="si">}</span><span class="s2"> hmm output</span>
+<span class="s2"># profile length= </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"></span>
+<span class="s2"># i_evalue threshold= </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_evalue_sel</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2"># coverage threshold= </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">coverage_profile</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2"># hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+        
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="HMMReport.save_extract"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport.save_extract">[docs]</a>    <span class="k">def</span> <span class="nf">save_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the string representation of the extract report in a file.</span>
+<span class="sd">        The name of this file is the concatenation of the gene name and of the &quot;res_extract_suffix&quot;</span>
+<span class="sd">        from the config object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">extract_out_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">res_extract_suffix</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_extract_out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">working_dir</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">hmmer_dir</span><span class="p">(),</span> <span class="n">extract_out_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_out</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">_file</span><span class="p">:</span>
+                <span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="HMMReport.best_hit"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport.best_hit">[docs]</a>    <span class="k">def</span> <span class="nf">best_hit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the best hit among multiple hits</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._hit_start"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._hit_start">[docs]</a>    <span class="k">def</span> <span class="nf">_hit_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param line: the line to parse</span>
+<span class="sd">        :type line: string</span>
+<span class="sd">        :return: True if it&#39;s the beginning of a new hit in Hmmer raw output files.</span>
+<span class="sd">         False otherwise</span>
+<span class="sd">        :rtype: boolean.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._build_my_db"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._build_my_db">[docs]</a>    <span class="k">def</span> <span class="nf">_build_my_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hmm_output</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build the keys of a dictionary object to store sequence identifiers of hits.</span>
+
+<span class="sd">        :param hmm_output: the path to the hmmsearch output to parse.</span>
+<span class="sd">        :type hmm_output: string</span>
+<span class="sd">        :return: a dictionary containing a key for each sequence id of the hits</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hmm_output</span><span class="p">)</span> <span class="k">as</span> <span class="n">hmm_file</span><span class="p">:</span>
+            <span class="n">hits</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">hmm_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hit_start</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_hmm_header</span><span class="p">(</span><span class="n">h</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._fill_my_db"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._fill_my_db">[docs]</a>    <span class="k">def</span> <span class="nf">_fill_my_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fill the dictionary with information on the matched sequences</span>
+
+<span class="sd">        :param db: the database containing all sequence id of the hits.</span>
+<span class="sd">        :type db: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">Indexes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="n">idx</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">seqid</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">seqid</span> <span class="ow">in</span> <span class="n">db</span><span class="p">:</span>
+                <span class="n">db</span><span class="p">[</span><span class="n">seqid</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">rank</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._parse_hmm_header"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._parse_hmm_header">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_hmm_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h_grp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param h_grp: the sequence of string return by groupby function representing the header of a hit </span>
+<span class="sd">        :type h_grp: sequence of string (&lt;itertools._grouper object at 0x7ff9912e3b50&gt;)</span>
+<span class="sd">        :returns: the sequence identifier from a set of lines that corresponds to a single hit</span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">h_grp</span><span class="p">:</span>
+            <span class="n">hit_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">hit_id</span></div>
+
+
+<div class="viewcode-block" id="HMMReport._parse_hmm_body"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.HMMReport._parse_hmm_body">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_hmm_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_id</span><span class="p">,</span> <span class="n">gene_profile_lg</span><span class="p">,</span> <span class="n">seq_lg</span><span class="p">,</span> <span class="n">coverage_threshold</span><span class="p">,</span> <span class="n">replicon_name</span><span class="p">,</span>
+                        <span class="n">position_hit</span><span class="p">,</span> <span class="n">i_evalue_sel</span><span class="p">,</span> <span class="n">b_grp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected</span>
+<span class="sd">        (&quot;coverage_profile&quot; and &quot;i_evalue_select&quot; command-line parameters)</span>
+
+<span class="sd">        :param str hit_id: the sequence identifier</span>
+<span class="sd">        :param int gene_profile_lg: the length of the profile matched</span>
+<span class="sd">        :paramint  seq_lg: the length of the sequence</span>
+<span class="sd">        :param float coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment</span>
+<span class="sd">                                        for hit selection.</span>
+<span class="sd">        :param str replicon_name: the identifier of the replicon</span>
+<span class="sd">        :param int position_hit: the rank of the sequence matched in the input dataset file</span>
+<span class="sd">        :param float i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection</span>
+<span class="sd">        :param b_grp: the Hmmer output lines to deal with (grouped by hit)</span>
+<span class="sd">        :type b_grp: list of list of strings</span>
+<span class="sd">        :returns: a sequence of hits</span>
+<span class="sd">        :rtype: list of :class:`macsypy.report.CoreHit` objects</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">first_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">b_grp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">first_line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;   #    score&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">b_grp</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">hits</span>
+                <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; ---   ------ ----- --------&quot;</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># fields[2] = score</span>
+                        <span class="c1"># fields[5] = i_evalue</span>
+                        <span class="c1"># fields[6] = hmmfrom</span>
+                        <span class="c1"># fields[7] = hmm to</span>
+                        <span class="c1"># fields[9] = alifrom</span>
+                        <span class="c1"># fields[10] = ali to</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">i_evalue_sel</span><span class="p">:</span>
+                            <span class="n">cov_profile</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">gene_profile_lg</span>
+                            <span class="n">begin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+                            <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+                            <span class="n">cov_gene</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">begin</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">seq_lg</span>  <span class="c1"># To be added in Gene: sequence_length</span>
+                            <span class="k">if</span> <span class="n">cov_profile</span> <span class="o">&gt;=</span> <span class="n">coverage_threshold</span><span class="p">:</span>
+                                <span class="n">i_eval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+                                <span class="n">score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                                <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CoreHit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene</span><span class="p">,</span>
+                                                    <span class="n">hit_id</span><span class="p">,</span>
+                                                    <span class="n">seq_lg</span><span class="p">,</span>
+                                                    <span class="n">replicon_name</span><span class="p">,</span>
+                                                    <span class="n">position_hit</span><span class="p">,</span>
+                                                    <span class="n">i_eval</span><span class="p">,</span>
+                                                    <span class="n">score</span><span class="p">,</span>
+                                                    <span class="n">cov_profile</span><span class="p">,</span>
+                                                    <span class="n">cov_gene</span><span class="p">,</span>
+                                                    <span class="n">begin</span><span class="p">,</span>
+                                                    <span class="n">end</span><span class="p">))</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid line to parse :</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GeneralHMMReport"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.GeneralHMMReport">[docs]</a><span class="k">class</span> <span class="nc">GeneralHMMReport</span><span class="p">(</span><span class="n">HMMReport</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle HMM report. Extract a synthetic report from the raw hmmer output.</span>
+<span class="sd">    Dedicated to any type of &#39;unordered&#39; datasets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GeneralHMMReport._get_replicon_name"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.GeneralHMMReport._get_replicon_name">[docs]</a>    <span class="k">def</span> <span class="nf">_get_replicon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_id</span><span class="p">):</span>
+        <span class="c1"># replicon_name = self.cfg. # Define a variable in further devt</span>
+        <span class="k">return</span> <span class="s2">&quot;Unordered&quot;</span></div></div>
+
+
+
+<div class="viewcode-block" id="OrderedHMMReport"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.OrderedHMMReport">[docs]</a><span class="k">class</span> <span class="nc">OrderedHMMReport</span><span class="p">(</span><span class="n">HMMReport</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle HMM report. Extract a synthetic report from the raw hmmer output.</span>
+<span class="sd">    Dedicated to &#39;ordered_replicon&#39; datasets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OrderedHMMReport._get_replicon_name"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.OrderedHMMReport._get_replicon_name">[docs]</a>    <span class="k">def</span> <span class="nf">_get_replicon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RepliconDB</span><span class="o">.</span><span class="n">ordered_replicon_name</span></div></div>
+
+
+<div class="viewcode-block" id="GembaseHMMReport"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.GembaseHMMReport">[docs]</a><span class="k">class</span> <span class="nc">GembaseHMMReport</span><span class="p">(</span><span class="n">HMMReport</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle HMM report. Extract a synthetic report from the raw hmmer output.</span>
+<span class="sd">    Dedicated to &#39;gembase&#39; format datasets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GembaseHMMReport._get_replicon_name"><a class="viewcode-back" href="../../developer_guide/api/report.html#macsypy.report.GembaseHMMReport._get_replicon_name">[docs]</a>    <span class="k">def</span> <span class="nf">_get_replicon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_id</span><span class="p">):</span>
+        <span class="n">replicon_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hit_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">replicon_name</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

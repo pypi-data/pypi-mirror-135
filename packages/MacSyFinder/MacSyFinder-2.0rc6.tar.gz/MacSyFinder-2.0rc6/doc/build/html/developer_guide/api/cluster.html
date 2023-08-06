@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cluster &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="system" href="system.html" />
+    <link rel="prev" title="hit" href="hit.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cluster</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cluster-api-reference">cluster API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-clusters">build_clusters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/cluster.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cluster">
+<span id="id1"></span><h1>cluster<a class="headerlink" href="#cluster" title="Permalink to this headline">¶</a></h1>
+<p>A cluster is an ordered set of hits related to a model which satisfy the model distance constraints.</p>
+<div class="section" id="cluster-api-reference">
+<span id="cluster-api"></span><h2>cluster API reference<a class="headerlink" href="#cluster-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id2">
+<h2>cluster<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.cluster.Cluster">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.cluster.</code><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hits</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">hit_weights</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle hits relative to a model which collocates</p>
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.__contains__">
+<code class="sig-name descname">__contains__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v_hit</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v_hit</strong> (<a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> object) – The hit to test</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the hit is in the cluster hits, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hits</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">hit_weights</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hits</strong> ([ <a class="reference internal" href="hit.html#macsypy.hit.CoreHit" title="macsypy.hit.CoreHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.CoreHit</span></code></a> | <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a>, … ]) – the hits constituting this cluster</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a>) – the model associated to this cluster</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a string representation of this cluster</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.cluster.Cluster.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.cluster.Cluster.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster._check_replicon_consistency">
+<code class="sig-name descname">_check_replicon_consistency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster._check_replicon_consistency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster._check_replicon_consistency" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Raise</dt>
+<dd class="field-odd"><p>MacsypyError if all hits of a cluster are NOT related to the same replicon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.fulfilled_function">
+<code class="sig-name descname">fulfilled_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">genes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.fulfilled_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.fulfilled_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gene</strong> – The genes which must be tested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the common functions between genes and this cluster.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set of string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.loner">
+<em class="property">property </em><code class="sig-name descname">loner</code><a class="headerlink" href="#macsypy.cluster.Cluster.loner" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if this cluster is made of only one hit representing a loner gene
+False otherwise:
+- contains several hits
+- contains one hit but gene is not tag as loner (max_gene_required = 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster</span></em>, <em class="sig-param"><span class="n">before</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>merge the cluster in this one. (do it in place)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> (<a class="reference internal" href="#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> object) – </p></li>
+<li><p><strong>before</strong> (<em>bool</em>) – If False the hits of the cluster will be add at the end of this one,
+Otherwise the cluster hits will be inserted before the hits of this one.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="error.html#macsypy.error.MacsypyError" title="macsypy.error.MacsypyError"><strong>MacsypyError</strong></a> – if the two clusters have not the same model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.multi_system">
+<em class="property">property </em><code class="sig-name descname">multi_system</code><a class="headerlink" href="#macsypy.cluster.Cluster.multi_system" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if this cluster is made of only one hit representing a multi_system gene
+False otherwise:
+- contains several hits
+- contains one hit but gene is not tag as loner (max_gene_required = 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.cluster.Cluster.replace">
+<code class="sig-name descname">replace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">old</span></em>, <em class="sig-param"><span class="n">new</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#Cluster.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.Cluster.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>replace hit old in this cluster by new one. (work in place)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old</strong> (<a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> object.) – the hit to replace</p></li>
+<li><p><strong>new</strong> (<a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> object.) – the new hit</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="build-clusters">
+<h2>build_clusters<a class="headerlink" href="#build-clusters" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.cluster.build_clusters">
+<code class="sig-prename descclassname">macsypy.cluster.</code><code class="sig-name descname">build_clusters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hits</span></em>, <em class="sig-param"><span class="n">rep_info</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">hit_weights</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/cluster.html#build_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.cluster.build_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>From a list of filtered hits, and replicon information (topology, length),
+build all lists of hits that satisfied the constraints:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>max_gene_inter_space</p></li>
+<li><p>loner</p></li>
+<li><p>multi_system</p></li>
+</ul>
+</div></blockquote>
+<p>If Yes create a cluster
+A cluster contains at least two hits separated by less or equal than max_gene_inter_space
+Except for loner genes which are allowed to be alone in a cluster</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hits</strong> (list of <a class="reference internal" href="hit.html#macsypy.hit.ModelHit" title="macsypy.hit.ModelHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.ModelHit</span></code></a> objects) – list of filtered hits</p></li>
+<li><p><strong>rep_info</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.Indexes.RepliconInfo</span></code> object) – the replicon to analyse</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – the model to study</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of regular clusters,
+the special clusters (loners not in cluster and multi systems)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><p>tuple with 2 elements</p>
+<ul class="simple">
+<li><p>true_clusters which is list of <a class="reference internal" href="#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> objects</p></li>
+<li><p>true_loners: a dict { str function: :class:macsypy.hit.Loner | :class:macsypy.hit.LonerMultiSystem object}</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="system.html" class="btn btn-neutral float-right" title="system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hit.html" class="btn btn-neutral float-left" title="hit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

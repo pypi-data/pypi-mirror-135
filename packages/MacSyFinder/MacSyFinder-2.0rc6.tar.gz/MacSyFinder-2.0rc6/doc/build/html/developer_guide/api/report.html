@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>report &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="search_genes" href="search_genes.html" />
+    <link rel="prev" title="system" href="system.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">report</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#report-api-reference">report API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">HMMReport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generalhmmreport">GeneralHMMReport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#orderedhmmreport">OrderedHMMReport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gembasehmmreport">GembaseHMMReport</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>report</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/report.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="report">
+<span id="hmmreport"></span><h1>report<a class="headerlink" href="#report" title="Permalink to this headline">¶</a></h1>
+<p>A <em>“HMMReport”</em> object represents the results of a Hmmer program search on a dataset with a hidden Markov model protein profile (see <a class="reference internal" href="../overview.html#report-implementation"><span class="std std-ref">this section</span></a>).
+This object has methods to extract and filter Hmmer raw outputs (see <a class="reference internal" href="../../user_guide/outputs.html#hmmer-outputs-label"><span class="std std-ref">generated output files</span></a>), and then build Hits relevant for system detection.
+For matches selected with the filtering parameters, <em>“Hit”</em> objects (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.HMMReport.Hit</span></code>) are built.</p>
+<div class="section" id="report-api-reference">
+<span id="report-api"></span><h2>report API reference<a class="headerlink" href="#report-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id1">
+<h2>HMMReport<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.report.HMMReport">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.report.</code><code class="sig-name descname">HMMReport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">hmmer_output</span></em>, <em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,
+after having applied a hit filtering.
+This class is an <strong>abstract class</strong>. There are two implementations of this abstract class
+depending on whether the input sequence dataset is “ordered” (“gembase” or “ordered_replicon” db_type)
+or not (“unordered” db_type).</p>
+<dl class="py method">
+<dt id="macsypy.report.HMMReport.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">hmmer_output</span></em>, <em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gene</strong> (<a class="reference internal" href="gene.html#macsypy.gene.CoreGene" title="macsypy.gene.CoreGene"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.CoreGene</span></code></a> object) – the gene corresponding to the profile search reported here</p></li>
+<li><p><strong>hmmer_output</strong> (<em>string</em>) – The path to the raw Hmmer output file</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="config.html#id0" title="macsypy.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.config.Config</span></code></a> object) – the configuration object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>string representation of this report</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.report.HMMReport.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.report.HMMReport.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._build_my_db">
+<code class="sig-name descname">_build_my_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hmm_output</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._build_my_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._build_my_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the keys of a dictionary object to store sequence identifiers of hits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hmm_output</strong> (<em>string</em>) – the path to the hmmsearch output to parse.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dictionary containing a key for each sequence id of the hits</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._fill_my_db">
+<code class="sig-name descname">_fill_my_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._fill_my_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._fill_my_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill the dictionary with information on the matched sequences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>db</strong> (<em>dict</em>) – the database containing all sequence id of the hits.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._get_replicon_name">
+<em class="property">abstract </em><code class="sig-name descname">_get_replicon_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hit_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._get_replicon_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._get_replicon_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used by extract method and must be implemented by concrete class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hit_id</strong> (<em>str</em>) – the id of the current hit extract from hmm output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the replicon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._hit_start">
+<code class="sig-name descname">_hit_start</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._hit_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._hit_start" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>string</em>) – the line to parse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it’s the beginning of a new hit in Hmmer raw output files.
+False otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._parse_hmm_body">
+<code class="sig-name descname">_parse_hmm_body</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hit_id</span></em>, <em class="sig-param"><span class="n">gene_profile_lg</span></em>, <em class="sig-param"><span class="n">seq_lg</span></em>, <em class="sig-param"><span class="n">coverage_threshold</span></em>, <em class="sig-param"><span class="n">replicon_name</span></em>, <em class="sig-param"><span class="n">position_hit</span></em>, <em class="sig-param"><span class="n">i_evalue_sel</span></em>, <em class="sig-param"><span class="n">b_grp</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._parse_hmm_body"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._parse_hmm_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
+(“coverage_profile” and “i_evalue_select” command-line parameters)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hit_id</strong> (<em>str</em>) – the sequence identifier</p></li>
+<li><p><strong>gene_profile_lg</strong> (<em>int</em>) – the length of the profile matched</p></li>
+<li><p><strong>coverage_threshold</strong> (<em>float</em>) – the minimal coverage of the profile to be reached in the Hmmer alignment
+for hit selection.</p></li>
+<li><p><strong>replicon_name</strong> (<em>str</em>) – the identifier of the replicon</p></li>
+<li><p><strong>position_hit</strong> (<em>int</em>) – the rank of the sequence matched in the input dataset file</p></li>
+<li><p><strong>i_evalue_sel</strong> (<em>float</em>) – the maximal i-evalue (independent evalue) for hit selection</p></li>
+<li><p><strong>b_grp</strong> (<em>list of list of strings</em>) – the Hmmer output lines to deal with (grouped by hit)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Paramint seq_lg</dt>
+<dd class="field-even"><p>the length of the sequence</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a sequence of hits</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.report.CoreHit</span></code> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport._parse_hmm_header">
+<code class="sig-name descname">_parse_hmm_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">h_grp</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport._parse_hmm_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport._parse_hmm_header" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>h_grp</strong> (<em>sequence of string</em><em> (</em><em>&lt;itertools._grouper object at 0x7ff9912e3b50&gt;</em><em>)</em>) – the sequence of string return by groupby function representing the header of a hit</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the sequence identifier from a set of lines that corresponds to a single hit</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport.best_hit">
+<code class="sig-name descname">best_hit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport.best_hit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport.best_hit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the best hit among multiple hits</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the output file of hmmer compute from an unordered genes base
+and produced a new synthetic report file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.report.HMMReport.save_extract">
+<code class="sig-name descname">save_extract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#HMMReport.save_extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.HMMReport.save_extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the string representation of the extract report in a file.
+The name of this file is the concatenation of the gene name and of the “res_extract_suffix”
+from the config object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="generalhmmreport">
+<h2>GeneralHMMReport<a class="headerlink" href="#generalhmmreport" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.report.GeneralHMMReport">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.report.</code><code class="sig-name descname">GeneralHMMReport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">hmmer_output</span></em>, <em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#GeneralHMMReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.GeneralHMMReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle HMM report. Extract a synthetic report from the raw hmmer output.
+Dedicated to any type of ‘unordered’ datasets.</p>
+<dl class="py method">
+<dt id="macsypy.report.GeneralHMMReport._get_replicon_name">
+<code class="sig-name descname">_get_replicon_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hit_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#GeneralHMMReport._get_replicon_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.GeneralHMMReport._get_replicon_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used by extract method and must be implemented by concrete class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hit_id</strong> (<em>str</em>) – the id of the current hit extract from hmm output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the replicon</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="orderedhmmreport">
+<h2>OrderedHMMReport<a class="headerlink" href="#orderedhmmreport" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.report.OrderedHMMReport">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.report.</code><code class="sig-name descname">OrderedHMMReport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">hmmer_output</span></em>, <em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#OrderedHMMReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.OrderedHMMReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle HMM report. Extract a synthetic report from the raw hmmer output.
+Dedicated to ‘ordered_replicon’ datasets.</p>
+<dl class="py method">
+<dt id="macsypy.report.OrderedHMMReport._get_replicon_name">
+<code class="sig-name descname">_get_replicon_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hit_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#OrderedHMMReport._get_replicon_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.OrderedHMMReport._get_replicon_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used by extract method and must be implemented by concrete class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hit_id</strong> (<em>str</em>) – the id of the current hit extract from hmm output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the replicon</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gembasehmmreport">
+<h2>GembaseHMMReport<a class="headerlink" href="#gembasehmmreport" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.report.GembaseHMMReport">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.report.</code><code class="sig-name descname">GembaseHMMReport</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gene</span></em>, <em class="sig-param"><span class="n">hmmer_output</span></em>, <em class="sig-param"><span class="n">cfg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#GembaseHMMReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.GembaseHMMReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle HMM report. Extract a synthetic report from the raw hmmer output.
+Dedicated to ‘gembase’ format datasets.</p>
+<dl class="py method">
+<dt id="macsypy.report.GembaseHMMReport._get_replicon_name">
+<code class="sig-name descname">_get_replicon_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hit_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/report.html#GembaseHMMReport._get_replicon_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.report.GembaseHMMReport._get_replicon_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used by extract method and must be implemented by concrete class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hit_id</strong> (<em>str</em>) – the id of the current hit extract from hmm output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the replicon</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="search_genes.html" class="btn btn-neutral float-right" title="search_genes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="system.html" class="btn btn-neutral float-left" title="system" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

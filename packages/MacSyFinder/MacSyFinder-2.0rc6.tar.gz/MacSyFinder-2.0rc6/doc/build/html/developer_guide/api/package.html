@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>package &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="utils" href="utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#package-api-reference">package API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abstractmodelindex">AbstractModelIndex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#localmodelindex">LocalModelIndex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remotemodelindex">RemoteModelIndex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/package.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="package">
+<span id="package-module"></span><h1>package<a class="headerlink" href="#package" title="Permalink to this headline">¶</a></h1>
+<p>Allow to handles model package either on localhost or from a remote location.
+the model packages can be stored in github organization to be downloaded and installed locally.
+The classes below are used by <cite>macsydata</cite>, which is the entry point to manipulate models package.</p>
+<div class="section" id="package-api-reference">
+<span id="package-api"></span><h2>package API reference<a class="headerlink" href="#package-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="abstractmodelindex">
+<h2>AbstractModelIndex<a class="headerlink" href="#abstractmodelindex" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.package.AbstractModelIndex">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.package.</code><code class="sig-name descname">AbstractModelIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#AbstractModelIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.AbstractModelIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>This the base class for ModelIndex.
+This class cannot be implemented, it must be subclassed</p>
+<dl class="py method">
+<dt id="macsypy.package.AbstractModelIndex.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cache</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#AbstractModelIndex.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.AbstractModelIndex.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.AbstractModelIndex.__new__">
+<em class="property">static </em><code class="sig-name descname">__new__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#AbstractModelIndex.__new__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.AbstractModelIndex.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.package.AbstractModelIndex.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.package.AbstractModelIndex.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.AbstractModelIndex.unarchive_package">
+<code class="sig-name descname">unarchive_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/macsypy/package.html#AbstractModelIndex.unarchive_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.AbstractModelIndex.unarchive_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unarchive and uncompress a package under
+<cite>&lt;remote cache&gt;/&lt;organization name&gt;/&lt;package name&gt;/&lt;vers&gt;/&lt;package name&gt;</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the package</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="localmodelindex">
+<h2>LocalModelIndex<a class="headerlink" href="#localmodelindex" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.package.LocalModelIndex">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.package.</code><code class="sig-name descname">LocalModelIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#LocalModelIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.LocalModelIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>It allow to manage installation from a local package (tarball)</p>
+<dl class="py method">
+<dt id="macsypy.package.LocalModelIndex.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cache</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/macsypy/package.html#LocalModelIndex.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.LocalModelIndex.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="remotemodelindex">
+<h2>RemoteModelIndex<a class="headerlink" href="#remotemodelindex" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.package.RemoteModelIndex">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.package.</code><code class="sig-name descname">RemoteModelIndex</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class allow to interact with ModelIndex on github</p>
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">org</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'macsy-models'</span></em>, <em class="sig-param"><span class="n">cache</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>org</strong> – The name of the organization on github where are stored the models</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex._url_json">
+<code class="sig-name descname">_url_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex._url_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex._url_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the url, deserialize the data as json</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – the url to download</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the json corresponding to the response url</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pack_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">vers</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">dest</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a package from a github repos and save it as
+&lt;remote cache&gt;/&lt;organization name&gt;/&lt;package name&gt;/&lt;vers&gt;.tar.gz</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pack_name</strong> (<em>str</em>) – the name of the package to download</p></li>
+<li><p><strong>vers</strong> (<em>str</em>) – the version of the package to download</p></li>
+<li><p><strong>dest</strong> (<em>str</em>) – The path to the directory where save the package
+This directory must exists
+If dest is None, the macsyfinder cache will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The package archive path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.get_metadata">
+<code class="sig-name descname">get_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pack_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">vers</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'latest'</span></em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the metadata_path from a remote package</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pack_name</strong> (<em>str</em>) – The package name</p></li>
+<li><p><strong>vers</strong> (<em>str</em>) – The package version</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the metadata_path corresponding to this package/version</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary corresponding of the yaml parsing of the metadata_path file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.list_package_vers">
+<code class="sig-name descname">list_package_vers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pack_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.list_package_vers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.list_package_vers" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all available versions from github model repos for a given package</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pack_name</strong> (<em>str</em>) – the name of the package</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of the versions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.list_packages">
+<code class="sig-name descname">list_packages</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.list_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.list_packages" title="Permalink to this definition">¶</a></dt>
+<dd><p>list all model packages available on a model repos
+:return: The list of package names.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.RemoteModelIndex.remote_exists">
+<code class="sig-name descname">remote_exists</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/macsypy/package.html#RemoteModelIndex.remote_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.RemoteModelIndex.remote_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the remote exists and is an organization
+:return: True if the Remote url point to a github Organization, False otherwise</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.package.Package">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.package.</code><code class="sig-name descname">Package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class Modelize a package of Models
+a package is a directory with the name of the models family
+it must contains at least
+- a subdirectory definitions
+- a subdirectory profiles
+- a file metadata.yml
+it is also recomanded to add a file
+for licensing and copyright and a README.
+for further explanation see TODO</p>
+<dl class="py method">
+<dt id="macsypy.package.Package.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../../_modules/macsypy/package.html#Package.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The of the package root directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.package.Package.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.package.Package.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._check_metadata">
+<code class="sig-name descname">_check_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package._check_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._check_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the QA of package metadata_path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>errors and warnings</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple of 2 lists ([str error_1, ..], [str warning_1, ..])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._check_model_conf">
+<code class="sig-name descname">_check_model_conf</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package._check_model_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._check_model_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if a model configuration file is present in the package (model_conf.xml)
+if the syntax of this file is good.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._check_model_consistency">
+<code class="sig-name descname">_check_model_consistency</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">, </span>List<span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package._check_model_consistency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._check_model_consistency" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if each xml seems well write, each genes have an associated profile, etc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._check_structure">
+<code class="sig-name descname">_check_structure</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package._check_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._check_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the QA structure of the package</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>errors and warnings</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple of 2 lists ([str error_1, ..], [str warning_1, ..])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._find_readme">
+<code class="sig-name descname">_find_readme</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package._find_readme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._find_readme" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the README file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the README file or None if there is no file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package._load_metadata">
+<code class="sig-name descname">_load_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="../../_modules/macsypy/package.html#Package._load_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package._load_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the metadata_path file and de-serialize it’s content
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/macsypy/package.html#Package.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the QA of this package</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package.help">
+<code class="sig-name descname">help</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/macsypy/package.html#Package.help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package.help" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the content of the README file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/macsypy/package.html#Package.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.package.Package.info" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>some information about the package</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.package.Package.metadata">
+<em class="property">property </em><code class="sig-name descname">metadata</code><a class="headerlink" href="#macsypy.package.Package.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The parsed metadata as a dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="utils.html" class="btn btn-neutral float-left" title="utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

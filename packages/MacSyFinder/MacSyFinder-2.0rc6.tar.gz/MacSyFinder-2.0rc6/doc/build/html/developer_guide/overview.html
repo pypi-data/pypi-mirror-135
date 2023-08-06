@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MacSyFinder implementation overview &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MacSyFinder API documentation" href="api/index.html" />
+    <link rel="prev" title="Developer Guide" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MacSyFinder implementation overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#macsyfinder-project-structure">MacSyFinder project structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macsyfinder-architecture-overview">MacSyFinder architecture overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macsyfinder-functioning-overview">MacSyFinder functioning overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-model-object">The Model object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-gene-object">The Gene object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-profile-object">The Profile object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reporting-hmmer-search-results">Reporting Hmmer search results</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tests-coverage">tests coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/index.html">MacSyFinder API documentation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Developer Guide</a> &raquo;</li>
+        
+      <li>MacSyFinder implementation overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/developer_guide/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="macsyfinder-implementation-overview">
+<span id="overview"></span><h1>MacSyFinder implementation overview<a class="headerlink" href="#macsyfinder-implementation-overview" title="Permalink to this headline">¶</a></h1>
+<p>MacSyFinder is implemented with an object-oriented architecture.
+Below a short glossary to fix the vocabulary used in MacSyFinder</p>
+<dl class="glossary simple">
+<dt id="term-Cluster">Cluster</dt><dd><p>Is a “contiguous” set of hits.
+two hits are considered contiguous if the number of genes between the 2 genes matching the 2 hits
+in the replicon is lesser than inter-genes-max-space.</p>
+</dd>
+<dt id="term-Model">Model</dt><dd><p>Is a formal description of a macromolecular system.
+Is composed of a definition and a list of profiles.
+at each gene of the Model must correspond a profile</p>
+</dd>
+<dt id="term-Model-family">Model family</dt><dd><p>A set of models, on the same topic.
+It is composed of several definitions which can be sorted in hierachical structure
+and profiles. A profile is a hmm profile file.</p>
+</dd>
+<dt id="term-ModelDefinition">ModelDefinition</dt><dd><p>Is a definition of model, it’s serialize as a xml file</p>
+</dd>
+<dt id="term-Solution">Solution</dt><dd><p>It’s a systems combination for one replicon.
+Technically it’s a list of Systems. The best solution for a replicon,
+is the combination of all systems found in this replicon which maximize the score.</p>
+</dd>
+<dt id="term-System">System</dt><dd><p>It’s an occurrence of a specific Model on a replicon.
+Basically, it’s a cluster or set of clusters which satisfy the Model quorum.</p>
+</dd>
+</dl>
+<div class="section" id="macsyfinder-project-structure">
+<h2>MacSyFinder project structure<a class="headerlink" href="#macsyfinder-project-structure" title="Permalink to this headline">¶</a></h2>
+<p>A brief overview of the files and directory constituting the MacSyFinder project</p>
+<dl class="glossary simple">
+<dt id="term-doc">doc</dt><dd><p>The project is documented using sphinx.
+All sources files needed to generate this documentation is in the directory <em>doc</em></p>
+</dd>
+<dt id="term-etc">etc</dt><dd><p>This directory contains a template to configure macsyfinder.
+It’s allow to set some configuration available for each run and avoid to specify them
+at each run on the command line.
+This file is in <em>ini</em> format.</p>
+</dd>
+<dt id="term-macsypy">macsypy</dt><dd><p>This the MacSyFinder python library
+Inside macsypy there is a subdirectory <em>scripts</em> which are the entry points for
+<cite>macsyfinder</cite> and <cite>macsydata</cite></p>
+</dd>
+<dt id="term-tests">tests</dt><dd><p>The code is tested using <cite>unittests</cite>.
+In <em>tests</em> the directory <em>data</em> contains all data needed to perform the tests.</p>
+</dd>
+<dt id="term-utils">utils</dt><dd><p>Contains a binary <cite>setsid</cite> needed macsyfinder to parallelize some steps.
+Usually <cite>setsid</cite> is provides by the system, but some macOS version does not provide it.</p>
+</dd>
+<dt id="term-CITATION.yml">CITATION.yml</dt><dd><p>A file indicating how to cite macsyfinder in yaml format.</p>
+</dd>
+<dt id="term-CONTRIBUTORS">CONTRIBUTORS</dt><dd><p>A file containing the list of code contributors.</p>
+</dd>
+<dt id="term-CONTRIBUTING">CONTRIBUTING</dt><dd><p>A guide on how to contribute to the project.</p>
+</dd>
+<dt id="term-COPYRIGHT">COPYRIGHT</dt><dd><p>The macsyfinder copyrights.</p>
+</dd>
+<dt id="term-COPYING">COPYING</dt><dd><p>The licencing.
+MacSyFinder is released under GPLv3.</p>
+</dd>
+<dt id="term-README.md">README.md</dt><dd><p>Brief information about the project.</p>
+</dd>
+<dt id="term-requirements.txt">requirements.txt</dt><dd><p>The list of python dependencies needed by macsyfinder.
+do not forget to install hmmsearch which is not handle by python packet manager <cite>pip</cite></p>
+</dd>
+<dt id="term-requirements_dev.txt">requirements_dev.txt</dt><dd><p>The list of extra dependencies needed if you want to contribute to the code.</p>
+</dd>
+<dt id="term-setup.py">setup.py</dt><dd><p>The installation recipe.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="macsyfinder-architecture-overview">
+<h2>MacSyFinder architecture overview<a class="headerlink" href="#macsyfinder-architecture-overview" title="Permalink to this headline">¶</a></h2>
+<p>An overview of the main classes.</p>
+<div class="figure align-default" id="id1">
+<img alt="../_images/macsyfinder_classes.svg" src="../_images/macsyfinder_classes.svg" /><p class="caption"><span class="caption-text">The macsyfinder classes diagram.
+The classes are not details. only the main attributes allowing us to understand the interaction are mentioned.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<div class="legend">
+<ul class="simple">
+<li><p>in green the modules</p></li>
+<li><p>in orange, the concrete class</p></li>
+<li><p>in red the abstract classes</p></li>
+<li><p>in blue the enumeration</p></li>
+<li><p>in purple the dataclass</p></li>
+<li><p>in purple/pink functions</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>use <em>view image</em> of your browser to  zoom in the diagram</p>
+</div>
+</div>
+<div class="section" id="macsyfinder-functioning-overview">
+<h2>MacSyFinder functioning overview<a class="headerlink" href="#macsyfinder-functioning-overview" title="Permalink to this headline">¶</a></h2>
+<p>In this section I’ll give you an idea of the macsyfinder functioning at very high grain coarse.</p>
+<p>As all program the entrypoint is the main function
+The goal of <cite>macsyfinder.main</cite> is to parse the command line.
+Then to creates a <a class="reference internal" href="api/config.html#configuration"><span class="std std-ref">configuration</span></a> object and also initialize the logger.
+After that it call main_search_systems which contains the macsyfinder logic</p>
+<p>The first main_search_systems task is to create models asked by the user on the command line.
+So a DefinitionParser is instantiated and the ModelBank and GeneBank are populated</p>
+<p>Once all models are created, we gather all genes and search them in the replicons.
+This step is done in parallel.
+The search is done by profile object associated to each gene and rely on the external software <em>hmmsearch</em>.
+The parallelization is ensure by search_genes function
+The results of this step is a list of hits.</p>
+<p>This list is sorted by position and score.
+this list is filtered to keep only one hit for each position,
+the one with the best score (position is a gene product in a replicon)</p>
+<p>For each model asked by the user, we filter the hits list to keep only those related to the model.
+Those which are link to mandatory, accessory, neutral or forbidden genes included the exchangeables.</p>
+<p>This hits are clustered based on distance constraints describe in the models:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>inter_gene_max_space</strong> : the maximum genes allowed between to genes of a system.</p></li>
+<li><p><strong>loner</strong> : allow a gene to participate to system even if it does not clusterize with some other genes.</p></li>
+</ul>
+</div></blockquote>
+<p>Then we check if each cluster satisfy the quorum described in the model.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>min_mandatory_genes</strong> : the minimum of mandatory genes requisite to have a system.</p></li>
+<li><p><strong>min_genes_required</strong> : the minimum of genes (mandatory + accessory) requisite to have a system.</p></li>
+<li><p><strong>forbidden_genes</strong> : no forbidden genes may appear in the cluster.</p></li>
+</ul>
+</div></blockquote>
+<p>If the model is multi_loci we generate a combination of the clusters and check the quorum for each combination.
+If the cluster or combination satisfy the quorum a <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.systems.System</span></code> is created otherwise a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.RejectedCluster</span></code>.</p>
+<p>The Systems from the same replicon are sort against their position, score.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The neutral genes are used to build clusters. But not to fulfill the quorum.</p>
+</div>
+<p>Among all this potential systems, MSF compute the best combination. <a class="reference internal" href="api/solution.html#macsypy.solution.find_best_solutions" title="macsypy.solution.find_best_solutions"><code class="xref py py-func docutils literal notranslate"><span class="pre">macsypy.solution.find_best_solutions()</span></code></a>.
+The best combination is the set of compatible systems (do not share common hits) which maximize the score.
+It’s possible to have several equivalent “best solutions”.
+The results of this step is reported in the <cite>best_systems.tsv</cite> file.</p>
+<div class="section" id="the-model-object">
+<span id="system-implementation"></span><h3>The Model object<a class="headerlink" href="#the-model-object" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="api/model.html#model"><span class="std std-ref">Model object</span></a> represents a macromolecular model to detect.
+It is defined <em>via</em> a definition file in XML stored in a dedicated location that can be specified <em>via</em>
+the configuration file, or the command-line (<cite>-d</cite> parameter).
+See <a class="reference internal" href="../modeler_guide/modeling.html#model-definition-grammar-label"><span class="std std-ref">The XML hierarchy</span></a> for more details on the XML grammar.</p>
+<p>An object <a class="reference internal" href="api/definition_parser.html#definition-parser"><span class="std std-ref">ModelDefinitionParser</span></a> is used to build a model object from its XML definition file.</p>
+<p>A model is named after the file tree name of its XML definition.
+A model has an attribute <cite>inter_gene_max_space</cite> which is an integer,
+and four kind of components are listed in function of their presence in the system:</p>
+<ul class="simple">
+<li><p>The genes that must be present in the genome to define this model (“mandatory”).</p></li>
+<li><p>The genes that can be present, but do not have to be found in every case (“accessory”).</p></li>
+<li><p>The genes that are used to build clusters, but not take in account to check the quorum
+(<code class="docutils literal notranslate"><span class="pre">min-genes-required</span></code> and <code class="docutils literal notranslate"><span class="pre">min-mandatory-genes-required</span></code>) are described as “neutral”.</p></li>
+<li><p>The genes that must not be present in the system (“forbidden”).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A complete description of macromolecular models modelling is available in the section <a class="reference internal" href="../user_guide/model_definition.html#model-definition"><span class="std std-ref">Macromolecular models</span></a></p>
+</div>
+</div>
+<div class="section" id="the-gene-object">
+<span id="gene-implementation"></span><h3>The Gene object<a class="headerlink" href="#the-gene-object" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="api/gene.html#id1"><span class="std std-ref">Gene object</span></a> represents genes encoding the protein components of a Model.
+There is 2 kind of gene The <code class="docutils literal notranslate"><span class="pre">CoreGene</span></code> (<a class="reference internal" href="api/gene.html#macsypy.gene.CoreGene" title="macsypy.gene.CoreGene"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.CoreGene</span></code></a>) which must be unique given a name.
+A <code class="docutils literal notranslate"><span class="pre">CoreGene</span></code> must have a corresponding HMM protein profile.
+These profiles are represented by Profile objects (<a class="reference internal" href="api/profile.html#macsypy.profile.Profile" title="macsypy.profile.Profile"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.profile.Profile</span></code></a>),
+and must be named after the gene name. For instance, the gene <em>gspD</em> will correspond to the “gspD.hmm” profile file.
+See <a class="reference internal" href="#profile-implementation"><span class="std std-ref">The Profile object</span></a>). After hmmsearch step the hits are link the them.
+The CoreGene must be created by using the GeneBank factory.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">ModelGene</span></code> (<a class="reference internal" href="api/gene.html#macsypy.gene.ModelGene" title="macsypy.gene.ModelGene"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.ModelGene</span></code></a>) which encapsulate a CoreGene and is linked to a Model.
+Instead CoreGene, several ModelGene with the same name may coexists in macsyfinder,
+in different Models and hold different values for attributes as <em>inter_gene_max_space</em>, …
+Each ModelGene points out its Model of origin (<a class="reference internal" href="api/model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a>).
+A Gene has several properties described in the <a class="reference internal" href="api/gene.html#id1"><span class="std std-ref">Gene API</span></a>.</p>
+<p>A ModelGene may be functionally replaced by an other (usually Homologs or Analogs).
+In this case these genes are described as exchangeables.
+Exchangeable object encapsulates a ModelGene and has a reference to the ModelGene it is exchangeable to.
+See the <a class="reference internal" href="api/gene.html#exchangeable-api"><span class="std std-ref">Exchangeable API</span></a> for more details.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To optimize computation and to avoid concurrency problems when we search several Models,
+each CoreGene must be instantiated only once, and stored in a <em>“gene_bank”</em>.
+gene_bank is a <a class="reference internal" href="api/gene.html#macsypy.gene.GeneBank" title="macsypy.gene.GeneBank"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.GeneBank</span></code></a> object.
+The gene_bank and model_bank are filled by the system_parser (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.definition_parser.ModelDefinitionParser</span></code>)</p>
+</div>
+</div>
+<div class="section" id="the-profile-object">
+<span id="profile-implementation"></span><h3>The Profile object<a class="headerlink" href="#the-profile-object" title="Permalink to this headline">¶</a></h3>
+<p>Each <em>“CoreGene”</em> component corresponds to a <em>“Profile”</em>.
+The <em>“Profile”</em> object is used for the search of the gene with Hmmer.
+Thus, a <em>“Profile”</em> must match a HMM file, which name is based on the profile name.
+For instance, the <em>gspG</em> gene has the corresponding “gspG.hmm” profile file provided at a dedicated location.</p>
+</div>
+<div class="section" id="reporting-hmmer-search-results">
+<span id="report-implementation"></span><h3>Reporting Hmmer search results<a class="headerlink" href="#reporting-hmmer-search-results" title="Permalink to this headline">¶</a></h3>
+<p>A <em>“HMMReport”</em> (<a class="reference internal" href="api/report.html#macsypy.report.HMMReport" title="macsypy.report.HMMReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.report.HMMReport</span></code></a>) object represents the results of a Hmmer program search on
+the input dataset with a hidden Markov model protein profile.
+This object has methods to extract and build <em>“Hits”</em> that are then analyzed for systems assessment.</p>
+<p>It analyses Hmmer raw outputs, and applies filters on the matches (according to <a class="reference internal" href="../user_guide/input.html#hmmer-options"><span class="std std-ref">Hmmer options</span></a>).
+See <a class="reference internal" href="../user_guide/outputs.html#hmmer-outputs-label"><span class="std std-ref">Hmmer results’ output files</span></a> for details on the resulting output files.
+For profile matches selected with the filtering parameters, <em>“Hit”</em> objects are built (see <a class="reference internal" href="api/hit.html#hit"><span class="std std-ref">the Hit API</span></a>).</p>
+</div>
+</div>
+<div class="section" id="tests-coverage">
+<h2>tests coverage<a class="headerlink" href="#tests-coverage" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://gem.pages.pasteur.fr/MacSyFinder/coverage">macsyfinder coverage</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/index.html" class="btn btn-neutral float-right" title="MacSyFinder API documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Developer Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

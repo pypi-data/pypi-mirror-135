@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>solution &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="serialization" href="serialization.html" />
+    <link rel="prev" title="search_genes" href="search_genes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="definition_parser.html">definition_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">solution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#solution-api-reference">solution API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-clusters">combine_clusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-multisystems">combine_multisystems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#find-best-solutions">find_best_solutions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>solution</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/solution.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="solution">
+<span id="id1"></span><h1>solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h1>
+<p>MacSyFinder find lot of potential systems for the same model,
+all these systems are saved in “all_systems.xxx” files.
+This module allow to explore among of all systems which combination seems to be more probable.</p>
+<div class="section" id="solution-api-reference">
+<span id="solution-api"></span><h2>solution API reference<a class="headerlink" href="#solution-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id2">
+<h2>Solution<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.solution.Solution">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.solution.</code><code class="sig-name descname">Solution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle Solution, a solution is a set of compatible Systems</p>
+<p>when compare solutions we check the following criteria</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The number of hits</p></li>
+<li><p>The number of systems</p></li>
+<li><p>The average of wholeness</p></li>
+<li><p>The hits position (is used ti give predictable output for unit tests)</p></li>
+</ol>
+</div></blockquote>
+<dl class="py method">
+<dt id="macsypy.solution.Solution.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution.__gt__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution.__iter__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solution allow to iterate over the systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>generator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution.__lt__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.solution.Solution.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.solution.Solution.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution._sorted_systems">
+<code class="sig-name descname">_sorted_systems</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#Solution._sorted_systems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.Solution._sorted_systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>sort the systems following the positions of th hits that composed the systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>systems</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">mcsypy.system.System</span></code> objects) – the systems to sort</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a sorted copy of the <em>systems</em></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">mcsypy.system.System</span></code> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.average_wholeness">
+<em class="property">property </em><code class="sig-name descname">average_wholeness</code><a class="headerlink" href="#macsypy.solution.Solution.average_wholeness" title="Permalink to this definition">¶</a></dt>
+<dd><p>The average of the systems wholeness</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.hits_number">
+<em class="property">property </em><code class="sig-name descname">hits_number</code><a class="headerlink" href="#macsypy.solution.Solution.hits_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>The sum of the hits of each systems in this solution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.hits_positions">
+<em class="property">property </em><code class="sig-name descname">hits_positions</code><a class="headerlink" href="#macsypy.solution.Solution.hits_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of position of all hits of the soltution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.score">
+<em class="property">property </em><code class="sig-name descname">score</code><a class="headerlink" href="#macsypy.solution.Solution.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>The score of this solution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.solution.Solution.systems">
+<em class="property">property </em><code class="sig-name descname">systems</code><a class="headerlink" href="#macsypy.solution.Solution.systems" title="Permalink to this definition">¶</a></dt>
+<dd><p>“a sorted list of the <em>systems</em> that composed the solution</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="combine-clusters">
+<h2>combine_clusters<a class="headerlink" href="#combine-clusters" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.solution.combine_clusters">
+<code class="sig-prename descclassname">macsypy.solution.</code><code class="sig-name descname">combine_clusters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clusters</span></em>, <em class="sig-param"><span class="n">true_loners</span></em>, <em class="sig-param"><span class="n">multi_loci</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#combine_clusters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.combine_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate the combinations of clusters, with loners and multi systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clusters</strong> (list of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> object) – the clusters to combines</p></li>
+<li><p><strong>true_loners</strong> (dict the name of the function code by hit gene_ref.alternate_of as key
+and 1 <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> with the best a
+<a class="reference internal" href="hit.html#macsypy.hit.Loner" title="macsypy.hit.Loner"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.Loner</span></code></a> or
+<a class="reference internal" href="hit.html#macsypy.hit.LonerMultiSystem" title="macsypy.hit.LonerMultiSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.LonerMultiSystem</span></code></a> hit  as value) – the multi-systems hits</p></li>
+<li><p><strong>multi_loci</strong> (<em>bool</em>) – True if the model is multi_loci false otherwise</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>all available combination of clusters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of combination. a combination is a tuple of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="combine-multisystems">
+<h2>combine_multisystems<a class="headerlink" href="#combine-multisystems" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.solution.combine_multisystems">
+<code class="sig-prename descclassname">macsypy.solution.</code><code class="sig-name descname">combine_multisystems</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rejected_clusters</span></em>, <em class="sig-param"><span class="n">multi_systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#combine_multisystems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.combine_multisystems" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rejected_clusters</strong> – </p></li>
+<li><p><strong>multi_systems</strong> – sequence of <a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a>
+each cluster must be composed of only one <a class="reference internal" href="hit.html#macsypy.hit.MultiSystem" title="macsypy.hit.MultiSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.MultiSystem</span></code></a> object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of cluster combination with teh multisystem</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[(<a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> cluster1, cluster2, …),
+(<a class="reference internal" href="cluster.html#macsypy.cluster.Cluster" title="macsypy.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.cluster.Cluster</span></code></a> cluster3, cluster4, …)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="find-best-solutions">
+<h2>find_best_solutions<a class="headerlink" href="#find-best-solutions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="macsypy.solution.find_best_solutions">
+<code class="sig-prename descclassname">macsypy.solution.</code><code class="sig-name descname">find_best_solutions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">systems</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/solution.html#find_best_solutions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.solution.find_best_solutions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Among the systems choose the combination of systems which does not share <a class="reference internal" href="hit.html#macsypy.hit.CoreHit" title="macsypy.hit.CoreHit"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.hit.CoreHit</span></code></a>
+and maximize the sum of systems scores</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>systems</strong> (list of <a class="reference internal" href="system.html#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a> object) – the systems to analyse</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of list of systems which represent one best solution and the it’s score</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of 2 elements the best solution and it’s score
+([[<a class="reference internal" href="system.html#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a>, …], [<a class="reference internal" href="system.html#macsypy.system.System" title="macsypy.system.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.system.System</span></code></a>, …]], float score)
+The inner list represent a best solution</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="serialization.html" class="btn btn-neutral float-right" title="serialization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="search_genes.html" class="btn btn-neutral float-left" title="search_genes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

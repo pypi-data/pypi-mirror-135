@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>macsypy.serialization &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>macsypy.serialization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for macsypy.serialization</h1><div class="highlight"><pre>
+<span></span><span class="c1">#########################################################################</span>
+<span class="c1"># MacSyFinder - Detection of macromolecular systems in protein dataset  #</span>
+<span class="c1">#               using systems modelling and similarity search.          #</span>
+<span class="c1"># Authors: Sophie Abby, Bertrand Neron                                  #</span>
+<span class="c1"># Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #</span>
+<span class="c1"># See the COPYRIGHT file for details                                    #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># This file is part of MacSyFinder package.                             #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># MacSyFinder is free software: you can redistribute it and/or modify   #</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by  #</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or     #</span>
+<span class="c1"># (at your option) any later version.                                   #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># MacSyFinder is distributed in the hope that it will be useful,        #</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of        #</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #</span>
+<span class="c1"># GNU General Public License for more details .                         #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1"># You should have received a copy of the GNU General Public License     #</span>
+<span class="c1"># along with MacSyFinder (COPYING).                                     #</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.                          #</span>
+<span class="c1">#########################################################################</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+
+<span class="kn">from</span> <span class="nn">macsypy.gene</span> <span class="kn">import</span> <span class="n">GeneStatus</span>
+
+
+<div class="viewcode-block" id="SystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.SystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">SystemSerializer</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    handle the different way to serialize a system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TxtSystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtSystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">TxtSystemSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle System serialization in text</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="TxtSystemSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtSystemSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of system readable by human</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">clst</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">((</span><span class="n">v_h</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">v_h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">v_h</span><span class="o">.</span><span class="n">position</span><span class="p">))</span> <span class="k">for</span> <span class="n">v_h</span> <span class="ow">in</span> <span class="n">cluster</span><span class="o">.</span><span class="n">hits</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span>
+                          <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">clusters</span><span class="p">])</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;system id = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">model = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">replicon = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">replicon_name</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">clusters = </span><span class="si">{</span><span class="n">clst</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">occ = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">occurrence</span><span class="p">()</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">wholeness = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">wholeness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">loci nb = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">loci_nb</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">score = </span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">genes</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;mandatory&quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">mandatory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;accessory&quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">accessory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;neutral&quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">neutral_occ</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> genes:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">g_name</span><span class="p">,</span> <span class="n">hits</span> <span class="ow">in</span> <span class="n">genes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">g_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="n">all_hits_str</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+                    <span class="n">used_in_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">hit_system_tracker</span><span class="p">[</span><span class="n">h</span><span class="o">.</span><span class="n">hit</span><span class="p">]</span>
+                                       <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span> <span class="o">!=</span> <span class="n">system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">]</span>
+                    <span class="n">used_in_systems</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">used_in_systems</span><span class="p">:</span>
+                        <span class="n">hit_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">used_in_systems</span><span class="p">)</span><span class="si">}</span><span class="s2">]&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">hit_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">all_hits_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hit_str</span><span class="p">)</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_hits_str</span><span class="p">)</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="k">return</span> <span class="n">s</span></div></div>
+
+
+<div class="viewcode-block" id="TsvSystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">TsvSystemSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle System serialization in tsv format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;replicon</span><span class="se">\t</span><span class="s2">hit_id</span><span class="se">\t</span><span class="s2">gene_name</span><span class="se">\t</span><span class="s2">hit_pos</span><span class="se">\t</span><span class="s2">model_fqn</span><span class="se">\t</span><span class="s2">sys_id</span><span class="se">\t</span><span class="s2">sys_loci</span><span class="se">\t</span><span class="s2">locus_num</span><span class="se">\t</span><span class="s2">sys_wholeness</span><span class="se">\t</span><span class="s2">sys_score</span><span class="se">\t</span><span class="s2">sys_occ&quot;</span> \
+             <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">hit_gene_ref</span><span class="se">\t</span><span class="s2">hit_status</span><span class="se">\t</span><span class="s2">hit_seq_len</span><span class="se">\t</span><span class="s2">hit_i_eval</span><span class="se">\t</span><span class="s2">hit_score</span><span class="se">\t</span><span class="s2">hit_profile_cov</span><span class="se">\t</span><span class="s2">hit_seq_cov</span><span class="se">\t</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;hit_begin_match</span><span class="se">\t</span><span class="s2">hit_end_match</span><span class="se">\t</span><span class="s2">counterpart</span><span class="se">\t</span><span class="s2">used_in&quot;</span>
+
+    <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;$sys_replicon_name</span><span class="se">\t</span><span class="s2">$mh_id</span><span class="se">\t</span><span class="s2">$mh_gene_name</span><span class="se">\t</span><span class="s2">$mh_position</span><span class="se">\t</span><span class="s2">$sys_model_fqn</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$sys_id</span><span class="se">\t</span><span class="s2">$sys_loci</span><span class="se">\t</span><span class="s2">$locus_num</span><span class="se">\t</span><span class="s2">$sys_wholeness</span><span class="se">\t</span><span class="s2">$sys_score</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$sys_occurrence</span><span class="se">\t</span><span class="s2">$mh_gene_role</span><span class="se">\t</span><span class="s2">$mh_status</span><span class="se">\t</span><span class="s2">$mh_seq_length</span><span class="se">\t</span><span class="s2">$mh_i_eval</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$mh_score</span><span class="se">\t</span><span class="s2">$mh_profile_coverage</span><span class="se">\t</span><span class="s2">$mh_sequence_coverage</span><span class="se">\t</span><span class="s2">$mh_begin_match&quot;</span>
+                        <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">$mh_end_match</span><span class="se">\t</span><span class="s2">$mh_counterpart</span><span class="se">\t</span><span class="s2">$used_in_systems</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TsvSystemSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSystemSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: a serialisation of this system in tabulated separated value format</span>
+<span class="sd">                 each line represent a hit and have the following structure:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score</span>
+<span class="sd">            \tsys_occ\thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov</span>
+<span class="sd">            \thit_seq_cov\tit_begin_match\thit_end_match\tcounterpart\tused_in_systems</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tsv</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">loci_num</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">loci_num</span>
+        <span class="k">for</span> <span class="n">locus_num</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">loci_num</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">clusters</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cluster</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">mh</span><span class="p">:</span> <span class="n">mh</span><span class="o">.</span><span class="n">position</span><span class="p">):</span>
+                <span class="n">used_in_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">hit_system_tracker</span><span class="p">[</span><span class="n">mh</span><span class="o">.</span><span class="n">hit</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span> <span class="o">!=</span> <span class="n">system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">]</span>
+                <span class="n">used_in_systems</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                <span class="n">tsv</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+                    <span class="n">sys_replicon_name</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">replicon_name</span><span class="p">,</span>
+                    <span class="n">mh_id</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">mh_gene_name</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">mh_position</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                    <span class="n">sys_model_fqn</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">,</span>
+                    <span class="n">sys_id</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">sys_loci</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">loci_nb</span><span class="p">,</span>
+                    <span class="n">locus_num</span><span class="o">=</span><span class="n">locus_num</span><span class="p">,</span>
+                    <span class="n">sys_wholeness</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">wholeness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">sys_score</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">system</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">sys_occurrence</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">occurrence</span><span class="p">(),</span>
+                    <span class="n">mh_gene_role</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">gene_ref</span><span class="o">.</span><span class="n">alternate_of</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">mh_status</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                    <span class="n">mh_seq_length</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">seq_length</span><span class="p">,</span>
+                    <span class="n">mh_i_eval</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">i_eval</span><span class="p">,</span>
+                    <span class="n">mh_score</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_profile_coverage</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">profile_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_sequence_coverage</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">sequence_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_begin_match</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">begin_match</span><span class="p">,</span>
+                    <span class="n">mh_end_match</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">end_match</span><span class="p">,</span>
+                    <span class="n">mh_counterpart</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">h</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">mh</span><span class="o">.</span><span class="n">counterpart</span><span class="p">]),</span>
+                    <span class="n">used_in_systems</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">used_in_systems</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">tsv</span></div></div>
+
+
+<div class="viewcode-block" id="TsvSolutionSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSolutionSerializer">[docs]</a><span class="k">class</span> <span class="nc">TsvSolutionSerializer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle Solution (list of Systems) serialization in tsv format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TsvSolutionSerializer.__init__"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSolutionSerializer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor &quot;&quot;&quot;</span>
+        <span class="vm">__class__</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;sol_id</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">TsvSystemSerializer</span><span class="o">.</span><span class="n">header</span>
+        <span class="vm">__class__</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;$$sol_id</span><span class="se">\t</span><span class="si">{</span><span class="n">TsvSystemSerializer</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TsvSolutionSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSolutionSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">sol_id</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param solution: the solution to serialize</span>
+<span class="sd">        :type solution: list of :class:`macsypy.system.System` object</span>
+<span class="sd">        :param int sol_id: the solution identifier</span>
+<span class="sd">        :param hit_system_tracker:</span>
+<span class="sd">        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object</span>
+<span class="sd">        :return: a serialisation of this solution (a list of systems) in tabulated separated value format</span>
+<span class="sd">                 each line represent a hit and have the same structure as system serialization</span>
+<span class="sd">                 :meth:`macsypy.serialization.TsvSystemSerializer.serialize` but with an extra column</span>
+<span class="sd">                 sol_id which is a technical id to identified the different solutions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tsv</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">sys_ser</span> <span class="o">=</span> <span class="n">TsvSystemSerializer</span><span class="p">()</span>
+        <span class="n">sys_ser</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span>
+
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
+            <span class="n">sol_temp</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">sys_ser</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">))</span>
+            <span class="n">tsv</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sol_temp</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">sol_id</span><span class="o">=</span><span class="n">sol_id</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">tsv</span></div></div>
+
+
+<div class="viewcode-block" id="TxtLikelySystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtLikelySystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">TxtLikelySystemSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle System serialization in text</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="TxtLikelySystemSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtLikelySystemSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">likely_system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of system readable by human</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hits</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">((</span><span class="n">h</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">position</span><span class="p">))</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">hits</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">forbidden_hits</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s2">&quot;WARNING there quorum is reached but there is also some forbidden genes.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;This replicon contains genetic materials needed for system </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="s2"></span>
+<span class="si">{</span><span class="n">warning</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">system id = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">model = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">replicon = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">replicon_name</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">hits = [</span><span class="si">{</span><span class="n">hits</span><span class="si">}</span><span class="s2">]</span>
+<span class="s2">wholeness = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">wholeness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">genes</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;mandatory&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">mandatory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;accessory&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">accessory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;neutral&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">neutral_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;forbidden&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">forbidden_occ</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> genes:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">g_name</span><span class="p">,</span> <span class="n">hits</span> <span class="ow">in</span> <span class="n">genes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">g_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="n">all_hits_str</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+                    <span class="n">used_in_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">hit_system_tracker</span><span class="p">[</span><span class="n">h</span><span class="o">.</span><span class="n">hit</span><span class="p">]</span>
+                                       <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span> <span class="o">!=</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">]</span>
+                    <span class="n">used_in_systems</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">used_in_systems</span><span class="p">:</span>
+                        <span class="n">hit_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">used_in_systems</span><span class="p">)</span><span class="si">}</span><span class="s2">]&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">hit_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">all_hits_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hit_str</span><span class="p">)</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_hits_str</span><span class="p">)</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Use ordered replicon to have better prediction.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">s</span></div></div>
+
+
+<div class="viewcode-block" id="TsvLikelySystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvLikelySystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">TsvLikelySystemSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle potential System from unordered replicon</span>
+<span class="sd">    serialization in tsv format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;replicon</span><span class="se">\t</span><span class="s2">hit_id</span><span class="se">\t</span><span class="s2">gene_name</span><span class="se">\t</span><span class="s2">hit_pos</span><span class="se">\t</span><span class="s2">model_fqn</span><span class="se">\t</span><span class="s2">sys_id</span><span class="se">\t</span><span class="s2">sys_wholeness&quot;</span> \
+             <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">hit_gene_ref</span><span class="se">\t</span><span class="s2">hit_status</span><span class="se">\t</span><span class="s2">hit_seq_len</span><span class="se">\t</span><span class="s2">hit_i_eval</span><span class="se">\t</span><span class="s2">hit_score</span><span class="se">\t</span><span class="s2">hit_profile_cov</span><span class="se">\t</span><span class="s2">hit_seq_cov</span><span class="se">\t</span><span class="s2">&quot;</span> \
+             <span class="s2">&quot;hit_begin_match</span><span class="se">\t</span><span class="s2">hit_end_match</span><span class="se">\t</span><span class="s2">used_in&quot;</span>
+
+    <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;$sys_replicon_name</span><span class="se">\t</span><span class="s2">$mh_id</span><span class="se">\t</span><span class="s2">$mh_gene_name</span><span class="se">\t</span><span class="s2">$mh_position</span><span class="se">\t</span><span class="s2">$sys_model_fqn</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$sys_id</span><span class="se">\t</span><span class="s2">$sys_wholeness</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$mh_gene_role</span><span class="se">\t</span><span class="s2">$mh_status</span><span class="se">\t</span><span class="s2">$mh_seq_length</span><span class="se">\t</span><span class="s2">$mh_i_eval</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;$mh_score</span><span class="se">\t</span><span class="s2">$mh_profile_coverage</span><span class="se">\t</span><span class="s2">$mh_sequence_coverage</span><span class="se">\t</span><span class="s2">$mh_begin_match&quot;</span>
+                        <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">$mh_end_match</span><span class="se">\t</span><span class="s2">$used_in_systems</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TsvLikelySystemSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvLikelySystemSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">likely_system</span><span class="p">,</span> <span class="n">hit_system_tracker</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: a serialisation of this system in tabulated separated value format</span>
+<span class="sd">                 each line represent a hit and have the following structure:</span>
+
+<span class="sd">        .. code-block:: text</span>
+
+<span class="sd">            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_wholeness</span>
+<span class="sd">            \thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov</span>
+<span class="sd">            \thit_seq_cov\tit_begin_match\thit_end_match\t$used_in_systems</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tsv</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">GeneStatus</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hits</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">likely_system</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">_hits&quot;</span><span class="p">)</span>
+                <span class="n">hits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">hits</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">mh</span><span class="p">:</span> <span class="n">mh</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">mh</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+                <span class="n">used_in_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">hit_system_tracker</span><span class="p">[</span><span class="n">mh</span><span class="o">.</span><span class="n">hit</span><span class="p">]</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span> <span class="o">!=</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">]</span>
+                <span class="n">used_in_systems</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                <span class="n">tsv</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+                    <span class="n">sys_replicon_name</span><span class="o">=</span><span class="n">likely_system</span><span class="o">.</span><span class="n">replicon_name</span><span class="p">,</span>
+                    <span class="n">mh_id</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">mh_gene_name</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">mh_position</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                    <span class="n">sys_model_fqn</span><span class="o">=</span><span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="p">,</span>
+                    <span class="n">sys_id</span><span class="o">=</span><span class="n">likely_system</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="n">sys_wholeness</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">wholeness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_gene_role</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">gene_ref</span><span class="o">.</span><span class="n">alternate_of</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">mh_status</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                    <span class="n">mh_seq_length</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">seq_length</span><span class="p">,</span>
+                    <span class="n">mh_i_eval</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">i_eval</span><span class="p">,</span>
+                    <span class="n">mh_score</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_profile_coverage</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">profile_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_sequence_coverage</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mh</span><span class="o">.</span><span class="n">sequence_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mh_begin_match</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">begin_match</span><span class="p">,</span>
+                    <span class="n">mh_end_match</span><span class="o">=</span><span class="n">mh</span><span class="o">.</span><span class="n">end_match</span><span class="p">,</span>
+                    <span class="n">used_in_systems</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">used_in_systems</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tsv</span></div></div>
+
+
+<div class="viewcode-block" id="TxtUnikelySystemSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtUnikelySystemSerializer">[docs]</a><span class="k">class</span> <span class="nc">TxtUnikelySystemSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle System serialization in text</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="TxtUnikelySystemSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TxtUnikelySystemSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">likely_system</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a string representation of system readable by human</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hits</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">((</span><span class="n">h</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">position</span><span class="p">))</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">hits</span><span class="p">])</span>
+        <span class="n">reasons</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">likely_system</span><span class="o">.</span><span class="n">reasons</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;This replicon probably not contains a system </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="s2">:</span>
+<span class="si">{</span><span class="n">reasons</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">system id = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">model = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">replicon = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">replicon_name</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">hits = [</span><span class="si">{</span><span class="n">hits</span><span class="si">}</span><span class="s2">]</span>
+<span class="s2">wholeness = </span><span class="si">{</span><span class="n">likely_system</span><span class="o">.</span><span class="n">wholeness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">genes</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;mandatory&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">mandatory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;accessory&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">accessory_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;neutral&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">neutral_occ</span><span class="p">),</span>
+                             <span class="p">(</span><span class="s2">&quot;forbidden&quot;</span><span class="p">,</span> <span class="n">likely_system</span><span class="o">.</span><span class="n">forbidden_occ</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> genes:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">g_name</span><span class="p">,</span> <span class="n">hits</span> <span class="ow">in</span> <span class="n">genes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">g_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="n">all_hits_str</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">gene</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">]</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_hits_str</span><span class="p">)</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Use ordered replicon to have better prediction.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">s</span></div></div>
+
+
+<div class="viewcode-block" id="TsvSpecialHitSerializer"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSpecialHitSerializer">[docs]</a><span class="k">class</span> <span class="nc">TsvSpecialHitSerializer</span><span class="p">(</span><span class="n">SystemSerializer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Seraialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TsvSpecialHitSerializer.serialize"><a class="viewcode-back" href="../../developer_guide/api/serialization.html#macsypy.serialization.TsvSpecialHitSerializer.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">best_hits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param best_hits: the special hits to serialized</span>
+<span class="sd">        :type best_hits: sequence of :class:`macsypy.hit.Loner` or :class:`macsypy.hit.MultiSystem` objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">best_hits</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;replicon</span><span class="se">\t</span><span class="s2">model_fqn</span><span class="se">\t</span><span class="s2">function</span><span class="se">\t</span><span class="s2">gene_name</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                     <span class="s2">&quot;hit_id</span><span class="se">\t</span><span class="s2">hit_pos</span><span class="se">\t</span><span class="s2">hit_status</span><span class="se">\t</span><span class="s2">hit_seq_len</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                     <span class="s2">&quot;hit_i_eval</span><span class="se">\t</span><span class="s2">hit_score</span><span class="se">\t</span><span class="s2">hit_profile_cov</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                     <span class="s2">&quot;hit_seq_cov</span><span class="se">\t</span><span class="s2">hit_begin_match</span><span class="se">\t</span><span class="s2">hit_end_match</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">header</span>
+            <span class="n">special_hits</span> <span class="o">=</span> <span class="p">{</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">best_hits</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">best_hit</span> <span class="ow">in</span> <span class="n">best_hits</span><span class="p">:</span>
+                <span class="n">special_hits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">best_hit</span><span class="o">.</span><span class="n">counterpart</span><span class="p">)</span>
+            <span class="n">special_hits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">special_hits</span><span class="p">)</span>
+            <span class="n">special_hits</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">one_hit</span> <span class="ow">in</span> <span class="n">special_hits</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">replicon_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">gene_ref</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fqn</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">gene_ref</span><span class="o">.</span><span class="n">alternate_of</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">gene_ref</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">position</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">seq_length</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">i_eval</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">score</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">profile_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">sequence_coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span> \
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">begin_match</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">one_hit</span><span class="o">.</span><span class="n">end_match</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="n">row</span>
+        <span class="k">return</span> <span class="n">s</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>

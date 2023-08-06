@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>definition_parser &mdash; MacSyFinder 2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="model" href="model.html" />
+    <link rel="prev" title="registries" href="registries.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MacSyFinder
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modeler_guide/index.html">Modeller Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">MacSyFinder implementation overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">MacSyFinder API documentation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model_conf_parser.html">model_conf_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="registries.html">registries</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">definition_parser</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#defintion-parser-api-reference">defintion_parser API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-macsypy.definition_parser">DefinitionParser</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gene.html">gene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="profile.html">profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hit.html">hit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster.html">cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="search_genes.html">search_genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="solution.html">solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="serialization.html">serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="package.html">package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MacSyFinder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Developer Guide</a> &raquo;</li>
+        
+          <li><a href="index.html">MacSyFinder API documentation</a> &raquo;</li>
+        
+      <li>definition_parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/developer_guide/api/definition_parser.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="definition-parser">
+<span id="id1"></span><h1>definition_parser<a class="headerlink" href="#definition-parser" title="Permalink to this headline">¶</a></h1>
+<p>The model definition parser object “DefinitionParser” instantiates Models and Genes objects from
+XML model definitions (see <a class="reference internal" href="../../user_guide/model_definition.html#model-definition"><span class="std std-ref">Macromolecular models</span></a>).
+The parsing consists in three phases.</p>
+<p>Phase 1.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>For each model to parse</p>
+<ul>
+<li><p>create the Model</p></li>
+<li><p>add this Model to the model_bank</p></li>
+<li><p>findall genes defined in this model what are the level in the model definition.</p></li>
+<li><p>create the CoreGene (a Gene which is not bind to a model).
+For each gene name there is only one instance of CoreGene</p></li>
+<li><p>add these CoreGene in the gene_bank</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p>Phase 2.</p>
+<blockquote>
+<div><ul>
+<li><p>For each model to search</p>
+<ul>
+<li><p>For each Gene defined in this System:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>link the gene to the model. Create a ModelGene by encapsulating CoreGene from the gene_bank
+It can exists at each run several ModelGene for one CoreGene</p></li>
+<li><p>If a gene has exhangeables create them (an Exchangeable inherits from ModeleGene)
+and add them to the current ModelGene</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<p>For instance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Syst_1
+&lt;system inter_gene_max_space=&quot;10&quot;&gt;
+    &lt;gene name=”A” mandatory=”1” loner=&quot;1&quot;&gt;
+        &lt;exchangeables&gt;
+            &lt;gene name=”B”&gt;
+        &lt;/exchangeables&gt;
+    &lt;/gene&gt;
+&lt;system&gt;
+
+Syst_2
+&lt;system inter_gene_max_space=&quot;15&quot;&gt;
+    &lt;gene name=”B” mandatory=”1”&gt;
+        &lt;exchangeables&gt;
+            &lt;gene name=”C”&gt;
+        &lt;/exchangeables&gt;
+    &lt;/gene&gt;
+&lt;system&gt;
+
+Syst_3
+&lt;system inter_gene_max_space=&quot;20&quot;&gt;
+    &lt;gene name=”c” mandatory=”1” /&gt;
+&lt;system&gt;
+</pre></div>
+</div>
+<p>With the example above:</p>
+<ul class="simple">
+<li><p>the CoreGene A, B, C will be created</p></li>
+<li><p>the ModelGene (Syst_1, A)  (Syst_1, B), (Syst_2, B), (Syst_2, C), (Syst_3, C)</p></li>
+<li><p>The ModeleGene (Syst_1, A), (Syst_2, B) and (Syst_3, C) are directly link to their respective Models</p></li>
+<li><p>and where (Syst_1, B) (Syst_2, C) are exchangeables and link respectively to (Syst_1, A) and (Syst_2, B)</p></li>
+<li><p>the ModelGene has attributes defined in the model where they appear
+(Syst_1, B) inter_gene_max_space=”10”
+(Syst_2, B) inter_gene_max_space=”15”</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The only “full” Systems (<em>i.e.,</em> with all corresponding Genes created) are those to detect.</p>
+</div>
+<div class="section" id="defintion-parser-api-reference">
+<span id="defintion-parser-api"></span><h2>defintion_parser API reference<a class="headerlink" href="#defintion-parser-api-reference" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-macsypy.definition_parser">
+<span id="definitionparser"></span><h2>DefinitionParser<a class="headerlink" href="#module-macsypy.definition_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="macsypy.definition_parser.DefinitionParser">
+<em class="property">class </em><code class="sig-prename descclassname">macsypy.definition_parser.</code><code class="sig-name descname">DefinitionParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">model_bank</span></em>, <em class="sig-param"><span class="n">gene_bank</span></em>, <em class="sig-param"><span class="n">model_registry</span></em>, <em class="sig-param"><span class="n">profile_factory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a Model instance from the corresponding model definition described in the XML file.</p>
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">model_bank</span></em>, <em class="sig-param"><span class="n">gene_bank</span></em>, <em class="sig-param"><span class="n">model_registry</span></em>, <em class="sig-param"><span class="n">profile_factory</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<a class="reference internal" href="config.html#id0" title="macsypy.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.config.Config</span></code></a> object) – the configuration object of this run</p></li>
+<li><p><strong>model_bank</strong> (<a class="reference internal" href="model.html#macsypy.model.ModelBank" title="macsypy.model.ModelBank"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.ModelBank</span></code></a> object) – the model factory</p></li>
+<li><p><strong>gene_bank</strong> (<a class="reference internal" href="gene.html#macsypy.gene.GeneBank" title="macsypy.gene.GeneBank"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.GeneBank</span></code></a> object) – the gene factory</p></li>
+<li><p><strong>model_registry</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registry.ModelRegistry</span></code> object) – The registry with all model location</p></li>
+<li><p><strong>profile_factory</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.profil.ProfilFactory</span></code> object) – The profile factory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="macsypy.definition_parser.DefinitionParser.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._check_syntax">
+<code class="sig-name descname">_check_syntax</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_node</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._check_syntax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._check_syntax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the definition does not contains logical error which is allow by syntax
+and absence of explicit grammar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_node</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Et.Element</span></code> object) – the node correponding to the model</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – the path of the definition.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="error.html#macsypy.error.ModelInconsistencyError" title="macsypy.error.ModelInconsistencyError"><strong>ModelInconsistencyError</strong></a> – if an error is encountered in the document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._create_model">
+<code class="sig-name descname">_create_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">def_loc</span></em>, <em class="sig-param"><span class="n">model_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._create_model" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>def_loc</strong> (<a class="reference internal" href="registries.html#macsypy.registries.DefinitionLocation" title="macsypy.registries.DefinitionLocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registries.DefinitionLocation</span></code></a> object) – the definition location to parse.</p></li>
+<li><p><strong>model_node</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Et.ElementTree</span></code> object.) – the node corresponding to the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the model corresponding to the definition location.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._fill_gene_bank">
+<code class="sig-name descname">_fill_gene_bank</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_node</span></em>, <em class="sig-param"><span class="n">model_location</span></em>, <em class="sig-param"><span class="n">def_loc</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._fill_gene_bank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._fill_gene_bank" title="Permalink to this definition">¶</a></dt>
+<dd><p>find all gene node and add them to the gene_bank</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_node</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Et.ElementTree</span></code> object.) – <dl class="field-list simple">
+<dt class="field-odd">param model_node</dt>
+<dd class="field-odd"><p>the node corresponding to the model.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>model_location</strong> (class:<cite>macsypy.registries.ModelLocation</cite> object.) – </p></li>
+<li><p><strong>def_loc</strong> (<em>the node corresponding to the 'model' tag</em>) – a definition location to parse.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._get_model_node">
+<code class="sig-name descname">_get_model_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">def_loc</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._get_model_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._get_model_node" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>def_loc</strong> (<em>return the node corresponding to the 'model' tag</em>) – a definition location to parse.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._parse_exchangeable">
+<code class="sig-name descname">_parse_exchangeable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em>, <em class="sig-param"><span class="n">gene_ref</span></em>, <em class="sig-param"><span class="n">curr_model</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._parse_exchangeable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._parse_exchangeable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a xml element gene child of exchangeable and build the corresponding object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">xml.etree.ElementTree.Element</span></code> object.) – a “node” corresponding to the gene element in the XML hierarchy</p></li>
+<li><p><strong>gene_ref</strong> (class:<cite>macsypy.gene.ModelGene</cite> object) – the gene which this gene is homolog to</p></li>
+<li><p><strong>curr_model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – the model being parsed .</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the gene object corresponding to the node</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="gene.html#macsypy.gene.Exchangeable" title="macsypy.gene.Exchangeable"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.gene.Exchangeable</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser._parse_genes">
+<code class="sig-name descname">_parse_genes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">model_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser._parse_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser._parse_genes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create genes belonging to the models.
+Each gene is directly added to the model in it’s right category (‘mandatory, accessory, …)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#macsypy.model.Model" title="macsypy.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.model.Model</span></code></a> object) – the Model currently parsing</p></li>
+<li><p><strong>model_node</strong> (:class”<cite>Et.ElementTree</cite> object) – the element ‘model’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser.check_consistency">
+<code class="sig-name descname">check_consistency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">models</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser.check_consistency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser.check_consistency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the consistency of the co-localization features between the different values given as an input: 
+between XML definitions, configuration file, and command-line options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>models</strong> (list of <cite>class:macsypy.model.Model</cite> object) – the list of models to check</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p><a class="reference internal" href="error.html#macsypy.error.ModelInconsistencyError" title="macsypy.error.ModelInconsistencyError"><code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.error.ModelInconsistencyError</span></code></a> if one test fails</p>
+</dd>
+</dl>
+<p>(see <a class="reference external" href="https://projets.pasteur.fr/issues/1850">feature</a>)</p>
+<p>In the different possible situations, different requirements need to be fulfilled
+(“mandatory_genes” and “accessory_genes” consist of lists of genes defined as such in the model definition):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>If:</strong> min_mandatory_genes_required = None  ; min_genes_required = None</p></li>
+<li><p><strong>Then:</strong> min_mandatory_genes_required = min_genes_required = len(mandatory_genes)</p></li>
+</ul>
+<p><em>always True by Models design</em></p>
+<ul class="simple">
+<li><p><strong>If:</strong> min_mandatory_genes_required = value  ; min_genes_required = None</p></li>
+<li><p><strong>Then:</strong> min_mandatory_genes_required &lt;= len(mandatory_genes)</p></li>
+<li><p>AND min_genes_required = min_mandatory_genes_required</p></li>
+</ul>
+<p><em>always True by design</em></p>
+<ul class="simple">
+<li><p><strong>If:</strong> min_mandatory_genes_required =  None ; min_genes_required = Value</p></li>
+<li><p><strong>Then:</strong> min_mandatory_genes_required = len(mandatory_genes)</p></li>
+<li><p>AND min_genes_required &gt;= min_mandatory_genes_required</p></li>
+<li><p>AND min_genes_required &lt;= len(mandatory_genes+accessory_genes)</p></li>
+</ul>
+<p><em>to be checked</em></p>
+<ul class="simple">
+<li><p><strong>If:</strong> min_mandatory_genes_required =  Value ; min_genes_required = Value</p></li>
+<li><p><strong>Then:</strong> min_genes_required &lt;= len(accessory_genes+mandatory_genes)</p></li>
+<li><p>AND min_genes_required &gt;= min_mandatory_genes_required</p></li>
+<li><p>AND min_mandatory_genes_required &lt;= len(mandatory_genes)</p></li>
+</ul>
+<p><em>to be checked</em></p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="macsypy.definition_parser.DefinitionParser.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">models_2_detect</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/macsypy/definition_parser.html#DefinitionParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#macsypy.definition_parser.DefinitionParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse models definition in XML format to build the corresponding Model objects,
+and add them to the model factory after checking its consistency.
+To get the model ask it to model_bank</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>models_2_detect</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">macsypy.registry.DefinitionLocation</span></code>) – a list of model definition to parse.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="model.html" class="btn btn-neutral float-right" title="model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="registries.html" class="btn btn-neutral float-left" title="registries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2014-2022, &#39;Institut Pasteur (Paris), CNRS&#39;
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+  
+
+<a href="https://github.com/gem-pasteur/macsyfinder">
+    <img style="position: absolute; top: 0; right: 0; border: 0;"
+         src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+         alt="Fork me on GitHub"
+         data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+
+
+
+</body>
+</html>
