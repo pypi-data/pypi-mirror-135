@@ -1,0 +1,1 @@
+Zadanie z obiektów, napisanie klasy Student i Class.
