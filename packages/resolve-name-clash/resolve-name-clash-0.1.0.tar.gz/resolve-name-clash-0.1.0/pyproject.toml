@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "resolve-name-clash"
+version = "0.1.0"
+description = "Simple utility that takes a source file and a destination directory and determines a unique name for the source file in the destination directory that will not clash with any existing file."
+authors = ["Shyam Pather <shyam.pather@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.0.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+mypy = "^0.931"
+black = "^21.12b0"
+pylint = "^2.12.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+resolve-name-clash = "resolve_name_clash.resolve_name_clash:cli"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "missing-module-docstring, missing-function-docstring"
