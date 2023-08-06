@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: ipy2d
+Version: 0.0.4
+Summary: Convert IP addresses to integers
+Home-page: https://github.com/0xflotus/ipy2d
+Author: 0xflotus
+Author-email: 0xflotus+pypi@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+## ipy2d
+
+A small library to convert IP addresses to integers
+
+### Usage
+
+```py
+from ipy2d import fun
+
+print(fun.from_4("127.0.0.1")) # -> 2130706433
+print(fun.to_4(134744072)) # -> 8.8.8.8
+
+print(fun.from_6("::1")) # -> 1
+print(fun.to_6(1051570404137199630024704)) # -> 0000:0000:0000:dead:beef:0000:0000:0000
+```
+
+#### Development
+
+* Install dependencies from `setup.py` `python3 setup.py install`
+* run *__main__.py* `python3 -m ipy2d`
+
+#### Test
+
+If `pytest` is installed, you can run `pytest test/*`
+
+#### Deploy
+
+* create *dist* `python3 setup.py sdist bdist_wheel`
+* check *dist* `twine check dist/*`
+* publish *dist* `twine upload dist/* ` 
+
+
