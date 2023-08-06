@@ -1,0 +1,60 @@
+Metadata-Version: 2.1
+Name: change-event-service
+Version: 2.0.7
+Summary: Change Event Service
+Home-page: https://github.com/mantis-software-company/change-event-service
+Author: Ramazan Çetin
+Author-email: lramazancetinl@gmail.com
+License: UNKNOWN
+Platform: all
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Topic :: Internet
+Classifier: Topic :: Software Development
+Classifier: Topic :: Utilities
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >3.8.*, <4
+Description-Content-Type: text/markdown
+Requires-Dist: Flask (~=2.0.2)
+Requires-Dist: flask-smorest (~=0.36.0)
+Requires-Dist: marshmallow (~=3.14.1)
+Requires-Dist: pyctuator (~=0.18.1)
+Requires-Dist: Flask-SQLAlchemy (==2.5.1)
+Requires-Dist: SQLAlchemy-Utils (~=0.38.2)
+Requires-Dist: psycopg2-binary (~=2.9.3)
+Requires-Dist: Flask-APScheduler (==1.12.3)
+Requires-Dist: pika (~=1.2.0)
+Requires-Dist: python-slugify (~=5.0.2)
+Requires-Dist: requests (~=2.27.1)
+
+# Change Event Service
+
+This service is web service that provides a RESTful API for creating, deleting and querying change events.
+## How it Works?
+This project written with [Flask web framework](https://flask.palletsprojects.com/en/2.0.x/). It use [flask-smorest](https://flask-smorest.readthedocs.io/en/latest/index.html) for REST API, [Pyctuator](https://github.com/SolarEdgeTech/pyctuator) for actuator endpoint and [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) for handle DB queries. Swagger UI documentation and API validations handled by flask-smorest itself. flask-smorest uses [Marshmallow](https://marshmallow.readthedocs.io/en/stable/index.html) schemas for marshalling and unmarshalling objects in request and response. This schemas also used by Swagger UI.  
+
+With [Flask-APScheduler](https://viniciuschiele.github.io/flask-apscheduler/index.html), a background job started to consume change events from the queue using [Pika](https://pika.readthedocs.io/en/stable/) and persist them to the database.
+
+## Environment Variables
+* `__SERVICE_MQ_HOST` : RabbitMQ host
+* `__SERVICE_MQ_VHOST`: RabbitMQ virtual host
+* `__SERVICE_MQ_QUEUE`: RabbitMQ queue name
+* `__SERVICE_MQ_USER`:  RabbitMQ user
+* `__SERVICE_MQ_PASSWORD`: RabbitMQ password
+* `__SERVICE_MQ_EXCHANGE`: RabbitMQ exchange (For dead letter queue feature)
+* `__SERVICE_MQ_ROUTING_KEY`: RabbitMQ routing key (For dead letter queue feature)
+* `__SERVICE_SQLALCHEMY_DATABASE_URI`: SQLAlchemy database URI
+* `__SERVICE_DB_TABLE_NAME`: Database table name
+* `__SERVICE_API_TITLE`: Swagger UI title
+* `__SERVICE_API_VERSION`: API version
+* `__SERVICE_OPENAPI_URL_PREFIX`: OpenAPI URL prefix
+* `__SERVICE_OPENAPI_SWAGGER_UI_PATH`: Swagger UI path
+* `__SERVICE_OPENAPI_JSON_PATH`: OpenAPI JSON path
+* `__SERVICE_OPENAPI_SWAGGER_UI_URL`: Swagger UI Library URL
+* `__SERVICE_ACTUATOR_BASE_URI`: Actuator base URI
+
