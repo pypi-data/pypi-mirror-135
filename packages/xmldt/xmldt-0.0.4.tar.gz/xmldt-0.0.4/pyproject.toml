@@ -1,0 +1,24 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "xmldt"
+authors = [ {name = "Alberto Simões", email = "ambs@zbr.pt"},
+            {name = "José João Almeida", email = "jj@di.uminho.pt"} ]
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+dependencies = [
+    "lxml",
+]
+
+[project.urls]
+Home = "https://natura.di.uminho.pt/svn/main/python/XML-DT/"
+
+[tool.flit.sdist]
+include = ["xmldt/", "tests/", "LICENSE", "pyproject.toml", "*.md"]
+
+[project.scripts]
+pydt = "xmldt.skel:main"
+
