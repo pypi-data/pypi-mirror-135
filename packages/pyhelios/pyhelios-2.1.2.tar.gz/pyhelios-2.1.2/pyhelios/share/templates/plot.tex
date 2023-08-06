@@ -1,0 +1,83 @@
+\BLOCK{if standalone}\documentclass[10pt]{standalone}
+\usepackage{mathpazo}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage{nicefrac}
+\usepackage{caption}
+\usepackage{amsmath}
+
+\pgfplotsset{compat = newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{fit}
+\pgfplotsset{every axis/.append style = {line width = 1pt, line join = round, line cap = round}}
+\pgfplotsset{every crossref picture/.style = {line width = 1pt, line join = round, line cap = round, baseline, yshift=0.5ex}}
+\pgfplotsset{legend image code/.append code={\node[fit=(current bounding box),inner sep=0.5ex]{};}}
+
+\definecolor{blue}{RGB}{86,121,163}
+\definecolor{orange}{RGB}{229,146,68}
+\definecolor{red}{RGB}{209,96,93}
+\definecolor{lightblue}{RGB}{132,181,178}
+\definecolor{green}{RGB}{106,159,88}
+\definecolor{yellow}{RGB}{232,201,96}
+\definecolor{purple}{RGB}{168,125,159}
+\definecolor{pink}{RGB}{242,162,169}
+\definecolor{brown}{RGB}{151,118,98}
+\definecolor{gray}{RGB}{184,176,172}
+
+\begin{document}
+\BLOCK{endif}
+\begin{tikzpicture}
+	\begin{\BLOCK{if (xlog and ylog)}loglogaxis\BLOCK{elif xlog}semilogxaxis\BLOCK{elif ylog}semilogyaxis\BLOCK{else}axis\BLOCK{endif}}[
+		% --- Page size. --- %
+\BLOCK{if standalone}
+		width = 82.3mm,
+		height = 82.3mm,
+\BLOCK{else}
+		width = \textwidth,
+		height = \textwidth,
+\BLOCK{endif}
+		% --- Log axis. --- %
+		log ticks with fixed point,
+\BLOCK{if xlog}
+		log basis x = 10,
+\BLOCK{endif}
+\BLOCK{if ylog}
+		log basis y = 10,
+\BLOCK{endif}
+		% --- xy-range. --- %
+		xmin = \VAR{xminext}, xmax = \VAR{xmaxext},
+		ymin = \VAR{yminext}, ymax = \VAR{ymaxext},
+		restrict x to domain = \VAR{xmineps}:\VAR{xmaxeps},
+		restrict y to domain = \VAR{ymineps}:\VAR{ymaxeps},
+		% --- Axis configuration. --- %
+		axis x line = bottom,
+		axis y line = left,
+		enlarge x limits = 0.0,
+		enlarge y limits = 0.0,
+		axis line style = -,
+		% --- Tics configuration. --- %
+		tick align = inside,
+		major tick style = {black, thick},
+		minor tick style = {gray, thin},
+		xtick = {\BLOCK{for t in xtick}\VAR{t}\BLOCK{if not loop.last}, \BLOCK{endif}\BLOCK{endfor}},
+		ytick = {\BLOCK{for t in ytick}\VAR{t}\BLOCK{if not loop.last}, \BLOCK{endif}\BLOCK{endfor}},
+		minor xtick = {\BLOCK{for t in minorxtick}\VAR{t}\BLOCK{if not loop.last}, \BLOCK{endif}\BLOCK{endfor}},
+		minor ytick = {\BLOCK{for t in minorytick}\VAR{t}\BLOCK{if not loop.last}, \BLOCK{endif}\BLOCK{endfor}},
+		% --- xy-labels. --- %
+		xlabel = {\VAR{xlabel}},
+		ylabel = {\VAR{ylabel}},
+		% --- Legend. --- %
+\BLOCK{if legend}
+		legend entries = {\BLOCK{for l in lines}\VAR{l.label}\BLOCK{if not loop.last}, \BLOCK{endif}\BLOCK{endfor}},
+\BLOCK{endif}
+		legend style = {\BLOCK{if legend_position}legend pos = {\VAR{legend_position}}, \BLOCK{endif}draw = none},
+		legend cell align = {left},
+		]
+\BLOCK{for l in lines}
+		\addplot[\VAR{l.color}, \VAR{l.marker}, \VAR{l.line}, \BLOCK{if l.every}mark repeat = \VAR{l.every},\BLOCK{endif} mark size = 1.5pt] table[x index = \VAR{l.x}, y index = \VAR{l.y}] {\VAR{l.data}}; \label{\VAR{fig}_curve_\VAR{loop.index}}
+\BLOCK{endfor}
+	\end{\BLOCK{if (xlog and ylog)}loglogaxis\BLOCK{elif xlog}semilogxaxis\BLOCK{elif ylog}semilogyaxis\BLOCK{else}axis\BLOCK{endif}}
+\end{tikzpicture}
+\BLOCK{if standalone}
+\end{document}
+\BLOCK{endif}
