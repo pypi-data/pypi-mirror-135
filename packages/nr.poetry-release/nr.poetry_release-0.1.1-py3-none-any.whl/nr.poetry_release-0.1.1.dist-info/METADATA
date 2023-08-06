@@ -1,0 +1,91 @@
+Metadata-Version: 2.1
+Name: nr.poetry-release
+Version: 0.1.1
+Summary: A Poetry plugin to automate the release process of Python packages.
+Author: Niklas Rosenstein
+Author-email: rosensteinniklas@gmail.com
+Requires-Python: >=3.10,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Requires-Dist: databind.json (>=1.4.0,<2.0.0)
+Requires-Dist: nr.util (>=0.4.5,<0.5.0)
+Requires-Dist: poetry (>=1.2.0a2,<2.0.0)
+Requires-Dist: tomli (>=2.0.0,<3.0.0)
+Description-Content-Type: text/markdown
+
+# poetry-release
+
+A Poetry plugin to automate releasing new versions of Python packages.
+
+__Features__
+
+* Update the version number in all relevant places
+  * Built-in support for `pyproject.toml` (like the `poetry version`command) & in your package source code
+  * Configuration option to match and bump version numbers in other files
+  * Plugin infrastructure to dispatch additional logic on version bump (used by e.g. `poetry-changelog`)
+* Automatically commit, tag and push version bumps
+* Easily release from CI
+
+## Installation
+
+Plugins work with Poetry version `1.2.0a2` or above.
+
+    $ poetry plugin add nr.poetry-release
+
+## Usage
+
+    $ poetry release patch --tag --push
+
+This will
+
+1. Increment the patch version number in `pyproject.toml` and synchronize all other built-in and configured places
+   where the version number is referenced
+2. Commit the changes and create a Git tag with the new version number, then push the branch to the remote repository
+
+In addition to the version rules already supported by `poetry version`, the `poetry release` plugin supports a `git`
+rule which will construct a version number based on the last Git tag and the commit distance. Note that this version
+number is not PyPI compatible, but can be used to publish for example to Artifactory.
+
+Using the `--verify` option will instead check if the specified version number is used consistently across all version
+references and is useful in CI.
+
+## Configuration
+
+__Release branch__
+
+If in a Git project, unless `--no-branch-check` is passed, `poetry release` will prevent you from creating the
+release unless the worktree is currently on the configured release branch (`develop` by default). The release
+branch can be changed by setting the `tool.poetry-release.branch` option in `pyproject.toml`.
+
+```toml
+[tool.poetry-release]
+branch = "main"
+```
+
+__Tag format__
+
+When using the `--tag` option, a Git tag will be created with the target version as its name. The name assigned to the
+new tag can be changed by setting the `tool.poetry-release.tag-format` option in `pyproject.toml`. For example, if the
+target version is `1.0.0` but the tag name should be `v1.0.0`, the configuration to use is:
+
+```toml
+[tool.poetry-release]
+tag-format = "v{version}"
+```
+
+__Additional version references__
+
+You can configure additional references to the version number in your project using the `tool.poetry-release.references`
+option. It must be a list of tables that define the files and a regular expression to find the version number.
+
+```toml
+[tool.poetry-release]
+references = [
+  { file = "../frontend/package.json", pattern = "  \"version\": \"{version}\"," }
+]
+```
+
+In addition to this configuration option, plugins of type `peotry_release.plugin_api.PoetryReleasePlugin` registered
+under the `poetry_release.plugins` entrypoint will be used to detect additional version number references, or register
+a callback to modify file(s) with respect to the target version number.
+
