@@ -1,0 +1,152 @@
+#!python
+from __future__ import absolute_import
+import click
+import pkg_resources
+
+from gbackup import Client, DriverHelper
+
+VERSION = pkg_resources.require("gbak")[0].version
+
+@click.group()
+@click.version_option(version=VERSION, prog_name='gbak')
+def gbak():  # pragma: no cover
+    pass
+
+@click.command()
+@click.option('--config', help='config file')
+@click.option('--input', help=' input')
+@click.option('--output', help=' output')
+def download(config,input,output):
+    if config != None :
+        c = Client(config, "download", input, output)
+        c.run()
+    else:
+        print("{}")
+@click.command()
+@click.option('--url', help='config file')
+@click.option('--ext', help=' ext', default=None)
+@click.option('--root', help=' root', default=None)
+def downloada(url,ext,root):
+    if url != None :
+        dhr = DriverHelper()
+        rs = dhr.download_file(url,root,ext)
+        print(rs)
+    else:
+        print("")
+@click.command()
+@click.option('--sv', help='server name')
+@click.option('--idx', help='id file', default=None)
+@click.option('--path', help=' root', default=None)
+def downloadsv(sv,idx,path):
+    if sv != None :
+        dhr = DriverHelper()
+        rs = dhr.download_file_pub(sv,idx,path)
+        print(rs)
+    else:
+        print("")
+@click.command()
+@click.option('--sv', help='server name')
+@click.option('--idx', help='id file', default=None)
+@click.option('--path', help=' root', default=".")
+@click.option('--type', help=' type', default=None)
+def downloadfolder(sv, idx, path, type):
+    if sv != None :
+        dhr = DriverHelper()
+        rs = dhr.download_folder(sv, idx, path, type)
+        print(rs)
+    else:
+        print("")
+@click.command()
+@click.option('--sv', help='server name')
+@click.option('--idx', help='id file', default=None)
+def listfolder(sv, idx):
+    if sv != None :
+        dhr = DriverHelper()
+        dhr.list_folder(sv, idx)
+    else:
+        print("")
+@click.command()
+@click.option('--config', help='config file')
+@click.option('--input', help=' input')
+def upload(config, input):
+    if config != None :
+        c = Client(config, "upload", input, "")
+        c.run()
+    else:
+        print("{}")
+@click.command()
+@click.option('--email', help='email')
+@click.option('--input', help=' input')
+def uploada_email(email, input):
+    if input != None:
+        dhr = DriverHelper()
+        rs = dhr.upload_file(email,input)
+        print(rs)
+    else:
+        print("{}")
+@click.command()
+@click.option('--email', help='email')
+@click.option('--input', help=' input')
+@click.option('--folderid', help=' folderid')
+def uploada_email_folder(email, input, folderid):
+    if input != None:
+        dhr = DriverHelper()
+        rs = dhr.upload_file_to_folder(email, input, folderid)
+        print(rs)
+    else:
+        print("{}")
+@click.command()
+@click.option('--server', help='server group name')
+@click.option('--input', help=' input')
+def uploada_sv(server, input):
+    if input != None:
+        dhr = DriverHelper()
+        rs = dhr.upload_file_auto(server,input)
+        print(rs)
+    else:
+        print("{}")
+@click.command()
+@click.option('--url', help='url')
+@click.option('--input', help=' input: path want to update')
+def update(url, input):
+    if input != None:
+        dhr = DriverHelper()
+        rs = dhr.update_file(url,input)
+        print(rs)
+    else:
+        print("{}")
+@click.command()
+@click.option('--email', help='email')
+@click.option('--idx', help='idx')
+def delete(email, idx):
+    if input != None:
+        dhr = DriverHelper()
+        rs = dhr.delete_file(email, idx)
+        print(rs)
+    else:
+        print("{}")
+@click.command()
+@click.option('--email', help='email')
+@click.option('--name', help='name')
+@click.option('--folderid', help='folderid')
+def create_folder(email, name, folderid):
+    if email and name:
+        dhr = DriverHelper()
+        rs = dhr.create_folder(email, name, folderid)
+        print(rs)
+    else:
+        print("error")
+gbak.add_command(download)
+gbak.add_command(upload)
+gbak.add_command(downloada)
+gbak.add_command(uploada_email)
+gbak.add_command(uploada_sv)
+gbak.add_command(update)
+gbak.add_command(downloadsv)
+gbak.add_command(downloadfolder)
+gbak.add_command(delete)
+gbak.add_command(listfolder)
+gbak.add_command(uploada_email_folder)
+gbak.add_command(create_folder)
+if __name__ == '__main__':  # pragma: no cover
+    gbak()
