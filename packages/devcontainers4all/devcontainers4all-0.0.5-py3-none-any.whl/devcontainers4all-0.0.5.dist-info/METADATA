@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: devcontainers4all
+Version: 0.0.5
+Summary: 
+License: GPL-3.0-or-later
+Author: Cosimo Alfarano
+Author-email: cosimo@alfarano.net
+Requires-Python: >=3.7,<4.0
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Dist: click (>=8.0.3,<9.0.0)
+Requires-Dist: click-pathlib (>=2020.3.13.0,<2021.0.0.0)
+Requires-Dist: commentjson (>=0.9.0,<0.10.0)
+Requires-Dist: docker (>=5.0.3,<6.0.0)
+Requires-Dist: logzero (>=1.7.0,<2.0.0)
+Requires-Dist: mypy (>=0.930,<0.931)
+Requires-Dist: pexpect (>=4.8.0,<5.0.0)
+Description-Content-Type: text/markdown
+
+[[_TOC_]]
+
+# devcontainers4all: Devcontainers without an IDE
+
+At the moment the only supported devcontainer format is the Visual Studio Code `devcontainer.json` manifest and `.devcontainer` directory structure.
+
+The only container technology supported is docker, but podman is on its way.
+
+To use such devcontainer, use the `d4a` command:
+```
+$ d4a --help
+Usage: dc [OPTIONS]
+
+  Manage the devcontainer
+
+Options:
+  --repository PATH  The repository checkout to mount in the devcontainer
+  --location PATH    The location of the devcontainer definition
+  --help             Show this message and exit.
+```
+
+example: `d4a --location ~/location/to/.devcontainer/  --repository ~/Sources/my_repo`
+
+Where locaiton is the directory where the devcontainer manifest and Dockerfile are present.
+It need to contain at least a VSC-compatible `devcontainer.json` and a working Dockerfile.
+
+The manifest needs to contain all the build-args, and all the environment variables required for the build.
+**Note**: at the moment only constant are possible for build-args and environmental variables value, even though the VSC manifest supports other variable-expansion syntaxes.
+
+It will use the `location` as build directory and will create container image from it.
+This image will be executed, the `repository` directory will be bind-mounted under `/workspace` within the container, and the post-command in the manifest will be executed.
+
+At this point a shell will be available, within the container.
+
+# Visual Studio Code DevContainers
+
+Ultimately the aim is to fully support https://code.visualstudio.com/docs/remote/devcontainerjson-reference, with the exceptions of [Visual Studio Code specific properties](https://code.visualstudio.com/docs/remote/devcontainerjson-reference#_vs-code-specific-properties), which would apply only in a VSC environment.
+
+## Image or Dockerfile specific properties
+
+At the moment the following limited format is supported (copied by VSC reference):
+
+| Property         | type  | Description |
+| ---              | ---      | ---      |
+| build.dockerfile |  str  | Required when using a Dockerfile. The location of a Dockerfile that defines the contents of the container. The path is relative to the devcontainer.json file. You can find Dockerfiles for different runtimes in the vscode-dev-containers repository. |
+| build.args       |  str  | A set of name-value pairs containing Docker image build arguments that should be passed when building a Dockerfile. Environment and pre-defined variables may be referenced in the values. Defaults to not set. For example: `"build": { "args": { "MYARG": "MYVALUE", "MYARGFROMENVVAR": "${localEnv:VARIABLE_NAME}" } }` |
+
+
+## Lifecycle scripts
+
+| Property           | type  | Description |
+| ---                | ---   | ---      |
+| postCreateCommand  |  str, array | This command is the last of three that finalizes container setup when a dev container is created. It happens after updateContentCommand and once the dev container has been assigned to a user for the first time. |
+
