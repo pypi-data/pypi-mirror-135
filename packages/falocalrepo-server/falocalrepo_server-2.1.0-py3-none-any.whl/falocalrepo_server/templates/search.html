@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="icon" href="/touch-icon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+    <link rel="stylesheet" href="/static/styles/style.css">
+    <style>
+        #search_form {
+            width: 100%;
+            top: 20px;
+            margin: auto;
+            text-align: center
+        }
+
+        #search_params, #query_help {
+            width: 100%;
+            max-width: 800px;
+            top: 20px;
+            margin: auto;
+            text-align: left
+        }
+
+        #header {
+            width: 95%;
+            top: 20px;
+            margin: auto;
+            text-align: center
+        }
+
+        #footer {
+            width: 95%;
+            bottom: 20px;
+            margin: auto;
+            text-align: center
+        }
+
+        #search_form td.colLabel {
+            width: 60px;
+            text-align: left;
+        }
+
+        #search_form td.colInput {
+            width: available;
+            text-align: left;
+        }
+
+        #search_form td.colInput input {
+            width: 100%;
+        }
+
+        #search_form td.colButton {
+            width: 1ch;
+            text-align: center;
+        }
+
+        #search_results table.results_list {
+            width: 100%;
+            max-width: 100% !important;
+            top: 20px;
+            margin: auto;
+        }
+
+        #search_results.submissions table.results_list td {
+            height: 50px;
+            min-height: 50px;
+            max-height: 50px;
+        }
+
+        #search_results table.results_list td span {
+            padding: 2px;
+        }
+
+        #search_results table.results_list th {
+            padding: 2px;
+        }
+
+        #search_results table.results_list td.id {
+            width: 11ch;
+            min-width: 11ch;
+            max-width: 11ch;
+        }
+
+        #search_results table.results_list td.author, #search_results table.results_list td.username {
+            width: 20ch;
+            min-width: 20ch;
+            max-width: 20ch;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #search_results table.results_list td.date {
+            width: 16ch;
+            min-width: 16ch;
+            max-width: 16ch;
+        }
+
+        #search_results table.results_list td.title {
+            min-width: 10ch;
+            max-width: available;
+            text-align: left;
+        }
+
+        #search_results table.results_list td.relevance {
+            width: 9ch;
+            max-width: 9ch;
+        }
+
+        #search_results table.results_list .thumbnail {
+            width: 100px;
+            min-width: 100px;
+            max-width: 200px;
+            max-height: 50px;
+        }
+
+        @media (pointer: fine) {
+            #search_results table.results_list .thumbnail:not(.notfound):hover * {
+                width: 200px;
+                height: 200px;
+                min-width: 200px;
+                max-width: 200px;
+                max-height: 200px;
+            }
+        }
+
+        #search_results table.results_list .thumbnail img {
+            max-width: 100px;
+            max-height: 50px;
+            object-fit: contain;
+            margin: auto;
+        }
+
+        #search_results div.results_grid {
+            width: 100%;
+            top: 20px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            align-content: center;
+        }
+
+        #search_results div.results_grid div.grid_item {
+            padding: 15px;
+            max-width: 250px;
+            text-align: center;
+            font-size: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #search_results div.results_grid div.grid_item .thumbnail img {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+        }
+
+        #header button, #footer button {
+            position: relative;
+            top: 10px;
+            bottom: 10px;
+        }
+
+        @media only screen and (max-width: {{ "850px" if table == "submissions" else "670px"}}) {
+            #search_results table.results_list .id, #search_results table.results_list .relevance {
+                visibility: hidden;
+                display: none;
+            }
+        }
+
+        @media only screen and (max-width: {{ "675px" if table == "submissions" else "600px"}}) {
+            #search_results table.results_list td.date {
+                width: 10ch;
+                min-width: 10ch;
+                max-width: 10ch;
+            }
+
+            #search_results table.results_list .date_time {
+                visibility: hidden;
+                display: none;
+            }
+
+            #search_results table.results_list td.author {
+                width: 10ch;
+                min-width: 10ch;
+                max-width: 10ch;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+            #search_results div.results_grid div.grid_item, #search_results div.results_grid div.grid_item .thumbnail img {
+                min-width: 100px;
+                width: 33vw;
+            }
+        }
+    </style>
+</head>
+<body>
+{% set table_short %}{{ table[:-1] }}{% endset %}
+<h2 style="text-align: center;">{{ title }}</h2>
+<form id="search_form" action="{{ action }}">
+    <table id="search_params">
+        <tr>
+            <td class="colLabel"><label for="query">Search</label></td>
+            <td class="colInput"><input type="text" name="query" id="query"></td>
+            <td class="colButton">
+                <label for="queryAdd"></label>
+                <select name="" id="queryAdd" style="width: 8ch"
+                        oninput="addToInput($('query'), '@' + this.value); this.options[0].selected = true;">
+                    <option selected disabled style="display: none">Field</option>
+                    <option value="any">Any</option>
+                    {% for col in columns_table %}
+                        <option value="{{ col.lower() }}">{{ col.title() if col|length > 2 else col.upper() }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="colButton">
+                <button type="button" onclick="$('query').value = ''">-</button>
+            </td>
+            <td class="colButton">
+                <button type="button" onclick="let td = $('query_help'); td.hidden = !td.hidden">?</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="colLabel"><label for="sort_field">Sort by</label></td>
+            <td class="colInput" colspan="4"><select id="sort_field" name="sort" style="width: 100%;">
+                {% for col in columns_table %}
+                    <option {{ "selected" if sort == col.lower() }} value="{{ col.lower() }}">
+                        {{ col.title() if col|length > 2 else col.upper() }}
+                    </option>
+                {% endfor %}
+            </select></td>
+        </tr>
+        <tr>
+            <td class="colLabel"><label for="order_field">Order</label></td>
+            <td class="colInput" colspan="4"><select id="order_field" name="order" style="width: 100%;">
+                <option {{ "selected" if order == "asc" }} value="asc">Ascending</option>
+                <option {{ "selected" if order == "desc" }} value="desc">Descending</option>
+            </select></td>
+        </tr>
+        <tr id="viewRow" {{ "hidden" if not allow_view else "" }}>
+            <td class="colLabel"><label for="view">View</label></td>
+            <td class="colInput" colspan="4"><select id="view" name="view" style="width: 100%;"
+                                                     onchange="changeView(this.value)">
+                <option {{ "selected" if view == "list" or not allow_view or not view }} id="viewList" value="list">
+                    List
+                </option>
+                <option {{ "selected" if view == "grid" and allow_view }} id="viewGrid" value="grid">Grid</option>
+            </select></td>
+        </tr>
+    </table>
+    <div id="query_help" hidden>
+        <p>The query language used for this server is based on and improves the search syntax currently used by
+            the Fur Affinity website. Its basic elements are:</p>
+        <ul>
+            <li>
+                <code>@&lt;field&gt;</code> field specifier (e.g. <code>@title</code>), all database columns
+                are available as search fields.
+                See <a href="https://pypi.org/project/falocalrepo-database/"
+                       rel="nofollow noreferrer noopener" target="_blank">falocalrepo-database</a> for
+                details on the available columns.
+            </li>
+            <li>
+                <code>()</code> parentheses, they can be used for better logic operations
+            </li>
+            <li>
+                <code>&amp;</code> <em>AND</em> logic operator, used between search terms
+            </li>
+            <li>
+                <code>|</code> <em>OR</em> logic operator, used between search terms
+            </li>
+            <li>
+                <code>!</code> <em>NOT</em> logic operator, used as prefix of search terms
+            </li>
+            <li>
+                <code>""</code> quotes, allow searching for literal strings without needing to escape
+            </li>
+            <li>
+                <code>%</code> match 0 or more characters
+            </li>
+            <li>
+                <code>_</code> match exactly 1 character
+            </li>
+            <li>
+                <code>^</code> start of field, when used at the start of a search term, it matches the
+                beginning of the field
+            </li>
+            <li>
+                <code>$</code> end of field, when used at the end of a search term, it matches the end of
+                the field
+            </li>
+        </ul>
+        <p>All other strings are considered search terms.</p>
+        <p>The search uses the <code>@any</code> field by default, allowing to do general searches without
+            specifying a field.</p>
+        <p>Search terms that are not separated by a logic operator are considered <em>AND</em> terms (i.e.
+            <code>a b c</code> -&gt; <code>a &amp; b &amp; c</code>).</p>
+        <p>Except for the <code>ID</code>, <code>AUTHOR</code>, and <code>USERNAME</code> fields, all search
+            terms are searched through the whole content of the
+            various fields: i.e. <code>@description cat</code> will match any item whose description field
+            contains "cat". To match items that
+            contain only "cat" (or start with, end with, etc.), the <code>%</code>, <code>_</code>,
+            <code>^</code>, and <code>$</code> operators need to be used (
+            e.g. <code>@description ^cat</code>).</p>
+        <p>Search terms for <code>ID</code>, <code>AUTHOR</code>, and <code>USERNAME</code> are matched
+            exactly as they are: i.e. <code>@author tom</code> will match only
+            items whose author field is exactly equal to "tom", to match items that contain "tom" the
+            <code>%</code>,
+            <code>_</code>, <code>^</code>, and <code>$</code>
+            operators need to be used (e.g. <code>@author %tom%</code>).</p>
+    </div>
+    <br>
+    <button type="submit">Search</button>
+    <button type="submit" onclick="$('query').value = ''">Browse</button>
+    {% if table == "submissions" %}
+        <button type="button" onclick="convertToFAQuery()">Search on Fur Affinity</button>
+    {% endif %}
+</form>
+<br>
+{% if results or params %}
+<div id="header">
+    {% set navigation %}
+    Results: {{ offset + (results_total > 0) }}-{{ offset + results|length }} of {{ results_total }} · Page {{ page }}
+    <br>
+    <button type="submit" form="search_form" name="page" value="1" {{ 'disabled' if page == 1 }}>
+        First
+    </button>
+    <button type="submit" form="search_form" name="page" value="{{ page - 1 }}" {{ 'disabled' if page == 1 }}>
+        Prev
+    </button>
+    <button type="submit" form="search_form" name="page"
+            value="{{ page + 1 }}" {{ 'disabled' if offset + limit >= results_total }}>
+        Next
+    </button>
+    <button type="submit" form="search_form" name="page"
+            value="{{ (results_total // limit) + 1 }}" {{ 'disabled' if offset + limit >= results_total }}>
+        Last
+    </button>
+    {% endset %}
+    {{ navigation }}
+    <br>&nbsp;<br>
+</div>
+{% endif %}
+{% if results %}
+    <div id="search_results" class="{{ table.lower() }}" style="text-align: center">
+        <table id="results_table_list"
+               class="border results_list"
+                {{ "" if view == "list" or not allow_view else 'style="display: none"'|safe }}>
+            <tr class="even">
+                {% for column in columns_results %}
+                    <th class="border-thick {{ column.lower() }}">{{ column }}</th>
+                {% endfor %}
+                {% if thumbnails %}
+                    <th class="border-thick thumbnail"></th>
+                {% endif %}
+            </tr>
+            {% for item in results %}
+                <tr class="hover_highlight clickable {{ loop.cycle('odd', 'even') }}">
+                    {% for column in columns_results %}
+                        <td class="border {{ column.lower() }} {{ 'hover_underline' if column == "AUTHOR" }}">
+                            {% if column == "AUTHOR" %}
+                                <a class="cell-link" href="/user/{{ item[column] }}">
+                                    <span>{{ item[column] }}</span>
+                                </a>
+                            {% elif column == "DATE" %}
+                                <a class="cell-link" href="/{{ table_short }}/{{ item[column_id] }}">
+                                    <span class="date_date">{{ item[column].strftime("%Y-%m-%d") }}</span>
+                                    <span class="date_time">{{ item[column].strftime("%H:%M") }}</span>
+                                </a>
+                            {% else %}
+                                <a class="cell-link" href="/{{ table_short }}/{{ item[column_id] }}">
+                                    <span>{{ " ".join(item[column]) if column in columns_list else item[column] }}</span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                    {% if thumbnails %}
+                        <td class="border thumbnail">
+                            <a class="cell-link" href="/{{ table_short }}/{{ item[column_id] }}">
+                                <img src="/static/loading.gif"
+                                     data-src="/{{ table_short }}/{{ item[column_id] }}/thumbnail/"
+                                     data-src-error="/static/not-found.png"
+                                     onload="this.onload = null; this.src = this.dataset.src;"
+                                     onerror="this.onload = null; this.parentNode.parentNode.classList.add('notfound'); this.src = this.dataset.srcError;"
+                                     alt="{{ item["TITLE"] }}" title="{{ item["TITLE"] }}">
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="results_table_grid" class="results_grid"
+             style="display: {{ "flex" if view == "grid" and allow_view else "none" }}">
+            {% if allow_view %}
+                {% for item in results %}
+                    <div class="grid_item">
+                        {% if thumbnails %}
+                            <a class="nocolor thumbnail" href="/{{ table_short }}/{{ item[column_id] }}">
+                                <img src="/static/loading.gif"
+                                     data-src="/{{ table_short }}/{{ item[column_id] }}/thumbnail/"
+                                     data-src-error="/static/not-found.png"
+                                     onload="this.onload = null; this.src = this.dataset.src;"
+                                     onerror="this.onload = null; this.src = this.dataset.srcError;"
+                                     alt="{{ item["TITLE"] }}" title="{{ item["TITLE"] }}">
+                            </a>
+                            <br>
+                        {% endif %}
+                        <b><a class="nocolor" href="/{{ table_short }}/{{ item[column_id] }}">
+                            <span>{{ item["TITLE"] }}</span>
+                        </a></b>
+                        <br>
+                        <i>by</i>&nbsp;
+                        <a class="nocolor hover_underline"
+                           href="/user/{{ item["AUTHOR"] }}">
+                            <span>{{ item["AUTHOR"] }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <div id="footer">
+        {{ navigation }}
+        <br>&nbsp;<br>
+    </div>
+{% endif %}
+<script async>
+    const $ = (id) => document.getElementById(id)
+    let view = $("view").value === "grid" ? $("results_table_grid") : $("results_table_list")
+
+    $("query").value = (new URL(window.location.href)).searchParams.get("query") || ""
+
+    const addToInput = (input, value) => {
+        const selectStart = input.selectionStart, selectEnd = input.selectionEnd
+        const a = input.value.substr(0, selectStart).replace(/ +$/, "")
+        const b = input.value.substr(selectEnd).replace(/^ +/, "")
+        const addition = selectStart === selectEnd ? ` ${value} ` : ` (${value} ${input.value.substring(selectStart, selectEnd)}) `
+        input.value = a + addition + b
+        input.focus()
+        input.setSelectionRange(selectStart + addition.length - 1, selectStart + addition.length - 1)
+    }
+
+    const changeView = (view) => {
+        if (view === "list") {
+            $("results_table_list").style.display = ""
+            $("results_table_grid").style.display = "none"
+        } else if (view === "grid") {
+            $("results_table_list").style.display = "none"
+            $("results_table_grid").style.display = "flex"
+        }
+        const url = new URL(window.location.href)
+        url.searchParams.set("view", view)
+        window.history.replaceState({}, document.title, url.href)
+    }
+
+    {% if table == "submissions" %}
+        const convertToFAQuery = () => {
+            const url = new URL("https://furaffinity.net/search/")
+            const query = $("query").value
+                .replace(/@(?!(tags|author|description|fileurl|fileext|title))[^@]+ ?/ig, "")
+                .replace(/@tags/ig, "@keywords")
+                .replace(/@author/ig, "@lower")
+                .replace(/@description/ig, "@message")
+                .replace(/@(fileurl|fileext)/ig, "@filename")
+                .trim()
+            url.searchParams.set("q", query)
+            if ($("sort_field").value.match(/date|id/i)) {
+                url.searchParams.set("order-by", "date")
+                url.searchParams.set("order-direction", $("order_field").value)
+            }
+            window.location = url.href
+        }
+    {% endif %}
+
+    {% if allow_view %}
+        window.onresize = () => {
+            const view = $("view")
+            if (window.innerWidth < 505) {
+                $("viewGrid").selected = true
+                view.onchange(null)
+                $("viewRow").hidden = view.disabled = true
+            } else $("viewRow").hidden = view.disabled = false
+        }
+        window.onresize(null)
+    {% endif %}
+</script>
+</body>
+</html>
