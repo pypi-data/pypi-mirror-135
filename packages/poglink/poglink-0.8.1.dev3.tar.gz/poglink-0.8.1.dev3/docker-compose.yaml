@@ -1,0 +1,15 @@
+version: "3"
+services:
+  bot:
+    container_name: poglink
+    build: .
+    volumes:
+      - ./data:/data
+    networks:
+      - bot-net
+    command: ""
+    environment:
+      BOT_DEBUG: "false"
+
+networks:
+  bot-net:
