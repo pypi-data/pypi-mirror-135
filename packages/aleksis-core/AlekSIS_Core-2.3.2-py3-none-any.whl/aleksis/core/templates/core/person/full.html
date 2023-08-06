@@ -1,0 +1,148 @@
+{# -*- engine:django -*- #}
+
+{% extends "core/base.html" %}
+
+{% load i18n static rules material_form %}
+{% load render_table from django_tables2 %}
+
+{% block browser_title %}{{ person.first_name }} {{ person.last_name }}{% endblock %}
+
+{% block content %}
+  <h1>{{ person.first_name }} {{ person.last_name }}</h1>
+
+  {% has_perm 'core.edit_person_rule' user person as can_change_person %}
+  {% has_perm 'core.change_person_preferences_rule' user person as can_change_person_preferences %}
+  {% has_perm 'core.delete_person_rule' user person as can_delete_person %}
+  {% has_perm "core.impersonate_rule" user person as can_impersonate %}
+
+  {% if can_change_person or can_change_person_preferences or can_delete_person or can_impersonate %}
+    <p>
+      {% if can_change_person %}
+        <a href="{% url 'edit_person_by_id' person.id %}" class="btn waves-effect waves-light">
+          <i class="material-icons left">edit</i>
+          {% trans "Edit" %}
+        </a>
+      {% endif %}
+
+      {% if can_delete_person %}
+        <a href="{% url 'delete_person_by_id' person.id %}" class="btn waves-effect waves-light red">
+          <i class="material-icons left">delete</i>
+          {% trans "Delete" %}
+        </a>
+      {% endif %}
+
+      {% if can_change_person_preferences %}
+        <a href="{% url "preferences_person" person.id %}" class="btn waves-effect waves-light">
+          <i class="material-icons left">settings</i>
+          {% trans "Change preferences" %}
+        </a>
+      {% endif %}
+
+    {% if can_impersonate and person.user %}
+        <a href="{% url "impersonate-start" person.user.id %}" class="btn waves-effect waves-light">
+          <i class="material-icons left">portrait</i>
+          {% trans "Impersonate" %}
+        </a>
+      {% endif %}
+    </p>
+  {% endif %}
+
+  <h2>{% blocktrans %}Contact details{% endblocktrans %}</h2>
+  <div class="row">
+    <div class="col s12 m4">
+      {% has_perm 'core.view_photo_rule' user person as can_view_photo %}
+      {% if person.photo and can_view_photo %}
+        <img class="person-img" src="{{ person.photo.url }}"
+             alt="{{ person.first_name }} {{ person.last_name }}"/>
+      {% else %}
+        <img class="person-img" src="{% static 'img/fallback.png' %}"
+             alt="{{ person.first_name }} {{ person.last_name }}"/>
+      {% endif %}
+    </div>
+    <div class="col s12 m8">
+      <table class="responsive-table highlight">
+        <tr>
+          <td rowspan="6">
+
+          </td>
+          <td>
+            <i class="material-icons small">person</i>
+          </td>
+          <td>{{ person.first_name }}</td>
+          <td>{{ person.additional_name }}</td>
+          <td>{{ person.last_name }}</td>
+        </tr>
+        <tr>
+          <td>
+            <i class="material-icons small">face</i>
+          </td>
+          <td colspan="3">{{ person.get_sex_display }}</td>
+        </tr>
+        {% has_perm 'core.view_address_rule' user person as can_view_address %}
+        {% if can_view_address %}
+          <tr>
+            <td>
+              <i class="material-icons small">home</i>
+            </td>
+            <td colspan="2">{{ person.street }} {{ person.housenumber }}</td>
+            <td colspan="2">{{ person.postal_code }} {{ person.place }}</td>
+          </tr>
+        {% endif %}
+        {% has_perm 'core.view_contact_details_rule' user person as can_view_contact_details %}
+        {% if can_view_contact_details %}
+          <tr>
+            <td>
+              <i class="material-icons small">phone</i>
+            </td>
+            <td>{{ person.phone_number }}</td>
+            <td>{{ person.mobile_number }}</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="material-icons small">email</i>
+            </td>
+            <td colspan="3">{{ person.email }}</td>
+          </tr>
+        {% endif %}
+        {% has_perm 'core.view_personal_details_rule' user person as can_view_personal_details %}
+        {% if can_view_personal_details %}
+          <tr>
+            <td>
+              <i class="material-icons small">cake</i>
+            </td>
+            <td colspan="2">{{ person.date_of_birth|date }}</td>
+            <td colspan="2">{{ person.place_of_birth }}</td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+    {% if person.description %}
+      <div class="col s12 m12">
+        <h2>{% trans "Description" %}</h2>
+        <p>
+          {{ person.description }}
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if person.children.all and can_view_personal_details %}
+    <div class="col s12 m12">
+      <h2>{% trans "Children" %}</h2>
+      {% include "core/person/collection.html" with persons=person.children.all %}
+    </div>
+  {% endif %}
+
+  {% if person.guardians.all and can_view_personal_details %}
+    <div class="col s12 m12">
+      <h2>{% trans "Guardians / Parents" %}</h2>
+      {% include "core/person/collection.html" with persons=person.guardians.all %}
+    </div>
+  {% endif %}
+
+  {% has_perm 'core.view_person_groups_rule' user person as can_view_groups %}
+  {% if can_view_groups %}
+    <h2>{% blocktrans %}Groups{% endblocktrans %}</h2>
+    {% render_table groups_table %}
+  {% endif %}
+{% endblock %}
