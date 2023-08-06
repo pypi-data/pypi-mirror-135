@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkquetz_theme=self.webpackChunkquetz_theme||[]).push([[568],{568:(e,t,a)=>{a.r(t),a.d(t,{default:()=>s});const s={id:"quetz-theme",requires:[a(618).IThemeManager],autoStart:!0,activate:(e,t)=>{t.register({name:"Quetz",isLight:!1,load:()=>t.loadCSS("quetz-theme/index.css"),unload:()=>Promise.resolve(void 0)})}}}}]);
