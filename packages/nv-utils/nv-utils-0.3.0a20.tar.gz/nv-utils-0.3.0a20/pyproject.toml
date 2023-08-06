@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "nv-utils"
+version = "0.3.0a20"
+description = "Parsers, formatters, data structures and helpers for Python 3 (>=3.9)"
+authors = ["Gustavo Santos <gustavo@next.ventures>"]
+license = "MIT"
+repository = "https://github.com/gstos/nv-utils"
+packages = [{ include = "nv"}]
+# New attributes
+readme = "README.md"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+msgpack-python = { version = "^0.5.6", optional = true }
+xmltodict = { version = "^0.12.0", optional = true }
+dicttoxml = { version = "^1.7.4", optional = true }
+charset-normalizer = { version = "^2.0.10", optional = true }
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.1"
+
+[tool.poetry.extras]
+msgpack = ["msgpack-python"]
+xml = ["xmltodict", "dicttoxml"]
+detect = ["charset-normalizer"]
+all = ["msgpack-python", "xmltodict", "dicttoxml", "charset-normalizer"]
+
+[tool.pytest.ini_options]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
