@@ -1,0 +1,116 @@
+[tool]
+[tool.poetry]
+name = "techlib-nr-oai-pmh-harvester"
+version = "1.0.0a12"
+description = "Czech National Repository oai-pmh-harvester"
+license = "MIT"
+keywords = ["Czech", "National", "Respository", "Invenio", "harvester", "oai", "pmh"]
+classifiers = ["Environment :: Web Environment", "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent", "Programming Language :: Python", "Topic :: Internet :: WWW/HTTP :: Dynamic Content", "Topic :: Software Development :: Libraries :: Python Modules", "Programming Language :: Python :: 3", "Programming Language :: Python :: 3.9", "Development Status :: 3 - Alpha"]
+authors = ["Daniel Kopecký <Daniel.Kopecky@techlib.cz>"]
+readme = "README.md"
+packages = [{ include = "nr_oai_pmh_harvester" }]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+oarepo-oai-pmh-harvester = "^2.0.0-alpha.13"
+oarepo-taxonomies = "^3.0.0a1"
+xmltodict = "^0.12.0"
+dojson = "^1.4.0"
+pycountry = ">=20.7.3"
+
+[tool.poetry.dev-dependencies]
+oarepo = "~3.3"
+oarepo-references = "^1.8.3"
+pytest = "^5.0.0"
+pytest-cov = "^2.10.1"
+techlib-nr-common = "^3.0.0a39"
+techlib-nr-theses = "^1.0.0a1"
+techlib-nr-Nresults = "^1.0.0a12"
+techlib-nr-events = "^1.0.0a13"
+oarepo-communities = "^1.4.2"
+oarepo-records-draft = "^5.5.4"
+oarepo-multilingual = "^2.5.0"
+techlib-nr-generic = "^1.0.0-alpha.5"
+
+[tool.poetry.extras]
+tests = ["oarepo", "pytest", "pytest-cov"]
+
+[tool.poetry.plugins."invenio_config.module"]
+restoration = "nr_oai_pmh_harvester.config"
+
+[tool.poetry.plugins."oarepo_oai_pmh_harvester.parsers"]
+"parsers" = "nr_oai_pmh_harvester.parser"
+
+[tool.poetry.plugins."oarepo_oai_pmh_harvester.mappings"]
+"nusl" = "nr_oai_pmh_harvester.endpoint_handlers"
+
+[tool.poetry.plugins."oarepo_oai_pmh_harvester.post_processors"]
+"post_processors" = "nr_oai_pmh_harvester.post_processors"
+
+[tool.poetry.plugins."oarepo_oai_pmh_harvester.error_handlers"]
+"error_handler" = "nr_oai_pmh_harvester.error_handler"
+
+# TODO: přidat prefixy institucí
+[tool.poetry.plugins."oarepo_oai_pmh_harvester.rules"]
+"field001" = "nr_oai_pmh_harvester.rules.nusl.field001"
+"field020" = "nr_oai_pmh_harvester.rules.nusl.field020"
+"field022" = "nr_oai_pmh_harvester.rules.nusl.field022__a"
+"field035" = "nr_oai_pmh_harvester.rules.nusl.field035"
+"field046__j" = "nr_oai_pmh_harvester.rules.nusl.field046__j"
+"field046__k" = "nr_oai_pmh_harvester.rules.nusl.field046__k"
+"field260" = "nr_oai_pmh_harvester.rules.nusl.field260"
+"field300" = "nr_oai_pmh_harvester.rules.nusl.field300"
+"field336__a" = "nr_oai_pmh_harvester.rules.nusl.field336__a"
+"field502__c" = "nr_oai_pmh_harvester.rules.nusl.field502__c"
+"field520" = "nr_oai_pmh_harvester.rules.nusl.field520"
+"field540" = "nr_oai_pmh_harvester.rules.nusl.field540"
+"field586" = "nr_oai_pmh_harvester.rules.nusl.field586"
+"field598__a" = "nr_oai_pmh_harvester.rules.nusl.field598__a"
+"field650_7" = "nr_oai_pmh_harvester.rules.nusl.field650_7"
+"field65007" = "nr_oai_pmh_harvester.rules.nusl.field65007"
+"field65017" = "nr_oai_pmh_harvester.rules.nusl.field65017"
+"field653" = "nr_oai_pmh_harvester.rules.nusl.field653"
+"field656_7a" = "nr_oai_pmh_harvester.rules.nusl.field656_7a"
+"field720" = "nr_oai_pmh_harvester.rules.nusl.field720"
+"field7201" = "nr_oai_pmh_harvester.rules.nusl.field7201"
+"field909COo" = "nr_oai_pmh_harvester.rules.nusl.field909COo"
+"field970__a" = "nr_oai_pmh_harvester.rules.nusl.field970__a"
+"field980__a" = "nr_oai_pmh_harvester.rules.nusl.field980__a"
+"field996" = "nr_oai_pmh_harvester.rules.nusl.field996"
+"field998" = "nr_oai_pmh_harvester.rules.nusl.field998"
+"field999C1" = "nr_oai_pmh_harvester.rules.nusl.field999C1"
+"field04107" = "nr_oai_pmh_harvester.rules.nusl.field04107"
+"field4900" = "nr_oai_pmh_harvester.rules.nusl.field4900"
+"field7102" = "nr_oai_pmh_harvester.rules.nusl.field7102"
+"field7112" = "nr_oai_pmh_harvester.rules.nusl.field7112"
+"field7731" = "nr_oai_pmh_harvester.rules.nusl.field7731"
+"field24500" = "nr_oai_pmh_harvester.rules.nusl.field24500"
+"field24630" = "nr_oai_pmh_harvester.rules.nusl.field24630"
+"field24633" = "nr_oai_pmh_harvester.rules.nusl.field24633"
+"field85640" = "nr_oai_pmh_harvester.rules.nusl.field85640"
+"field85642u" = "nr_oai_pmh_harvester.rules.nusl.field85642u"
+"uk_publication_place_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.uk_publication_place_cs_CZ_value"
+"uk_publication_place_cs_CZ_value_2" = "nr_oai_pmh_harvester.rules.uk.uk_publication_place_cs_CZ_value_2"
+"uk_publication_place_cs_CS_value" = "nr_oai_pmh_harvester.rules.uk.uk_publication_place_cs_CS_value"
+"dc_language_iso" = "nr_oai_pmh_harvester.rules.uk.dc_language_iso"
+"dc_identifier_uri" = "nr_oai_pmh_harvester.rules.uk.dc_identifier_uri"
+"dc_description_abstract" = "nr_oai_pmh_harvester.rules.uk.dc_description_abstract"
+"dc_contributor_advisor" = "nr_oai_pmh_harvester.rules.uk.dc_contributor_advisor"
+"dc_publisher_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.dc_publisher_cs_CZ_value"
+"dc_type_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.dc_type_cs_CZ_value"
+"dc_subject" = "nr_oai_pmh_harvester.rules.uk.dc_subject"
+"uk_degree_discipline_cs_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.uk_degree_discipline_cs_cs_CZ_value"
+"dc_contributor_referee" = "nr_oai_pmh_harvester.rules.uk.dc_contributor_referee"
+"dc_creator" = "nr_oai_pmh_harvester.rules.uk.dc_creator"
+"uk_file_availability_value" = "nr_oai_pmh_harvester.rules.uk.uk_file_availability_value"
+"dc_description_department_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.dc_description_department_cs_CZ_value"
+"uk_grantor_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.uk_grantor_cs_CZ_value"
+"uk_grantor_cs_CS_value" = "nr_oai_pmh_harvester.rules.uk.uk_grantor_cs_CS_value"
+"dc_title" = "nr_oai_pmh_harvester.rules.uk.dc_title"
+"dc_date_issued" = "nr_oai_pmh_harvester.rules.uk.dc_date_issued"
+"dc_description_faculty_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.dc_description_faculty_cs_CZ_value"
+"dc_publisher_cs_CS_value" = "nr_oai_pmh_harvester.rules.uk.dc_publisher_cs_CS_value"
+"others_identifier" = "nr_oai_pmh_harvester.rules.uk.others_identifier"
+"dcterms_dateAccepted_value" = "nr_oai_pmh_harvester.rules.uk.dcterms_dateAccepted_value"
+"uk_degree_program_cs_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.uk_degree_program_cs_cs_CZ_value"
+"thesis_grade_cs_cs_CZ_value" = "nr_oai_pmh_harvester.rules.uk.thesis_grade_cs_cs_CZ_value"
