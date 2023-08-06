@@ -1,0 +1,79 @@
+[build-system]
+requires = [
+    "robotpy-build<2023.0.0,>=2022.2.0",
+    "robotpy-wpiutil<2023.0.0,>=2022.2.1.1",
+    "robotpy-wpimath<2023.0.0,>=2022.2.1.2",
+    "wpilib<2023.0.0,>=2022.2.1.3",
+]
+
+[tool.robotpy-build]
+base_package = "rev"
+
+[tool.robotpy-build.static_libs."revlib_driver".maven_lib_download]
+artifact_id = "REVLib-driver"
+group_id = "com.revrobotics.frc"
+repo_url = "https://maven.revrobotics.com/"
+version = "2022.1.1"
+libs = ["REVLibDriver"]
+
+[tool.robotpy-build.static_libs."revlib".maven_lib_download]
+artifact_id = "REVLib-cpp"
+group_id = "com.revrobotics.frc"
+repo_url = "https://maven.revrobotics.com/"
+version = "2022.1.1"
+libs = ["REVLib"]
+
+[tool.robotpy-build.wrappers."rev"]
+name = "rev"
+sources = [
+    "rev/rev.cpp"
+]
+
+depends = [
+    "wpilibc",
+    "wpilib_core",
+    "wpimath_cpp",
+    "wpiHal",
+    "wpiutil",
+    "revlib_driver",
+    "revlib",
+]
+
+generation_data = "gen"
+
+[tool.robotpy-build.wrappers."rev".autogen_headers]
+# rev
+AnalogInput = "rev/AnalogInput.h"
+# CANAnalog = "rev/CANAnalog.h"
+# CANDeviceScanner = "rev/CANDeviceScanner.h"
+# CANDigitalInput = "rev/CANDigitalInput.h"
+# CANEncoder = "rev/CANEncoder.h"
+# CANPIDController = "rev/CANPIDController.h"
+CANSensor = "rev/CANSensor.h"
+CANSparkMax = "rev/CANSparkMax.h"
+CANSparkMaxLowLevel = "rev/CANSparkMaxLowLevel.h"
+CIEColor = "rev/CIEColor.h"
+ColorMatch = "rev/ColorMatch.h"
+ColorSensorV3 = "rev/ColorSensorV3.h"
+# ControlType = "rev/ControlType.h"
+MotorFeedbackSensor = "rev/MotorFeedbackSensor.h"
+REVLibError = "rev/REVLibError.h"
+RelativeEncoder = "rev/RelativeEncoder.h"
+SparkMaxAlternateEncoder = "rev/SparkMaxAlternateEncoder.h"
+SparkMaxAnalogSensor = "rev/SparkMaxAnalogSensor.h"
+SparkMaxLimitSwitch = "rev/SparkMaxLimitSwitch.h"
+SparkMaxPIDController = "rev/SparkMaxPIDController.h"
+SparkMaxRelativeEncoder = "rev/SparkMaxRelativeEncoder.h"
+
+[tool.robotpy-build.metadata]
+name = "robotpy-rev"
+description = "REVLib for RobotPy"
+author = "RobotPy Development Team"
+author_email = "robotpy@googlegroups.com"
+url = "https://github.com/robotpy/robotpy-rev"
+license = "BSD-3-Clause"
+install_requires = [
+    "robotpy-wpiutil<2023.0.0,>=2022.2.1.1",
+    "robotpy-wpimath<2023.0.0,>=2022.2.1.2",
+    "wpilib<2023.0.0,>=2022.2.1.3",
+]
