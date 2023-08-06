@@ -1,0 +1,143 @@
+Metadata-Version: 2.1
+Name: oracle-ads
+Version: 2.5.6
+Summary: Oracle Accelerated Data Science SDK
+Home-page: https://docs.oracle.com/en-us/iaas/tools/ads-sdk/latest/index.html
+Author: Oracle Data Science
+License: Universal Permissive License 1.0
+Keywords: Oracle Cloud Infrastructure,OCI,Machine Learning,ML,Artificial Intelligence,AI,Data Science,Cloud,Oracle
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Universal Permissive License (UPL)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: asteval (>=0.9.25)
+Requires-Dist: bokeh (>=2.3.0)
+Requires-Dist: cerberus (>=1.3.4)
+Requires-Dist: cloudpickle (>=1.6.0)
+Requires-Dist: cx-Oracle (>=8.0)
+Requires-Dist: datefinder (>=0.7.1)
+Requires-Dist: fdk (>=0.1.18)
+Requires-Dist: folium (>=0.12.1)
+Requires-Dist: fsspec (>=0.8.7)
+Requires-Dist: geopandas (>=0.9.0)
+Requires-Dist: gitpython (>=3.1.2)
+Requires-Dist: graphviz (<0.17)
+Requires-Dist: htmllistparse (>=0.6.0)
+Requires-Dist: ipython (<8.0,>=7.23.1)
+Requires-Dist: jinja2 (>=2.11.2)
+Requires-Dist: jsonschema (<4.0)
+Requires-Dist: matplotlib (>=3.1.3)
+Requires-Dist: numexpr (>=2.7.3)
+Requires-Dist: numpy (>=1.19.2)
+Requires-Dist: oci (>=2.48.1)
+Requires-Dist: ocifs (>=0.1.5)
+Requires-Dist: onnx (~=1.10.0)
+Requires-Dist: onnxmltools (~=1.9.0)
+Requires-Dist: onnxruntime (~=1.8.0)
+Requires-Dist: pandas (<1.4,>1.2.1)
+Requires-Dist: psutil (>=5.7.2)
+Requires-Dist: py-cpuinfo (>=7.0.0)
+Requires-Dist: python-jsonschema-objects (>=0.3.13)
+Requires-Dist: scikit-learn (>=0.23.2)
+Requires-Dist: scipy (>=1.5.4)
+Requires-Dist: seaborn (>=0.11.0)
+Requires-Dist: six (>=1.14.0)
+Requires-Dist: skl2onnx (~=1.9.0)
+Requires-Dist: sqlalchemy (>=1.4.1)
+Requires-Dist: tabulate (>=0.8.9)
+Requires-Dist: tqdm (>=4.59.0)
+Provides-Extra: all-optional
+Requires-Dist: ipywidgets (~=7.6.3) ; extra == 'all-optional'
+Requires-Dist: wordcloud (>=1.8.1) ; extra == 'all-optional'
+Requires-Dist: fastavro (>=0.24.2) ; extra == 'all-optional'
+Requires-Dist: openpyxl (>=3.0.7) ; extra == 'all-optional'
+Requires-Dist: pandavro (>=1.6.0) ; extra == 'all-optional'
+Requires-Dist: mysql-connector-python ; extra == 'all-optional'
+Requires-Dist: docker ; extra == 'all-optional'
+Requires-Dist: lightgbm ; extra == 'all-optional'
+Requires-Dist: oci-cli ; extra == 'all-optional'
+Requires-Dist: xgboost ; extra == 'all-optional'
+Provides-Extra: boosted
+Requires-Dist: xgboost ; extra == 'boosted'
+Requires-Dist: lightgbm ; extra == 'boosted'
+Provides-Extra: complete
+Requires-Dist: docker ; extra == 'complete'
+Requires-Dist: fastavro (>=0.24.2) ; extra == 'complete'
+Requires-Dist: ipywidgets (~=7.6.3) ; extra == 'complete'
+Requires-Dist: lightgbm ; extra == 'complete'
+Requires-Dist: mysql-connector-python ; extra == 'complete'
+Requires-Dist: oci-cli ; extra == 'complete'
+Requires-Dist: openpyxl (>=3.0.7) ; extra == 'complete'
+Requires-Dist: pandavro (>=1.6.0) ; extra == 'complete'
+Requires-Dist: wordcloud (>=1.8.1) ; extra == 'complete'
+Requires-Dist: xgboost ; extra == 'complete'
+Provides-Extra: data
+Requires-Dist: fastavro (>=0.24.2) ; extra == 'data'
+Requires-Dist: openpyxl (>=3.0.7) ; extra == 'data'
+Requires-Dist: pandavro (>=1.6.0) ; extra == 'data'
+Provides-Extra: mysql
+Requires-Dist: mysql-connector-python ; extra == 'mysql'
+Provides-Extra: notebook
+Requires-Dist: ipywidgets (~=7.6.3) ; extra == 'notebook'
+Provides-Extra: opctl
+Requires-Dist: oci-cli ; extra == 'opctl'
+Requires-Dist: docker ; extra == 'opctl'
+Provides-Extra: text
+Requires-Dist: wordcloud (>=1.8.1) ; extra == 'text'
+
+# Overview
+
+The Oracle Accelerated Data Science (ADS) SDK is maintained by the Oracle Data Science team. Its goal is to speed up common data science activities. It does this by providing tools that automate or simplify common tasks that a data scientist performs. It also provides a data scientist-friendly interface to Oracle Cloud Infrastructure (OCI) web services.
+
+ADS allows you to store your data on Oracle Object Storage and read it into Pandas, natively. Use ADS to automate data transformation or get recommendations on what transformations will improve your models. Use Feature Types to create features that have multiple inheritances and are not bound by the restrictions of the data type. Use this to create reusable summary statistics, summary plots, validate the data, looking for potential problems, and select features based on their type. Use the ADSTuner to perform smart hyperparameter tuning operations. The text extraction module takes the hard work out of extracting text from various document formats so that you can quickly get to NLP modeling.
+
+Integration with OCIs services is a key feature of ADS. The integrations are focused on the use cases that data scientists need. For example, the Vault service allows you to store secrets. ADS simplifies the process by taking a dictionary, say username and password, and it will return a dictionary. There are integrations to the Data Science services such as Projects, Module Catalog, Model Deployment, and Jobs. But it also has integrations to other services that data scientists commonly use such as the Vault, Autonomous Database, Object Storage and much more.
+
+Contributions are welcome.
+
+# Installation 
+
+You have various options when installing ADS package. 
+
+* Installing the base package of oracle-ads
+
+```
+pip install oracle-ads
+```
+
+
+* Installing extras libraries
+
+If you would use ADS within a notebook session, install 
+```
+pip install oracle-ads[notebook]
+```
+
+If you would work on machine learning tasks, install
+```
+pip install oracle-ads[boosted]
+```
+
+If you would work on text related tasks, install
+```
+pip install oracle-ads[text]
+```
+
+If you need support for a broad set of data formats (for example, excel, avro, etc.), install
+```
+pip install oracle-ads[data]
+```
+
+**Note** 
+
+- Multiple extra dependencies can be installed together, for example,
+```
+pip install oracle-ads[notebook,boosted,text]
+```
+
+
