@@ -1,0 +1,121 @@
+schema;config:
+  map:
+    # fixed per template and cannotbe overridden from the UI
+    build:
+      map:
+        layout:
+          type: str
+          enum: ["compact", "book"]
+
+    # fixed per template
+    schema:
+      map:
+        aside:
+          type: str
+          enum:
+            [
+              "default",
+              "marginpar",
+              "framed",
+              "mdframed",
+              "callout",
+              "aside.def",
+            ]
+        callout:
+          type: str
+          enum: ["default", "callout", "mdframed", "framed", "callout.def"]
+        code:
+          type: str
+          enum: ["default", "verbatim", "highlight", "code.def"]
+        raggedbottom:
+          type: bool
+        sloppy:
+          type: bool
+        hidelinks:
+          type: bool
+        natbib:
+          type: bool
+        bibstyle:
+          type: bool
+        citestyle:
+          type: bool
+
+    # fixed per template, but provided optionally by the user
+    # is tagged content is not provided tagged elements in the
+    # template will be omitted
+    tagged:
+      seq:
+        - map:
+            id:
+              type: str
+              required: true
+              pattern: ([a-z]{1}[a-z0-9_]{0,63})
+            tag:
+              type: str
+              pattern: ([a-z]{1}[a-z0-9-]{0,63})
+            description:
+              required: true
+              type: str
+            required:
+              type: bool
+            plain:
+              type: bool
+            chars:
+              map:
+                min:
+                  type: number
+                max:
+                  type: number
+            words:
+              map:
+                min:
+                  type: number
+                max:
+                  type: number
+            condition:
+              map:
+                option:
+                  type: str
+                  pattern: ([a-z]{1}[a-z0-9_]{0,63})
+                value:
+                  type: str
+                required:
+                  type: bool
+
+    # set per template but can be overridden by the user
+    options:
+      seq:
+        - map:
+            type: # note this is a key name
+              type: str
+              required: true
+              enum:
+                ["bool", "str", "choice", "corresponding_author", "keywords"]
+            id:
+              type: str
+              required: true
+              pattern: ([a-z]{1}[a-z0-9_]{0,63})
+            title:
+              type: str
+              pattern: ([A-Za-z]{1}[A-Za-z0-9_-]{0,63})
+            description:
+              type: str
+            options:
+              seq:
+                - type: str
+                - type: int
+            default:
+              type: any
+            required:
+              type: bool
+            multiple:
+              type: bool
+            condition:
+              map:
+                option:
+                  type: str
+                  pattern: ([a-z]{1}[a-z0-9_]{0,63})
+                value:
+                  type: any
+                required:
+                  type: bool
