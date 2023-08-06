@@ -1,0 +1,46 @@
+[tool.poetry]
+
+name = "Twidi"
+version = "0.0.3dev"
+description = "Creates a simple bridge between Twitch chat commands and MIDI controls"
+authors = ["Greg Hatt <ghattjr@gmail.com>"]
+
+packages = [
+    { include = "twidi", from = "src" }
+]
+
+include = [
+    { path = "tests", format = "sdist" }
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ['py36', 'py37', 'py38']
+include = '\.pyi?$'
+extend-exclude = '''
+'''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+mido = "^1.2.10"
+pygame = "^2.1.2"
+twitchio = "^2.1.4"
+black = "^21.12b0"
+cleo = "^0.8.1"
+pytest = "^6.2.5"
+PyYAML = "^6.0"
+fire = "^0.4.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
