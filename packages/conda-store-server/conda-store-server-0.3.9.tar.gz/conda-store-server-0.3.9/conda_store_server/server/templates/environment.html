@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Environment {{ environment.namespace.name }}/{{ environment.name }}{% endblock %}
+
+{% block content %}
+<h3>Environment</h3>
+<div class="card my-2">
+    <div class="card-body">
+        <h5 class="card-title">{{ environment.namespace.name }}/{{ environment.name }}
+            <span class="badge badge-light">{{ (environment.current_build.size or 0) | filesizeformat(true) }}</span>
+        </h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="card-body">
+                <div id="editor" style="height: 300px;">{{ spec }}</div>
+            </div>
+        </li>
+    </ul>
+    <div class="card-body">
+        <a href="{{ url_for('ui.ui_edit_environment', namespace=environment.namespace.name, name=environment.name) }}" class="btn btn-primary btn-block">Edit</a>
+        <button type="button" onclick="deleteEnvironment()" class="btn btn-primary btn-block">
+            Delete
+        </button>
+    </div>
+</div>
+
+<h3>Builds</h3>
+<ul class="list-group">
+    {% for build in environment.builds %}
+    <li class="list-group-item d-flex justify-content-between align-items-center {% if build.id == environment.current_build_id %}list-group-item-success{% elif build.deleted_on is not none %}list-group-item-secondary{% endif %}">
+        <a href="{{ url_for('ui.ui_get_build', build_id=build.id) }}">Build {{ build.id }}</a>
+        <span>{{ build.status.value }}</span>
+        <div class="btn-group" role="group" aria-label="Build actions">
+            {% if build.id != environment.current_build_id and build.status.value == 'COMPLETED' and build.deleted_on is none %}
+            <button type="button" onclick="updateEnvironmentBuild('{{ build.id }}')" class="btn btn-primary mb-2">
+                <ion-icon name="checkmark"></ion-icon>
+            </button>
+            {% endif %}
+            <button type="button" onclick="buildAction('PUT', '{{ build.id }}')" class="btn btn-primary mb-2">
+                <ion-icon name="refresh"></ion-icon>
+            </button>
+            {% if build.status.value in ["COMPLETED", "FAILED"] and  build.deleted_on is none %}
+            <button type="button" onclick="buildAction('DELETE', '{{ build.id }}')" class="btn btn-primary mb-2">
+                <ion-icon name="trash"></ion-icon>
+            </button>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous"></script>
+<script>
+ var editor = ace.edit("editor");
+ editor.setTheme("ace/theme/github");
+ editor.getSession().setMode("ace/mode/yaml");
+ editor.setFontSize("20px");
+ editor.setReadOnly(true);
+
+ function updateEnvironmentBuild(buildId) {
+     fetch(`{{ url_for('api.api_get_environment', namespace=environment.namespace.name, name=environment.name) }}`, {
+         method: 'PUT',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({"buildId": buildId})
+     }).then(response => window.location.reload(true));
+ }
+
+ function deleteEnvironment() {
+     fetch(`{{ url_for('api.api_get_environment', namespace=environment.namespace.name, name=environment.name) }}`, {
+         method: 'DELETE',
+     }).then(response => window.location = '/');
+ }
+
+ function buildAction(method, buildId) {
+     fetch(`{{ url_for('api.api_list_builds') }}${buildId}/`, {
+         method: method,
+     }).then(response => window.location.reload(true));
+ }
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url_for('ui.ui_list_environments') }}">Conda-Store</a>
+        </div>
+
+        <div class="nav navbar-right">
+            <ul class="nav navbar-nav">
+{% if entity is none %}
+                <li>
+                    <a class="btn btn-outline-success my-2 my-sm-0 mr-2" href="{{ url_for('ui.ui_list_environments') }}login" role="button">
+                        Login
+                    </a>
+                </li>
+{% else %}
+                <li>
+                    <a class="btn btn-outline-success my-2 my-sm-0 mr-2" href="{{ url_for('ui.ui_get_user') }}" role="button">
+                        User
+                    </a>
+                </li>
+{% endif %}
+                <li>
+                    <a class="btn btn-outline-success my-2 my-sm-0 mr-2" href="{{ url_for('ui.ui_create_get_environment') }}" role="button">
+                        Create Environment
+                    </a>
+                </li>
+
+                <li>
+                    <a class="btn btn-outline-secondary my-2 my-sm-0" href="https://conda-store.readthedocs.io/"
+                        target="_blank" role="button">
+                        Help
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
