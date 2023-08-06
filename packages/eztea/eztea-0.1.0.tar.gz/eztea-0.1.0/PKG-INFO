@@ -1,0 +1,68 @@
+Metadata-Version: 2.1
+Name: eztea
+Version: 0.1.0
+Summary: EZTea Web Framework
+Home-page: https://github.com/guyskk/eztea
+License: MIT
+Keywords: web,framework,development
+Author: guyskk
+Author-email: guyskk@qq.com
+Requires-Python: >=3.7.4,<4.0
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development
+Provides-Extra: migration
+Provides-Extra: mysql
+Provides-Extra: postgresql
+Requires-Dist: alembic (>=1.7.5); extra == "migration"
+Requires-Dist: black (>=21.12b0); extra == "migration"
+Requires-Dist: ciso8601 (>=2.2.0)
+Requires-Dist: click (>=7.1.2); extra == "migration"
+Requires-Dist: falcon (>=3.0.1)
+Requires-Dist: mako (>=1.1.6); extra == "migration"
+Requires-Dist: psycopg2 (>=2.9.3); extra == "postgresql"
+Requires-Dist: pymysql (>=1.0.2); extra == "mysql"
+Requires-Dist: python-dateutil (>=2.8.2); extra == "migration"
+Requires-Dist: python-dotenv (>=0.12.0)
+Requires-Dist: sqlalchemy (>=1.3.19)
+Requires-Dist: sqlalchemy-jsonfield (>=1.0.0)
+Requires-Dist: sqlalchemy-utc (>=0.14.0)
+Requires-Dist: sqlalchemy-utils (>=0.38.2)
+Requires-Dist: validr (>=1.2.1)
+Project-URL: Repository, https://github.com/guyskk/eztea
+Description-Content-Type: text/markdown
+
+# EZTea Web Framework
+
+```
+pip install eztea
+```
+
+## Usage
+
+```python
+from validr import T
+
+from eztea.web import Application, ResponderContext, Router
+
+router = Router()
+
+
+@router.get("/")
+def hello(
+    ctx: ResponderContext,
+    name: str = T.str.default("world"),
+) -> T.dict(hello=T.str):
+    return {"hello": name}
+
+
+app = Application()
+app.include_router(router)
+```
+
