@@ -1,0 +1,19 @@
+run (int n_samples)
+{
+	int samples_per_clock_tick = 2000; // XXX sample_rate / bpm
+
+	/* get state */
+	int next_clk_tick         = this->next_clk_tick;
+	int sample_at_cycle_start = this->sample_at_cycle_start;
+
+	int sample_at_cycle_end = sample_at_cycle_start + n_samples;
+
+	while (next_clk_tick < sample_at_cycle_end) {
+		send_rt_message_at (next_clk_tick - sample_at_cycle_start);
+		next_clk_tick += sample_per_clock_tick;
+	}
+
+	/* save variables for next cycle */
+	this->sample_at_cycle_start = sample_at_cycle_end;
+	this->next_clk_tick = next_clk_tick;
+}
