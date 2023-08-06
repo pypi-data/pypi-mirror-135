@@ -1,0 +1,49 @@
+"""
+    Copyright 2019 Inmanta
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    Contact: code@inmanta.com
+"""
+
+entity Resource extends std::PurgeableResource:
+    """
+        A test resource for unit and integration testing purposes.
+
+        :param skip: When set to true the handler will raise a skipresource
+        :param fail: When set to true the handler will raise an exception to mark a failure
+    """
+    string name
+    string desired_value
+    bool skip=false
+    bool fail=false
+    string agent="internal"
+end
+
+index Resource(name)
+
+implement Resource using std::none
+
+
+entity IgnoreResource extends std::PurgeableResource:
+    """
+        This resource will raise an IgnoreResourceException exception on export.
+    """
+    string name
+    string desired_value
+    string agent="internal"
+end
+
+index IgnoreResource(name)
+
+implement IgnoreResource using std::none
