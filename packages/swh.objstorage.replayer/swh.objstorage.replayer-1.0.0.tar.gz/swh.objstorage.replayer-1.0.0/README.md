@@ -1,0 +1,5 @@
+swh-objstorage-replayer
+=======================
+
+Simple command line tool to replicate content objects from a source Object storage to a
+destination one by listening the `content` topic of a `swh.journal` kafka stream.
