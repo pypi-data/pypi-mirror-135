@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: beaker-py
+Version: 0.2.6
+Summary: UNKNOWN
+Home-page: https://github.com/allenai/beaker-py
+Author: Allen Institute for Artificial Intelligence
+Author-email: contact@allenai.org
+License: Apache
+Platform: UNKNOWN
+Classifier: Intended Audience :: Science/Research
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: tqdm
+Requires-Dist: PyYAML
+Requires-Dist: docker (<6.0,>=5.0)
+Provides-Extra: dev
+Requires-Dist: flake8 ; extra == 'dev'
+Requires-Dist: mypy (==0.910) ; extra == 'dev'
+Requires-Dist: black (==21.11b1) ; extra == 'dev'
+Requires-Dist: isort (==5.10.1) ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: pytest-cov ; extra == 'dev'
+Requires-Dist: coverage ; extra == 'dev'
+Requires-Dist: codecov ; extra == 'dev'
+Requires-Dist: twine (>=1.11.0) ; extra == 'dev'
+Requires-Dist: setuptools ; extra == 'dev'
+Requires-Dist: wheel ; extra == 'dev'
+Requires-Dist: Sphinx (==4.3.0) ; extra == 'dev'
+Requires-Dist: furo (==2021.11.23) ; extra == 'dev'
+Requires-Dist: myst-parser (==0.15.2) ; extra == 'dev'
+Requires-Dist: sphinx-copybutton (==0.4.0) ; extra == 'dev'
+Requires-Dist: sphinx-autobuild (==2021.3.14) ; extra == 'dev'
+Requires-Dist: petname (==2.6) ; extra == 'dev'
+
+# beaker-py
+
+A [Beaker](https://beaker.org) client for Python.
+
+## Quick links
+
+- [Documentation](https://beaker-py.readthedocs.io/)
+- [PyPI Package](https://pypi.org/project/beaker-py/)
+- [Contributing](https://github.com/allenai/beaker-py/blob/main/CONTRIBUTING.md)
+- [License](https://github.com/allenai/beaker-py/blob/main/LICENSE)
+
+## Installing
+
+### Installing with `pip`
+
+**beaker-py** is available [on PyPI](https://pypi.org/project/beaker-py/). Just run
+
+```bash
+pip install beaker-py
+```
+
+### Installing from source
+
+To install **beaker-py** from source, first clone [the repository](https://github.com/allenai/beaker-py):
+
+```bash
+git clone https://github.com/allenai/beaker-py.git
+cd beaker-py
+```
+
+Then run
+
+```bash
+pip install -e .
+```
+
+## Quick start
+
+<!-- start quickstart -->
+
+Create a Beaker client with your Beaker [user token](https://beaker.org/user):
+
+```python
+from beaker import Beaker, Config
+
+beaker = Beaker(Config(user_token="my beaker token", default_workspace="my_org/my_workspace"))
+```
+
+You can also create your client from a beaker config file or environment variables with:
+
+```python
+beaker = Beaker.from_env()
+```
+
+<!-- end quickstart -->
+
+
