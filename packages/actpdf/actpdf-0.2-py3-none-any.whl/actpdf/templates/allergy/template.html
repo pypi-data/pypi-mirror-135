@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="ui center aligned header">Your Summary Results</h2>
+  
+  <table class="ui celled padded table">
+    <thead>
+      <tr>
+      <th class="five wide center aligned">Trait Name</th>
+      <th class="one wide center aligned">Your Result</th>
+      <th class="six wide center aligned">Outcomes</th>
+    </tr></thead>
+    <tbody>
+      {% for item in table1 %}
+      {% set outcomes = item['comb'].split('*') %}
+      <tbody style="page-break-inside:avoid">
+      <tr>
+        <td rowspan={{outcomes|length}}>
+          <strong>{{item['trait']}}</strong>
+          <p>{{item['summary']}}</p>
+        </td>
+        {% for oc in outcomes %}
+        <td class="center aligned {% if loop.index == 1 %}warning{% elif loop.index == 2 %}positive{% else %} negative{%endif%}">
+          {% if oc.endswith('_sss_') %}
+          <i class="{% if oc.startswith('rr') %}red exclamation circle{% elif oc.startswith('lg') %}positive checkmark{% else %}orange exclamation triangle{%endif%} icon"></i>
+          {%endif%}
+        </td>
+        <td>{{oc| replace("Moderate: ","") | replace("lg] Low: ","") | replace("rr] High: ","") | replace(" _sss_","")}}</td>
+        {% if not loop.last %}
+              </tr><tr>
+          {% endif %}
+        {% endfor %}
+      </tr>
+      </tbody>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="page-break-before: always" ></p>
+
+  {% for item in table2 %}
+  {% set link = item['trait'].replace(' ', '_') %}
+  {% set oc = item['outcome'] %}
+  <h3 class="ui block header {% if oc.startswith('rr') %}custom-negative{% elif oc.startswith('lg') %}positive{% else %}custom-warning{%endif%} message" id="{{link}}">
+    <i class="{% if oc.startswith('rr') %}red exclamation triangle{% elif oc.startswith('lg') %}positive checkmark{% else %}orange exclamation triangle{%endif%} icon"></i>
+    <!-- <i class="green fa fa-check fa-2x"></i> -->
+    <div class="content">
+      {{item['trait']|title}}      
+      <div class="sub header">{{item['outcome']| replace("Moderate: ","") | replace("lg] Low: ","") | replace("rr] High: ","")}}</div>
+    </div>
+  </h3>
+  <div class="ui feed">
+    <div class="event">
+      <div class="label"></div>
+      <div class="content">
+          <div class="ui message">
+            <p>{{item['description']}}  <a href="{{item['link']}}">Learn more about {{item['trait']|title}}</a></p>
+          </div>
+
+          <div class="ui {% if oc.startswith('rr') %}custom-negative{% elif oc.startswith('lg') %}positive{% else %}custom-warning{%endif%} message">
+            <strong>Recommendations:</strong>
+
+            {% set recommendations = item['recommendation'].split('*') %}
+            <ul class="ui list">
+                {% for rec_item in recommendations %}
+              <li>{{rec_item}}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="ui message">
+            <p><strong>Genes Analyzed: </strong>{{item['genes']}}</p>
+          </div>
+      </div>
+      </div>
+  </div>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block toc %}
+  <img style="width:700px; display:block;" src="file:///{% if partner == 'xcode' or partner == '' %}{{cover_img}}{% else %}{{partner_cover_img}}{% endif %}">
+  <p style="page-break-before: always"></p>
+
+  <a class="footer" href="#toc">Go To Table of Contents</a>
+  <h3 class="ui center aligned header" id="toc">Table of Contents</h3>
+  <ol class="toc">
+    {% for item in table2 %}
+      {% set link = item['trait'].replace(' ', '_') %}
+    <li><a class="xref" href="#{{link}}">{{item['trait']|upper}}</a></li>
+    {%endfor %}
+  </ol>
+  <p style="page-break-before: always"></p>
+{% endblock %}
+
+
+{% block intro %}
+
+{% endblock %}
+
+
+{% block content %}
+  <h2 class="ui center aligned header">Result Summary 1</h2> 
+  <table class="ui celled padded table">
+    <thead>
+      <tr>
+      <th class="one wide center aligned">Condition</th>
+      <th class="one wide center aligned">Status</th>
+      <th class="four wide center aligned">Recommendation</th>
+    </tr></thead>
+    <tbody>
+      {% for item in table3 %}
+        {% set oc = item['Outcome']|remove_unwanted_chars %}
+        <tr>
+        <td class="center aligned">{{item['Phase']}}</td>
+        <td class="center aligned"> 
+          <div class="ui {% if oc.outcome == 'r' %}red{% elif oc.outcome == 'g' %}green{% else %}orange{%endif%} horizontal label">{{oc.data}}</div>
+        </td>
+        <td>{{item['Recommendation']}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="page-break-before: always"></p>
+
+
+  <h2 class="ui center aligned header">Your Summary Results</h2>
+  
+  <table class="ui celled padded table">
+    <thead>
+      <tr>
+      <th class="five wide center aligned">Gene Name</th>
+      <th class="one wide center aligned">Your Result</th>
+      <th class="six wide center aligned">Outcomes</th>
+    </tr></thead>
+    <tbody>
+      {% for item in table1 %}
+      {% set outcomes = item['comb'].split('*') %}
+      <tbody style="page-break-inside:avoid">
+      <tr>
+        <td rowspan={{outcomes|length}}>
+          <strong>{{item['trait']|upper}}</strong>
+          <p>{{item['summary']}} <a href="#{{item['trait'].replace(' ', '_')}}">Learn more</a></p>
+        </td>
+        {% for outcome in outcomes %}
+        {% set oc = outcome|remove_unwanted_chars %}
+        <td class="center aligned {% if oc.outcome == 'r' %}negative{% elif oc.outcome == 'g' %}positive{% else %}warning{%endif%}">
+          {% if outcome.endswith('_sss_') %}
+          <i class="{% if oc.outcome == 'r'  %}red exclamation circle{% elif oc.outcome == 'g' %}positive checkmark{% else %}orange exclamation triangle{%endif%} icon"></i>
+          {%endif%}
+        </td>
+        <td>{{oc.data}}</td>
+        {% if not loop.last %}
+              </tr><tr>
+          {% endif %}
+        {% endfor %}
+      </tr>
+      </tbody>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="page-break-before: always" ></p>
+
+  {% for item in table2 %}
+  {% set link = item['trait'].replace(' ', '_') %}
+  {% set oc = item['outcome']|remove_unwanted_chars %}
+  <div style="page-break-inside:avoid">
+  <h3 class="ui block header {% if oc.outcome == 'r'  %}custom-negative{% elif oc.outcome == 'g' %}custom-positive{% else %}custom-warning{%endif%} message" id="{{link}}" style="margin-top:20px">
+    <i class="{% if oc.outcome == 'r'  %}red exclamation circle{% elif oc.outcome == 'g' %}positive checkmark{% else %}orange exclamation triangle{%endif%} icon"></i>
+    <!-- <i class="green fa fa-check fa-2x"></i> -->
+    <div class="content">
+      {{item['trait']|upper}}      
+      <div class="sub header">{{oc.data}}</div>
+    </div>
+  </h3>
+  <div class="ui feed">
+    <div class="event">
+      <div class="label"></div>
+      <div class="content">
+          <div class="ui message">
+            <p>{{item['description']}}  <a href="{{item['link']}}">Learn more about {{item['trait']|upper}}</a></p>
+          </div>
+
+          <div class="ui {% if oc.outcome == 'r'  %}custom-negative{% elif oc.outcome == 'g' %}custom-positive{% else %}custom-warning{%endif%} message">
+            <strong>Recommendations:</strong>
+            {% set recommendations = item['recommendation'].split('*') %}
+            <ul class="ui list">
+                {% for rec_item in recommendations %}
+                {%if rec_item!=' ' %}<li>{{rec_item}}</li>{% endif %} {% endfor %}
+            </ul>
+          </div>
+
+          <!-- <div class="ui message">
+            <p><strong>Genes Analyzed: </strong>{{item['genes']|upper}}</p>
+            <p><strong>Number of Gene Markers Analyzed: </strong>{{item['num_markers']}}</p>
+          </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+  {% endfor %}
+
+{% endblock %}
+
+
+{% block backcover %}
+<!-- there is an extra page bug -->
+<div id="back_cover" class="ui container" style="page-break-before: avoid;">
+  <ui class="content" style="display: inline-block;text-align: center;vertical-align:center;">
+    <img style="width:792px; display:block; " src="file:///{{back_img}}" />
+</ui>
+</div>
+{% endblock %}
