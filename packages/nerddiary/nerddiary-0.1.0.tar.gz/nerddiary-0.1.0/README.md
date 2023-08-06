@@ -1,0 +1,3 @@
+# THe Nerd Diary
+
+WIP
