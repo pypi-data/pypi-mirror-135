@@ -1,0 +1,119 @@
+Metadata-Version: 2.1
+Name: diligence-fuzzing
+Version: 0.8.2
+Summary: A command line interface for the Diligence Fuzzing API
+Home-page: https://github.com/ConsenSys/diligence-fuzzing
+Author: Dominik Muhs, João Santos
+Author-email: joao.santos@consensys.net
+License: Apache-2.0 License
+Keywords: diligence-fuzzing
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Natural Language :: English
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Information Technology
+Classifier: Topic :: Security
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: Quality Assurance
+Classifier: Topic :: Terminals :: Terminal Emulators/X Terminals
+Classifier: Topic :: Utilities
+Classifier: Typing :: Typed
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+License-File: AUTHORS.rst
+
+====================================
+A CLI for the Diligence Fuzzing API
+====================================
+
+This package aims to provide a simple to use command line interface for the `Diligence Fuzzing <https://consensys.net/diligence/fuzzing/>`_ smart contract
+security analysis API.
+
+
+What is Diligence Fuzzing?
+--------------------------
+
+Easy to use and powerful, Fuzzing as a Service enables users to find bugs immediately after writing their first specification!
+Smart contracts are increasingly complex programs that often hold and manage large amounts of assets. Developers should use tools to analyze their smart contracts before deploying them to find vulnerabilities open to exploitation.
+
+
+Usage
+-----
+
+.. code-block:: console
+
+    $ fuzz [OPTIONS] COMMAND [ARGS]...
+
+    Your CLI for interacting with https://fuzzing.diligence.tools
+
+    Options:
+      --debug            Provide additional debug output
+      -c, --config PATH  YAML config file for default parameters
+      --stdout           Force printing to stdout
+      --help             Show this message and exit.
+
+    Commands:
+      arm     Prepare the target files for FaaS submission.
+      disarm  Revert the target files to their original, un-instrumented state.
+      run
+
+
+
+Installation
+------------
+
+The Diligence Fuzzing CLI runs on Python 3.6+, including 3.8 and pypy3.
+
+To get started, simply run
+
+.. code-block:: console
+
+    $ pip3 install diligence-fuzzing
+
+Alternatively, clone the repository and run
+
+.. code-block:: console
+
+    $ pip3 install .
+
+Or directly through Python's :code:`setuptools`:
+
+.. code-block:: console
+
+    $ python3 setup.py install
+
+
+* Free software: Apache 2 license
+* Documentation: https://fuzzing-docs.diligence.tools/getting-started/configuring-the-cli
+
+
+=======
+History
+=======
+
+
+0.7.2 (2019-09-13)
+--------------------
+
+- Add new format API Key support
+- Add :code:`project_name` config parameter
+
+0.7.1 (2019-09-13)
+--------------------
+
+- Update Readme
+
+0.6.22 (2021-08-20)
+--------------------
+
+- First release on PyPI.
+
+
