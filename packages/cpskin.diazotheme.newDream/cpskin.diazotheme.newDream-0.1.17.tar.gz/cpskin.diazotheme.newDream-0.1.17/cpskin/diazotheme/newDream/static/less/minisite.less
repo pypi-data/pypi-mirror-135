@@ -1,0 +1,151 @@
+/*   Navigation minisite   */
+/*    Navigation    */
+
+[id="minisite-navigation-inner"] {
+    clear: right;
+    margin: 0 auto;
+    max-width: 1920px;
+}
+
+#minisite-navigation-inner {
+    background: white none repeat scroll 0 0;
+}
+
+#container-minisite-globalnav {
+    background: transparent none repeat scroll 0 0;
+    max-width: 100%;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    padding: 0;
+
+}
+#container-minisite-globalnav {
+    box-sizing: border-box;
+    margin:0 auto;
+    max-width: 1200px;
+}
+#minisite-globalnav{
+    background: #fff;
+}
+#container-minisite-globalnav [id="minisite-actions"] + #minisite-globalnav {
+    display:block;
+}
+#minisite-globalnav a {
+    color: @nav-onglet-color-hover;
+    display: inline-block;
+    margin: 1% 1% 1% 2.3%;
+}
+.minisite-home::before {
+    content: "\e811";
+    font-family: fontello;
+    font-size: 130%;
+}
+/*   actions minisite   */
+#minisite-actions {
+    text-align: right;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#minisite-actions ul {
+    box-sizing: border-box;
+    display: inline;
+    padding: 0.3% 1%;
+    float: right;
+}
+
+#minisite-actions a {
+    color: #333;
+    padding-right: 0.5em;
+    box-sizing: border-box;
+    padding-left: 0.5em;
+}
+
+// MINI SITES
+
+
+.mainThemeDependentCss(@couleur-onglet: @nav-onglet-bg-hover) {
+    #portal-globalnav a:hover,
+    #portal-globalnav .selected a,
+    #top-navigation #portal-globalnav .activated{
+    background-color:@couleur-onglet;
+    }
+}
+
+#top-actions.minisite {
+    height: 20px;
+}
+#minisite-logo-nav {
+    display: flex;
+}
+#minisite-search {
+    bottom: 100px;
+    padding: 0 1em;
+    position: absolute;
+    right: 0;
+    z-index: 9;
+}
+
+#minisite-logo {
+    position: inherit;
+    float: none;
+    img {
+    max-height: 100%;
+    width:auto;
+    }
+}
+
+.minisite-dropdown-menu {
+    align-self: center;
+}
+//Mini site menu collapsable
+
+[id="toggle-minisite-menu"] .hide-menu span::before {
+    transform: rotate(-90deg);
+}
+
+[id="toggle-minisite-menu"]{
+    background: @ms-menu-collapsable-bg;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    button{
+        background: @ms-menu-collapsable-a-bg;
+        color: @ms-menu-collapsable-a-color;
+        font-size: 110%;
+        padding: 0.5em 0;
+        border:none;
+        width: 100%;
+        cursor:pointer;
+
+    }
+    span{
+        display: inline-block;
+        width: 100%;
+        position:relative;
+        width:auto;
+        &:hover{
+            cursor: pointer;
+        }
+        &:before{
+            margin-right:1em;
+            right: 100%;
+        }
+        &:after{
+            margin-left:1em;
+            left: 100%;
+        }
+        &:before,
+        &:after{
+            content: "\00276F";
+            transform: rotate(90deg);
+            position: absolute;
+            top:1px;
+        }
+    }
+    .hide-menu span::after{
+        transform: rotate(-90deg);
+    }
+}

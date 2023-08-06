@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:css="http://namespaces.plone.org/diazo/css"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <replace css:content="#portal-header">
+      <header>
+          <xsl:copy-of select="./@*"/>
+          <xsl:apply-templates select="./*"/>
+      </header>
+  </replace>
+
+  <replace css:content="#portal-globalnav">
+      <nav id="portal-globalnav">
+          <ul>
+              <xsl:apply-templates select="./*"/>
+          </ul>
+      </nav>
+  </replace>
+
+  <replace css:content="#portal-footer-wrapper">
+      <div id="scroll-to-top"><a href="#top"></a></div>
+      <footer id="portal-footer-wrapper">
+          <div class="row">
+          <xsl:if test="not($isinminisitemode)">
+              <xsl:apply-templates select="./div/*"/>
+          </xsl:if>
+          <xsl:if test="$isinminisitemode">
+              <xsl:apply-templates select="./div/div[not(contains(@id,'footer-sitemap'))]"/>
+          </xsl:if>
+          </div>
+      </footer>
+  </replace>
+
+  <replace css:content="#content">
+      <article>
+          <xsl:copy-of select="./@*"/>
+          <xsl:apply-templates select="./*"/>
+      </article>
+  </replace>
+</rules>

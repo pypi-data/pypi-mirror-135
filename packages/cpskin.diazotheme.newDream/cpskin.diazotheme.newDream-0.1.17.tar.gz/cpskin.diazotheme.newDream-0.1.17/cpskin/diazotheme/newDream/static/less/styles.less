@@ -1,0 +1,662 @@
+
+// STYLES GENERAUX
+/* 1rem = 10px */
+html {
+    font-size: 62.5%;
+}
+#visual-portal-wrapper{
+    font-size: 1.6rem;
+}
+body div.overlay {
+    font-size: 16px!important;
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body img {
+    max-width: 100%;
+}
+
+body #visual-portal-wrapper {
+    float:left;
+    width: 100% !important;
+    overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, #portal-globalnav li a{
+    font-family: @font-title;
+}
+
+body:not(.main-homepage) #content{
+    h1{
+      font-size: 3.463rem;
+      }
+    h2{
+      font-size: 2.815rem;
+      color:#333;
+      }
+    h3{
+      font-size: 2.289rem;
+      color:#333;
+      }
+    h4{
+      font-size: 1.861rem;
+      color:#333;
+      }
+   }
+   body:not(.main-homepage){
+    h1, h2, h3, h4, h5, h6 {
+        line-height: 1.3em;
+        margin-bottom: 1.75rem;
+        font-weight:normal;
+    }
+}
+   body:not(.main-homepage) h2, body:not(.main-homepage) h3,  body:not(.main-homepage) h4, body:not(.main-homepage) h5, body:not(.main-homepage) h6 {
+       margin-top: 2.5rem;
+   }
+
+body{
+    font-family: @font-general;
+}
+
+#activity, .contact-ttwfields, .addnewcontactfromorganization, div#organization-photos {
+    width: 100%;
+}
+#logo, .related-contact.logo {
+    float: left;
+}
+
+#content {
+    font-size: 1.8rem;
+}
+@media screen and (min-width:860px){
+    .portaltype-organization .width-full #activity,
+    .width-full #viewlet-above-content-body {
+        width: 75%;
+    }
+}
+#before-activity {
+    background: transparent;
+    padding: 0;
+    margin:1rem 0 4rem;
+    #contact-schedule {
+        border-left: 2px solid gray;
+        padding-left: 1.5rem;
+        div.schedule-widget-day{
+            width: auto;
+            float: left;
+            clear: both;
+            border-top-width: 0px;
+            .title {
+                box-sizing: border-box;
+                font-weight: normal;
+                margin-right: 2em;
+            }
+           .morningend {
+               margin-right: 2em;
+            }
+        }
+        .contact-details {
+            float: none;
+            p {
+                margin-bottom: 0.5rem;
+                &#fax::after {
+                    content: "(fax)";
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+    }
+}
+#aboveContentContact .coordinates {
+    background:transparent;
+    display: inline-block;
+    margin: 2em 0em;
+    padding: 0 0 0 1.5rem;
+    div.schedule-widget-day {
+        border-top: 0px dotted #dfdfdf;
+    }
+}
+.portaltype-document .documentDescription {
+    display: none;
+}
+
+#breadcrumbs-you-are-here {
+    width: 0px;
+    overflow: hidden;
+    float: left;
+    height: 1px;
+}
+
+#portal-breadcrumbs span:last-child::after {
+    display: none;
+}
+
+div.width-full {
+    width: 100%;
+}
+
+div.position-0 {
+    margin-left: -100%;
+}
+
+.image-background {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+html body #content a:link, html body dl.portlet a:link, html body a:link, html body a:visited{
+    color: @all-link-color;
+}
+
+// FIN STYLES GENERAUX
+
+//FONT ET TITRES
+
+#content {
+    font-size: 1.4rem;
+}
+
+dl.portlet {
+    font-size: 1.4rem;
+}
+
+/* --- Fin font size --- */
+
+h1 {
+    font-weight: normal;
+    font-size: 2.2rem;
+    color:#333333;
+    line-height:1em;
+    margin-bottom:0.5rem;
+}
+
+
+h3 {
+    font-size: 1.4rem;
+    font-weight: normal;
+}
+
+h4 {
+    font-weight: normal;
+}
+//FIN FONT ET TITRE
+
+/* See fontello.css */
+
+
+#content .sc_social_bookmarks li a.icon-Facebook::before{
+    content: "\e809";
+}
+
+#content .sc_social_bookmarks li a.icon-Twitter::before{
+    content: "\e80e";
+}
+
+.icon-sendtomanager::before{
+    content: "\e84e"; 
+}
+
+#content .iconifiedDocumentActions li a.icon-print::before{
+    content: '\e81a';
+}
+/* affichage menu collective.jekyll */ 
+.diagnosis {
+    height: 1em;
+}
+
+/* Cookies */
+.cc-cookies {
+    position: fixed !important;
+    margin: 0 auto;
+    max-width: 850px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.975);
+    font-size: 20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius:5px;
+    box-shadow: 0 -3px 27px -5px rgba(50,50,93,.25),0 8px 16px -8px rgba(0,0,0,.3),0 -6px 16px -6px rgba(0,0,0,.025);
+    text-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    overflow: hidden;
+    font-weight: 400;
+    color: @color-dark;
+    padding:1.5em 1.5rem;
+    a{
+        display: inline-block;
+        order: 2;
+        color: @color-dark;
+    }
+    a[href$='/cookies-page']{
+        &:hover{
+            opacity: .8;
+            color: @color-dark;
+        }
+    }
+    p{
+        color: @color-dark;
+    }
+    span{
+        font-family: @font-title;
+        font-size: 26px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+    .cc-cookie-accept{
+        display: block!important;
+        max-width: 250px ;
+        margin: 10rem auto 1rem auto!important;
+        order: 1!important;
+        background: @button-bg!important;
+        position: relative;
+        &:before{
+            content: "\EC75";
+            position: absolute;
+            font-family: fontello;
+            left: 50%;
+            transform: translate(-50%); 
+            top: -72px;
+            color:#000;
+            font-size: 40px;
+        }
+    }
+}
+/* Fin cookies */
+
+// PAGINATION
+#content #faceted-results .listingBar a,
+#content #faceted-results .listingBar a:last-child,
+#faceted-form #center-content-area #faceted-results .listingBar a:hover:last-child{
+    border: none;
+}
+// #visual-portal-wrapper #content #faceted-results .listingBar a:focus{
+//     outline: none;
+// }
+#faceted-form #center-content-area #faceted-results .listingBar a:hover{
+    border-bottom: none;
+    border-top: none;
+    border-left: none;
+    border-right: 1px solid #dedede;
+}
+.pagination.listingBar .current{
+    border-right: 1px solid #dedede;
+    padding: 0.25em 0.5em;
+    font-size: 1.5em;
+}
+#content #faceted-results .listingBar a{
+    border-right: 1px solid #dedede;
+    font-size: 1.5em;
+}
+#content #faceted-results .listingBar .next,
+#faceted-form #center-content-area #faceted-results .listingBar a.next:hover{
+    border-right: none;
+    border-left: 1px solid #ccc;
+}
+
+/* PAGE LOGIN */
+.overlay-login #content-core,
+body.template-logged_out #content-core,
+body.template-login_form #content-core{
+    display:table;
+}
+#login-password, .login_message {
+    display: table-cell;
+    width: 50%;
+}
+body.template-logged_out #content,
+body.template-login_form #content, .pb-ajax #login-form {
+    text-align: left;
+}
+#pb_1 .pb-ajax > div {
+    box-sizing: border-box;
+    padding: 0;
+    width: 100%;
+}
+#login-password,
+.login-message-inner {
+    box-sizing: border-box;
+    vertical-align: top;
+}
+#login-password{
+    padding: 4em;
+}
+.login-message-inner div{
+    background: #e5eef2;
+    padding: 4em;
+}
+.login-message-inner h2 {
+    color: #333;
+    margin: 1em 0;
+}
+.login-message-inner h2:first-child{
+    margin-top:0;
+}
+#login-form .field {
+    margin-bottom: 8em;
+}
+#fieldset-openid-login label,
+#login-form label {
+    display: block;
+    margin-right: 0.5em;
+    padding-top: 0.2em;
+    text-align: left;
+    width: auto;
+}
+div.overlay label {
+    margin-bottom: 1em;
+}
+div.formControls {
+    margin: 1em 1em 1em 0;
+}
+#login-form input[type="text"],
+#login-form input[type="password"] {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #bcbcbc;
+    box-sizing: border-box;
+    float: left;
+    height: 45px;
+    padding-left: 0.3em;
+    width: 70%;
+}
+#login-form .context {
+    background: #949494 none repeat scroll 0 0;
+    border: 0 solid #9e9e9e;
+    border-radius: 3px;
+    color: #ffffff;
+    display: block;
+    padding: 0.5em 1em;
+    text-align: left;
+}
+[id="login-forgotten-password"] {
+    display: inline-block;
+    margin-top: 5em;
+    max-width: 70%;
+}
+//ckeditor
+.image-dummy {
+    text-align: center;
+}
+#babel-edit #formfield-form-widgets-IRichText-text,
+#babel-edit #formfield-form-widgets-ILeadImage-image_caption,
+#babel-edit #formfield-form-widgets-IVersionable-changeNote{
+     position: static !important;
+}
+#babel-edit #formfield-form-widgets-ILeadImage-image_caption + label {
+    margin-top: -7em;
+    display: block;
+    margin-bottom: 9em;
+}
+#babel-edit #formfield-form-widgets-ILeadImage-image_caption {
+    padding-top: 4em !important;
+}
+#babel-edit #fieldset-default{
+    height: auto !important;
+}
+// galleria
+#galleria {
+    margin: 15px auto;
+    box-shadow: 0 0 14px 7px #fff !important;
+    -moz-box-shadow: 0 0 14px 7px #fff !important;
+    -webkit-box-shadow: 0 0 14px 7px #fff !important;
+     box-shadow: 0 0 14px 7px #fff !important;
+}
+
+.galleria-thumb-nav-left, .galleria-thumb-nav-right,
+.galleria-info-link, .galleria-info-close,
+.galleria-image-nav-left, .galleria-image-nav-right {
+    background-color: black;
+}
+
+//CPSKIN NAVIGATION VIEW WITH LEADIMAGE
+.template-cpskin_navigation_view_with_leadimage{
+    .navigation-view-menu-description:hover{
+        background: rgba(0, 0, 0, 0.65)!important;
+        color: white !important;
+        padding: 0 1em 1em !important;
+    }
+    .navigation-view-menu-description{
+        background: rgba(0, 0, 0, 0);
+        visibility: visible;
+        bottom: -70%;
+        box-sizing: border-box;
+        color: transparent;
+        height: 70%;
+        overflow: hidden;
+        padding: 2em 1em 0;
+        position: absolute;
+        transition: background 0.5s, padding 1s ease 0s;
+        width:100%;
+        display: flex;
+        align-items: center;
+        
+    }
+    .navigation-view-menu {
+        float: left;
+        margin-bottom: 1.5%;
+        margin-right: 1.5%;
+        position: relative;
+        width: 31.75%;
+    }
+    .navigationLeadImage {
+        padding-top: 100%;
+        background-size: cover;
+    }
+    h2.navigation-view-menu-title:hover + .navigation-view-menu-description {
+        background: rgba(0, 0, 0, 0.65) none repeat scroll 0 0 !important;
+        color: white !important;
+        padding: 0 1em 1em !important;
+    }
+    h2.navigation-view-menu-title + .navigation-view-menu-description {
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        visibility: visible;
+        bottom: 0;
+        box-sizing: border-box;
+        color: transparent;
+        height: 70%;
+        overflow: hidden;
+        padding: 2em 1em 0;
+        position: absolute;
+        transition: background 0.5s, padding .5s ease 0s;
+        width:100%;
+        font-weight: 700;
+    }
+     a:hover h2 {
+        background: #000;
+        bottom: 70%;
+    }
+    h2.navigation-view-menu-title {
+        background: rgba(0, 0, 0, 0.6) none repeat scroll 0 0;
+        bottom: 0;
+        box-sizing: border-box;
+        color: white;
+        display: block;
+        font-size: 1.5em;
+        height: 30%;
+        line-height: 1em;
+        padding: 0.15em 0.5em !important;
+        position: absolute;
+        width: 100%;
+        transition: all .2s ease;
+        display: flex;
+        align-items: center;
+    }
+    .width-full.position-0 .navigation-view-menu {
+        width: 23.5%;
+    }
+    .organization-entry{
+        height: 15em;
+    }
+    .contact-entry {
+        height: 15em;
+    }
+
+    @media screen and (max-width: 815px){
+        .width-full.position-0 .navigation-view-menu {
+            width: 31.8%;
+        }
+        .navigation-view-menu-description{
+            display: none;
+        }
+        a:hover h2 {
+            bottom: 0;
+        }
+    }
+    
+}
+#scroll-to-top{
+    text-align: right;
+    right: 20px;
+    visibility: hidden;
+    position: fixed;
+    bottom: 20px;
+    z-index: 99;
+    a{
+        width: 50px;
+        height: 50px;
+        display: block;
+        position: relative;
+        margin-left: auto;
+        &:before{
+            content: "\E8A9";
+            font-family: fontello;
+            visibility: visible;
+            border: solid 2px;
+            font-size: 20px;   
+            border-radius: 4px;   
+            font-weight: bold;      
+            visibility: visible;         
+            position: absolute;          
+            left: 0;          
+            right: 0;          
+            top: 0;           
+            bottom: 0;       
+            text-align: center;
+            vertical-align: middle;        
+            line-height: 50px;
+            background: #fff;
+        }
+    }
+}
+
+// A NE PAS GARDER ?
+
+// affichage réglements
+#formfield-form-widgets-texte label,
+#formfield-form-widgets-taxonomy_infospubliques label,
+#formfield-form-widgets-ILeadImage-image label,
+#formfield-form-widgets-ILeadImage-image_caption label,
+#form-widgets-ILeadImage-image .discreet {
+    display: none;
+}
+.template-edit #formfield-form-widgets-texte label,
+.template-edit #formfield-form-widgets-taxonomy_infospubliques label,
+.template-edit #formfield-form-widgets-ILeadImage-image label,
+.template-edit #formfield-form-widgets-ILeadImage-image_caption label,
+.template-edit #form-widgets-ILeadImage-image .discreet {
+    display: inline;
+}
+
+.portaltype-event #formfield-form-widgets-ILeadImage-image label {
+    display: inline;
+}
+
+#formfield-form-widgets-date_adoption_historique,
+#formfield-form-widgets-date_adoption,
+#formfield-form-widgets-date_publication_historique,
+#formfield-form-widgets-date_publication,
+#formfield-form-widgets-date_echeance {
+    background: #f2f2f2;
+    box-sizing: border-box;
+    clear: none;
+    color: white;
+    float: left;
+    margin-bottom: 0;
+    padding: 2em 0em 1.5em 1em;
+    position: relative;
+    width: 33.333%;
+    z-index: 0;
+}
+
+#formfield-form-widgets-date_adoption_historique > span,
+#formfield-form-widgets-date_adoption > span,
+#formfield-form-widgets-date_publication_historique > span,
+#formfield-form-widgets-date_publication > span,
+#formfield-form-widgets-date_echeance > span,
+.event-dates > span{
+    padding-left: 1.5em;
+    background-size: 12px;
+    color:#333;
+}
+
+#formfield-form-widgets-date_adoption_historique label,
+#formfield-form-widgets-date_adoption label,
+#formfield-form-widgets-date_publication_historique label,
+#formfield-form-widgets-date_publication label,
+#formfield-form-widgets-date_echeance label{
+    color: #000;
+}
+#formfield-form-widgets-texte_legislatif label {
+    display: block;
+    padding-bottom: 1em;
+    padding-top: 3em;
+    position: relative;
+    text-transform: uppercase;
+}
+
+#formfield-form-widgets-date_adoption_historique.empty > span,
+#formfield-form-widgets-date_adoption.empty > span,
+#formfield-form-widgets-date_publication_historique.empty > span,
+#formfield-form-widgets-date_publication.empty > span,
+#formfield-form-widgets-date_echeance.empty > span {
+    background:none;
+}
+
+#formfield-form-widgets-date_adoption_historique.empty:before,
+#formfield-form-widgets-date_adoption.empty:before,
+#formfield-form-widgets-date_publication_historique.empty:before,
+#formfield-form-widgets-date_publication.empty:before,
+#formfield-form-widgets-date_echeance.empty:before {
+    bottom: 0;
+    content: "--";
+    left: 4em;
+    position: absolute;
+}
+
+.icon-print, .icon-sendtomanager{
+display: none;
+}
+//AUTHENTICATED
+#edit-bar {
+    font-size: 1.5rem;
+}
+
+.firstname, .lastname {
+	display: inline;
+}
+#content a:link{
+    border-bottom: 0px;
+}
+
+.bloc-collection .voir-tout-content{
+    overflow: hidden;
+}
+.template-cpskin_navigation_view_with_leadimage{
+    .navigation-view-menu{
+        h2{
+            margin: 0;
+        }
+    }
+}
+
+
+@media screen and (max-width: 800px){
+    body{
+        padding: 0!important;
+    }
+}
