@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+##
+ # Pipe this through bash to install {{ cli_context.app_name|lower }}.
+ #
+ # Application version: {{ cli_context.app_version }}
+ ##
+
+# ------------------------------------------------------------------------------
+# FUNCTIONS
+# ------------------------------------------------------------------------------
+
+function main()
+{
+    mkdir -p "{{ install_dir }}" || print_error_and_exit "Could not create [{{ install_dir }}]"
+    [[ -w "{{ install_dir }}" ]] || print_error_and_exit "No permissions to write to [{{ install_dir }}]"
+
+    cd "{{ install_dir }}"
+
+    # Create versioned launcher
+    local _launcher_versioned=".$(date -Isec --utc)_{{ cli_context.app_name|lower }}_{{ cli_context.app_version }}"
+    generate_launcher > "${_launcher_versioned}" || print_error_and_exit "No permissions to write to [${_launcher_versioned}]"
+    chmod a+x "${_launcher_versioned}"
+
+    local _launcher_generic="{{ cli_context.app_name|lower }}"
+
+    # If the generic launcher already exists, upgrade the existing application
+    [[ -e "${_launcher_generic}" ]] && upgrade_existing_application "${_launcher_generic}" "${_launcher_versioned}"
+
+    # Update the symlink to the generic launcher
+    rm -f "${_launcher_generic}" || print_error_and_exit "No permissions to delete to [${_launcher_generic}]"
+    ln -s "${_launcher_versioned}" "${_launcher_generic}"
+
+    >&2 cat <<EOF
+    $(date -Isec --utc) INFO: {{ cli_context.app_name|lower }} version [{{ cli_context.app_version }}] can be launched via:
+
+        {{ install_dir }}/{{ cli_context.app_name|lower }}
+EOF
+}
+
+function generate_launcher()
+{
+    docker run \
+        --name {{ cli_context.app_name }}_{{ cli_context.environment }}_launcher_$(date +%s) \
+        --rm \
+        {{ configuration.docker_image }}:{{ cli_context.app_version }} \
+            --configuration-dir "{{ cli_context.configuration_dir }}" \
+            --data-dir "{{ cli_context.data_dir }}" \
+            --backup-dir "{{cli_context.backup_dir }}" \
+            --environment "{{ cli_context.environment }}" \
+{% if cli_context.docker_credentials_file %}
+            --docker-credentials-file "{{ cli_context.docker_credentials_file }}" \
+{% endif %}
+{% for name, path in cli_context.additional_data_dirs %}
+            --additional-data-dir {{ name }}="{{ path }}" \
+{% endfor %}
+{% for name, value in cli_context.additional_env_variables %}
+            --additional-env-var {{ name }}="{{ value }}" \
+{% endfor %}
+{% if cli_context.debug %}
+            --debug \
+{% endif %}
+            launcher
+}
+
+function upgrade_existing_application()
+{
+    local _launcher_existing="$(realpath ${1})"
+    local _launcher_upgrade="$(realpath ${2})"
+
+    >&2 echo "Installing an upgrade on existing application..."
+
+    # Stop services and apply with the old launcher
+    NO_TTY=true ${_launcher_existing} service stop
+    NO_TTY=true ${_launcher_existing} configure apply --force
+
+    # Migrate and apply with the new launcher
+    NO_TTY=true ${_launcher_upgrade} migrate
+    NO_TTY=true ${_launcher_upgrade} configure apply --force
+}
+
+function print_error_and_exit()
+{
+    >&2 echo "$(date -Isec --utc) ERROR: $@"
+    exit 1
+}
+
+# ------------------------------------------------------------------------------
+# LOGIC
+# ------------------------------------------------------------------------------
+
+main $@
