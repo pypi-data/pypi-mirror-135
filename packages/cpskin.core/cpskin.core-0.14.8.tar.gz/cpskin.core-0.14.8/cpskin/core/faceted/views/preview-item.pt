@@ -1,0 +1,36 @@
+<div class="photoAlbumEntry"
+  tal:define="portal_type context/portal_type;
+              useViewTypes context/portal_properties/site_properties/typesUseViewActionInListings;
+              useView python:portal_type in useViewTypes;
+              scale request/scale;">
+
+  <a tal:define="
+      description context/Description|string:;
+      title context/pretty_title_or_id|string:;
+      desc_or_title python:description or title;
+      url context/absolute_url|string:#;
+      view_url python:(url and useView and url + '/view') or url;
+      has_image python:getattr(getattr(context, 'image', None), 'getImageSize', None) is not None;"
+     tal:attributes="href view_url;
+                     title description">
+
+    <span class="photoAlbumEntryWrapper"
+          tal:condition="has_image">
+
+       <img style="border: none" tal:attributes="
+        title desc_or_title;
+        alt title;
+        src string:$url/@@images/image/$scale"/>
+    </span>
+
+    <span class="news-date"
+          tal:define="toLocalizedTime nocall: context/@@plone/toLocalizedTime;"
+          tal:condition="python: context.portal_type == 'News Item'">
+      <span tal:replace="python: toLocalizedTime(context.effective(), long_format=0)" />
+    </span>
+
+    <span class="photoAlbumEntryTitle" tal:content="context/pretty_title_or_id|string:">Title</span>
+    <span class="photoAlbumEntryDescription" tal:content="description">Description</span>
+
+  </a>
+</div>

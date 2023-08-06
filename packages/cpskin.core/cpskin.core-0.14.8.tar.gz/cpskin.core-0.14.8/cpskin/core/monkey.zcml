@@ -1,0 +1,48 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:monkey="http://namespaces.plone.org/monkey">
+
+    <include package="collective.monkeypatcher" />
+
+    <monkey:patch
+        description="Patch of related items search when one is broken #18546"
+        class="plone.app.layout.viewlets.content.ContentRelatedItems"
+        original="related2brains"
+        replacement=".monkeypatches.related2brains"
+        />
+
+    <monkey:patch
+        description="Patch of empty method called after user creation"
+        class="Products.CMFCore.RegistrationTool.RegistrationTool"
+        original="afterAdd"
+        replacement=".monkeypatches.afterMemberAdd"
+        />
+
+    <monkey:patch
+        description="Patch the KeywordIndex for eea.facetednavigation queries"
+        class="Products.PluginIndexes.KeywordIndex.KeywordIndex.KeywordIndex"
+        original="_apply_index"
+        replacement=".monkeypatches.keyword_apply_index"
+        />
+
+    <monkey:patch
+      description="Don't use relative year range for date widget"
+      class="plone.formwidget.datetime.base.AbstractDateWidget"
+      original="years"
+      replacement=".monkeypatches.date_widget_years"
+      />
+
+    <monkey:patch
+      description="Fix the year range for date widget"
+      class="plone.formwidget.datetime.z3cform.widget.DateWidget"
+      original="update"
+      replacement=".monkeypatches.date_widget_update"
+      />
+
+    <monkey:patch
+      description="Fix the year range for datetime widget"
+      class="plone.formwidget.datetime.z3cform.widget.DatetimeWidget"
+      original="update"
+      replacement=".monkeypatches.datetime_widget_update"
+      />
+
+</configure>
