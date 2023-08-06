@@ -1,0 +1,51 @@
+# See docs:
+#     https://typhoon-data-org.github.io/typhoon-orchestrator/getting-started/connections.html
+#     https://typhoon-data-org.github.io/typhoon-orchestrator/usage/hooks.html#db-api-20
+
+data_lake:
+  prod:
+    conn_type: s3
+    extra:
+      base_path: /
+      bucket: test-corp-data-lake
+      region_name: eu-west-1
+      login: <your login>
+      passowrd: <your key>
+
+  local:
+    conn_type: local_storage
+    extra:
+      base_path: /tmp/data_lake/
+
+echo:
+  local:
+    conn_type: echo
+
+relational_db:
+  local:
+    conn_type: mysql
+    login: my_login
+    password: my_pass
+    host: localhost
+    port: 3306
+
+transaction_db:
+  dev:
+    conn_type: sqlite
+    schema: main
+    extra:
+      database: /tmp/web_trans_local.db
+
+  prod:
+    conn_type: sqlalchemy
+    login: typhoon
+    password: typhoon
+    host: localhost
+    port: 3306
+    schema: prod_web_ecom
+    extra:
+      dialect: mysql
+      driver: mysqldb
+      database: prod_web_ecom
+
+
