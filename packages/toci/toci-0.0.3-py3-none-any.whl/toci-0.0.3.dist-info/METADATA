@@ -1,0 +1,64 @@
+Metadata-Version: 2.1
+Name: toci
+Version: 0.0.3
+Summary: markdown tool to create table of content from jupyter notebooks
+Home-page: https://github.com/ozlerhakan/toci
+Author: Hakan Ozler
+Author-email: ozler.hakan@gmail.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/ozlerhakan/toci/issues
+Keywords: python,jupyter,notebook,markdown,toc
+Platform: linux
+Platform: unix
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/plain; charset=UTF-8
+License-File: LICENSE
+Requires-Dist: nbconvert (>=6.2.0)
+Requires-Dist: nbformat (>=5.1.3)
+Requires-Dist: mistune (==0.8.4)
+
+# Toci
+
+Toci is a markdown tool to generate an outline from a given Jupyter notebook. It traverses the markdown cells of a given `ipynb` file to form a toc for you.
+
+## How it works
+
+```
+$ pip install toci==0.0.3
+
+$ toci --help
+usage: toci [-h] [--version] --notebook NOTEBOOK
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --notebook NOTEBOOK, -n NOTEBOOK
+                        an ipynb notebook file
+```
+
+Create a table of content from a given ipynb file as follows:
+
+```
+$ toci -n notebook.ipynb                                                                                                      
+# Table of Content
+- [Intro](#intro)
+  - [Heading 2](#heading-2)
+    - [Heading 3](#heading-3)
+  - [Another Heading 2](#another-heading-2)
+  - [Another Heading 2 2](#another-heading-2-2)
+    - [Another Heading 3](#another-heading-3)
+      - [Another Heading 4](#another-heading-4)
+- [😽 Cat Section](#-cat-section)
+  - [is another section ready?](#is-another-section-ready)
+```
+
+## LICENSE
+
+MIT
+
+
+
+
