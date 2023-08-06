@@ -1,0 +1,65 @@
+Metadata-Version: 2.1
+Name: pyhearthis
+Version: 0.0.6b3
+Summary: A python client for the hearthis.at music community API
+Home-page: https://github.com/universalappfactory/pyhearthis
+Author: universalappfactory
+License: MIT
+Platform: UNKNOWN
+Classifier: Topic :: Multimedia
+Classifier: Topic :: Multimedia :: Sound/Audio
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Software Development :: Libraries
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Provides-Extra: lint
+Provides-Extra: test
+Provides-Extra: dev
+License-File: LICENSE
+
+# pyhearthis
+
+[![Latest PyPI version](https://img.shields.io/pypi/v/pyhearthis)](https://pypi.org/project/pyhearthis/)
+[![CI build status](https://img.shields.io/github/workflow/status/universalappfactory/pyhearthis/Deploy%20to%20PyPI/main)](https://github.com/universalappfactory/pyhearthis/actions/workflows/pypi-deploy.yml)
+
+A python client for the [hearthis.at](https://hearthis.at/) music community API
+
+The API documentation is availabe at
+
+[https://hearthis.at/api-v2](https://hearthis.at/api-v2/)
+
+# Howto use the client
+
+1. Get some credentials from [hearthis.at](https://hearthis.at/) (at the moment only the login with hearthis.at credentials is supported)
+
+2. Use the client
+
+```
+import asyncio
+import aiohttp
+from pyhearthis.hearthis import HearThis
+
+async def do_some_queries():
+
+    async with aiohttp.ClientSession() as session:
+        hearthis = HearThis(session)
+        user = await hearthis.login("mylogin", "mypassword")
+
+        # Search for music
+        search_result = await hearthis.search(user, "MySearchQuery")
+        for track in search_result:
+            print(track)
+
+        # Create a playlist
+        playlist = await hearthis.create_playlist(user, "MyNewPlaylist")
+
+        # Add a track to the playlist
+        await hearthis.add_track_to_playlist(user, search_result[0], playlist)
+
+```
+
