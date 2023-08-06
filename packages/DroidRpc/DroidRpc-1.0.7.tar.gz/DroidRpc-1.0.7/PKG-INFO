@@ -1,0 +1,205 @@
+Metadata-Version: 2.1
+Name: DroidRpc
+Version: 1.0.7
+Summary: Droid Rpc for bot functionality
+Home-page: https://github.com/asklora/DROID-V3.git
+Author: Rede akbar - William
+Author-email: asklora@loratechai.com
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+
+# DroidRpc
+
+A gRPC client instance as an interface for DROIDv3 server.
+
+## Installation
+
+open your project folder and type:
+```
+pip install DroidRpc
+```
+
+## Usage
+
+This is an example on how to use the client
+
+```python
+# we import the client
+from DroidRpc.client import Client
+
+# initialise the client
+# replace `localhost` with existing droidv3 server url
+client: Client = Client(address='localhost', port='50065')
+
+# create, hedge, or stop bot by providing the payload to the commands
+create_response: dict = client.create_bot(
+    ticker="0005.HK",
+    spot_date="2021-12-27",
+    investment_amount=100000,
+    price=156.5,
+    bot_id="CLASSIC_classic_015384",
+    margin=1,
+    fraction=False,
+)
+
+# do something with the result
+print(create_response)
+
+```
+
+## Docstrings
+
+- `createBot`
+
+  ```
+  """ Create position and start the bot
+
+  Args:
+    ticker (str): Ticker name.
+    spot_date (str): Spot date.
+    investment_amount (float): Amount to invest.
+    price (float): The price the investment is put in.
+    bot_id (str): The bot id to be used.
+    margin (int): Margin used in the order.
+    fraction (bool): Whether to allow fraction in share number.
+
+  Returns:
+    ticker (str)
+    share_num (int|float)
+    expiry (str)
+    spot_date (str)
+    created (str)
+    total_bot_share_num (int|float)
+    max_loss_pct (float)
+    max_loss_price (float)
+    max_loss_amount (float)
+    target_profit_pct (float)
+    target_profit_price (float)
+    target_profit_amount (float)
+    entry_price (float)
+    margin (int)
+    bot_id (str)
+    fraction (bool)
+    side (str)
+    status (str)
+    vol (float)
+    classic_vol (float)
+    strike_2 (int)
+    barrier (int)
+    delta (int)
+    option_price (int)
+    q (int)
+    r (int)
+    strike (int)
+    t (int)
+    v1 (int)
+    v2 (int)
+
+  """
+  ```
+
+- `hedgeBot`
+  ```
+  """ create a hedge position using payload params
+
+  Args:
+    bot_id (str)
+    ric (str)
+    current_price (float)
+    entry_price (float)
+    last_share_num (float)
+    last_hedge_delta (float)
+    investment_amount (float)
+    bot_cash_balance (float)
+    stop_loss_price (float)
+    take_profit_price (float)
+    expiry (str): date in format yyyy-mm-dd
+    strike (float, optional)
+    strike_2 (float, optional)
+    margin (float, optional)
+    fraction (bool, optional)
+    option_price (float, optional)
+    barrier (float, optional)
+    current_low_price (float, optional)
+    current_high_price (float, optional)
+    ask_price (float, optional)
+    bid_price (float, optional)
+    trading_day (str, optional): date in format yyyy-mm-dd
+
+  Returns:
+    entry_price (float)
+    current_price (float)
+    share_num (int|float)
+    total_bot_share_num (int|float)
+    last_hedge_delta (int)
+    share_change (int|float)
+    side (str)
+    status (str)
+    strike_2 (int)
+    barrier (int)
+    delta (int)
+    option_price (int)
+    q (int)
+    r (int)
+    strike (int)
+    t (int)
+    v1 (int)
+    v2 (int)
+
+  """
+  ```
+
+- `stopBot`
+  ```
+  """ stop the bot and close the position
+
+  Args:
+    bot_id (str)
+    ric (str)
+    current_price (float)
+    entry_price (float)
+    last_share_num (float)
+    last_hedge_delta (float)
+    investment_amount (float)
+    bot_cash_balance (float)
+    stop_loss_price (float)
+    take_profit_price (float)
+    expiry (str): date in format yyyy-mm-dd
+    strike (float, optional)
+    strike_2 (float, optional)
+    margin (float, optional)
+    fraction (bool, optional)
+    option_price (float, optional)
+    barrier (float, optional)
+    current_low_price (float, optional)
+    current_high_price (float, optional)
+    ask_price (float, optional)
+    bid_price (float, optional)
+    trading_day (str, optional): date in format yyyy-mm-dd
+
+  Returns:
+    entry_price (float)
+    current_price (float)
+    share_num (int|float)
+    total_bot_share_num (int|float)
+    last_hedge_delta (int)
+    share_change (int|float)
+    side (str)
+    status (str)
+    strike_2 (int)
+    barrier (int)
+    delta (int)
+    option_price (int)
+    q (int)
+    r (int)
+    strike (int)
+    t (int)
+    v1 (int)
+    v2 (int)
+
+  """
+  ```
+
+
+
