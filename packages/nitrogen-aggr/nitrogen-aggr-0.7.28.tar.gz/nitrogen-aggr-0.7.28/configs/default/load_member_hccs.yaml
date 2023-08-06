@@ -1,0 +1,365 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the member_hccs sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for member_hccs
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+# 01/04/2022 : Add filter to exclude rows with year that are NOT in the 4 years for which we run the calculator (current_year - 3 to current_year)
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+  member_hccs_history:
+    type: parquet
+    location: "{aggr_location}/member_hccs_history/"
+
+  RAFi_HCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_HCCs/"
+
+  RAFxDataSample:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFxDataSample/"
+
+  RAFxDiseaseResultsV2:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFxDiseaseResultsV2/"
+
+  ref_hcc_descriptions:
+    type: parquet
+    location: "{project_root_path}/{client}/ref_hcc_descriptions/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#     WITH allrows as (
+#        SELECT
+#           * , row_number() over(partition by member_id, year, hcc_code order by  job_id desc ) as r
+#        FROM member_hccs_history)
+#     SELECT
+#        member_id,
+#        year,
+#        hcc_code,
+#        hash_value,
+#        job_id
+#     FROM allrows
+#     WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         member_id,
+         year,
+         hcc_code,
+         hash_value,
+         job_id
+      FROM member_hccs_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+#tested with SSS with:
+#      limit 10
+#  WHERE l.member_id in (
+#  '580905491A',
+#  '580526287D',
+#  '580641903B',
+#  '583052395A',
+#  '584078579A',
+#  '581108425D',
+#  '581313808A',
+#  '121461430A',
+#  'E19480315VEM440056',
+#  '581520906A')
+  hcc_interactions:
+    sql: >-
+      SELECT
+        member_id,
+        l.paymentyear - 1 as year,
+        dx.NAME as hcc_code,
+        dx.value as raf_captured,
+        0.0 as raf_suspects,
+        '' as suspect_type,
+        '' as trumped_by,
+        false as is_trumped,
+        false as is_recap_opp,
+        false as is_recap,
+        CASE
+        WHEN   dx.NAME in ( 'D4' , 'D5','D6' , 'D7', 'D8' , 'D9', 'D10P') THEN 'Captured (PCC)'
+         ELSE 'Captured (Disease Interaction)'
+         END as hcc_status,
+         cast(null AS string) as source_code
+      FROM   RAFxDiseaseResultsV2 dx
+      INNER JOIN rafxdatasample l ON dx.rafxdata_id = l.rafxdata_id
+
+#tested with SSS with:
+#      limit 10
+#WHERE h.member_id in (
+#     '580905491A',
+#     '580526287D',
+#     '580641903B',
+#     '583052395A',
+#     '584078579A',
+#     '581108425D',
+#     '581313808A',
+#     '121461430A',
+#     'E19480315VEM440056',
+#     '581520906A')
+  hccs:
+    sql: >-
+      SELECT
+        h.Member_Id,
+        h.year,
+        concat('HCC', substring(concat('000', Cast(h.hcc_code AS String)), -3, 3)) as  hcc_code,
+        CASE
+          WHEN hcc_type = 'Captured' THEN hcc_value
+        ELSE 0.0
+        END as raf_captured,
+        CASE
+          WHEN hcc_type = 'Suspect' THEN hcc_value
+        ELSE 0.0
+        END as RAF_Suspects,
+        h.suspect_type,
+        CASE WHEN  IFNULL(trim(h.trumped_by), '') ='' THEN ''
+              ELSE concat('HCC', substring(concat('000', Cast(h.Trumped_By AS String)), -3, 3))
+              END
+              AS Trumped_By,
+        CASE
+          WHEN Ifnull (trim(is_trumped_by), '') ='' THEN false
+        ELSE true
+        END as Is_Trumped_By,
+        CASE
+          WHEN ifnull(h.is_recap_opp, 0 ) = 1 THEN true
+        ELSE false
+        END is_recap_opp ,
+        CASE
+          WHEN ifnull(h.is_recap, 0 ) = 1 THEN true
+        ELSE false
+        END AS is_recap,
+        h.hcc_status,
+        h.source_code
+      FROM   RAFi_HCCs h
+    cache: true
+
+  member_hccs_full:
+    sql: >-
+      WITH all_items as (
+        SELECT *
+        FROM  hcc_interactions
+        UNION
+        SELECT *
+        FROM hccs )
+      SELECT
+        year(current_date()) as load_year,
+        month(current_date()) as load_month,
+        a.*,
+        b.description as hcc_description,
+        hash(
+            member_id,
+            year,
+            a.hcc_code,
+            b.description,
+            raf_captured,
+            raf_suspects,
+            suspect_type,
+            trumped_by,
+            is_trumped,
+            is_recap_opp,
+            is_recap,
+            hcc_status,
+            source_code) as hash_value,
+            ( select cad_job_id from cad_job )  as job_id
+      FROM all_items a
+      LEFT JOIN  ref_hcc_descriptions b on a.hcc_code =  b.hcc_code
+
+  member_hccs_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+             a.hash_value,
+             'INSERT' as operation,
+             a.job_id,
+             a.load_year,
+             a.load_month,
+             a.member_id,
+             a.year,
+             a.hcc_code,
+             a.hcc_description,
+             a.raf_captured,
+             a.raf_suspects,
+             a.suspect_type,
+             a.trumped_by,
+             a.is_trumped,
+             a.is_recap_opp,
+             a.is_recap,
+             a.hcc_status,
+             a.source_code
+          FROM  member_hccs_full a
+          inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 3 and  s.current_year
+          LEFT JOIN  previous_load b on a.member_id = b.member_id and a.year = b.year and a.hcc_code = b.hcc_code
+          WHERE b.member_id is null ),
+      delete_rows as (
+          SELECT
+             a.hash_value,
+             'DELETE' as operation,
+              ( select cad_job_id from cad_job ) as job_id,
+             cast(null as integer) as load_year,
+             cast(null as integer) as load_month,
+             a.member_id,
+             a.year,
+             a.hcc_code,
+             cast(null as string) as hcc_description,
+             cast(null as double) as raf_captured,
+             cast(null as double) as raf_suspects,
+             cast(null as string) as suspect_type,
+             cast(null as string) as trumped_by,
+             cast(null as boolean) as is_trumped,
+             cast(null as boolean) as is_recap_opp,
+             cast(null as boolean) as is_recap,
+             cast(null as string) as hcc_status,
+             cast(null as string) as source_code
+          FROM  previous_load a
+          inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 3 and  s.current_year
+          LEFT JOIN  member_hccs_full  b on a.member_id = b.member_id and a.year = b.year and a.hcc_code = b.hcc_code
+          WHERE b.member_id is null ),
+      update_rows as (
+          SELECT
+             a.hash_value,
+             'UPDATE' as operation,
+             a.job_id,
+             a.load_year,
+             a.load_month,
+             a.member_id,
+             a.year,
+             a.hcc_code,
+             a.hcc_description,
+             a.raf_captured,
+             a.raf_suspects,
+             a.suspect_type,
+             a.trumped_by,
+             a.is_trumped,
+             a.is_recap_opp,
+             a.is_recap,
+             a.hcc_status,
+             a.source_code
+           FROM   member_hccs_full  a
+           inner join EpiAnalyst_Client_Settings s on a.year between s.current_year - 3 and  s.current_year
+           INNER JOIN previous_load b on a.member_id = b.member_id and a.year = b.year and a.hcc_code = b.hcc_code
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+  member_hcc_arrays:
+    sql: >-
+      SELECT
+        h.member_id,
+        h.year,
+        h.hcc_type,
+        collect_set(
+                 concat('HCC', right(concat('000', hcc_code),3))
+                 )
+                 as hccs_array
+      FROM   rafi_hccs h
+      where length(coalesce(hcc_code,'')) >0
+      GROUP BY  h.member_id, h.year, h.Hcc_Type
+
+  hcc_nums:
+    sql: >-
+      WITH captured as (
+          SELECT
+            h.member_id,
+            h.year,
+            'captured' as hcc_type,
+            count(*) hcc_num_all
+          FROM   hccs h
+          where  upper(left(hcc_status, 8)) = 'CAPTURED' AND   Is_Trumped_By = false
+          GROUP BY  h.member_id, h.year
+      ),
+      suspects as (
+            SELECT
+              h.member_id,
+              h.year,
+              'suspect' as hcc_type,
+              count(*) hcc_num_all
+            FROM   hccs h
+            where  upper(left(hcc_status, 7)) = 'SUSPECT' AND   Is_Trumped_By = false
+            GROUP BY  h.member_id, h.year
+      )
+      SELECT * FROM CAPTURED
+      UNION
+      SELECT * FROM SUSPECTS
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  member_hccs_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_hccs_full'
+      mode: overwrite
+
+  member_hccs_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/member_hccs_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_member_hccs
+#      mode: overwrite
+
+  member_hcc_arrays:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_hcc_arrays'
+      mode: overwrite
+
+  hcc_nums:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_hcc_nums'
+      mode: overwrite

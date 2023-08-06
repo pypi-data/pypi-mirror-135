@@ -1,0 +1,242 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the provider_member_relationships sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for provider_member_relationships
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+  provider_member_relationships_history:
+    type: parquet
+    location: "{aggr_location}/provider_member_relationships_history/"
+
+  RAFi_Claims:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_Claims/"
+
+  RAFi_Members:
+    type: parquet
+    location: "{project_root_path}/{client}/RAFi_Members/"
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+
+#  previous_load:
+#    sql: >-
+#     WITH allrows as (
+#        SELECT
+#           * , row_number() over(partition by member_id, provider_id order by  job_id desc ) as r
+#        FROM provider_member_relationships_history)
+#     SELECT
+#        member_id,
+#        provider_id,
+#        hash_value,
+#        relation_type,
+#        job_id
+#     FROM allrows
+#     WHERE  r=1
+
+    # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         member_id,
+         provider_id,
+         hash_value,
+         job_id
+      FROM provider_member_relationships_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  current_setting:
+    sql: >-
+      SELECT
+          current_year
+      FROM epianalyst_client_settings
+
+#            WHERE
+#              provider_id in (
+#                                    '1558336552',
+#                                    '1912158726',
+#                                    '1801887559',
+#                                    '1679557771',
+#                                    '1023190071')
+#  and     m.member_id in ('583147650A',
+#  '582283994A',
+#  '581030842A',
+#  '581984411A',
+#  '580484452B3')
+  provider_member_relationships_full:
+    sql: >-
+      WITH
+      member_claim_providers as (
+            SELECT
+                member_id ,
+                provider_id,
+                'enc' as relation_type
+            FROM   rafi_claims c
+            INNER JOIN  epianalyst_client_settings s on year(c.dos_to) between s.current_year-4 and s.current_year
+            GROUP by member_id, provider_id
+      ),
+      member_pcps as (
+            SELECT
+                member_id,
+                ifnull( pcp_provider_id, '-1') as provider_id,
+                'pcp' as  relation_type
+            FROM rafi_members m
+      ),
+      all_providers as (
+            SELECT
+                m.*
+            FROM member_pcps m
+            UNION
+            SELECT
+                n.*
+            FROM member_claim_providers n
+            LEFT JOIN member_pcps f on n.member_id = f.member_id and n.provider_id = f.provider_id
+            WHERE f.member_id is null
+      )
+      SELECT
+            member_id,
+            provider_id,
+            hash(member_id, provider_id, relation_type) as hash_value,
+            relation_type,
+           ( select cad_job_id from cad_job )  as job_id
+      FROM all_providers
+
+  provider_member_relationships_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+             'INSERT' as operation,
+             a.job_id,
+             a.member_id ,
+             a.provider_id,
+             a.relation_type
+          FROM  provider_member_relationships_full a
+          LEFT JOIN  previous_load b on a.member_id = b.member_id and a.provider_id = b.provider_id
+          WHERE b.member_id is null ),
+      delete_rows as (
+          SELECT
+              'DELETE' as operation,
+               ( select cad_job_id from cad_job )  as job_id,
+              a.member_id ,
+              a.provider_id,
+               cast(null as string)  as relation_type
+          FROM  previous_load a
+          LEFT JOIN  provider_member_relationships_full  b on a.member_id = b.member_id and a.provider_id = b.provider_id
+          WHERE b.member_id is null ),
+      update_rows as (
+          SELECT
+              'UPDATE' as operation,
+              a.job_id,
+              a.member_id ,
+              a.provider_id,
+              a.relation_type
+           FROM  provider_member_relationships_full a
+           INNER JOIN previous_load b on a.member_id = b.member_id and a.provider_id = b.provider_id
+           WHERE a.hash_value <> b.hash_value )
+      SELECT *
+      FROM new_rows
+      UNION
+      SELECT *
+      FROM delete_rows
+      UNION
+      SELECT *
+      FROM update_rows
+
+#      WHERE
+#      c.member_id in ('583147650A',
+#                                        '582283994A',
+#                                        '581030842A',
+#                                        '581984411A',
+#                                        '580484452B3')
+  member_encounter_arrays:
+    sql: >-
+      SELECT
+        c.member_id,
+        collect_set( c.provider_id ) as encountered_ids
+      FROM rafi_claims c
+      INNER JOIN  epianalyst_client_settings s on year(c.dos_to) between s.current_year-4 and s.current_year
+      group by
+      c.member_id
+
+  spec_encounter_counts:
+    sql: >-
+      SELECT
+        m.Member_Id,
+        Count(DISTINCT( Dos_To )) AS spec_dos_Count,
+        max(Dos_to) as spec_last_encounter
+      FROM    provider_member_relationships_full m
+      INNER JOIN   rafi_claims c  on c.member_id = m.member_id and c.provider_id = m.provider_id
+      INNER JOIN  epianalyst_client_settings s on year(c.dos_to) between s.current_year-4 and s.current_year
+      WHERE m.relation_type = 'enc'
+      GROUP  BY m.member_id
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  provider_member_relationships_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/provider_member_relationships_full'
+      mode: overwrite
+
+  provider_member_relationships_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/provider_member_relationships_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_provider_member_relationships
+#      mode: overwrite
+
+  member_encounter_arrays:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_encounter_arrays'
+      mode: overwrite
+
+  spec_encounter_counts:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/spec_encounter_counts'
+      mode: overwrite

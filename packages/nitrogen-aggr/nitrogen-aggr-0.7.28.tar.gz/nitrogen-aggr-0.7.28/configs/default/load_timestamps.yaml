@@ -1,0 +1,192 @@
+debug: false
+
+#    """
+#    Logic:
+#        1- load the history table for the timestamps sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for timestamps
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  timestamps_history:
+    type: parquet
+    location: "{aggr_location}/timestamps_history/"
+  MOR_Member_HCCs:
+    type: parquet
+    location: "{project_root_path}/{client}/MOR_Member_HCCs/"
+  MMR_Details:
+    type: parquet
+    location: "{project_root_path}/{client}/MMR_Details/"
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: true
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+    create_local_job_id: true
+
+#  previous_load:
+#    sql: >-
+#      WITH allrows as (
+#         SELECT
+#            * , row_number() over(partition by load_type, load_start, load_end order by job_id desc) as r
+#         FROM timestamps_history)
+#      SELECT
+#         load_type,
+#         load_start,
+#         load_end,
+#         hash_value,
+#         job_id
+#      FROM allrows
+#      WHERE  r=1
+#    cache: true
+
+  # previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         load_type,
+         load_start,
+         load_end ,
+         hash_value,
+         job_id
+      FROM timestamps_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  Load_Timestamps:
+    sql: >-
+      With timestamps as (
+      SELECT
+        'MMR' as load_type,
+        cast(max(Payment_date) as varchar(10)) as load_end
+      FROM MMR_Details
+      union
+      SELECT
+        'MOR' as load_type,
+        max( concat(dos_year, right( concat(0, last_payment_month), 2 ))) as load_end
+      FROM mor_member_hccs
+      union
+      select
+        'Data' as load_type,
+        cast(current_date as varchar(10)) as load_end
+      )
+      select
+        load_type,
+        load_end as load_start,
+        load_end
+      from timestamps
+
+
+  timestamps_full:
+    sql: >-
+      SELECT
+        load_type,
+        load_start,
+        load_end,
+        hash(
+        load_type,
+        load_start,
+        load_end
+        ) as hash_value,
+        ( select cad_job_id from cad_job )  as job_id
+      FROM Load_Timestamps
+    cache: true
+
+  timestamps_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+            a.load_type,
+            a.load_start,
+            a.load_end
+           FROM timestamps_full a
+           LEFT JOIN previous_load b
+           ON a.load_type = b.load_type
+           AND a.load_start = b.load_start
+           AND a.load_end = b.load_end
+           WHERE b.load_start IS NULL OR b.load_end IS NULL),
+      delete_rows as (
+           SELECT
+            a.hash_value,
+            'DELETE' as operation,
+            a.job_id,
+            CAST(a.load_type AS STRING),
+            CAST(a.load_start AS STRING),
+            CAST(a.load_end AS STRING)
+           FROM previous_load a
+           LEFT JOIN timestamps_full b
+           ON a.load_type = b.load_type
+           AND a.load_start = b.load_start
+           AND a.load_end = b.load_end
+           WHERE b.load_start IS NULL OR b.load_end IS NULL),
+      update_rows as (
+           SELECT
+            a.hash_value,
+            'UPDATE' as operation,
+            a.job_id,
+            a.load_type,
+            a.load_start,
+            a.load_end
+           FROM timestamps_full a
+           INNER JOIN previous_load b
+           ON a.load_type = b.load_type
+           AND a.load_start = b.load_start
+           AND a.load_end = b.load_end
+           WHERE a.hash_value <> b.hash_value)
+      SELECT * FROM new_rows
+      UNION
+      SELECT * FROM delete_rows
+      UNION
+      SELECT * FROM update_rows
+
+    cache: true
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  timestamps_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/timestamps_full'
+      mode: overwrite
+
+  timestamps_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/timestamps_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_timestamps
+#      mode: overwrite

@@ -1,0 +1,82 @@
+debug: true
+
+#    """
+#    DE-1021 correct snapshot partition
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  input_raf:
+    type: csv
+    location: "{project_root_path}/{client}/input/VMD MA_RAF_JY editV2.csv"
+
+  input_members:
+    type: parquet
+    location: "{project_root_path}/{client}/input/custom_members/"
+
+Transform:
+  members:
+    sql: >-
+        with raf as (
+            select member_id, raf_type_code ,
+            row_number() over (partition by member_id order by period_start desc) as r
+            from input_raf
+        ),
+        oneraf as (
+            select *
+            from raf
+            where r=1
+        )
+        select
+            trim(m.Member_Id) as Member_Id,
+            trim(MedicareID) as MedicareID,
+            case when  ifnull(trim(MedicareID), '') = '' and ifnull(trim(HICN),'') = ''
+            THEN  trim(m.Member_Id)
+            ELSE  trim(HICN)
+            END as HICN,
+            trim(First_Name) as First_Name,
+            trim(Middle_Name) as Middle_Name,
+            trim(Last_Name) as Last_Name,
+            Dob,
+            trim(Gender) as Gender,
+            trim(Address_1) as Address_1,
+            trim(Address_2) as Address_2,
+            trim(City) as City,
+            trim(State) as State,
+            trim(Zip) as Zip,
+            trim(Phone) as Phone,
+            trim(Health_Plan_Member_Id) as Health_Plan_Member_Id,
+            trim(Health_Plan_Name) as Health_Plan_Name,
+            CASE WHEN ifnull(trim(r.RAF_Type_Code), '')= '' THEN 'CN'
+            ELSE trim(r.RAF_Type_Code)
+            END as RAF_Type_Code,
+            ESRD,
+            Disabled,
+            trim(Flexi_Field_1) as Flexi_Field_1,
+            trim(Flexi_Field_2) as Flexi_Field_2,
+            trim(Flexi_Field_3) as Flexi_Field_3,
+            trim(Flexi_Field_4) as Flexi_Field_4,
+            trim(Flexi_Field_5) as Flexi_Field_5,
+            trim(Flexi_Field_6) as Flexi_Field_6,
+            trim(Flexi_Field_7) as Flexi_Field_7,
+            trim(Flexi_Field_8) as Flexi_Field_8,
+            trim(Flexi_Field_9) as Flexi_Field_9,
+            trim(Flexi_Field_10) as Flexi_Field_10
+        from input_members m
+        left join oneraf r on m.member_id = r.member_id
+    cache: false
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  members:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/input/members'
+      mode: overwrite

@@ -1,0 +1,131 @@
+# ETL Job
+name: risk_adj_suspect_flexi
+step: risk_adj_suspect_flexi
+debug: true
+log_pg: false
+register_udfs: true
+
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - master_location =  {config.master_location}
+  - reference_location = {config.reference_location}
+  - report_location = {config.report_location}
+  - aggr_location = {config.aggr_location}
+  - debug = False
+  - suspecting_source = {config.step_config.suspecting_source}
+
+Extract:
+  memelig:
+    type: parquet
+    location: "{aggr_location}/member_eligibility_benefits_risk_score_input2_pby_job_id_epi_member_id_par_client_year_isa_year_mth_isa_date"
+
+  dx:
+    type: parquet
+    location: "{aggr_location}/risk_adj_preprocessing_claims_pby_jobid_clientyear"
+
+  rx:
+    type: parquet
+    location: "{aggr_location}/risk_adj_preprocessing_rx_pby_jobid_clientyear"
+
+  suspects:
+    type: parquet
+    location: "{aggr_location}/suspecting_aggr_pby_job_id_epi_member_id_par"
+
+
+Transform:
+#  suspects_source_filtered:
+#    type: user_function
+#    function_name: suspects_source_filtered
+
+  #       Filter suspects based on suspecting source given in CLI. If no suspecting_source provided, use suspects from all sources. Then filter by job_id
+  #       :returns: suspects_source_filtered df, like source, but filtered to have correct rows for risk adj calc
+  suspects_source_filtered:
+    sql: >-
+      SELECT * FROM suspects WHERE job_id={cad_job_id} AND (LOWER(suspecting_source) = '{suspecting_source}' or  '{suspecting_source}' is NULL or  '{suspecting_source}' = 'combined')
+
+  # Get member eligibilities for *all* members with new eligibilities, claims or rx
+  member_list:
+    sql: >-
+      SELECT DISTINCT epi_member_id, epi_member_id_par, client_year
+      FROM (
+        SELECT epi_member_id, epi_member_id_par, client_year
+        FROM memelig
+        WHERE job_id = {cad_job_id}
+      ) UNION
+      (
+        SELECT epi_member_id, epi_member_id_par, client_year
+        FROM dx
+        WHERE job_id = {cad_job_id}
+      ) UNION
+      (
+        SELECT epi_member_id, epi_member_id_par, client_year
+        FROM rx
+        WHERE job_id = {cad_job_id}
+      ) UNION
+      (
+        SELECT epi_member_id, epi_member_id_par, client_year
+        FROM suspects_source_filtered
+        WHERE job_id = {cad_job_id}
+      )
+
+  memelig_01:
+    sql: >-      
+      SELECT memelig.* FROM member_list
+        LEFT JOIN memelig
+          ON
+            member_list.epi_member_id_par = memelig.epi_member_id_par
+            AND
+            member_list.epi_member_id = memelig.epi_member_id
+            AND
+            member_list.client_year = memelig.client_year
+  
+  memelig_02:
+    sql: >-
+      SELECT 
+        *,
+        DENSE_RANK() OVER (PARTITION BY client_year, epi_member_id_par, epi_member_id  ORDER BY isa_date DESC) AS isa_rank
+      FROM memelig_01
+
+  memelig_final:
+    sql: >-
+      SELECT * from memelig_02
+      WHERE isa_rank = 1
+    cache: true
+
+  client_years_list:
+    sql: >-
+      SELECT
+        DISTINCT(client_year) as client_year
+      FROM memelig_final
+
+
+  risk_adjustment_member_calc_result_1:
+    type: user_function
+    function_name: member_riskadj_runner
+
+  risk_adjustment_member_calc_result_2:
+    sql: >-
+      SELECT
+        a.*,
+        b.epi_member_id_par,
+        "{cad_job_id}" as job_id,
+        "{suspecting_source}" as suspect_source
+      FROM risk_adjustment_member_calc_result_1 a
+      LEFT JOIN memelig_final b ON a.epi_member_id=b.epi_member_id AND a.client_year=b.client_year
+
+# Note: Load tables have to be same as Transform tables.
+# Placeholder; load for Risk Adj happens in member_riskadj_runner
+
+Load:
+  risk_adjustment_member_calc_result_2:
+    load_2:
+      type: print
+    load_1:
+      type: parquet
+      location: '{aggr_location}/risk_adj_suspecting_pby_client_year_job_id'
+      partitions:
+        - client_year
+        - suspect_source
+        - job_id
+
