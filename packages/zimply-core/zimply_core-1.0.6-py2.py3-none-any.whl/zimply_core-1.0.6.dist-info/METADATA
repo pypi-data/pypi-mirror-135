@@ -1,0 +1,39 @@
+Metadata-Version: 2.1
+Name: zimply-core
+Version: 1.0.6
+Summary: Fork of ZIMply with only the zimply_core module.
+Home-page: https://github.com/dylanmccall/ZIMply-core
+Author: Dylan McCall
+Author-email: dylan@endlessos.org
+License: MIT
+Keywords: zim,wiki,wikipedia
+Platform: any
+Classifier: Programming Language :: Python :: 3.4
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Development Status :: 2 - Pre-Alpha
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: zstandard (>=0.14.1)
+
+# ZIMply Core
+
+ZIMply Core is an unstable fork of [ZIMply](https://pypi.org/project/zimply/),
+intended for developers who would like to use its pure Python zim file parser
+without the additional dependencies.
+
+## Usage
+
+Install zimply-core from pypi:
+
+    pip install zimply-core
+
+Now, in Python code, you can import from zimply_core:
+
+    from zimply_core import ZIMClient
+    zim_file = ZIMClient("wikipedia.zim", encoding="utf-8", auto_delete=True)
+    print("{name} contains {count} articles".format(
+        name=zim_file.get_article("M/Name").data.decode(),
+        count=zim_file.get_namespace_count("A")
+    ))
+
+
