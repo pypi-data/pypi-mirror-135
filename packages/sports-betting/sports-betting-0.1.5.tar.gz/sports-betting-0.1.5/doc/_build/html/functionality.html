@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functionality &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user_guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Functionality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-loaders">Data loaders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-the-training-data">Extracting the training data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#default-values-for-parameters">Default values for parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-default-values-for-parameters">Non default values for parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-the-fixtures-data">Extracting the fixtures data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#machine-learning-modelling">Machine learning modelling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Data Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html#machine-learning">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="user_guide.html">User Guide</a> &raquo;</li>
+      <li>Functionality</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/functionality.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="functionality">
+<h1>Functionality<a class="headerlink" href="#functionality" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>sports-betting</cite> package provides a set of classes that help to download
+sports betting data. Additionally, it includes a backtesting engine to
+evaluate the performance of machine learning models.</p>
+<div class="section" id="data-loaders">
+<h2>Data loaders<a class="headerlink" href="#data-loaders" title="Permalink to this headline">¶</a></h2>
+<p>Each dataloader class corresponds to a data source or a combination
+of data sources. Their methods return datasets suitable for machine
+learning modelling. There various dataloaders available while all of
+them inherit from the same base class and provide the same public API.</p>
+<p>A dataloader is initialized with the parameter <code class="docutils literal notranslate"><span class="pre">param_grid</span></code> that selects the training
+data to extract. You can get the available parameters and their values from the
+class method <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_all_params()</span></code>. For example, the available parameters for the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">DummySoccerDataLoader</span></code> are the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sportsbet.datasets</span> <span class="kn">import</span> <span class="n">DummySoccerDataLoader</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_params</span> <span class="o">=</span> <span class="n">DummySoccerDataLoader</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">all_params</span><span class="p">)</span>
+<span class="go">[...{&#39;division&#39;: 1, &#39;league&#39;: &#39;Spain&#39;, &#39;year&#39;: 1997}, {&#39;division&#39;: 2, &#39;league&#39;: &#39;Spain&#39;, &#39;year&#39;: 1999}, {&#39;division&#39;: 2, &#39;league&#39;: &#39;England&#39;, &#39;year&#39;: 1997}...]</span>
+</pre></div>
+</div>
+<p>The default value of <code class="docutils literal notranslate"><span class="pre">param_grid</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> and corresponds to the selection
+of all data. In the following example we select only the data of
+the Spanish end English leagues for all available divisions and years:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DummySoccerDataLoader</span><span class="p">(</span><span class="n">param_grid</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Spain&#39;</span><span class="p">,</span> <span class="s1">&#39;England&#39;</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extracting-the-training-data">
+<h2>Extracting the training data<a class="headerlink" href="#extracting-the-training-data" title="Permalink to this headline">¶</a></h2>
+<p>You can extract the training data using the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_train_data()</span></code>
+that accepts the parameters <code class="docutils literal notranslate"><span class="pre">drop_na_thres</span></code> and <code class="docutils literal notranslate"><span class="pre">odds_type</span></code>. The training data
+is a tuple of the input matrix <code class="docutils literal notranslate"><span class="pre">X_train</span></code>, the multi-output targets <code class="docutils literal notranslate"><span class="pre">Y_train</span></code>
+and the odds matrix <code class="docutils literal notranslate"><span class="pre">Odds_train</span></code>.</p>
+<p>Tha parameter <code class="docutils literal notranslate"><span class="pre">drop_na_thres</span></code> controls the proportion of the columns and rows with
+missing values that will be removed from the input matrix <code class="docutils literal notranslate"><span class="pre">X_train</span></code>. It takes values in the range
+[0.0, 1.0].</p>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">odds_type</span></code> selects the type of odds that will be used for the odds matrix <code class="docutils literal notranslate"><span class="pre">Odds_train</span></code>.
+It also affects the columns of the multi-output targets <code class="docutils literal notranslate"><span class="pre">Y_train</span></code> since there is a correspondence between
+<code class="docutils literal notranslate"><span class="pre">Y_train</span></code> and <code class="docutils literal notranslate"><span class="pre">Odds_train</span></code>. You can get the available odds types from the class method <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_odds_types()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DummySoccerDataLoader</span><span class="o">.</span><span class="n">get_odds_types</span><span class="p">()</span>
+<span class="go">[&#39;interwetten&#39;, &#39;williamhill&#39;]</span>
+</pre></div>
+</div>
+<div class="section" id="default-values-for-parameters">
+<h3>Default values for parameters<a class="headerlink" href="#default-values-for-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Initially we extract the training data using the default values of <code class="docutils literal notranslate"><span class="pre">drop_na_thres</span></code> and <code class="docutils literal notranslate"><span class="pre">odds_type</span></code>
+which are <code class="docutils literal notranslate"><span class="pre">None</span></code> for both of them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Odds_train</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">extract_train_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>No columns are dropped from the input matrix <code class="docutils literal notranslate"><span class="pre">X_train</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span>
+<span class="go">            division   league  year    home_team    away_team ... williamhill__away_win__odds</span>
+<span class="go">date                                                          ...</span>
+<span class="go">1997-05-04         1    Spain  1997  Real Madrid    Barcelona ...                         NaN</span>
+<span class="go">1998-03-04         3  England  1998    Liverpool      Arsenal ...                         NaN</span>
+<span class="go">1999-03-04         2    Spain  1999    Barcelona  Real Madrid ...                         NaN</span>
+</pre></div>
+</div>
+<p>The multi-output targets matrix <code class="docutils literal notranslate"><span class="pre">Y_train</span></code> is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Y_train</span>
+<span class="go">   away_win__full_time_goals ... under_2.5_goals__full_time_goals</span>
+<span class="go">0                      False ...                            False</span>
+<span class="go">1                       True ...                            False</span>
+<span class="go">2                      False ...                            False</span>
+</pre></div>
+</div>
+<p>No odds matrix is returned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Odds_train</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="non-default-values-for-parameters">
+<h3>Non default values for parameters<a class="headerlink" href="#non-default-values-for-parameters" title="Permalink to this headline">¶</a></h3>
+<p>We extract the training data using specific values of <code class="docutils literal notranslate"><span class="pre">drop_na_thres</span></code> and <code class="docutils literal notranslate"><span class="pre">odds_type</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Odds_train</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">extract_train_data</span><span class="p">(</span><span class="n">drop_na_thres</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">odds_type</span><span class="o">=</span><span class="s1">&#39;williamhill&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Columns that contain missing values are dropped from the input matrix <code class="docutils literal notranslate"><span class="pre">X_train</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span>
+<span class="go">            division   league  year ... williamhill__home_win__odds</span>
+<span class="go">date                                ...</span>
+<span class="go">1997-05-04         1    Spain  1997 ...                         2.5</span>
+<span class="go">1998-03-04         3  England  1998 ...                         2.0</span>
+<span class="go">1999-03-04         2    Spain  1999 ...                         2.0</span>
+</pre></div>
+</div>
+<p>The multi-output targets <code class="docutils literal notranslate"><span class="pre">Y_train</span></code> is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Y_train</span>
+<span class="go">   away_win__full_time_goals  ... home_win__full_time_goals</span>
+<span class="go">0                      False  ...                      True</span>
+<span class="go">1                       True  ...                     False</span>
+<span class="go">2                      False  ...                     False</span>
+</pre></div>
+</div>
+<p>The corresponding odds matrix is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Odds_train</span>
+<span class="go">   williamhill__away_win__odds ... williamhill__home_win__odds</span>
+<span class="go">0                          NaN ...                         2.5</span>
+<span class="go">1                          NaN ...                         2.0</span>
+<span class="go">2                          NaN ...                         2.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="extracting-the-fixtures-data">
+<h2>Extracting the fixtures data<a class="headerlink" href="#extracting-the-fixtures-data" title="Permalink to this headline">¶</a></h2>
+<p>Once the training data are extracted, it is straightforward to extract
+the corresponding fixtures data using the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_fixtures_data()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_fix</span><span class="p">,</span> <span class="n">Y_fix</span><span class="p">,</span> <span class="n">Odds_fix</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">extract_fixtures_data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The method accepts no parameters and the extracted fixtures input matrix has
+the same columns as the latest extracted input matrix for the training data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X_fix</span>
+<span class="go">                            division  league ... williamhill__home_win__odds</span>
+<span class="go">date</span>
+<span class="gp">... </span>        <span class="mi">4</span>     <span class="n">NaN</span> <span class="o">...</span> <span class="mf">3.5</span>
+<span class="gp">... </span>        <span class="mi">3</span>  <span class="n">France</span> <span class="o">...</span> <span class="mf">2.5</span>
+</pre></div>
+</div>
+<p>The odds matrix is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Odds_fix</span>
+<span class="go">   williamhill__away_win__odds ... williamhill__home_win__odds</span>
+<span class="go">0                          2.0 ...                         3.5</span>
+<span class="go">1                          2.5 ...                         2.5</span>
+</pre></div>
+</div>
+<p>Since we are extracting the fixtures data, there is no target matrix:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Y_fix</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="machine-learning-modelling">
+<h2>Machine learning modelling<a class="headerlink" href="#machine-learning-modelling" title="Permalink to this headline">¶</a></h2>
+<p>For this example, we select only the numerical features:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;interwetten__home_win__odds&#39;</span><span class="p">,</span> <span class="s1">&#39;interwetten__draw__odds&#39;</span><span class="p">,</span> <span class="s1">&#39;interwetten__away_win__odds&#39;</span><span class="p">,</span> <span class="s1">&#39;williamhill__home_win__odds&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_fix_info</span> <span class="o">=</span> <span class="n">X_fix</span><span class="p">[[</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_fix</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">cols</span><span class="p">],</span> <span class="n">X_fix</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The data can be used to train machine learning models and make predictions on fixtures.
+Initially, we create a decision tree classifier:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We fit the model on the training data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">)</span>
+<span class="go">KNeighborsClassifier(n_neighbors=2)</span>
+</pre></div>
+</div>
+<p>Finally, we make probability predictions using the fixtures input data and reshape them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y_pred_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">prob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_fix</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can use the predictions to get the value bets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value_bets</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X_fix_info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>  <span class="n">Y_pred_prob</span> <span class="o">*</span> <span class="n">Odds_fix</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value_bets</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span><span class="n">col</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">value_bets</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;odds&#39;</span><span class="p">)})</span>
+<span class="go">   home_team    away_team  away_win   draw  home_win</span>
+<span class="go">0  Barcelona  Real Madrid     False   True      True</span>
+<span class="go">1     Monaco          PSG      True  False      True</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

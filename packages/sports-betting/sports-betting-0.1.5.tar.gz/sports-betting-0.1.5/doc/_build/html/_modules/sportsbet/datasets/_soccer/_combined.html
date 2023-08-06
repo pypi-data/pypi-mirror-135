@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sportsbet.datasets._soccer._combined &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="../../../../_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Data Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html#machine-learning">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>sportsbet.datasets._soccer._combined</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sportsbet.datasets._soccer._combined</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Download and transform historical and fixtures data</span>
+<span class="sd">for various leagues from Football-Data.co.uk and FiveThirtyEight.</span>
+
+<span class="sd">Football-Data.co.uk: http://www.football-data.co.uk/data.php</span>
+<span class="sd">FiveThirtyEight: https://github.com/fivethirtyeight/data/tree/master/soccer-spi</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author: Georgios Douzas &lt;gdouzas@icloud.com&gt;</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">ParameterGrid</span>
+
+<span class="kn">from</span> <span class="nn">.._base</span> <span class="kn">import</span> <span class="n">_BaseDataLoader</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">OUTCOMES</span>
+<span class="kn">from</span> <span class="nn">._fd</span> <span class="kn">import</span> <span class="n">FDSoccerDataLoader</span>
+<span class="kn">from</span> <span class="nn">._fte</span> <span class="kn">import</span> <span class="n">FTESoccerDataLoader</span>
+
+
+<div class="viewcode-block" id="SoccerDataLoader"><a class="viewcode-back" href="../../../../generated/sportsbet.datasets.SoccerDataLoader.html#sportsbet.datasets.SoccerDataLoader">[docs]</a><span class="k">class</span> <span class="nc">SoccerDataLoader</span><span class="p">(</span><span class="n">_BaseDataLoader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataloader for all soccer data.</span>
+
+<span class="sd">    Read more in the :ref:`user guide &lt;user_guide&gt;`.</span>
+
+<span class="sd">    parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param_grid : dict of str to sequence, or sequence of such parameter, default=None</span>
+<span class="sd">        The parameter grid to explore, as a dictionary mapping data parameters</span>
+<span class="sd">        to sequences of allowed values. An empty dict signifies default</span>
+<span class="sd">        parameters. A sequence of dicts signifies a sequence of grids to search,</span>
+<span class="sd">        and is useful to avoid exploring parameter combinations that do not</span>
+<span class="sd">        exist. The default value corresponds to all parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_names_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;SK Austria Klagenfurt&#39;</span><span class="p">:</span> <span class="s1">&#39;A. Klagenfurt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AEK Athens&#39;</span><span class="p">:</span> <span class="s1">&#39;AEK&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AaB&#39;</span><span class="p">:</span> <span class="s1">&#39;Aalborg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AGF Aarhus&#39;</span><span class="p">:</span> <span class="s1">&#39;Aarhus&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Accrington Stanley&#39;</span><span class="p">:</span> <span class="s1">&#39;Accrington&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Adana Demirspor&#39;</span><span class="p">:</span> <span class="s1">&#39;Ad. Demirspor&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Trenkwalder Admira&#39;</span><span class="p">:</span> <span class="s1">&#39;Admira&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AC Ajaccio&#39;</span><span class="p">:</span> <span class="s1">&#39;Ajaccio&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GFC Ajaccio&#39;</span><span class="p">:</span> <span class="s1">&#39;Ajaccio GFCO&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Akhisar Belediye&#39;</span><span class="p">:</span> <span class="s1">&#39;Akhisar Belediyespor&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Terek Grozny&#39;</span><span class="p">:</span> <span class="s1">&#39;Akhmat Grozny&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AlavÃ©s&#39;</span><span class="p">:</span> <span class="s1">&#39;Alaves&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AD Alcorcon&#39;</span><span class="p">:</span> <span class="s1">&#39;Alcorcon&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cashpoint SC Rheindorf Altach&#39;</span><span class="p">:</span> <span class="s1">&#39;Altach&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AmÃ©rica Mineiro&#39;</span><span class="p">:</span> <span class="s1">&#39;America MG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Amkar Perm&#39;</span><span class="p">:</span> <span class="s1">&#39;Amkar&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Apollon Smyrni&#39;</span><span class="p">:</span> <span class="s1">&#39;Apollon&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Argentinos Juniors&#39;</span><span class="p">:</span> <span class="s1">&#39;Argentinos Jrs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Aris Salonika&#39;</span><span class="p">:</span> <span class="s1">&#39;Aris&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Arouca&#39;</span><span class="p">:</span> <span class="s1">&#39;Arouca&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Arsenal Tula&#39;</span><span class="p">:</span> <span class="s1">&#39;Arsenal Tula&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Athletic Bilbao&#39;</span><span class="p">:</span> <span class="s1">&#39;Ath Bilbao&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Atletico Madrid&#39;</span><span class="p">:</span> <span class="s1">&#39;Ath Madrid&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AtlÃ©tico San Luis&#39;</span><span class="p">:</span> <span class="s1">&#39;Atl. San Luis&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AtlÃ©tico TucumÃ¡n&#39;</span><span class="p">:</span> <span class="s1">&#39;Atl. Tucuman&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Atlanta United FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Atlanta United&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Atletico Mineiro&#39;</span><span class="p">:</span> <span class="s1">&#39;Atletico-MG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AtlÃ©tico Paranaense&#39;</span><span class="p">:</span> <span class="s1">&#39;Atletico-PR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Augsburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Augsburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FK Austria Vienna&#39;</span><span class="p">:</span> <span class="s1">&#39;Austria Vienna&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvaÃ</span><span class="se">\xad</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;Avai&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BahÃ</span><span class="se">\xad</span><span class="s1">a&#39;</span><span class="p">:</span> <span class="s1">&#39;Bahia&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Barcelona II&#39;</span><span class="p">:</span> <span class="s1">&#39;Barcelona B&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KFCO Beerschot-Wilrijk&#39;</span><span class="p">:</span> <span class="s1">&#39;Beerschot VA&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Guizhou Renhe&#39;</span><span class="p">:</span> <span class="s1">&#39;Beijing Renhe&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Belgrano Cordoba&#39;</span><span class="p">:</span> <span class="s1">&#39;Belgrano&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Betis&#39;</span><span class="p">:</span> <span class="s1">&#39;Betis&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Beziers AS&#39;</span><span class="p">:</span> <span class="s1">&#39;Beziers&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Arminia Bielefeld&#39;</span><span class="p">:</span> <span class="s1">&#39;Bielefeld&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VfL Bochum&#39;</span><span class="p">:</span> <span class="s1">&#39;Bochum&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Botafogo&#39;</span><span class="p">:</span> <span class="s1">&#39;Botafogo RJ&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Bourg-Peronnas&#39;</span><span class="p">:</span> <span class="s1">&#39;Bourg Peronnas&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AFC Bournemouth&#39;</span><span class="p">:</span> <span class="s1">&#39;Bournemouth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Bradford City&#39;</span><span class="p">:</span> <span class="s1">&#39;Bradford&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SK Brann&#39;</span><span class="p">:</span> <span class="s1">&#39;Brann&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Eintracht Braunschweig&#39;</span><span class="p">:</span> <span class="s1">&#39;Braunschweig&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Brighton and Hove Albion&#39;</span><span class="p">:</span> <span class="s1">&#39;Brighton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Bristol Rovers&#39;</span><span class="p">:</span> <span class="s1">&#39;Bristol Rvs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Istanbul Basaksehir&#39;</span><span class="p">:</span> <span class="s1">&#39;Buyuksehyr&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cambridge United&#39;</span><span class="p">:</span> <span class="s1">&#39;Cambridge&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cambuur Leeuwarden&#39;</span><span class="p">:</span> <span class="s1">&#39;Cambuur&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cardiff City&#39;</span><span class="p">:</span> <span class="s1">&#39;Cardiff&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Carlisle United&#39;</span><span class="p">:</span> <span class="s1">&#39;Carlisle&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Cartagena&#39;</span><span class="p">:</span> <span class="s1">&#39;Cartagena&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;CearÃ¡&#39;</span><span class="p">:</span> <span class="s1">&#39;Ceara&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Celta Vigo&#39;</span><span class="p">:</span> <span class="s1">&#39;Celta&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Central CÃ³rdoba Santiago del Estero&#39;</span><span class="p">:</span> <span class="s1">&#39;Central Cordoba&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Chambly Thelle FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Chambly&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Chapecoense AF&#39;</span><span class="p">:</span> <span class="s1">&#39;Chapecoense-SC&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sporting de Charleroi&#39;</span><span class="p">:</span> <span class="s1">&#39;Charleroi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Charlton Athletic&#39;</span><span class="p">:</span> <span class="s1">&#39;Charlton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cheltenham Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Cheltenham&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Chiapas FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Chiapas&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Chievo Verona&#39;</span><span class="p">:</span> <span class="s1">&#39;Chievo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Chongqing Lifan&#39;</span><span class="p">:</span> <span class="s1">&#39;Chongqing Liangjiang Athletic&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Clermont Foot&#39;</span><span class="p">:</span> <span class="s1">&#39;Clermont&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Club AmÃ©rica&#39;</span><span class="p">:</span> <span class="s1">&#39;Club America&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tijuana&#39;</span><span class="p">:</span> <span class="s1">&#39;Club Tijuana&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Montreal Impact&#39;</span><span class="p">:</span> <span class="s1">&#39;Club de Foot Montreal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Colchester United&#39;</span><span class="p">:</span> <span class="s1">&#39;Colchester&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Colon Santa Fe&#39;</span><span class="p">:</span> <span class="s1">&#39;Colon Santa FE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Coventry City&#39;</span><span class="p">:</span> <span class="s1">&#39;Coventry&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Crewe Alexandra&#39;</span><span class="p">:</span> <span class="s1">&#39;Crewe&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dalian Aerbin&#39;</span><span class="p">:</span> <span class="s1">&#39;Dalian Yifang F.C.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dalkurd FF&#39;</span><span class="p">:</span> <span class="s1">&#39;Dalkurd&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Darmstadt 98&#39;</span><span class="p">:</span> <span class="s1">&#39;Darmstadt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Degerfors IF&#39;</span><span class="p">:</span> <span class="s1">&#39;Degerfors&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ADO Den Haag&#39;</span><span class="p">:</span> <span class="s1">&#39;Den Haag&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Derby County&#39;</span><span class="p">:</span> <span class="s1">&#39;Derby&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dijon FCO&#39;</span><span class="p">:</span> <span class="s1">&#39;Dijon&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Djurgardens IF&#39;</span><span class="p">:</span> <span class="s1">&#39;Djurgarden&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Doncaster Rovers&#39;</span><span class="p">:</span> <span class="s1">&#39;Doncaster&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Borussia Dortmund&#39;</span><span class="p">:</span> <span class="s1">&#39;Dortmund&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dynamo Dresden&#39;</span><span class="p">:</span> <span class="s1">&#39;Dresden&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MSV Duisburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Duisburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dundee Utd&#39;</span><span class="p">:</span> <span class="s1">&#39;Dundee United&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Dinamo Moscow&#39;</span><span class="p">:</span> <span class="s1">&#39;Dynamo Moscow&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Eintracht Frankfurt&#39;</span><span class="p">:</span> <span class="s1">&#39;Ein Frankfurt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IF Elfsborg&#39;</span><span class="p">:</span> <span class="s1">&#39;Elfsborg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Erzurumspor&#39;</span><span class="p">:</span> <span class="s1">&#39;Erzurum BB&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Espanyol&#39;</span><span class="p">:</span> <span class="s1">&#39;Espanol&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Estoril Praia&#39;</span><span class="p">:</span> <span class="s1">&#39;Estoril&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Estudiantes&#39;</span><span class="p">:</span> <span class="s1">&#39;Estudiantes L.P.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Exeter City&#39;</span><span class="p">:</span> <span class="s1">&#39;Exeter&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Emmen&#39;</span><span class="p">:</span> <span class="s1">&#39;FC Emmen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Cologne&#39;</span><span class="p">:</span> <span class="s1">&#39;FC Koln&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Anzhi Makhachkala&#39;</span><span class="p">:</span> <span class="s1">&#39;FK Anzi Makhackala&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Krylia Sovetov&#39;</span><span class="p">:</span> <span class="s1">&#39;FK Krylya Sovetov Samara&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Rostov&#39;</span><span class="p">:</span> <span class="s1">&#39;FK Rostov&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Falkenbergs FF&#39;</span><span class="p">:</span> <span class="s1">&#39;Falkenbergs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SC Farense&#39;</span><span class="p">:</span> <span class="s1">&#39;Farense&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Flamengo&#39;</span><span class="p">:</span> <span class="s1">&#39;Flamengo RJ&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Fortuna Sittard&#39;</span><span class="p">:</span> <span class="s1">&#39;For Sittard&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Forest Green Rovers&#39;</span><span class="p">:</span> <span class="s1">&#39;Forest Green&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Fortuna DÃ¼sseldorf&#39;</span><span class="p">:</span> <span class="s1">&#39;Fortuna Dusseldorf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SC Freiburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Freiburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Gazisehir Gaziantep&#39;</span><span class="p">:</span> <span class="s1">&#39;Gaziantep&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KAA Gent&#39;</span><span class="p">:</span> <span class="s1">&#39;Gent&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Gimnasia La Plata&#39;</span><span class="p">:</span> <span class="s1">&#39;Gimnasia L.P.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GimnÃ¡stic Tarragona&#39;</span><span class="p">:</span> <span class="s1">&#39;Gimnastic&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Girona FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Girona&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GoiÃ¡s&#39;</span><span class="p">:</span> <span class="s1">&#39;Goias&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IFK Goteborg&#39;</span><span class="p">:</span> <span class="s1">&#39;Goteborg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Goztepe&#39;</span><span class="p">:</span> <span class="s1">&#39;Goztep&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;De Graafschap&#39;</span><span class="p">:</span> <span class="s1">&#39;Graafschap&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Grasshoppers ZÃ¼rich&#39;</span><span class="p">:</span> <span class="s1">&#39;Grasshoppers&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GrÃªmio&#39;</span><span class="p">:</span> <span class="s1">&#39;Gremio&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SpVgg Greuther FÃ¼rth&#39;</span><span class="p">:</span> <span class="s1">&#39;Greuther Furth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Grimsby Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Grimsby&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Groningen&#39;</span><span class="p">:</span> <span class="s1">&#39;Groningen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Guadalajara&#39;</span><span class="p">:</span> <span class="s1">&#39;Guadalajara Chivas&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Guangzhou RF&#39;</span><span class="p">:</span> <span class="s1">&#39;Guangzhou R&amp;F&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Guizhou Hengfeng Zhicheng&#39;</span><span class="p">:</span> <span class="s1">&#39;Guizhou Zhicheng&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BK Hacken&#39;</span><span class="p">:</span> <span class="s1">&#39;Hacken&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Halmstads BK&#39;</span><span class="p">:</span> <span class="s1">&#39;Halmstad&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hamburg SV&#39;</span><span class="p">:</span> <span class="s1">&#39;Hamburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hamilton Academical&#39;</span><span class="p">:</span> <span class="s1">&#39;Hamilton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hannover 96&#39;</span><span class="p">:</span> <span class="s1">&#39;Hannover&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Harrogate Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Harrogate&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hebei China Fortune FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Hebei&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;1. FC Heidenheim 1846&#39;</span><span class="p">:</span> <span class="s1">&#39;Heidenheim&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Helsingborgs IF&#39;</span><span class="p">:</span> <span class="s1">&#39;Helsingborg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Henan Jianye&#39;</span><span class="p">:</span> <span class="s1">&#39;Henan Songshan Longmen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hertha Berlin&#39;</span><span class="p">:</span> <span class="s1">&#39;Hertha&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hobro IK&#39;</span><span class="p">:</span> <span class="s1">&#39;Hobro&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;TSG Hoffenheim&#39;</span><span class="p">:</span> <span class="s1">&#39;Hoffenheim&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Consadole Sapporo&#39;</span><span class="p">:</span> <span class="s1">&#39;Hokkaido Consadole Sapporo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AC Horsens&#39;</span><span class="p">:</span> <span class="s1">&#39;Horsens&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Huddersfield Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Huddersfield&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SD Huesca&#39;</span><span class="p">:</span> <span class="s1">&#39;Huesca&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Hull City&#39;</span><span class="p">:</span> <span class="s1">&#39;Hull&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HuracÃ¡n&#39;</span><span class="p">:</span> <span class="s1">&#39;Huracan&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;UD Ibiza&#39;</span><span class="p">:</span> <span class="s1">&#39;Ibiza&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;CA Independiente&#39;</span><span class="p">:</span> <span class="s1">&#39;Independiente&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Ingolstadt 04&#39;</span><span class="p">:</span> <span class="s1">&#39;Ingolstadt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Internazionale&#39;</span><span class="p">:</span> <span class="s1">&#39;Inter&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Inter Miami CF&#39;</span><span class="p">:</span> <span class="s1">&#39;Inter Miami&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ionikos FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Ionikos&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ipswich Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Ipswich&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Jubilo Iwata&#39;</span><span class="p">:</span> <span class="s1">&#39;Iwata&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Jiangsu Suning FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Jiangsu Suning&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Jonkopings Sodra IF&#39;</span><span class="p">:</span> <span class="s1">&#39;Jonkopings&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC JuÃ¡rez&#39;</span><span class="p">:</span> <span class="s1">&#39;Juarez&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;1. FC Kaiserslautern&#39;</span><span class="p">:</span> <span class="s1">&#39;Kaiserslautern&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Kalmar FF&#39;</span><span class="p">:</span> <span class="s1">&#39;Kalmar&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KarabÃ¼kspor&#39;</span><span class="p">:</span> <span class="s1">&#39;Karabukspor&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Fatih KaragÃ¼mrÃ¼k&#39;</span><span class="p">:</span> <span class="s1">&#39;Karagumruk&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Karlsruher SC&#39;</span><span class="p">:</span> <span class="s1">&#39;Karlsruhe&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Khimki&#39;</span><span class="p">:</span> <span class="s1">&#39;Khimki&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KV Kortrijk&#39;</span><span class="p">:</span> <span class="s1">&#39;Kortrijk&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Krasnodar&#39;</span><span class="p">:</span> <span class="s1">&#39;Krasnodar&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Kristiansund BK&#39;</span><span class="p">:</span> <span class="s1">&#39;Kristiansund&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LASK Linz&#39;</span><span class="p">:</span> <span class="s1">&#39;LASK&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Deportivo La CoruÃ±a&#39;</span><span class="p">:</span> <span class="s1">&#39;La Coruna&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Larissa&#39;</span><span class="p">:</span> <span class="s1">&#39;Larisa&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Lausanne Sports&#39;</span><span class="p">:</span> <span class="s1">&#39;Lausanne&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Leeds United&#39;</span><span class="p">:</span> <span class="s1">&#39;Leeds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Leicester City&#39;</span><span class="p">:</span> <span class="s1">&#39;Leicester&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Cultural Leonesa&#39;</span><span class="p">:</span> <span class="s1">&#39;Leonesa&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Levadiakos&#39;</span><span class="p">:</span> <span class="s1">&#39;Levadeiakos&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Bayer Leverkusen&#39;</span><span class="p">:</span> <span class="s1">&#39;Leverkusen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Lincoln City&#39;</span><span class="p">:</span> <span class="s1">&#39;Lincoln&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Lobos de la BUAP&#39;</span><span class="p">:</span> <span class="s1">&#39;Lobos BUAP&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KSC Lokeren&#39;</span><span class="p">:</span> <span class="s1">&#39;Lokeren&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;La Hoya Lorca&#39;</span><span class="p">:</span> <span class="s1">&#39;Lorca&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Lugano&#39;</span><span class="p">:</span> <span class="s1">&#39;Lugano&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Luton Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Luton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Luzern&#39;</span><span class="p">:</span> <span class="s1">&#39;Luzern&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Borussia Monchengladbach&#39;</span><span class="p">:</span> <span class="s2">&quot;M&#39;gladbach&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;1. FC Magdeburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Magdeburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MÃ¡laga&#39;</span><span class="p">:</span> <span class="s1">&#39;Malaga&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Manchester City&#39;</span><span class="p">:</span> <span class="s1">&#39;Man City&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Manchester United&#39;</span><span class="p">:</span> <span class="s1">&#39;Man United&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Mansfield Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Mansfield&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Mattersburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Mattersburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MazatlÃ¡n FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Mazatlan FC&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KV Mechelen&#39;</span><span class="p">:</span> <span class="s1">&#39;Mechelen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Midtjylland&#39;</span><span class="p">:</span> <span class="s1">&#39;Midtjylland&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AC Milan&#39;</span><span class="p">:</span> <span class="s1">&#39;Milan&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Minnesota United FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Minnesota United&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AS Monaco&#39;</span><span class="p">:</span> <span class="s1">&#39;Monaco&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Morelia&#39;</span><span class="p">:</span> <span class="s1">&#39;Monarcas&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Mouscron-Peruwelz&#39;</span><span class="p">:</span> <span class="s1">&#39;Mouscron&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NAC&#39;</span><span class="p">:</span> <span class="s1">&#39;NAC Breda&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;C.D. Nacional&#39;</span><span class="p">:</span> <span class="s1">&#39;Nacional&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Nagoya Grampus Eight&#39;</span><span class="p">:</span> <span class="s1">&#39;Nagoya Grampus&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AS Nancy Lorraine&#39;</span><span class="p">:</span> <span class="s1">&#39;Nancy&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;New York City FC&#39;</span><span class="p">:</span> <span class="s1">&#39;New York City&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Newell&#39;s Old Boys&quot;</span><span class="p">:</span> <span class="s1">&#39;Newells Old Boys&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NEC&#39;</span><span class="p">:</span> <span class="s1">&#39;Nijmegen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FK Nizhny Novgorod&#39;</span><span class="p">:</span> <span class="s1">&#39;Nizhny Novgorod&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Nordsjaelland&#39;</span><span class="p">:</span> <span class="s1">&#39;Nordsjaelland&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IFK Norrkoping&#39;</span><span class="p">:</span> <span class="s1">&#39;Norrkoping&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Northampton Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Northampton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Norwich City&#39;</span><span class="p">:</span> <span class="s1">&#39;Norwich&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Nottingham Forest&#39;</span><span class="p">:</span> <span class="s2">&quot;Nott&#39;m Forest&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;1. FC NÃ¼rnberg&#39;</span><span class="p">:</span> <span class="s1">&#39;Nurnberg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Odd BK&#39;</span><span class="p">:</span> <span class="s1">&#39;Odd&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Odense BK&#39;</span><span class="p">:</span> <span class="s1">&#39;Odense&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Oldham Athletic&#39;</span><span class="p">:</span> <span class="s1">&#39;Oldham&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Olimpo&#39;</span><span class="p">:</span> <span class="s1">&#39;Olimpo Bahia Blanca&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Olympiacos&#39;</span><span class="p">:</span> <span class="s1">&#39;Olympiakos&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;KV Oostende&#39;</span><span class="p">:</span> <span class="s1">&#39;Oostende&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Orebro SK&#39;</span><span class="p">:</span> <span class="s1">&#39;Orebro&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Gazovik Orenburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Orenburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Orlando City SC&#39;</span><span class="p">:</span> <span class="s1">&#39;Orlando City&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;OrlÃ©ans&#39;</span><span class="p">:</span> <span class="s1">&#39;Orleans&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VfL Osnabruck&#39;</span><span class="p">:</span> <span class="s1">&#39;Osnabruck&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Ã</span><span class="se">\x96</span><span class="s1">stersunds FK&#39;</span><span class="p">:</span> <span class="s1">&#39;Ostersunds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;OH Leuven&#39;</span><span class="p">:</span> <span class="s1">&#39;Oud-Heverlee Leuven&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Oviedo&#39;</span><span class="p">:</span> <span class="s1">&#39;Oviedo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Oxford United&#39;</span><span class="p">:</span> <span class="s1">&#39;Oxford&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PAOK Salonika&#39;</span><span class="p">:</span> <span class="s1">&#39;PAOK&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SC Paderborn&#39;</span><span class="p">:</span> <span class="s1">&#39;Paderborn&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ParanÃ¡&#39;</span><span class="p">:</span> <span class="s1">&#39;Parana&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Paris Saint-Germain&#39;</span><span class="p">:</span> <span class="s1">&#39;Paris SG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Partick Thistle&#39;</span><span class="p">:</span> <span class="s1">&#39;Partick&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Pau&#39;</span><span class="p">:</span> <span class="s1">&#39;Pau FC&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;US Pescara&#39;</span><span class="p">:</span> <span class="s1">&#39;Pescara&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Peterborough United&#39;</span><span class="p">:</span> <span class="s1">&#39;Peterboro&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Plymouth Argyle&#39;</span><span class="p">:</span> <span class="s1">&#39;Plymouth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SD Ponferradina&#39;</span><span class="p">:</span> <span class="s1">&#39;Ponferradina&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Pordenone Calcio&#39;</span><span class="p">:</span> <span class="s1">&#39;Pordenone&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Porto&#39;</span><span class="p">:</span> <span class="s1">&#39;Porto&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Preston North End&#39;</span><span class="p">:</span> <span class="s1">&#39;Preston&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;QuerÃ©taro&#39;</span><span class="p">:</span> <span class="s1">&#39;Queretaro&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;US Quevilly&#39;</span><span class="p">:</span> <span class="s1">&#39;Quevilly Rouen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FK Volgograd&#39;</span><span class="p">:</span> <span class="s1">&#39;R. Volgograd&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Red Star FC 93&#39;</span><span class="p">:</span> <span class="s1">&#39;Red Star&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Jahn Regensburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Regensburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Stade Rennes&#39;</span><span class="p">:</span> <span class="s1">&#39;Rennes&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Ried&#39;</span><span class="p">:</span> <span class="s1">&#39;Ried&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Caykur Rizespor&#39;</span><span class="p">:</span> <span class="s1">&#39;Rizespor&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Roda JC&#39;</span><span class="p">:</span> <span class="s1">&#39;Roda&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AS Roma&#39;</span><span class="p">:</span> <span class="s1">&#39;Roma&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Rotherham United&#39;</span><span class="p">:</span> <span class="s1">&#39;Rotherham&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Energiya Khabarovsk&#39;</span><span class="p">:</span> <span class="s1">&#39;SKA Khabarovsk&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;CD Sabadell&#39;</span><span class="p">:</span> <span class="s1">&#39;Sabadell&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Salford City&#39;</span><span class="p">:</span> <span class="s1">&#39;Salford&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Salzburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Salzburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;San Martin San Juan&#39;</span><span class="p">:</span> <span class="s1">&#39;San Martin S.J.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;San Martin de Tucuman&#39;</span><span class="p">:</span> <span class="s1">&#39;San Martin T.&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Sandhausen&#39;</span><span class="p">:</span> <span class="s1">&#39;Sandhausen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Racing Santander&#39;</span><span class="p">:</span> <span class="s1">&#39;Santander&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SÃ£o Paulo&#39;</span><span class="p">:</span> <span class="s1">&#39;Sao Paulo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sarpsborg&#39;</span><span class="p">:</span> <span class="s1">&#39;Sarpsborg 08&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Seattle Sounders FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Seattle Sounders&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;RFC Seraing&#39;</span><span class="p">:</span> <span class="s1">&#39;Seraing&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Vitoria Setubal&#39;</span><span class="p">:</span> <span class="s1">&#39;Setubal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sevilla FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Sevilla&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sevilla Atletico&#39;</span><span class="p">:</span> <span class="s1">&#39;Sevilla B&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Shanghai Greenland&#39;</span><span class="p">:</span> <span class="s1">&#39;Shanghai Shenhua&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sheffield Wednesday&#39;</span><span class="p">:</span> <span class="s1">&#39;Sheffield Weds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Shenzhen FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Shenzhen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Shrewsbury Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Shrewsbury&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Sion&#39;</span><span class="p">:</span> <span class="s1">&#39;Sion&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IK Sirius&#39;</span><span class="p">:</span> <span class="s1">&#39;Sirius&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Sociedad&#39;</span><span class="p">:</span> <span class="s1">&#39;Sociedad&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Sociedad II&#39;</span><span class="p">:</span> <span class="s1">&#39;Sociedad B&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Southend United&#39;</span><span class="p">:</span> <span class="s1">&#39;Southend&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Braga&#39;</span><span class="p">:</span> <span class="s1">&#39;Sp Braga&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sporting GijÃ³n&#39;</span><span class="p">:</span> <span class="s1">&#39;Sp Gijon&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sparta&#39;</span><span class="p">:</span> <span class="s1">&#39;Sparta Rotterdam&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC St. Pauli&#39;</span><span class="p">:</span> <span class="s1">&#39;St Pauli&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;St. Truidense&#39;</span><span class="p">:</span> <span class="s1">&#39;St Truiden&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;St Gallen&#39;</span><span class="p">:</span> <span class="s1">&#39;St. Gallen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Union Saint Gilloise&#39;</span><span class="p">:</span> <span class="s1">&#39;St. Gilloise&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;St. PÃ¶lten&#39;</span><span class="p">:</span> <span class="s1">&#39;St. Polten&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Standard Liege&#39;</span><span class="p">:</span> <span class="s1">&#39;Standard&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IK Start&#39;</span><span class="p">:</span> <span class="s1">&#39;Start&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Stoke City&#39;</span><span class="p">:</span> <span class="s1">&#39;Stoke&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SK Sturm Graz&#39;</span><span class="p">:</span> <span class="s1">&#39;Sturm Graz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VfB Stuttgart&#39;</span><span class="p">:</span> <span class="s1">&#39;Stuttgart&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GIF Sundsvall&#39;</span><span class="p">:</span> <span class="s1">&#39;Sundsvall&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Sutton United&#39;</span><span class="p">:</span> <span class="s1">&#39;Sutton&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Swansea City&#39;</span><span class="p">:</span> <span class="s1">&#39;Swansea&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Swindon Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Swindon&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Talleres de CÃ³rdoba&#39;</span><span class="p">:</span> <span class="s1">&#39;Talleres Cordoba&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Tambov&#39;</span><span class="p">:</span> <span class="s1">&#39;Tambov&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tianjin Quanujian&#39;</span><span class="p">:</span> <span class="s1">&#39;Tianjin Quanjian&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tianjin Teda&#39;</span><span class="p">:</span> <span class="s1">&#39;Tianjin Tianhai&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WSG Swarovski Wattens&#39;</span><span class="p">:</span> <span class="s1">&#39;Tirol&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tokushima Vortis&#39;</span><span class="p">:</span> <span class="s1">&#39;Tokushima&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Tosno&#39;</span><span class="p">:</span> <span class="s1">&#39;Tosno&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tottenham Hotspur&#39;</span><span class="p">:</span> <span class="s1">&#39;Tottenham&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tranmere Rovers&#39;</span><span class="p">:</span> <span class="s1">&#39;Tranmere&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Trelleborgs FF&#39;</span><span class="p">:</span> <span class="s1">&#39;Trelleborgs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Twente&#39;</span><span class="p">:</span> <span class="s1">&#39;Twente&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tigres UANL&#39;</span><span class="p">:</span> <span class="s1">&#39;U.A.N.L.- Tigres&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Ufa&#39;</span><span class="p">:</span> <span class="s1">&#39;Ufa&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;1. FC Union Berlin&#39;</span><span class="p">:</span> <span class="s1">&#39;Union Berlin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Union Santa Fe&#39;</span><span class="p">:</span> <span class="s1">&#39;Union de Santa Fe&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Urawa Red Diamonds&#39;</span><span class="p">:</span> <span class="s1">&#39;Urawa Reds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Utrecht&#39;</span><span class="p">:</span> <span class="s1">&#39;Utrecht&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Vaduz&#39;</span><span class="p">:</span> <span class="s1">&#39;Vaduz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Valladolid&#39;</span><span class="p">:</span> <span class="s1">&#39;Valladolid&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Rayo Vallecano&#39;</span><span class="p">:</span> <span class="s1">&#39;Vallecano&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Varbergs BoIS FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Varbergs&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Vasco da Gama&#39;</span><span class="p">:</span> <span class="s1">&#39;Vasco&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;F.B.C Unione Venezia&#39;</span><span class="p">:</span> <span class="s1">&#39;Venezia&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Viking FK&#39;</span><span class="p">:</span> <span class="s1">&#39;Viking&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VÃ</span><span class="se">\xad</span><span class="s1">toria&#39;</span><span class="p">:</span> <span class="s1">&#39;Vitoria&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Wacker Innsbruck&#39;</span><span class="p">:</span> <span class="s1">&#39;Wacker Innsbruck&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Zulte Waregem&#39;</span><span class="p">:</span> <span class="s1">&#39;Waregem&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SV Wehen Wiesbaden&#39;</span><span class="p">:</span> <span class="s1">&#39;Wehen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;West Bromwich Albion&#39;</span><span class="p">:</span> <span class="s1">&#39;West Brom&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;West Ham United&#39;</span><span class="p">:</span> <span class="s1">&#39;West Ham&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Wolfsberger AC&#39;</span><span class="p">:</span> <span class="s1">&#39;Wolfsburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VfL Wolfsburg&#39;</span><span class="p">:</span> <span class="s1">&#39;Wolfsburg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Wuhan Zall&#39;</span><span class="p">:</span> <span class="s1">&#39;Wuhan FC&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WÃ¼rzburger Kickers&#39;</span><span class="p">:</span> <span class="s1">&#39;Wurzburger Kickers&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Wycombe Wanderers&#39;</span><span class="p">:</span> <span class="s1">&#39;Wycombe&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Neuchatel Xamax&#39;</span><span class="p">:</span> <span class="s1">&#39;Xamax&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Xanthi&#39;</span><span class="p">:</span> <span class="s1">&#39;Xanthi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Matsumoto Yamaga FC&#39;</span><span class="p">:</span> <span class="s1">&#39;Yamaga&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Yeovil Town&#39;</span><span class="p">:</span> <span class="s1">&#39;Yeovil&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Real Zaragoza&#39;</span><span class="p">:</span> <span class="s1">&#39;Zaragoza&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FC Zurich&#39;</span><span class="p">:</span> <span class="s1">&#39;Zurich&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PEC Zwolle&#39;</span><span class="p">:</span> <span class="s1">&#39;Zwolle&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span><span class="n">FDSoccerDataLoader</span><span class="o">.</span><span class="n">_get_schema</span><span class="p">()</span> <span class="o">+</span> <span class="n">FTESoccerDataLoader</span><span class="o">.</span><span class="n">_get_schema</span><span class="p">())</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_outcomes</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">OUTCOMES</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">full_param_grid</span> <span class="o">=</span> <span class="n">ParameterGrid</span><span class="p">(</span>
+            <span class="n">FDSoccerDataLoader</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">()</span><span class="o">.</span><span class="n">param_grid</span>
+            <span class="o">+</span> <span class="n">FTESoccerDataLoader</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">()</span><span class="o">.</span><span class="n">param_grid</span>
+        <span class="p">)</span>
+        <span class="n">full_param_grid</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">full_param_grid</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ParameterGrid</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">full_param_grid</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_param_grid</span><span class="p">()</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_schema</span><span class="p">()</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_outcomes</span><span class="p">()</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_drop_na_thres</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_odds_type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">dataloader</span><span class="o">.</span><span class="n">_check_data</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dataloader</span>
+
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fd_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">FDSoccerDataLoader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_grid</span><span class="p">))</span><span class="o">.</span><span class="n">data_</span>
+        <span class="n">fte_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">FTESoccerDataLoader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_grid</span><span class="p">))</span><span class="o">.</span><span class="n">data_</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">):</span>
+            <span class="n">fte_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">fte_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fd_data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">fte_data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sportsbet.datasets._soccer._dummy &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="../../../../_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Data Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html#machine-learning">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>sportsbet.datasets._soccer._dummy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sportsbet.datasets._soccer._dummy</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Dataloder for dummy data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author: Georgios Douzas &lt;gdouzas@icloud.com&gt;</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">ParameterGrid</span>
+
+<span class="kn">from</span> <span class="nn">sportsbet.datasets._base</span> <span class="kn">import</span> <span class="n">_BaseDataLoader</span>
+
+
+<div class="viewcode-block" id="DummySoccerDataLoader"><a class="viewcode-back" href="../../../../generated/sportsbet.datasets.DummySoccerDataLoader.html#sportsbet.datasets.DummySoccerDataLoader">[docs]</a><span class="k">class</span> <span class="nc">DummySoccerDataLoader</span><span class="p">(</span><span class="n">_BaseDataLoader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataloader for dummy data.&quot;&quot;&quot;</span>
+
+    <span class="n">DATE</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+    <span class="n">PARAMS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Greece&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">2019</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Spain&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1997</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Spain&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1999</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;England&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1997</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;England&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1998</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;France&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2000</span><span class="p">]},</span>
+        <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;France&#39;</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2001</span><span class="p">]},</span>
+    <span class="p">]</span>
+    <span class="n">SCHEMA</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;interwetten__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;interwetten__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;interwetten__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;williamhill__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;williamhill__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;williamhill__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">OUTCOMES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="s1">&#39;home_win__full_time_goals&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">&gt;</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s1">&#39;away_win__full_time_goals&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">&lt;</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s1">&#39;draw__full_time_goals&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s1">&#39;over_2.5_goals__full_time_goals&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">&gt;</span> <span class="mf">2.5</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s1">&#39;under_2.5_goals__full_time_goals&#39;</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">]</span>
+            <span class="o">&lt;</span> <span class="mf">2.5</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">DATA</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+            <span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;Greece&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Greece&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Greece&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Spain&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Spain&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;England&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;England&#39;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s1">&#39;France&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;France&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;France&#39;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;17/3/2017&#39;</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;17/3/2019&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;5/4/1997&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;3/4/1999&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;5/7/1997&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;3/4/1998&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;3/4/1998&#39;</span><span class="p">),</span>
+                <span class="n">DATE</span><span class="p">,</span>
+                <span class="n">DATE</span><span class="p">,</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;3/4/2000&#39;</span><span class="p">),</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;6/4/2001&#39;</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2017</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">2019</span><span class="p">,</span>
+                <span class="mi">1997</span><span class="p">,</span>
+                <span class="mi">1999</span><span class="p">,</span>
+                <span class="mi">1997</span><span class="p">,</span>
+                <span class="mi">1998</span><span class="p">,</span>
+                <span class="mi">1998</span><span class="p">,</span>
+                <span class="n">DATE</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                <span class="n">DATE</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                <span class="mi">2000</span><span class="p">,</span>
+                <span class="mi">2001</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;home_team&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;Olympiakos&#39;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s1">&#39;Panathinaikos&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Real Madrid&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Barcelona&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Arsenal&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Liverpool&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Liverpool&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Barcelona&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Monaco&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Lens&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;PSG&#39;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;away_team&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s1">&#39;Panathinaikos&#39;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="s1">&#39;AEK&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Barcelona&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Real Madrid&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Liverpool&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Arsenal&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Arsenal&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Real Madrid&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;PSG&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Monaco&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Lens&#39;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;interwetten__home_win__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="mf">3.0</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;interwetten__draw__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mf">4.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">4.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;interwetten__away_win__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">3.0</span><span class="p">,</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;williamhill__home_win__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="mf">3.0</span><span class="p">,</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="mf">4.0</span><span class="p">,</span>
+                <span class="mf">3.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;williamhill__draw__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">1.5</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">3.0</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;williamhill__away_win__odds&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">2</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+                <span class="mf">3.0</span><span class="p">,</span>
+                <span class="mf">2.5</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">&#39;fixtures&#39;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">False</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SCHEMA</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_outcomes</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">OUTCOMES</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ParameterGrid</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">PARAMS</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">DATA</span>
+
+    <span class="k">def</span> <span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DATA</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

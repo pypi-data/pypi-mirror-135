@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model evaluation &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="../../_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Soccer value bets" href="estimate_soccer_value_bets.html" />
+    <link rel="prev" title="Football-Data soccer data" href="../extract_fd_soccer_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Data Extraction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#machine-learning">Machine Learning</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-the-training-data">Extracting the training data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#splitting-the-data">Splitting the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-a-multi-output-classifier">Training a multi-output classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estimating-the-value-bets">Estimating the value bets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="estimate_soccer_value_bets.html">Soccer value bets</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Data Extraction</a> &raquo;</li>
+      <li>Model evaluation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/auto_examples/machine-learning/evaluate_soccer_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-machine-learning-evaluate-soccer-model-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="model-evaluation">
+<span id="sphx-glr-auto-examples-machine-learning-evaluate-soccer-model-py"></span><h1>Model evaluation<a class="headerlink" href="#model-evaluation" title="Permalink to this headline">¶</a></h1>
+<p>This example illustrates how to evaluate a model’s performance
+on soccer historical data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Author: Georgios Douzas &lt;gdouzas@icloud.com&gt;</span>
+<span class="c1"># Licence: MIT</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sportsbet.datasets</span> <span class="kn">import</span> <a href="../../generated/sportsbet.datasets.SoccerDataLoader.html#sportsbet.datasets.SoccerDataLoader" title="sportsbet.datasets.SoccerDataLoader" class="sphx-glr-backref-module-sportsbet-datasets sphx-glr-backref-type-py-class"><span class="n">SoccerDataLoader</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="sklearn.neighbors.KNeighborsClassifier" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class"><span class="n">KNeighborsClassifier</span></a>
+</pre></div>
+</div>
+<div class="section" id="extracting-the-training-data">
+<h2>Extracting the training data<a class="headerlink" href="#extracting-the-training-data" title="Permalink to this headline">¶</a></h2>
+<p>We extract the training data for the spanish league. We also remove any
+missing values and select the market maximum odds.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="../../generated/sportsbet.datasets.SoccerDataLoader.html#sportsbet.datasets.SoccerDataLoader" title="sportsbet.datasets.SoccerDataLoader" class="sphx-glr-backref-module-sportsbet-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataloader</span></a> <span class="o">=</span> <a href="../../generated/sportsbet.datasets.SoccerDataLoader.html#sportsbet.datasets.SoccerDataLoader" title="sportsbet.datasets.SoccerDataLoader" class="sphx-glr-backref-module-sportsbet-datasets sphx-glr-backref-type-py-class"><span class="n">SoccerDataLoader</span></a><span class="p">(</span><span class="n">param_grid</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Spain&#39;</span><span class="p">]})</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">Odds_train</span> <span class="o">=</span> <a href="../../generated/sportsbet.datasets.SoccerDataLoader.html#sportsbet.datasets.SoccerDataLoader.extract_train_data" title="sportsbet.datasets.SoccerDataLoader.extract_train_data" class="sphx-glr-backref-module-sportsbet-datasets sphx-glr-backref-type-py-method"><span class="n">dataloader</span><span class="o">.</span><span class="n">extract_train_data</span></a><span class="p">(</span>
+    <span class="n">drop_na_thres</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">odds_type</span><span class="o">=</span><span class="s1">&#39;market_maximum&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Football-Data.co.uk: ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+</pre></div>
+</div>
+<p>The input data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>home_team</th>
+      <th>away_team</th>
+      <th>league</th>
+      <th>division</th>
+      <th>year</th>
+      <th>home_team_soccer_power_index</th>
+      <th>away_team_soccer_power_index</th>
+      <th>home_team_probability_win</th>
+      <th>away_team_probability_win</th>
+      <th>probability_draw</th>
+      <th>home_team_projected_score</th>
+      <th>away_team_projected_score</th>
+      <th>match_quality</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2016-08-19</th>
+      <td>Malaga</td>
+      <td>Osasuna</td>
+      <td>Spain</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>72.57</td>
+      <td>56.93</td>
+      <td>0.5475</td>
+      <td>0.1897</td>
+      <td>0.2628</td>
+      <td>1.56</td>
+      <td>0.70</td>
+      <td>63.805561</td>
+    </tr>
+    <tr>
+      <th>2016-08-19</th>
+      <td>La Coruna</td>
+      <td>Eibar</td>
+      <td>Spain</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>66.52</td>
+      <td>62.29</td>
+      <td>0.5003</td>
+      <td>0.2260</td>
+      <td>0.2738</td>
+      <td>1.47</td>
+      <td>0.79</td>
+      <td>64.335545</td>
+    </tr>
+    <tr>
+      <th>2016-08-20</th>
+      <td>Barcelona</td>
+      <td>Betis</td>
+      <td>Spain</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>96.35</td>
+      <td>69.95</td>
+      <td>0.9591</td>
+      <td>0.0071</td>
+      <td>0.0337</td>
+      <td>3.40</td>
+      <td>0.42</td>
+      <td>81.054510</td>
+    </tr>
+    <tr>
+      <th>2016-08-20</th>
+      <td>Sevilla</td>
+      <td>Espanol</td>
+      <td>Spain</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>78.76</td>
+      <td>68.75</td>
+      <td>0.5952</td>
+      <td>0.1760</td>
+      <td>0.2288</td>
+      <td>1.89</td>
+      <td>0.88</td>
+      <td>73.415362</td>
+    </tr>
+    <tr>
+      <th>2016-08-20</th>
+      <td>Granada</td>
+      <td>Villarreal</td>
+      <td>Spain</td>
+      <td>1</td>
+      <td>2017</td>
+      <td>55.69</td>
+      <td>76.79</td>
+      <td>0.3194</td>
+      <td>0.3917</td>
+      <td>0.2889</td>
+      <td>1.07</td>
+      <td>1.19</td>
+      <td>64.559709</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2021-12-19</th>
+      <td>Fuenlabrada</td>
+      <td>Oviedo</td>
+      <td>Spain</td>
+      <td>2</td>
+      <td>2022</td>
+      <td>23.93</td>
+      <td>34.47</td>
+      <td>0.3181</td>
+      <td>0.3483</td>
+      <td>0.3336</td>
+      <td>0.97</td>
+      <td>1.03</td>
+      <td>28.248873</td>
+    </tr>
+    <tr>
+      <th>2021-12-19</th>
+      <td>Ponferradina</td>
+      <td>Amorebieta</td>
+      <td>Spain</td>
+      <td>2</td>
+      <td>2022</td>
+      <td>32.85</td>
+      <td>25.44</td>
+      <td>0.4926</td>
+      <td>0.2281</td>
+      <td>0.2793</td>
+      <td>1.53</td>
+      <td>0.95</td>
+      <td>28.674009</td>
+    </tr>
+    <tr>
+      <th>2021-12-31</th>
+      <td>Burgos</td>
+      <td>Amorebieta</td>
+      <td>Spain</td>
+      <td>2</td>
+      <td>2022</td>
+      <td>25.64</td>
+      <td>25.98</td>
+      <td>0.3896</td>
+      <td>0.3090</td>
+      <td>0.3014</td>
+      <td>1.26</td>
+      <td>1.09</td>
+      <td>25.808880</td>
+    </tr>
+    <tr>
+      <th>2021-12-31</th>
+      <td>Oviedo</td>
+      <td>Ponferradina</td>
+      <td>Spain</td>
+      <td>2</td>
+      <td>2022</td>
+      <td>34.04</td>
+      <td>32.07</td>
+      <td>0.4257</td>
+      <td>0.2608</td>
+      <td>0.3135</td>
+      <td>1.24</td>
+      <td>0.91</td>
+      <td>33.025648</td>
+    </tr>
+    <tr>
+      <th>2021-12-31</th>
+      <td>Eibar</td>
+      <td>Sociedad B</td>
+      <td>Spain</td>
+      <td>2</td>
+      <td>2022</td>
+      <td>35.73</td>
+      <td>25.54</td>
+      <td>0.5271</td>
+      <td>0.2011</td>
+      <td>0.2718</td>
+      <td>1.60</td>
+      <td>0.88</td>
+      <td>29.787635</td>
+    </tr>
+  </tbody>
+</table>
+<p>2724 rows × 13 columns</p>
+</div>
+</div>
+<br />
+<br /><p>The targets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Y_train</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>away_win__full_time_goals</th>
+      <th>draw__full_time_goals</th>
+      <th>home_win__full_time_goals</th>
+      <th>over_2.5__full_time_goals</th>
+      <th>under_2.5__full_time_goals</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2719</th>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2720</th>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2721</th>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2722</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2723</th>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>2724 rows × 5 columns</p>
+</div>
+</div>
+<br />
+<br /></div>
+<div class="section" id="splitting-the-data">
+<h2>Splitting the data<a class="headerlink" href="#splitting-the-data" title="Permalink to this headline">¶</a></h2>
+<p>We split the training data into training and testing data by keeping the
+first 80% of observations as training data, since the data are already
+sorted by date.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.80</span><span class="p">)</span>
+<span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="n">Odds_test</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a><span class="p">:],</span> <span class="n">Y_train</span><span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a><span class="p">:],</span> <span class="n">Odds_train</span><span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a><span class="p">:]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a><span class="p">],</span> <span class="n">Y_train</span><span class="p">[:</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ind</span></a><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="training-a-multi-output-classifier">
+<h2>Training a multi-output classifier<a class="headerlink" href="#training-a-multi-output-classifier" title="Permalink to this headline">¶</a></h2>
+<p>We train a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="(in scikit-learn v1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">KNeighborsClassifier</span></code></a> using only numerical
+features from the input data. We also use the extracted targets.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">num_features</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">col</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span>
+    <span class="k">if</span> <span class="n">X_train</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="numpy.dtype" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class"><span class="n">np</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="numpy.dtype" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class"><span class="n">np</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+<span class="p">]</span>
+<a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="sklearn.neighbors.KNeighborsClassifier" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clf</span></a> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier" title="sklearn.neighbors.KNeighborsClassifier" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-class"><span class="n">KNeighborsClassifier</span></a><span class="p">()</span>
+<a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier.fit" title="sklearn.neighbors.KNeighborsClassifier.fit" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-method"><span class="n">clf</span><span class="o">.</span><span class="n">fit</span></a><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">num_features</span></a><span class="p">],</span> <span class="n">Y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>KNeighborsClassifier()
+</pre></div>
+</div>
+</div>
+<div class="section" id="estimating-the-value-bets">
+<h2>Estimating the value bets<a class="headerlink" href="#estimating-the-value-bets" title="Permalink to this headline">¶</a></h2>
+<p>We can estimate the value bets by using the fitted classifier.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Y_pred_prob</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">prob</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">prob</span> <span class="ow">in</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier.predict_proba" title="sklearn.neighbors.KNeighborsClassifier.predict_proba" class="sphx-glr-backref-module-sklearn-neighbors sphx-glr-backref-type-py-method"><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span></a><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">num_features</span></a><span class="p">])],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">value_bets</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Y_pred_prob</span></a> <span class="o">*</span> <span class="n">Odds_test</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>We assume that we bet an amount of +1 in every value bet. Then we have the
+following mean profit per bet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">profit</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmean.html#numpy.nanmean" title="numpy.nanmean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span></a><span class="p">((</span><span class="n">Y_test</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="n">Odds_test</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">value_bets</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">profit</span></a>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-0.013812844036697245
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  45.232 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-machine-learning-evaluate-soccer-model-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<a class="reference download internal" download="" href="../../_downloads/a95a821f930951172b6f062a47328182/evaluate_soccer_model.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">evaluate_soccer_model.py</span></code></a></div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<a class="reference download internal" download="" href="../../_downloads/e1941fc061bdc4736e3acc0c5b2d4b7e/evaluate_soccer_model.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">evaluate_soccer_model.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../extract_fd_soccer_data.html" class="btn btn-neutral float-left" title="Football-Data soccer data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="estimate_soccer_value_bets.html" class="btn btn-neutral float-right" title="Soccer value bets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

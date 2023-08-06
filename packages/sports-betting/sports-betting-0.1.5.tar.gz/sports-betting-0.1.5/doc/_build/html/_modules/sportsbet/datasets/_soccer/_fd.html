@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sportsbet.datasets._soccer._fd &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="../../../../_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Data Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html#machine-learning">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>sportsbet.datasets._soccer._fd</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sportsbet.datasets._soccer._fd</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Download and transform historical and fixtures data</span>
+<span class="sd">for various leagues from Football-Data.co.uk.</span>
+
+<span class="sd">Football-Data.co.uk: http://www.football-data.co.uk/data.php</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author: Georgios Douzas &lt;gdouzas@icloud.com&gt;</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span><span class="p">,</span> <span class="n">urljoin</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">track</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">ParameterGrid</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">OUTCOMES</span>
+<span class="kn">from</span> <span class="nn">.._base</span> <span class="kn">import</span> <span class="n">_BaseDataLoader</span><span class="p">,</span> <span class="n">_read_csv</span>
+
+<span class="n">URL</span> <span class="o">=</span> <span class="s1">&#39;http://www.football-data.co.uk&#39;</span>
+<span class="n">BASE_URLS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;englandm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;scotlandm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;germanym.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;italym.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;spainm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;francem.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;netherlandsm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;belgiumm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;portugalm.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;turkeym.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;greecem.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Argentina.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Austria.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Brazil.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;China.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Denmark.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Finland.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Ireland.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Japan.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Mexico.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Norway.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Poland.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Romania.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Russia.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sweden.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Switzerland.php&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;USA.php&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">LEAGUES_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;England&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Scotland&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;SC&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Germany&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Italy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Spain&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;SP&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;France&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Netherlands&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Belgium&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Portugal&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Turkey&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Greece&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Argentina&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ARG&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Austria&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;AUT&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Brazil&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;BRA&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;China&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;CHN&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Denmark&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;DNK&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Finland&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;FIN&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Ireland&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;IRL&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Japan&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;JPN&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Mexico&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;MEX&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Norway&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;NOR&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Poland&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;POL&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Romania&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ROU&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Russia&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;RUS&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Sweden&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;SWE&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Switzerland&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;SWZ&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;USA&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_base_url_to_league</span><span class="p">(</span><span class="n">base_url</span><span class="p">):</span>
+    <span class="n">league</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.php&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">base_url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">islower</span><span class="p">():</span>
+        <span class="n">league</span> <span class="o">=</span> <span class="n">league</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">league</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_csv_urls</span><span class="p">(</span><span class="n">base_url</span><span class="p">):</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">urljoin</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">base_url</span><span class="p">))</span>
+    <span class="n">bsObj</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">features</span><span class="o">=</span><span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_param_grid_to_csv_urls</span><span class="p">(</span><span class="n">param_grid</span><span class="p">):</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">param_grid</span><span class="p">:</span>
+        <span class="n">in_main_leagues</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;league&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">m.php&#39;</span> <span class="ow">in</span> <span class="n">BASE_URLS</span>
+        <span class="n">encoded_league</span><span class="p">,</span> <span class="o">*</span><span class="n">divisions</span> <span class="o">=</span> <span class="n">LEAGUES_MAPPING</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;league&#39;</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">in_main_leagues</span><span class="p">:</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">])[</span><span class="mi">2</span><span class="p">:]</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">if</span> <span class="s1">&#39;0&#39;</span> <span class="ow">in</span> <span class="n">divisions</span><span class="p">:</span>
+                <span class="n">division</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">5</span> <span class="k">else</span> <span class="s1">&#39;C&#39;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">division</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">])</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">join</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="s1">&#39;mmz4281&#39;</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">encoded_league</span><span class="si">}{</span><span class="n">division</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">params</span><span class="p">,</span> <span class="n">join</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">encoded_league</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">urls</span>
+
+
+<div class="viewcode-block" id="FDSoccerDataLoader"><a class="viewcode-back" href="../../../../generated/sportsbet.datasets.FDSoccerDataLoader.html#sportsbet.datasets.FDSoccerDataLoader">[docs]</a><span class="k">class</span> <span class="nc">FDSoccerDataLoader</span><span class="p">(</span><span class="n">_BaseDataLoader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataloader for Football-Data.co.uk soccer data.</span>
+
+<span class="sd">    Read more in the :ref:`user guide &lt;user_guide&gt;`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param_grid : dict of str to sequence, or sequence of such parameter, default=None</span>
+<span class="sd">        The parameter grid to explore, as a dictionary mapping data parameters</span>
+<span class="sd">        to sequences of allowed values. An empty dict signifies default</span>
+<span class="sd">        parameters. A sequence of dicts signifies a sequence of grids to search,</span>
+<span class="sd">        and is useful to avoid exploring parameter combinations that do not</span>
+<span class="sd">        exist. The default value corresponds to all parameters.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_removed_cols</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;Div&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Country&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Season&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FTR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Res&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Attendance&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Referee&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HTR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAH&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Bb1X2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbOU&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;League&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;divisions&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">_cols_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;HT&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Home&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AT&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Away&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LB&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LB.1&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LB.2&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PH&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PD&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PA&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HG&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AG&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HomeTeam&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AwayTeam&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Date&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365AH&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBAH&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAHh&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBAH&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__size_of_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AHh&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__size_of_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AHCh&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365H&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365D&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365A&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365AHH&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365AHA&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365CH&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365CD&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365CA&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365C&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365C&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365CAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;B365CAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;bet365_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMxH&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMxD&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMxA&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMx&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMx&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMxAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbMxAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_maximum__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAvH&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAvD&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__draw_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAvA&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAv&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAv&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAvAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BbAvAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;betbrain_average__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWH&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWD&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWA&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWCH&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWCD&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BWCA&#39;</span><span class="p">:</span> <span class="s1">&#39;betwin_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BSH&#39;</span><span class="p">:</span> <span class="s1">&#39;bluesquare__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BSD&#39;</span><span class="p">:</span> <span class="s1">&#39;bluesquare__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BSA&#39;</span><span class="p">:</span> <span class="s1">&#39;bluesquare__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBH&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBD&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBA&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GB&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GB&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GBAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;gamebookers__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWH&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWD&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWA&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWCH&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWCD&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IWCA&#39;</span><span class="p">:</span> <span class="s1">&#39;interwetten_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBH&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBD&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBA&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LBAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;ladbrokes__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSH&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSD&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSA&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;P&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;P&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSCH&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSCD&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PSCA&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PC&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PC&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PCAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PCAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;pinnacle_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SOH&#39;</span><span class="p">:</span> <span class="s1">&#39;sporting__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SOD&#39;</span><span class="p">:</span> <span class="s1">&#39;sporting__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SOA&#39;</span><span class="p">:</span> <span class="s1">&#39;sporting__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SBH&#39;</span><span class="p">:</span> <span class="s1">&#39;sportingbet__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SBD&#39;</span><span class="p">:</span> <span class="s1">&#39;sportingbet__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SBA&#39;</span><span class="p">:</span> <span class="s1">&#39;sportingbet__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SJH&#39;</span><span class="p">:</span> <span class="s1">&#39;stanjames__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SJD&#39;</span><span class="p">:</span> <span class="s1">&#39;stanjames__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SJA&#39;</span><span class="p">:</span> <span class="s1">&#39;stanjames__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SYH&#39;</span><span class="p">:</span> <span class="s1">&#39;stanleybet__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SYD&#39;</span><span class="p">:</span> <span class="s1">&#39;stanleybet__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SYA&#39;</span><span class="p">:</span> <span class="s1">&#39;stanleybet__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCH&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCD&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCA&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCCH&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCCD&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VCCA&#39;</span><span class="p">:</span> <span class="s1">&#39;vcbet_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHH&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHD&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHA&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHCH&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHCD&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;WHCA&#39;</span><span class="p">:</span> <span class="s1">&#39;williamhill_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxD&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Max&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Max&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxCH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxCD&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxCA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxC&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxC&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxCAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MaxCAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_maximum_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgD&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Avg&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Avg&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgCH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__home_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgCD&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__draw__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgCA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__away_win__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgC&gt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__over_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgC&lt;2.5&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__under_2.5__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgCAHH&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AvgCAHA&#39;</span><span class="p">:</span> <span class="s1">&#39;market_average_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FTHG&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;FTAG&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HTHG&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__half_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HTAG&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__half_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HS&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__shots&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AS&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__shots&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HST&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__shots_on_target&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AST&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__shots_on_target&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HHW&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__hit_woodork&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AHW&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__hit_woodork&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HC&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__corners&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AC&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__corners&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HF&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__fouls_committed&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AF&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__fouls_committed&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HFKC&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__free_kicks_conceded&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AFKC&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__free_kicks_conceded&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HO&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__offsides&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AO&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__offsides&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HY&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__yellow_cards&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AY&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__yellow_cards&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HR&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__red_cards&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;AR&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__red_cards&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HBP&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__bookings_points&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ABP&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__bookings_points&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__size_of_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__size_of_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__size_of_asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bet365_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_maximum__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__draw_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betbrain_average__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;betwin_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bluesquare__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bluesquare__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bluesquare__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;gamebookers__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;interwetten_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ladbrokes__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;pinnacle_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sporting__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sporting__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sporting__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sportingbet__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sportingbet__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;sportingbet__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanjames__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanjames__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanjames__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanleybet__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanleybet__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;stanleybet__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;vcbet_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;williamhill_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_maximum_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__home_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__draw__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__away_win__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__over_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__under_2.5__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__asian_handicap_home_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;market_average_closing__asian_handicap_away_team__odds&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__half_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__half_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__shots&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__shots&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__shots_on_target&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__shots_on_target&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__hit_woodork&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__hit_woodork&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__corners&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__corners&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__fouls_committed&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__fouls_committed&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__free_kicks_conceded&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__free_kicks_conceded&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__offsides&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__offsides&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__yellow_cards&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__yellow_cards&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__red_cards&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__red_cards&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__bookings_points&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__bookings_points&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_outcomes</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">OUTCOMES</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">full_param_grid</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">base_url</span> <span class="ow">in</span> <span class="n">BASE_URLS</span><span class="p">:</span>
+            <span class="n">league</span> <span class="o">=</span> <span class="n">_convert_base_url_to_league</span><span class="p">(</span><span class="n">base_url</span><span class="p">)</span>
+            <span class="n">divisions</span> <span class="o">=</span> <span class="n">LEAGUES_MAPPING</span><span class="p">[</span><span class="n">league</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">urls</span> <span class="o">=</span> <span class="n">_extract_csv_urls</span><span class="p">(</span><span class="n">base_url</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">base_url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">islower</span><span class="p">():</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">division</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                    <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">year</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="s1">&#39;%y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
+                    <span class="n">division</span> <span class="o">=</span> <span class="n">division</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">league</span><span class="p">],</span>
+                        <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">division</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="s1">&#39;0&#39;</span> <span class="ow">in</span> <span class="n">divisions</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">division</span> <span class="o">!=</span> <span class="s1">&#39;C&#39;</span>
+                            <span class="k">else</span> <span class="mi">5</span>
+                        <span class="p">],</span>
+                        <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">year</span><span class="p">],</span>
+                    <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">years</span> <span class="o">=</span> <span class="n">_read_csv</span><span class="p">(</span><span class="n">urljoin</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">url</span><span class="p">),</span> <span class="n">parse_dates</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">)[</span><span class="s1">&#39;Season&#39;</span><span class="p">]</span>
+                    <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="n">season</span> <span class="o">+</span> <span class="mi">1</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">season</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span>
+                            <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">season</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">years</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+                    <span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;league&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">league</span><span class="p">],</span> <span class="s1">&#39;division&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}</span>
+                <span class="n">full_param_grid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_grid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ParameterGrid</span><span class="p">(</span><span class="n">full_param_grid</span><span class="p">)</span>
+
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Training data</span>
+        <span class="n">data_container</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="n">_param_grid_to_csv_urls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_grid_</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">params</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">track</span><span class="p">(</span><span class="n">urls</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Football-Data.co.uk:&#39;</span><span class="p">):</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">_read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;#REF!&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;new&#39;</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+                    <span class="n">league</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;league&#39;</span><span class="p">],</span>
+                    <span class="n">division</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">],</span>
+                    <span class="n">year</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">],</span>
+                    <span class="n">fixtures</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+                    <span class="n">league</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;league&#39;</span><span class="p">],</span> <span class="n">division</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">],</span> <span class="n">fixtures</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Season&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">season</span><span class="p">:</span> <span class="n">season</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">season</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span>
+                    <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">season</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]]</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">col</span>
+                    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+                    <span class="k">if</span> <span class="s1">&#39;Unnamed&#39;</span> <span class="ow">in</span> <span class="n">col</span> <span class="ow">or</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removed_cols</span>
+                <span class="p">],</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cols_mapping</span><span class="p">)</span>
+            <span class="n">data_container</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Fixtures data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">_read_csv</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="s1">&#39;fixtures.csv&#39;</span><span class="p">),</span> <span class="n">parse_dates</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;any&#39;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Div&#39;</span><span class="p">,</span> <span class="s1">&#39;HomeTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;AwayTeam&#39;</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fixtures&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">inv_leagues_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">LEAGUES_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;league&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Div&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">div</span><span class="p">:</span> <span class="n">inv_leagues_mapping</span><span class="p">[</span><span class="n">div</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Div&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">div</span><span class="p">:</span> <span class="n">div</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;divisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;league&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">league</span><span class="p">:</span> <span class="n">LEAGUES_MAPPING</span><span class="p">[</span><span class="n">league</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;division&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="s1">&#39;divisions&#39;</span><span class="p">]]</span>
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;C&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="mi">4</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">())</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="s1">&#39;division&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">years</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">col</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+                <span class="k">if</span> <span class="s1">&#39;Unnamed&#39;</span> <span class="ow">in</span> <span class="n">col</span> <span class="ow">or</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removed_cols</span>
+            <span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cols_mapping</span><span class="p">)</span>
+        <span class="n">data_container</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Combine data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_container</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

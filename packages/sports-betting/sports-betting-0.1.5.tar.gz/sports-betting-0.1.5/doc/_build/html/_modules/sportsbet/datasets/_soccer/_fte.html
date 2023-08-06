@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sportsbet.datasets._soccer._fte &mdash; sports-betting 0.1.4 documentation</title><link rel="stylesheet" href="../../../../_static/css/sports-betting.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> sports-betting
+          </a>
+              <div class="version">
+                0.1.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../test.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html">Data Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto_examples/index.html#machine-learning">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release_history.html">Release History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">sports-betting</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>sportsbet.datasets._soccer._fte</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sportsbet.datasets._soccer._fte</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Download and transform historical and fixtures data</span>
+<span class="sd">for various leagues from FiveThirtyEight.</span>
+
+<span class="sd">FiveThirtyEight: https://github.com/fivethirtyeight/data/tree/master/soccer-spi</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Author: Georgios Douzas &lt;gdouzas@icloud.com&gt;</span>
+<span class="c1"># License: MIT</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">ParameterGrid</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">OUTCOMES</span>
+<span class="kn">from</span> <span class="nn">.._base</span> <span class="kn">import</span> <span class="n">_BaseDataLoader</span><span class="p">,</span> <span class="n">_read_csv</span>
+
+<span class="n">URL</span> <span class="o">=</span> <span class="s1">&#39;https://projects.fivethirtyeight.com/soccer-api/club/spi_matches.csv&#39;</span>
+<span class="n">LEAGUES_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">7921</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;FAWSL&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">10281</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Europa&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">4582</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;NWSL&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">9541</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;NWSL&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">2160</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;United-Soccer-League&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1818</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Champions-League&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1820</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Europa-League&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1843</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;France&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">2411</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;England&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1869</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Spain&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1854</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Italy&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1845</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Germany&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1951</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1874</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Sweden&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1859</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Norway&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">2105</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Brazil&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1866</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Russia&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1952</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Mexico&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1975</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Mexico&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1827</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Austria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1879</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Switzerland&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1844</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;France&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">1846</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Germany&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">2412</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;England&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">2417</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Scotland&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1864</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Portugal&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1849</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Netherlands&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1882</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Turkey&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1871</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Spain&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">1856</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Italy&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="mi">5641</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Argentina&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1837</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Denmark&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1832</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Belgium&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1947</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Japan&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1979</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;China&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">2413</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;England&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="mi">1983</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;South-Africa&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">2414</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;England&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="mi">1884</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Greece&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="mi">1948</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Australia&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_data</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_read_csv</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="s1">&#39;division&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;league_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">lid</span><span class="p">:</span> <span class="n">LEAGUES_MAPPING</span><span class="p">[</span><span class="n">lid</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="FTESoccerDataLoader"><a class="viewcode-back" href="../../../../generated/sportsbet.datasets.FTESoccerDataLoader.html#sportsbet.datasets.FTESoccerDataLoader">[docs]</a><span class="k">class</span> <span class="nc">FTESoccerDataLoader</span><span class="p">(</span><span class="n">_BaseDataLoader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dataloader for FiveThirtyEight data.</span>
+
+<span class="sd">    Read more in the :ref:`user guide &lt;user_guide&gt;`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param_grid : dict of str to sequence, or sequence of such parameter, default=None</span>
+<span class="sd">        The parameter grid to explore, as a dictionary mapping data parameters</span>
+<span class="sd">        to sequences of allowed values. An empty dict signifies default</span>
+<span class="sd">        parameters. A sequence of dicts signifies a sequence of grids to search,</span>
+<span class="sd">        and is useful to avoid exploring parameter combinations that do not</span>
+<span class="sd">        exist. The default value corresponds to all parameters.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from sportsbet.datasets import FTESoccerDataLoader</span>
+<span class="sd">    &gt;&gt;&gt; dataloader = FTESoccerDataLoader()</span>
+<span class="sd">    &gt;&gt;&gt; X_train, Y_train, O_train = dataloader.extract_train_data()</span>
+<span class="sd">    &gt;&gt;&gt; X_fix, Y_fix, O_fix = dataloader.extract_fixtures_data()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_removed_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;league_id&#39;</span><span class="p">]</span>
+    <span class="n">_cols_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;team1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;team2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;spi1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team_soccer_power_index&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;spi2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team_soccer_power_index&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;prob1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team_probability_win&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;prob2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team_probability_win&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;probtie&#39;</span><span class="p">:</span> <span class="s1">&#39;probability_draw&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;proj_score1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team_projected_score&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;proj_score2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team_projected_score&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;importance1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team_match_importance&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;importance2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team_match_importance&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;score1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;score2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;xg1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_shot_expected_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;xg2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_shot_expected_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nsxg1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_non_shot_expected_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nsxg2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_non_shot_expected_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;adj_score1&#39;</span><span class="p">:</span> <span class="s1">&#39;home_team__full_time_adjusted_goals&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;adj_score2&#39;</span><span class="p">:</span> <span class="s1">&#39;away_team__full_time_adjusted_goals&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_schema</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;match_quality&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team_soccer_power_index&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team_soccer_power_index&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team_probability_win&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team_probability_win&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;probability_draw&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team_projected_score&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team_projected_score&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team_match_importance&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team_match_importance&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__full_time_goals&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__full_time_shot_expected_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__full_time_shot_expected_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__full_time_non_shot_expected_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__full_time_non_shot_expected_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;home_team__full_time_adjusted_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;away_team__full_time_adjusted_goals&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_outcomes</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">OUTCOMES</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_params</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">_extract_data</span><span class="p">()</span>
+        <span class="n">full_param_grid</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;league&#39;</span><span class="p">,</span> <span class="s1">&#39;division&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ParameterGrid</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[</span><span class="n">val</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">full_param_grid</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="nd">@lru_cache</span>
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">_extract_data</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;match_quality&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;spi1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;spi2&#39;</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fixtures&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;score1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;score2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_removed_cols</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cols_mapping</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Georgios Douzas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
