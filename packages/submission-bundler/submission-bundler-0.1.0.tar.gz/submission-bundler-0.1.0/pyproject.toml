@@ -1,0 +1,54 @@
+[build-system]
+requires = ["poetry_core >= 1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "submission-bundler"
+version = "0.1.0"
+description = "A package to bundle and generate submission file for competitive-programming. "
+authors = ["Hiroshi Tsuyuki <kagemeka1@gmail.com>"]
+packages = [
+    { include = "bundle_submission", from = "src" },
+]
+exclude = ["./**/*_test.py", "./**/test_*.py", "./**/tests/"]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+
+[tool.poetry.extras]
+
+
+[tool.poetry.dev-dependencies]
+flake8 = "^"
+mypy = "^"
+black = "^"
+blacken-docs = "^"
+isort = "^"
+autopep8 = "^"
+pydocstyle = "^"
+pytest = "^"
+
+
+[tool.black]
+target-version = ['py38', 'py39']
+line-length = 79
+
+
+[tool.flake8]
+count = 'true' # have not adaped to boolean value yet.
+show-source = 'true'
+statistics = 'true'
+ignore = 'E203'
+exclude = "src/dsalgo/numba"
+
+[tool.isort]
+line_length = 79
+
+
+[tool.mypy]
+strict_optional=true
+ignore_missing_imports = false
+
+
+[tool.pytest]
+cache_dir = "/tmp/.pytest_cache"
