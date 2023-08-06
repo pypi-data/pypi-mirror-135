@@ -1,0 +1,88 @@
+Metadata-Version: 2.1
+Name: custom-time
+Version: 1.0
+Summary: UNKNOWN
+Home-page: UNKNOWN
+Author: YangBiao
+Author-email: 19921297590@126.com
+License: MIT License
+Platform: all
+License-File: LICENCE
+
+custom\_time
+============
+
+编写目的
+--------
+
+1. custom\_time.py: 充分扩展python原生包datetime的功能与简化使用方法
+2. time\_range.py: 以python原生的range形式遍历时间
+
+使用方法
+--------
+
+custom\_time.py
+~~~~~~~~~~~~~~~
+
+一. 使用字符串初始化
+
+   .. code:: python
+
+       from custom_time import CustomTime
+       # 直接输入字符串,无需指定解析格式 
+       CustomTime("2022-01-23 17:00:00")
+       CustomTime("2022-01-23-17.00.00")
+       # 指定希望输出的时间格式 
+       CustomTime("2022-01-23 17:00:00", "%Y-%m-%d-%H-%M-%S")
+
+二. 获取当前时间
+
+   .. code:: python
+
+       # 使用默认的时间格式, 默认为"%Y-%m-%d %H:%M:%S"
+       now = CustomTime.now()
+       # 指定希望输出的时间格式 
+       now = CustomTime.now("%Y-%m-%d-%H-%M-%S")
+
+三. 输出时间字符串
+
+   .. code:: python
+
+       a =  CustomTime.now()
+       print(a.str)
+
+四. 可直接使用datetime的方法
+
+五. 时间的计算,支持的参数years, months, days, seconds, microseconds,milliseconds, minutes, hours, weeks
+    注意: datetime不支持days,本模块支持
+
+   .. code:: python
+
+       now = CustomTime.now()
+       yesterday = now.delta(days=-1)
+       tomorrow = now.delta(days=1)
+
+六. 其他方法
+
+   .. code:: python
+
+        now = CustomTime.now()
+        # 获取整点
+        now.oclock()
+        # 获取日期
+        now.date() now.date("%Y-%m-%d")
+
+TimeRange.py
+~~~~~~~~~~~~
+
+1. 1.遍历时间范围
+
+   .. code:: python
+
+       from custom_time import TimeRange
+       start_time = CustomTime.now()
+       end_time = start_time.delta(days=10)
+       for current in TimeRange(start_time, end_time, days=1):
+               print(current)
+
+
