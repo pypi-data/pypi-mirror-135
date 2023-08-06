@@ -1,0 +1,93 @@
+{% set name = "SpectroChemPy" %}
+
+{% set version = environ['VERSION'] %}
+
+{% set devstring = environ['DEVSTRING'] %}
+
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  path: ../
+
+build:
+  script_env:
+    - VERSION
+    - DEVSTRING
+    - CONDA_BLD_PATH
+  string: "{{ devstring }}"
+  noarch: python
+  script:
+    - export SETUPTOOLS_SCM_PRETEND_VERSION={{ version }}
+    - {{ PYTHON }} setup.py install
+
+requirements:
+  host:
+    - pip
+    - python >=3.6.9
+    - setuptools
+    - setuptools_scm
+    - nodejs
+    - jupyterlab >=2.2.10
+    - matplotlib-base
+
+  run:
+    - quadprog
+    - brukeropusreader
+    - quaternion
+    - nmrglue
+    - colorama
+    - dill
+    - ipython
+    - jinja2
+    - mamba
+    - matplotlib-base
+    - numpy
+    - orderedset
+    - pint=0.16.1
+    - plotly
+    - requests
+    - scipy
+    - tqdm
+    - traitlets
+    - traittypes
+    - xlrd
+    - setuptools
+    - setuptools_scm
+    - git
+    - ipywidgets
+    - ipympl
+    - jupyterlab >=2.2.10
+    - nodejs
+
+  test:
+    - python                {{ python }}
+
+test:
+  script_env:
+    - VERSION
+    - DEVSTRING
+    - CONDA_BLD_PATH
+  imports:
+    - spectrochempy
+
+about:
+  home: "https://github.com/spectrochempy/spectrochempy"
+  license: CeCILL-B
+  license_family: OTHER
+  summary: "Processing, analysis and modelling Spectroscopic data for Chemistry with Python"
+  doc_url: "https://www.spectrochempy.fr"
+  dev_url: "https://github.com/spectrochempy/spectrochempy"
+  description: |
+    SpectroChemPy is a framework for processing, analyzing and modeling Spectroscopic data for Chemistry with Python.
+    It is a cross platform software, running on Linux, Windows or OS X.
+
+    SpectroChemPy is still experimental and under active development.
+    Its current design is subject to major changes, reorganizations, bugs and crashes!!!.
+    Please report any issues to the Issue Tracker on github.
+
+extra:
+  recipe-maintainers:
+    - fernandezc
