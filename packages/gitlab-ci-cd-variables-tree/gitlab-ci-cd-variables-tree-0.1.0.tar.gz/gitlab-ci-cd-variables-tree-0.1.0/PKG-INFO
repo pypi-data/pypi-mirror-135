@@ -1,0 +1,57 @@
+Metadata-Version: 2.1
+Name: gitlab-ci-cd-variables-tree
+Version: 0.1.0
+Summary: Show Gitlab CI/CD variables as Tree structure
+Home-page: https://github.com/f9n/gitlab-ci-cd-variables-tree
+License: GPL-3.0
+Author: Fatih Sarhan
+Author-email: f9n@protonmail.com
+Requires-Python: >=3.9,<4.0
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: click (>=8.0.3,<9.0.0)
+Requires-Dist: python-gitlab (>=3.1.0,<4.0.0)
+Requires-Dist: rich (>=11.0.0,<12.0.0)
+Project-URL: Repository, https://github.com/f9n/gitlab-ci-cd-variables-tree
+Description-Content-Type: text/markdown
+
+# gitlab-ci-cd-variables-tree [![PyPi version](https://img.shields.io/pypi/v/gitlab-ci-cd-variables-tree.svg)](https://pypi.python.org/pypi/gitlab-ci-cd-variables-tree/) [![PyPI pyversions](https://img.shields.io/pypi/pyversions/gitlab-ci-cd-variables-tree.svg)](https://pypi.python.org/pypi/gitlab-ci-cd-variables-tree/) [![](https://img.shields.io/github/license/f9n/gitlab-ci-cd-variables-tree.svg)](https://github.com/f9n/gitlab-ci-cd-variables-tree/blob/master/LICENSE)
+
+Show [Gitlab](https://gitlab.com) CI/CD variables as Tree structure
+
+## Installation
+
+```
+$ # Install
+$ python3 -m pip install gitlab-ci-cd-variables-tree --user
+
+$ # Install with upgrade
+$ python3 -m pip install gitlab-ci-cd-variables-tree --user --upgrade
+```
+
+## Usage
+
+First you need to create a personal token on [gitlab.com](https://gitlab.com). [Link](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#create-a-personal-access-token
+)
+
+```bash
+$ gitlab-ci-cd-variables-tree --help
+
+$ # Show version
+$ gitlab-ci-cd-variables-tree version
+gitlab-ci-cd-variables-tree: 0.1.0
+
+$ # Show gitlab ci-cd variables,
+$ # Make sure that the 'GITLAB_URL' and 'GITLAB_TOKEN' environment variable is set.
+$ export GITLAB_URL=https://gitlab.com
+$ export GITLAB_TOKEN=<YOUR_PRIVATE_TOKEN>
+
+$ gitlab-ci-cd-variables-tree show --gitlab-group-id 6161
+
+$ # Show with detailed log messages
+$ gitlab-ci-cd-variables-tree --log-level INFO show --gitlab-group-id 6161
+
+```
+
