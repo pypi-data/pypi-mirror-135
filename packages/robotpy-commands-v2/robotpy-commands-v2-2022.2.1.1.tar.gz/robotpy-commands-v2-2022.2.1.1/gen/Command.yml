@@ -1,0 +1,62 @@
+---
+
+extra_includes:
+- frc2/command/InstantCommand.h
+- frc2/command/ParallelCommandGroup.h
+- frc2/command/ParallelRaceGroup.h
+- frc2/command/ParallelDeadlineGroup.h
+- frc2/command/SequentialCommandGroup.h
+- frc2/command/PerpetualCommand.h
+- frc2/command/ProxyScheduleCommand.h
+- frc2/command/WaitCommand.h
+- frc2/command/WaitUntilCommand.h
+- src/helpers.h
+
+inline_code: |
+  #include <src/Command.cpp.inl>
+
+functions:
+  GetTypeName:
+    ignore: true
+  RequirementsDisjoint:
+  Command_Schedule:
+    ignore: true
+  Command_Schedule:
+    overloads:
+      std::shared_ptr<Command>:
+        ignore: true
+      std::shared_ptr<Command>, bool:
+        ignore: true
+classes:
+  Command:
+    force_type_casters:
+    - wpi::span
+    - std::function
+    - units::second_t
+    shared_ptr: true
+    attributes:
+      m_isGrouped:
+    methods:
+      Command:
+      Initialize:
+      Execute:
+      End:
+      IsFinished:
+      GetRequirements:
+      Schedule:
+        overloads:
+          bool:
+            cpp_code: |
+              [](std::shared_ptr<Command> self, bool interruptable) {
+                Command_Schedule(self, interruptable);
+              }
+          "":
+            cpp_code: |
+              [](std::shared_ptr<Command> self) { Command_Schedule(self, true); }
+      Cancel:
+      IsScheduled:
+      HasRequirement:
+      IsGrouped:
+      SetGrouped:
+      RunsWhenDisabled:
+      GetName:
