@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "los_docusign"
+version = "0.3.1"
+description = "Docusign Django Wrapper for integrating DocuSign with Django Application"
+authors = ["tejasb <tejas@thesummitgrp.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Django = "^3.1.13"
+psycopg2-binary = "^2.9.2"
+docusign-esign = "^3.6.0"
+django-utils-six = "^2.0"
+django-environ = "^0.4.5"
+PyJWT = "1.7.1"
+django-model-utils = "^4.1.1"
+django-lc-utils = "^0.2.0"
+requests = "^2.26.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^21.8b0"
+isort = "^5.9.3"
+autoflake = "^1.4"
+pre-commit = "^2.15.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+sections = ['FUTURE', 'STDLIB', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']
+profile = "black"
+skip = "venv/"
+use_parentheses = "true"
+include_trailing_comma = "true"
+multi_line_output = "3"
