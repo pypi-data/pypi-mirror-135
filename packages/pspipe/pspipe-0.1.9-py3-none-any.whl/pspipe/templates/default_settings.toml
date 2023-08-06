@@ -1,0 +1,100 @@
+data_dir = '.'
+default_settings = ''
+debug = false
+longitude = 6.57
+
+[worker]
+nodes = 'localhost'
+max_concurrent = 4
+env_file = ''
+run_on_file_host = false
+run_on_file_host_pattern = ''
+
+[merge_ms]
+apply_aoflagger = true
+data_col = 'CORRECTED_DATA'
+obs_id_out_suffix = 'flagged'
+blmin = 0
+blmax = 1000
+flag_baselines = ''
+avg_timestep = 1
+time_start_index = 0
+time_end_index = 0
+
+[ssins]
+apply_ssins = true
+n_time_avg = [1, 4, 8]
+nsigmas.1 = [8, 5, 5]
+nsigmas.4 = [8, 5, 5]
+nsigmas.8 = [8, 5, 5]
+percentage_freq_full_flag = 0.4
+percentage_time_full_flag = 0.4
+time_freq_threshold = 0.6
+baseline_threshold = 0.75
+snapshot_threshold = 0.5
+
+[apply_flag]
+filename = ''
+
+[delay_flagger]
+umin = 50
+umax = 400
+n_time_avg = 50
+n_times = 20
+n_sigma_i = 6
+n_sigma_v = 6
+
+[image]
+name = 'default'
+umin = 50
+umax = 250
+scale = '0.5amin'
+size = '512 512'
+data_col = 'CORRECTED_DATA'
+channels_out = 'all'
+time_start_index = 0
+time_end_index = 0
+lst_bins = []
+stokes = 'IV'
+split_even_odd = true
+weight = 'natural'
+clean_niter = 0
+clean_auto_threshold = 5
+clean_mgain = 0.6
+clean_residual = true
+clean_spectra_fit_nterms = 4
+wsclean_args = {}
+
+[vis_cube]
+fov = 4
+umin = 50
+umax = 500
+win_fct = '(tukey,0.2)'
+
+[vis_to_sph]
+obs_id_out_suffix = 'sph'
+pre_flag = ''
+
+[combine]
+obs_id_out_prefix = '001'
+scale_with_noise = false
+weights_mode = 'full'
+inhomogeneous = false
+pre_flag = ''
+use_v_as_dt = false
+
+[power_spectra]
+eor_bin_list = ''
+ps_config = ''
+flagger = ''
+
+[gpr]
+name = ''
+config_i = ''
+config_v = ''
+plot_results = true
+
+[ml_gpr]
+name = ''
+config = ''
+plot_results = true
