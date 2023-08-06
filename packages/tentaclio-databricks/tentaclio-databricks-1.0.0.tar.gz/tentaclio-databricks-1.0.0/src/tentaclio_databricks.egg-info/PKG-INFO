@@ -1,0 +1,55 @@
+Metadata-Version: 2.1
+Name: tentaclio-databricks
+Version: 1.0.0
+Summary: A python project containing all the dependencies for the databricks+thrift tentaclio schema.
+Home-page: UNKNOWN
+Author: Octopus Energy
+Author-email: nerds@octopus.energy
+License: Proprietary
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+
+# tentaclio-databricks
+
+A package containing all the dependencies for the `databricks+thrift` tentaclio schema .
+
+## Quick Start
+
+This project comes with a `Makefile` which is ready to do basic common tasks
+
+```
+$ make help
+install                       Initalise the virtual env installing deps
+clean                         Remove all the unwanted clutter
+lock                          Lock dependencies
+update                        Update dependencies (whole tree)
+sync                          Install dependencies as per the lock file
+lint                          Lint files with flake and mypy
+format                        Run black and isort
+test                          Run unit tests
+circleci                      Validate circleci configuration (needs circleci cli)
+```
+
+## Configuring access to Databricks
+
+Your connection url should be in the following format:
+
+```
+databricks+thrift://<token>@<host>?HTTPPath=<http_path>
+```
+
+Example values:
+- token: dapi1213456789abc
+- host: myhost.databricks.com
+- http_path: /sql/1.0/endpoints/123456789
+
