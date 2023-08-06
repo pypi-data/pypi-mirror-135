@@ -1,0 +1,31 @@
+#!python
+
+import click
+from quickstats.clis.core import (run_pulls, plot_pulls, likelihood_scan, compile_macros, 
+                                  harmonize_np, cls_limit, generate_asimov, 
+                                  generate_standard_asimov, toy_significance, toy_limit)
+from quickstats.clis.inspect_ws import inspect_ws
+from quickstats.clis.inspect_rfile import inspect_rfile
+from quickstats.clis.limit_setting import limit_scan
+from quickstats.clis.processor_cli import process_rfile
+
+@click.group()
+def cli():
+    pass
+
+if __name__ == "__main__":
+    cli.add_command(compile_macros)
+    cli.add_command(inspect_ws)
+    cli.add_command(toy_significance)
+    cli.add_command(toy_limit)
+    cli.add_command(run_pulls)
+    cli.add_command(plot_pulls)
+    cli.add_command(likelihood_scan)
+    cli.add_command(cls_limit)
+    cli.add_command(limit_scan)
+    cli.add_command(harmonize_np)
+    cli.add_command(generate_asimov)
+    cli.add_command(generate_standard_asimov)
+    cli.add_command(inspect_rfile)
+    cli.add_command(process_rfile)
+    cli()
