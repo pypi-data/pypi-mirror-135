@@ -1,0 +1,41 @@
+name: Build and test, 
+
+on:
+  push:
+    branches:
+    - main
+    - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{github.head_ref}}
+    
+    - name: set up python 3.7
+      uses: actions/setup-python@v1
+      with: 
+        python-version: 3.7.*
+    
+    - name: install pipenv
+      uses: dschep/install-pipenv-action@v1
+
+    - name: cache pipevn virtualenv
+      id: cache-pipenv
+      uses: actions/cache@v1
+      with:
+        path: /opt/tools/Python/
+        key: ${{runner.os}}-pipenv-${{hashFiles('**requirements.txt')}}
+    
+    - name: upgrade pip and install dependencies
+      run : |
+            pip install --upgrade pip
+            pip install rltrade-test
+            
+    # - name: run test
+      # run : |
+      #       python examples/singlestock.py
+      #       python examples/portfolio.py
