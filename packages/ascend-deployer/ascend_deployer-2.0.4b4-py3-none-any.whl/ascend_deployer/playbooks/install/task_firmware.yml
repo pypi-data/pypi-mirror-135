@@ -1,0 +1,93 @@
+- name: include vars
+  include_vars: ../os_map.yml
+
+- name: message
+  debug:
+    msg:
+      - "can not find npu card, please check!"
+  failed_when: true
+  when: ansible_local.npu_info.scene == ""
+
+- name: get npu scene
+  import_tasks: task_get_npu_scene.yml
+
+- set_fact: run_dir={{ scene_dict[npu_scene] }}
+
+- name: find driver upgrade tool
+  find:
+    path: /usr/local/Ascend/driver
+    recurse: yes
+    file_type: file
+    use_regex: yes
+    patterns: "upgrade-tool"
+  register: up_tool
+
+- name: message
+  debug:
+    msg:
+    - "driver not installed, please install driver first"
+  failed_when: true
+  when: up_tool.matched == 0
+
+- name: find firmware upgrade tool
+  find:
+    path: /usr/local/Ascend/firmware
+    recurse: yes
+    file_type: file
+    use_regex: yes
+    patterns: "upgrade"
+  register: up_firm
+
+- name: find firmware package only zip
+  find:
+    paths: "{{ run_dir }}"
+    recurse: no
+    file_type: file
+    use_regex: yes
+    patterns: "npu-firmware.*.run"
+  register: firmware_pkg
+
+- set_fact: firmware_run={{firmware_pkg.files[0].path}}
+  when: firmware_pkg.matched > 0
+
+- name: find firmware package
+  find:
+    paths: "{{ run_dir }}"
+    recurse: no
+    file_type: file
+    use_regex: yes
+    patterns: "{{ ansible_local.npu_info.product }}.*firmware.*.run"
+  register: firmware_pkg
+
+- set_fact: firmware_run={{firmware_pkg.files[0].path}}
+  when: firmware_pkg.matched > 0
+
+- name: upgrade firmware
+  shell: "bash {{ firmware_run }} --nox11 --upgrade --quiet"
+  register: firmware_up_result
+  when: (firmware_run is defined) and (firmware_run|length > 0) and (up_firm.matched > 0)
+  failed_when: firmware_up_result.rc != 0
+
+- name: install firmware
+  shell: "bash {{ firmware_run }} --nox11 --full --quiet"
+  register: firmware_result
+  when: (firmware_run is defined) and (firmware_run|length > 0) and (up_firm.matched == 0)
+  failed_when: firmware_result.rc != 0
+
+- name: message
+  debug:
+    msg:
+      - "can not find firmware package, firmware install skipped"
+  when: firmware_run is not defined
+
+- name: message
+  debug:
+    msg:
+      - "{{ firmware_result | default('NOT DEFINED') }}"
+  when: firmware_result.changed
+
+- name: message
+  debug:
+    msg:
+      - "{{ firmware_up_result | default('NOT DEFINED') }}"
+  when: firmware_up_result.changed

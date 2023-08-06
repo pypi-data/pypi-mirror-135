@@ -1,0 +1,11 @@
+- hosts: '{{ hosts_name }}'
+  tasks:
+    - name: install docker images
+      import_tasks: task_docker_images.yml
+      when: ansible_user_uid == 0
+
+    - name: message
+      debug:
+        msg:
+        - "not support installing docker_images by non-root user, please switch to root user"
+      when: ansible_user_uid != 0
