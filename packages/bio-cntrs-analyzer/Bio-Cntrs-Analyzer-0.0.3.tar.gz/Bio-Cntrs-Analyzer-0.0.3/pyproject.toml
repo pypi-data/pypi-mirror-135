@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "Bio-Cntrs-Analyzer"
+version = "0.0.3"
+description = "The semi-automatic segmentation and quantification of patchy areas in various biomedical images based on the assessment of their local edge densities."
+authors = ["Aleksandr Sinitca <amsinitca@etu.ru>"]
+
+packages = [
+    { include = "bcanalyzer" },
+]
+
+readme = "README.md"
+repository = "https://gitlab.com/digiratory/biomedimaging/bcanalyzer"
+
+[tool.poetry.scripts]
+bcanalyzer = 'bcanalyzer.app:main'
+
+[tool.poetry.dependencies]
+python = "^3.6"
+numpy = "^1.19.0"
+filetype = ""
+opencv-python = "4.3.0.36"
+pandas = ""
+PyQt5 = ""
+appdirs = ""
+scipy=""
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
