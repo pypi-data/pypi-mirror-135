@@ -1,0 +1,62 @@
+[tool.black]
+    line-length = 100
+
+[tool.poetry]
+    name = "pysizing"
+    version = "v0.1.1-alpha"
+    description = "An open source framework for the sizing of technological systems"
+    authors = [
+        "Scott DELBECQ <scott.delbecq@isae-supaero.fr>",
+        "Marc BUDINGER <marc.budinger@insa-toulouse.fr>",
+        "Félix POLLET <felix.pollet@isae-supaero.fr>",
+        "Aurélien REYSSET <aurelien.reysset@insa-toulouse.fr>",
+        "Arthur AMMEUX <arthur.ammeux@student.isae-supaero.fr>",
+    ]
+    license = "MIT"
+    readme = "README.md"
+    homepage = "https://github.com/SizingLab/pysizing"
+    keywords = [
+        "sizing",
+        "optimization"
+    ]
+    classifiers = [
+        "Environment :: Console",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Education",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.7",
+        "Topic :: Scientific/Engineering :: Physics"
+    ]
+    include = [
+        "LICENSE"
+    ]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+sympy="*"
+ipyvuetify = "^1.7.1"
+numpy = "^1.17.3"
+scipy = "^1.4.1"
+pandas = "^1.1.0"
+openmdao = "^3.10"
+ipywidgets = "^7.5.0"
+ipysheet = ">=0.5.0, <1"
+plotly = "^5.0.0"
+jupyterlab = "^3.0.18"
+jupyter-client = "!=7.0.0, !=7.0.1, !=7.0.2, !=7.0.3, !=7.0.4, !=7.0.5"
+black = { version = "21.9b0", extras = ["jupyter"], allow-prereleases = true }
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+pytest-cov = "^3.0"
+coverage = { extras = ["toml"], version = "^5.5" }
+pre-commit = "^2.14.1"
+black = { version = "21.9b0", extras = ["jupyter"], allow-prereleases = true }
+pylint = "^2.10.2"
+nbval = "^0.9.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
