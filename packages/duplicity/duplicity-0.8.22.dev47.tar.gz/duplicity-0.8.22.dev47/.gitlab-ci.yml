@@ -1,0 +1,197 @@
+# Copyright 2019 Nils Tekampe <nils@tekampe.org>,
+# Kenneth Loafman <kenneth@loafman.com> and
+# Aaron Whitehouse <code@whitehouse.kiwi.nz>
+#
+# This file is part of duplicity.
+#
+# Duplicity is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# Duplicity is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with duplicity; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+# include:
+#     - template: Dependency-Scanning.gitlab-ci.yml
+
+.test-template: &test-template
+    stage: tests
+    except:
+        variables:
+            - $CI_COMMIT_MESSAGE =~ /\[skip[ _-]tests?\]/i
+            - $SKIP_TESTS
+
+variables:
+    # cache local items
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    # Set to non-interactive so no tzdata prompt
+    DEBIAN_FRONTEND: "noninteractive"
+    # for upload to pypi.org
+    TWINE_USERNAME: $TWINE_USERNAME
+    TWINE_PASSWORD: $TWINE_PASSWORD
+
+stages:
+    - qual
+    - test
+    - deploy
+
+default:
+    image: ubuntu:18.04
+    before_script:
+        # Set locale to prevent UTF-8 errors
+        - export LANG=C.UTF-8
+        - export LC_ALL=C.UTF-8
+        - apt-get update
+        - apt-get install -y 2to3 build-essential git intltool lftp librsync-dev
+          libffi-dev libssl-dev openssl par2 rdiff tzdata python3-pip
+        - python3 -m pip install --upgrade pip
+        - python3 -m pip install --requirement requirements.txt
+    interruptible: true
+
+code_ub18-04:
+    <<: *test-template
+    stage: qual
+    script:
+        - apt-get install -y python3.8 python3.8-dev
+        - tox -e code
+    artifacts:
+        reports:
+            junit: report.xml
+
+py27_ub18-04:
+    <<: *test-template
+    stage: test
+    script:
+        - apt-get install -y python2.7 python2.7-dev
+        - tox -e py27
+    artifacts:
+        reports:
+            junit: report.xml
+    allow_failure: true
+
+py35_ub16-04:
+    <<: *test-template
+    stage: test
+    image: ubuntu:16.04
+    before_script:
+        # Set locale to prevent UTF-8 errors
+        - export LANG=C.UTF-8
+        - export LC_ALL=C.UTF-8
+        - apt-get update
+        - apt-get install -y build-essential git intltool lftp librsync-dev
+          libffi-dev libssl-dev openssl par2 rdiff tzdata
+          python3-pip python3.5 python3.5-dev
+        - python3 -m pip install --upgrade pip==20.3.4
+        - python3 -m pip install --requirement requirements.txt
+    script:
+        - apt-get install -y python3.5 python3.5-dev
+        - tox -e py35
+    artifacts:
+        reports:
+            junit: report.xml
+    allow_failure: true
+
+py36_ub18-04:
+    <<: *test-template
+    stage: test
+    script:
+        - apt-get install -y python3.6 python3.6-dev
+        - tox -e py36
+    artifacts:
+        reports:
+            junit: report.xml
+
+py37_ub18-04:
+    <<: *test-template
+    stage: test
+    script:
+        - apt-get install -y python3.7 python3.7-dev
+        - tox -e py37
+    artifacts:
+        reports:
+            junit: report.xml
+
+py38_ub18-04:
+    <<: *test-template
+    stage: test
+    script:
+        - apt-get install -y python3.8 python3.8-dev
+        - tox -e py38
+    artifacts:
+        reports:
+            junit: report.xml
+
+py39_ub20-04:
+    <<: *test-template
+    stage: test
+    image: ubuntu:20.04
+    before_script:
+        # Set locale to prevent UTF-8 errors
+        - export LANG=C.UTF-8
+        - export LC_ALL=C.UTF-8
+        - apt-get update
+        - apt-get install -y build-essential git intltool lftp librsync-dev
+          libffi-dev libssl-dev openssl par2 rdiff tzdata python3-pip
+        - python3 -m pip install --upgrade pip
+        - python3 -m pip install --requirement requirements.txt
+    script:
+        - apt-get install -y python3.9 python3.9-dev
+        - tox -e py39
+    artifacts:
+        reports:
+            junit: report.xml
+
+build_pip:
+    stage: deploy
+    when: manual
+    only: [master]
+    script:
+        - pip install twine
+        - VERSION=`./setup.py --version`
+        - echo "make pip of ${VERSION}"
+        - ./setup.py sdist --dist-dir=.
+        - python3 -m twine upload duplicity-${VERSION}.tar.gz
+
+build_snap:
+    stage: deploy
+    image: ubuntu:20.04
+    when: manual
+    only: [master]
+    script:
+        - apt-get update
+        - apt-get upgrade
+        - apt-get install -y snapcraft
+        - VERSION=`./setup.py --version`
+        - echo "make snap of ${VERSION}"
+        - ./setup.py sdist --dist-dir=.
+        - rm -rf build
+        - mkdir -p build
+        - tar xf duplicity-${VERSION}.tar.gz -C build
+        - rm -f duplicity-${VERSION}.tar.gz
+        - cd build/duplicity-${VERSION}
+        - head -2 snap/snapcraft.yaml | tail -1
+        - echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snaplogin
+        - snapcraft login --with snaplogin
+        - rm snaplogin
+        - snapcraft snap
+        - snapcraft push duplicity_*.snap --release edge
+
+pages:
+    stage: deploy
+    when: manual
+    image: ubuntu:20.04
+    script:
+        - VERSION=`./setup.py --version`
+        - echo "make docs of ${VERSION}"
+        - make docs
+        - mv docs/_build/html public
+    artifacts:
+        paths:
+            - public
