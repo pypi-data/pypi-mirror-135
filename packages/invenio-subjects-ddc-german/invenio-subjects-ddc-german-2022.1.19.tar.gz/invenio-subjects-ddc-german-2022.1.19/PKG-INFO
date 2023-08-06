@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: invenio-subjects-ddc-german
+Version: 2022.1.19
+Summary: DDC subject terms for InvenioRDM
+Home-page: https://github.com/ulbmuenster/invenio-subjects-ddc-german
+Author: University of Münster
+Author-email: werner.gresshoff@uni-muenster.de
+License: MIT
+Keywords: invenio inveniordm subjects DDC
+Platform: any
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Description-Content-Type: text/markdown
+Provides-Extra: docs
+Provides-Extra: tests
+Provides-Extra: dev
+Provides-Extra: all
+License-File: LICENSE
+License-File: AUTHORS.rst
+
+# invenio-subjects-ddc
+
+DDC subject terms for InvenioRDM
+
+Install this extension to get the german [Dewey Decimal Classification](https://www.dnb.de/ddcuebersichten) into your instance.
+
+## Installation
+
+From your instance directory:
+
+    pipenv install invenio-subjects-ddc-german
+
+This will add it to your Pipfile.
+
+### Versions
+
+This repository follows [calendar versioning](https://calver.org/):
+
+`2021.06.18` is both a valid semantic version and an indicator of the year-month corresponding to the loaded DDC terms.
+
+
+## Usage
+
+There are 2 types of users for this package. Maintainers of the package and instance administrators.
+
+### Instance administrators
+
+For instance administrators, after you have installed the extension as per the steps above, you are done. It should just work.
+
+### TODO -- Maintainers
+
+When a new list of DDC term comes out, this package should be updated. Here we show how.
+
+0- Make sure you have cloned this package. Then install it locally with:
+
+    make install
+
+1- Update:
+
+    make update
+
+   This will
+
+   1- Download the new list
+   2- Convert terms to InvenioRDM subjects format
+   3- Write those to `invenio_subjects_ddc_german/vocabularies/subjects_ddc_german.yaml` file
+
+3- Run the tests just to make sure everything is still good:
+
+    make test
+
+4- When you are happy with the list, bump the version in `invenio_subjects_ddc_german/version.py` and release it.
+
+
+## Future Ideas
+
+- InvenioRDM doesn't have a way to update pre-existing subjects yet. Once there is one,
+  this package should provide the functionality to update GND subject terms.
+
+
+# Changes
+
+Version 2022.01.06 (unreleased)
+
+- Initial release.
+
+
