@@ -1,0 +1,49 @@
+---
+
+extra_includes:
+- networktables/NTSendableBuilder.h
+- frc/buttons/ButtonScheduler.h
+- frc/buttons/Trigger.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+- frc/commands/Subsystem.h
+- frc/smartdashboard/SmartDashboard.h
+
+
+classes:
+  Scheduler:
+    subpackage: command
+    force_no_trampoline: true
+    ignored_bases:
+    - wpi::SendableHelper<Scheduler>
+    methods:
+      GetInstance:
+        cpp_code: |
+          []() -> std::shared_ptr<frc::Scheduler> {
+            static std::shared_ptr<frc::Scheduler> s = std::unique_ptr<frc::Scheduler, py::nodelete>(frc::Scheduler::GetInstance());
+            return s;
+          }
+      AddCommand:
+        keepalive:
+        - [2, 2]
+      AddButton:
+        keepalive:
+          - [2, 2]
+      RegisterSubsystem:
+        keepalive:
+          - [2, 2]
+      Run:
+      Remove:
+      RemoveAll:
+      ResetAll:
+      SetEnabled:
+      InitSendable:
+
+inline_code: |
+  cls_Scheduler.def_static("addToSmartDashboard", [](std::string_view key) {
+    frc::SmartDashboard::PutData(key, Scheduler::GetInstance());
+  }, py::arg("key"),
+  "This is equivalent to ``wpilib.SmartDashboard.putData(key, Scheduler.getInstance())``.\n"
+  "Use this instead, as SmartDashboard.putData will fail if used directly\n"
+  "\n"
+  ":param key: the key\n");

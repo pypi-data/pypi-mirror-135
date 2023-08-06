@@ -1,0 +1,16 @@
+---
+
+classes:
+  PIDAnalogGyro:
+    subpackage: command
+    methods:
+      PIDGet:
+    
+    force_no_default_constructor: true
+
+inline_code: |
+  cls_PIDAnalogGyro
+    .def(py::init<int>(), release_gil())
+    .def(py::init<std::shared_ptr<frc::AnalogInput>>(), release_gil())
+    .def(py::init<int, int, double>(), release_gil())
+    .def(py::init<std::shared_ptr<frc::AnalogInput>, int, double>(), release_gil());

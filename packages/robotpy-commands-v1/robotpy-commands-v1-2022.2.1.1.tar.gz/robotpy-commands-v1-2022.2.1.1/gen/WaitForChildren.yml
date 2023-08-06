@@ -1,0 +1,18 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+
+classes:
+  WaitForChildren:
+    subpackage: command
+    shared_ptr: true
+    methods:
+      WaitForChildren:
+        overloads:
+          units::second_t:
+          std::string_view, units::second_t:
+      IsFinished:
+        rename: isFinished

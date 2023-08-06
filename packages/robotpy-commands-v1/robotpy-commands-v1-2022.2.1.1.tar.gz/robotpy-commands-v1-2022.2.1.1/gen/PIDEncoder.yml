@@ -1,0 +1,14 @@
+---
+
+classes:
+  PIDEncoder:
+    subpackage: command
+    methods:
+      PIDGet:
+
+    force_no_default_constructor: true
+
+inline_code: |
+  cls_PIDEncoder
+    .def(py::init<int, int, bool, frc::Encoder::EncodingType>(), release_gil())
+    .def(py::init<std::shared_ptr<frc::DigitalSource >, std::shared_ptr<frc::DigitalSource >, bool, frc::Encoder::EncodingType>(), release_gil());

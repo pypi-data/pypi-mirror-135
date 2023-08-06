@@ -1,0 +1,66 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+
+
+classes:
+  PIDCommand:
+    shared_ptr: true
+    subpackage: command
+    methods:
+      PIDCommand:
+        overloads:
+          std::string_view, double, double, double:
+          std::string_view, double, double, double, double:
+          std::string_view, double, double, double, double, double:
+          double, double, double:
+          double, double, double, double:
+          double, double, double, double, double:
+          std::string_view, double, double, double, Subsystem&:
+            keepalive:
+            - [1, 6]
+          std::string_view, double, double, double, double, Subsystem&:
+            keepalive:
+            - [1, 7]
+          std::string_view, double, double, double, double, double, Subsystem&:
+            keepalive:
+            - [1, 8]
+          double, double, double, Subsystem&:
+            keepalive:
+            - [1, 5]
+          double, double, double, double, Subsystem&:
+            keepalive:
+            - [1, 6]
+          double, double, double, double, double, Subsystem&:
+            keepalive:
+            - [1, 7]
+      SetSetpointRelative:
+      PIDWrite:
+      PIDGet:
+      InitSendable:
+      GetPIDController:
+        rename: getPIDController
+        cpp_code: |
+          [](PIDCommand * self) {
+            PyErr_SetString(PyExc_NotImplementedError, "Using the PIDController directly is not supported");
+            throw py::error_already_set();
+          }
+      _Initialize:
+        rename: _initialize
+      _Interrupted:
+        rename: _interrupted
+      _End:
+        rename: _end
+      SetSetpoint:
+        rename: setSetpoint
+      GetSetpoint:
+        rename: getSetpoint
+      GetPosition:
+        rename: getPosition
+      ReturnPIDInput:
+        rename: returnPIDInput
+      UsePIDOutput:
+        rename: usePIDOutput

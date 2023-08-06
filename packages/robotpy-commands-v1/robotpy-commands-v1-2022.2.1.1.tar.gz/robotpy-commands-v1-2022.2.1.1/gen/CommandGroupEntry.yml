@@ -1,0 +1,28 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+
+classes:
+  CommandGroupEntry:
+    shared_ptr: true
+    subpackage: command
+    attributes:
+      m_timeout:
+      m_command:
+      m_state:
+    enums:
+      Sequence:
+    methods:
+      CommandGroupEntry:
+        overloads:
+          "":
+          frc::Command*, frc::CommandGroupEntry::Sequence, units::second_t:
+            keepalive:
+            - [1, 2]
+            param_override:
+              timeout:
+                default: "-1_s"
+      IsTimedOut:

@@ -1,0 +1,33 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+
+classes:
+  Button:
+    shared_ptr: true
+    subpackage: button
+    methods:
+      Button:
+      WhenPressed:
+        keepalive:
+        - [1, 2]
+        - [2, 1]
+      WhileHeld:
+        keepalive:
+        - [1, 2]
+        - [2, 1]
+      WhenReleased:
+        keepalive:
+        - [1, 2]
+        - [2, 1]
+      CancelWhenPressed:
+        keepalive:
+        - [1, 2]
+        - [2, 1]
+      ToggleWhenPressed:
+        keepalive:
+        - [1, 2]
+        - [2, 1]

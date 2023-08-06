@@ -1,0 +1,51 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/commands/CommandGroup.h
+
+classes:
+  CommandGroup:
+    shared_ptr: true
+    subpackage: command
+    methods:
+      CommandGroup:
+        overloads:
+          "":
+          std::string_view:
+      AddSequential:
+        overloads:
+          Command*:
+            keepalive:
+            - [1, 2]
+          Command*, units::second_t:
+            keepalive:
+            - [1, 2]
+      AddParallel:
+        overloads:
+          Command*:
+            keepalive:
+            - [1, 2]
+          Command*, units::second_t:
+            keepalive:
+            - [1, 2]
+      IsInterruptible:
+      GetSize:
+      Initialize:
+        rename: initialize
+      Execute:
+        rename: execute
+      IsFinished:
+        rename: isFinished
+      End:
+        rename: end
+      Interrupted:
+        rename: interrupted
+      _Initialize:
+        rename: _initialize
+      _Execute:
+        rename: _execute
+      _End:
+        rename: _end
+      _Interrupted:
+        rename: _interrupted

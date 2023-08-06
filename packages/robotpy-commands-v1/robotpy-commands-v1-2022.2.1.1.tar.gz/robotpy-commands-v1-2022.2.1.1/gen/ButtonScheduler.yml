@@ -1,0 +1,23 @@
+---
+
+extra_includes:
+- wpi/sendable/SendableBuilder.h
+- frc/buttons/Trigger.h
+- frc/commands/Command.h
+- frc/commands/CommandGroup.h
+
+classes:
+  ButtonScheduler:
+    shared_ptr: true
+    subpackage: button
+    attributes:
+      m_pressedLast:
+      m_button:
+      m_command:
+    methods:
+      ButtonScheduler:
+        keepalive:
+        - [1, 2]
+        - [1, 3]
+      Execute:
+      Start:

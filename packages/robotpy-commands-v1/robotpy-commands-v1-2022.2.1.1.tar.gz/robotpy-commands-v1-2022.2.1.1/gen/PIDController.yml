@@ -1,0 +1,28 @@
+---
+
+classes:
+  PIDController:
+    ignored_bases:
+    - Controller
+    subpackage: command
+    methods:
+      PIDController:
+        overloads:
+          double, double, double, PIDSource*, frc::PIDOutput*, double:
+            ignore: true
+          double, double, double, double, PIDSource*, frc::PIDOutput*, double:
+            ignore: true
+          double, double, double, PIDSource&, frc::PIDOutput&, double:
+            keepalive:
+            - [1, 5]
+            - [1, 6]
+          double, double, double, double, PIDSource&, frc::PIDOutput&, double:
+            keepalive:
+            - [1, 6]
+            - [1, 7]
+      Enable:
+      Disable:
+      SetEnabled:
+      IsEnabled:
+      Reset:
+      InitSendable:

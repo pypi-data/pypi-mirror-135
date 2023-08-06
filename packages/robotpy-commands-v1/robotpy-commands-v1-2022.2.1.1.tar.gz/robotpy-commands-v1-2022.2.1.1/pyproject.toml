@@ -1,0 +1,88 @@
+[build-system]
+requires = [
+    "robotpy-build<2023.0.0,>=2022.2.0",
+    "wpilib<2023.0.0,>=2022.2.1.3",
+]
+
+[tool.robotpy-build]
+base_package = "commands1"
+
+[tool.robotpy-build.wrappers."commands1._impl".maven_lib_download]
+artifact_id = "wpilibOldCommands-cpp"
+group_id = "edu.wpi.first.wpilibOldCommands"
+repo_url = "https://frcmaven.wpi.edu/artifactory/release"
+version = "2022.2.1"
+
+libs = ["wpilibOldCommands"]
+
+[tool.robotpy-build.wrappers."commands1._impl"]
+name = "commands_v1"
+sources = ["commands1/_impl/command.cpp"]
+depends = ["wpiutil", "ntcore", "wpimath_cpp", "wpimath_geometry", "wpilibc", "wpilib_core"]
+
+generation_data = "gen"
+
+[tool.robotpy-build.wrappers."commands1._impl".autogen_headers]
+# frc
+PIDBase = "frc/PIDBase.h"
+PIDController = "frc/PIDController.h"
+PIDInterface = "frc/PIDInterface.h"
+PIDOutput = "frc/PIDOutput.h"
+PIDSource = "frc/PIDSource.h"
+
+# frc/buttons
+Button = "frc/buttons/Button.h"
+ButtonScheduler = "frc/buttons/ButtonScheduler.h"
+CancelButtonScheduler = "frc/buttons/CancelButtonScheduler.h"
+HeldButtonScheduler = "frc/buttons/HeldButtonScheduler.h"
+InternalButton = "frc/buttons/InternalButton.h"
+JoystickButton = "frc/buttons/JoystickButton.h"
+NetworkButton = "frc/buttons/NetworkButton.h"
+POVButton = "frc/buttons/POVButton.h"
+PressedButtonScheduler = "frc/buttons/PressedButtonScheduler.h"
+ReleasedButtonScheduler = "frc/buttons/ReleasedButtonScheduler.h"
+ToggleButtonScheduler = "frc/buttons/ToggleButtonScheduler.h"
+Trigger = "frc/buttons/Trigger.h"
+
+# frc/commands
+Command = "frc/commands/Command.h"
+CommandGroup = "frc/commands/CommandGroup.h"
+CommandGroupEntry = "frc/commands/CommandGroupEntry.h"
+ConditionalCommand = "frc/commands/ConditionalCommand.h"
+InstantCommand = "frc/commands/InstantCommand.h"
+PIDCommand = "frc/commands/PIDCommand.h"
+PIDSubsystem = "frc/commands/PIDSubsystem.h"
+PrintCommand = "frc/commands/PrintCommand.h"
+Scheduler = "frc/commands/Scheduler.h"
+StartCommand = "frc/commands/StartCommand.h"
+Subsystem = "frc/commands/Subsystem.h"
+TimedCommand = "frc/commands/TimedCommand.h"
+WaitCommand = "frc/commands/WaitCommand.h"
+WaitForChildren = "frc/commands/WaitForChildren.h"
+WaitUntilCommand = "frc/commands/WaitUntilCommand.h"
+
+# frc/pidwrappers
+PIDAnalogAccelerometer = "frc/pidwrappers/PIDAnalogAccelerometer.h"
+PIDAnalogGyro = "frc/pidwrappers/PIDAnalogGyro.h"
+PIDAnalogInput = "frc/pidwrappers/PIDAnalogInput.h"
+PIDAnalogPotentiometer = "frc/pidwrappers/PIDAnalogPotentiometer.h"
+PIDEncoder = "frc/pidwrappers/PIDEncoder.h"
+PIDMotorController = "frc/pidwrappers/PIDMotorController.h"
+PIDUltrasonic = "frc/pidwrappers/PIDUltrasonic.h"
+
+# Tell setuptools to include these namespaced packages
+[tool.robotpy-build.wrappers."wpilib.buttons"]
+name = "commands_v1_buttons"
+[tool.robotpy-build.wrappers."wpilib.command"]
+name = "commands_v1_command"
+
+[tool.robotpy-build.metadata]
+name = "robotpy-commands-v1"
+description = "WPILib command framework"
+author = "RobotPy Development Team"
+author_email = "robotpy@googlegroups.com"
+url = "https://github.com/robotpy/robotpy-commands"
+license = "BSD-3-Clause"
+install_requires = [
+    "wpilib<2023.0.0,>=2022.2.1.3",
+]
