@@ -1,0 +1,51 @@
+debug: true
+
+#    """
+#    DE-1021 correct snapshot partition
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = True
+
+Extract:
+  input_supp:
+    type: parquet
+    location: "{project_root_path}/{client}/input/custom_supplemental/"
+
+Transform:
+  supp:
+    sql: >-
+        select
+          trim(Claim_id) as Claim_Id,
+          trim(Rendering_Provider_NPI) as Provider_Id,
+          trim(MasterPersonID) as Member_Id,
+          trim(DiagnosisCode) as Icd_Code,
+          trim(Icd_version) as Icd_Version,
+          date(trim(ServiceDate)) as Dos_From,
+          date(trim(ServiceDate)) as Dos_To,
+          trim(cast(null as string)) as Claim_Type,
+          trim(Place_of_Service) as Place_Of_Service,
+          trim(ProcedureCode) as Cpt_Code,
+          trim(cast(null as string)) as Cpt_Code_Modifier_1,
+          trim(cast(null as string)) as Cpt_Code_Modifier_2,
+          trim(cast(null as string)) as Revenue_Code,
+          trim(cast(null as string)) as Specialty,
+          trim(cast(null as string)) as Bill_Type,
+          trim(cast(null as string)) as Billing_Provider_Id,
+          'S' as Source_Type,
+          trim(cast(null as string)) as Suspect_Reason
+          from input_supp
+    cache: false
+
+# Note: Load tables have to be same as Extract tables.
+Load:
+  supp:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/input/supplemental'
+      mode: overwrite

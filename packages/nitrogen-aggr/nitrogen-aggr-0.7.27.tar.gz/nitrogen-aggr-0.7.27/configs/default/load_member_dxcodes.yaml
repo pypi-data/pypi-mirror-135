@@ -1,0 +1,332 @@
+debug: false
+
+#    """
+#    Adapted from: EADx.scala , Nitrogen
+
+#    Logic:
+#        1- load the history table for the member_dx_codes sync table only include the records with
+#           the last job_id present in the history table
+#        2- create the full data for member_dx_codes
+#        3- compare the full data against the last history data to create the incremental table with 3 operations
+#         INSERT if records are present in the full table but not in the history (using the pk for the comparison
+#         DELETE if records are present in the history  table but not in the full table
+#         UPDATE If recorda are present in both tables (history and full) but the hash value is different
+# 01/04/2022 : Add filter to exclude rows with year that are NOT in the 4 years for which we run the calculator (current_year - 3 to current_year)
+#    """
+
+## Files to Load / Create View
+variables:
+  - project_root_path = {config.project_root_path}
+#  - cad_job_id = {config.job_id}
+  - client = {config.client}
+  - aggr_location =  {config.aggr_location}
+  - debug = False
+
+Extract:
+  member_dx_codes_history:
+    type: parquet
+    location: "{aggr_location}/member_dx_codes_history/"
+
+  EA_Dx:
+    type: parquet
+    location: "{project_root_path}/{client}/EA_Dx/"
+
+  job:
+    type: postgres
+    conn_config_name: cadmium_postgres_db
+    table_name: job
+    skip_if_local: false
+
+  EpiAnalyst_Client_Settings:
+    type: parquet
+    location: "{project_root_path}/{client}/EpiAnalyst_Client_Settings/"
+
+Transform:
+  cad_job:
+    sql: >-
+      With LastJob as (
+        SELECT
+          max(id) as last_job_id,
+          max(client_name) as client_name
+          FROM job
+          WHERE status = 'CLOSED' and client_name ='{client}'
+        )
+      SELECT
+        max(j.id) as cad_job_id, max(coalesce(l.last_job_id,0)) as last_job_id
+        FROM job j
+        inner join LastJob l on j.client_name = l.client_name
+        WHERE status = 'OPEN'
+    cache: true
+    create_local_job_id: false
+
+# previous job should ONLY include the table keys , hash values and job id for the previous job_id for the specific client
+  previous_load:
+    sql: >-
+      SELECT
+         member_id,
+         provider_id,
+         dxcode,
+         hcc_code,
+         date_of_service,
+         hash_value,
+         job_id
+      FROM member_dx_codes_history m
+      INNER JOIN cad_job  c on c.last_job_id =m.job_id
+    cache: true
+
+  # Currently flex1..flex10 is empty as a placeholder.
+  member_dx_codes_full:
+    sql: >-
+        with order_Claims as (
+            SELECT
+            Provider_Id AS provider_id,
+            Member_Id AS member_id,
+            Dx_Code As dxcode,
+            DOS as date_of_service,
+            YEAR(dx.DOS) As date_of_service_year,
+            IFNULL (concat('HCC', substring(concat('000', CAST(hcc_code AS String)), -3, 3)), '') as hcc_code,
+            hcc_type,
+            description,
+            source,
+            suspect_reason,
+            false as  added_by_client,
+            Place_Of_Service as pos,
+            false as is_deleted,
+            procedure_code,
+            dx_status,
+            case when ifnull(is_chronic, 0 ) = 0 then false else true end as is_chronic,
+            code_source,
+            case when ifnull( is_recap,0 ) = 0 then false else true end as is_recap,
+            cast(null as string) as flex1,
+            cast(null as string) as flex2,
+            cast(null as string) as flex3,
+            cast(null as string) as flex4,
+            cast(null as string) as flex5,
+            cast(null as string) as flex6,
+            cast(null as string) as flex7,
+            cast(null as string) as flex8,
+            cast(null as string) as flex9,
+            cast(null as string) as flex10,
+            row_number() over(partition by provider_id, member_id, dx_code, dos, hcc_code order by hcc_type, code_source, left(dx_status, 5), is_recap desc, is_chronic desc   ) as r
+            FROM EA_Dx dx
+        ),
+        UniquePK_Claims as (select * from order_claims where r =1  )
+        select
+            provider_id,
+            member_id,
+            dxcode,
+            date_of_service,
+            date_of_service_year,
+            hcc_code,
+            hcc_type,
+            description,
+            source,
+            suspect_reason,
+            added_by_client,
+            pos,
+            is_deleted,
+            procedure_code,
+            dx_status,
+            is_chronic,
+            code_source,
+            is_recap,
+            flex1,
+            flex2,
+            flex3,
+            flex4,
+            flex5,
+            flex6,
+            flex7,
+            flex8,
+            flex9,
+            flex10,
+            hash(
+            provider_id,
+            member_id,
+            dxcode,
+            date_of_service,
+            date_of_service_year,
+            hcc_code,
+            hcc_type,
+            description,
+            source,
+            suspect_reason,
+            added_by_client,
+            pos,
+            is_deleted,
+            procedure_code,
+            dx_status,
+            is_chronic,
+            code_source,
+            is_recap,
+            flex1,
+            flex2,
+            flex3,
+            flex4,
+            flex5,
+            flex6,
+            flex7,
+            flex8,
+            flex9,
+            flex10
+            ) as hash_value,
+             ( select cad_job_id from cad_job )  as job_id
+        FROM UniquePK_Claims
+    cache: true
+
+  member_dx_codes_incremental:
+    sql: >-
+      WITH new_rows as (
+           SELECT
+            a.hash_value,
+            'INSERT' as operation,
+            a.job_id,
+            a.provider_id,
+            a.member_id,
+            a.dxcode,
+            a.date_of_service,
+            a.date_of_service_year,
+            a.hcc_code,
+            a.hcc_type,
+            a.description,
+            a.source,
+            a.suspect_reason,
+            a.added_by_client,
+            a.pos,
+            a.is_deleted,
+            a.procedure_code,
+            a.dx_status,
+            a.is_chronic,
+            a.code_source,
+            a.is_recap,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+          FROM  member_dx_codes_full a
+          inner join EpiAnalyst_Client_Settings s on year(a.date_of_service) between s.current_year - 3 and  s.current_year
+          LEFT JOIN previous_load b
+              ON a.member_id = b.member_id
+              AND a.provider_id = b.provider_id
+              AND a.hcc_code = b.hcc_code
+              AND a.date_of_service = b.date_of_service
+              AND a.dxcode = b.dxcode
+          WHERE b.member_id is null ),
+      delete_rows as (
+          SELECT
+            a.hash_value,
+            'DELETE' as operation,
+           ( select cad_job_id from cad_job )  as job_id,
+            a.provider_id,
+            a.member_id,
+            a.dxcode,
+            a.date_of_service,
+            cast(null as integer) as date_of_service_year,
+            a.hcc_code,
+            cast(null as string) as hcc_type,
+            cast(null as string) as description,
+            cast(null as string) as source,
+            cast(null as string) as suspect_reason,
+            cast(null as boolean) as added_by_client,
+            cast(null as string) as pos,
+            cast(null as boolean) as is_deleted,
+            cast(null as string) as procedure_code,
+            cast(null as string) as dx_status,
+            cast(null as boolean) as is_chronic,
+            cast(null as string) as code_source,
+            cast(null as boolean) as is_recap,
+            cast(null as string) as flex1,
+            cast(null as string) as flex2,
+            cast(null as string) as flex3,
+            cast(null as string) as flex4,
+            cast(null as string) as flex5,
+            cast(null as string) as flex6,
+            cast(null as string) as flex7,
+            cast(null as string) as flex8,
+            cast(null as string) as flex9,
+            cast(null as string) as flex10
+            FROM previous_load a
+            inner join EpiAnalyst_Client_Settings s on year(a.date_of_service) between s.current_year - 3 and  s.current_year
+            LEFT JOIN member_dx_codes_full b
+                ON a.member_id = b.member_id
+                AND a.provider_id = b.provider_id
+                AND a.hcc_code = b.hcc_code
+                AND a.date_of_service = b.date_of_service
+                AND a.dxcode = b.dxcode
+            WHERE b.member_id is null ),
+      update_rows as (
+           SELECT
+            a.hash_value,
+            'UPDATE' as operation,
+            a.job_id,
+            a.provider_id,
+            a.member_id,
+            a.dxcode,
+            a.date_of_service,
+            a.date_of_service_year,
+            a.hcc_code,
+            a.hcc_type,
+            a.description,
+            a.source,
+            a.suspect_reason,
+            a.added_by_client,
+            a.pos,
+            a.is_deleted,
+            a.procedure_code,
+            a.dx_status,
+            a.is_chronic,
+            a.code_source,
+            a.is_recap,
+            a.flex1,
+            a.flex2,
+            a.flex3,
+            a.flex4,
+            a.flex5,
+            a.flex6,
+            a.flex7,
+            a.flex8,
+            a.flex9,
+            a.flex10
+          FROM member_dx_codes_full a
+          inner join EpiAnalyst_Client_Settings s on year(a.date_of_service) between s.current_year - 3 and  s.current_year
+          INNER JOIN previous_load b
+              ON a.member_id = b.member_id
+              AND a.provider_id = b.provider_id
+              AND a.hcc_code = b.hcc_code
+              AND a.date_of_service = b.date_of_service
+              AND a.dxcode = b.dxcode
+              WHERE a.hash_value <> b.hash_value )
+          SELECT *
+          FROM new_rows
+          UNION
+          SELECT *
+          FROM delete_rows
+          UNION
+          SELECT *
+          FROM update_rows
+    cache: true
+
+## Note: Load tables have to be same as Extract tables.
+Load:
+  member_dx_codes_full:
+    load_1:
+      type: parquet
+      location: '{aggr_location}/member_dx_codes_full'
+      mode: overwrite
+
+  member_dx_codes_incremental:
+    load_1:
+      type: parquet
+      location: '{project_root_path}/{client}/sync/member_dx_codes_incremental'
+      mode: overwrite
+#    load_to_postgres:
+#      type: postgres
+#      conn_config_name: epia_medicare_postgres
+#      table_name: load_member_dxcodes
+#      mode: overwrite

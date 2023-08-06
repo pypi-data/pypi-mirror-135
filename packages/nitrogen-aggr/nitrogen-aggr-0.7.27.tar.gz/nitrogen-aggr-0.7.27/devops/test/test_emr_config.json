@@ -1,0 +1,109 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Cadmium Spark cluster.",
+  "Parameters" : {
+    "NitrogenVersion" : {
+      "Type" : "String",
+      "Description" : "Version of Nitrogen to use.",
+      "Default": "0.0.1"
+    },
+    "ConfigFile" : {
+      "Type" : "String",
+      "Description" : "Name of the configuration file.",
+      "Default": "sss.conf"
+    }
+  },
+  "Resources": {
+    "NitrogenCluster": {
+      "Type": "AWS::EMR::Cluster",
+      "Properties": {
+        "Instances": {
+          "MasterInstanceGroup": {
+            "InstanceCount": 1,
+            "InstanceType": "m5.xlarge",
+            "Market": "ON_DEMAND",
+            "Name": "Master"
+          },
+          "CoreInstanceGroup": {
+            "InstanceCount": 3,
+            "InstanceType": "m5.xlarge",
+            "Market": "ON_DEMAND",
+            "Name": "Core",
+            "EbsConfiguration": {
+              "EbsBlockDeviceConfigs" : [ {
+                "VolumeSpecification" : {
+                  "SizeInGB": 128,
+                  "VolumeType": "gp2"
+                }
+              }]
+            }
+          },
+          "Ec2KeyName": "nitrogen",
+          "EmrManagedMasterSecurityGroup": "sg-54b92921",
+          "EmrManagedSlaveSecurityGroup": "sg-e7b92992",
+          "ServiceAccessSecurityGroup": "sg-67b32312",
+          "TerminationProtected": false,
+          "Ec2SubnetId": "subnet-e2ff8abf"
+        },
+        "EbsRootVolumeSize": 100,
+        "LogUri": "s3://epi-nitrogen/logs/prod/elasticmapreduce",
+        "Name": "Cadmium",
+        "ReleaseLabel": "emr-5.17.0",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Cadmium-EMR"
+          },
+          {
+            "Key": "Department",
+            "Value": "Engineering"
+          },
+          {
+            "Key": "Product_line",
+            "Value": "EpiAnalyst"
+          },
+          {
+            "Key": "Role",
+            "Value": "Processing Server"
+          }
+        ],
+        "Applications":[
+             { "Name": "Spark" },
+             { "Name": "Hive" }
+        ],
+        "Configurations": [
+          {
+            "Classification": "spark-defaults",
+            "ConfigurationProperties": {
+              "spark.network.timeout": "800",
+              "spark.sql.broadcastTimeout": "1200"
+            }
+          }],
+        "BootstrapActions": [
+          {
+            "Name": "Install Code",
+            "ScriptBootstrapAction": {
+              "Path": "s3://epi-nitrogen/prod/emr_bootstrap_actions.sh",
+              "Args": ["dev", { "Ref" : "NitrogenVersion"}, { "Ref" : "ConfigFile"}]
+            }
+          }
+        ],
+        "VisibleToAllUsers": true,
+        "JobFlowRole": "EMR_EC2_DefaultRole",
+        "ServiceRole": "EMR_DefaultRole",
+        "SecurityConfiguration": "nitrogen"
+      }
+    }
+  },
+  "Outputs": {
+  "IPAddress": {
+    "Description": "IP address of EMR cluster MasterNode",
+    "Value": {
+      "Fn::GetAtt": [
+        "NitrogenCluster",
+        "MasterPublicDNS"
+      ]
+    }
+  }
+}
+}
