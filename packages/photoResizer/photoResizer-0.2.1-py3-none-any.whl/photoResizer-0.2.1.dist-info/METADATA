@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: photoResizer
+Version: 0.2.1
+Summary: Photo Resizer, used mainly for Id cards and other documents.
+Home-page: https://gitlab.com/frague59/resize
+Author: "François GUÉRIN"
+Author-email: "frague59@gmail.com"
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Programming Language :: Python :: 3
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Topic :: Utilities
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: click (~=8.0)
+Requires-Dist: Willow (~=1.4)
+Requires-Dist: Pillow (~=8.4)
+Requires-Dist: pyYAML (~=6.0)
+Provides-Extra: opencv
+Requires-Dist: opencv-python ; extra == 'opencv'
+Requires-Dist: opencv-contrib-python ; extra == 'opencv'
+
+# Image resizer
+
+Resize images with face centering and cropping, export images into a directory.
+
+## Installation
+
+### Without face detection
+
+#### With pip
+```shell
+$ python3 -m pip --user install git+https://gitlab.com/frague59/resize.git
+```
+
+### With face detection (opencv)
+
+#### With pip
+```shell
+$ python3 -m pip --user install photoResizer[opencv] 
+```
+
+#### With pipx
+```shell
+$ pipx install photoResizer[opencv]
+```
+
+## Usage 
+
+```shell
+$ photoResizer --help
+Usage: python -m photoResizer [OPTIONS] IMAGES... OUTPUT_DIR
+
+  Resize images to a given width and height.
+
+Options:
+  --version
+  -W, --width INTEGER             Width of the output image.
+  -H, --height INTEGER            Height of the output image.
+  -Q, --quality INTEGER           Quality of the output image.
+  -f, --format [jpeg|png|tiff|webp]
+                                  Type of the output image.
+  -p, --multiprocessing           Use multiprocessing for image resizing.
+  -F, --face-detection            Use face detection for image resizing
+                                  (openCV required).
+  --help                          Show this message and exit.
+```
+
+`IMAGES` can be alist of image paths or a directory. 
+
+
