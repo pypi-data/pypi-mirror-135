@@ -1,0 +1,17 @@
+{% extends 'portal/base.html' %}
+{% load staticfiles %}
+{% load app_tags %}
+
+{% block content %}
+
+<div class="form--register form--register--teacher is-flex">
+    <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4 center-block">
+        <h4>Your email address verification failed</h4>
+        <img class="background" title="Sad Face" alt="Verification failure" src="{% static 'portal/img/sadface.png' %}">
+        <p>You used an invalid link, either you mistyped the URL or that link is expired.</p>
+        <p>When you next attempt to log in, you will be sent a new verification email.</p>
+        <a id="home_button" href="{% url 'home' %}">Back to homepage</a>
+    </div>
+</div>
+
+{% endblock content %}
