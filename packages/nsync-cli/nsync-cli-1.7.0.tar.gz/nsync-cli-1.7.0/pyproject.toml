@@ -1,0 +1,37 @@
+[project]
+name = "nsync-cli"
+description = "NeutronSync command line client. Use to securely sync your dot files."
+dependencies = [ "typer~=0.3", "cryptography~=3.4", "httpx[brotli,http2]~=0.18", "py-essentials~=1.4", "pendulum~=2.1", "tabulate~=0.8", "three-merge~=0.1",]
+requires-python = ">=3.7"
+dynamic = []
+readme = "README.md"
+version = "1.7.0"
+[[project.authors]]
+name = "Paul Bailey"
+email = "paul@neutron.studio"
+
+[build-system]
+requires = [ "pdm-pep517",]
+build-backend = "pdm.pep517.api"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage = "https://github.com/neutron-sync/nsync-cli"
+
+[project.optional-dependencies]
+
+[project.scripts]
+nsync = "nsync_cli.main:app"
+
+[tool.pdm.version]
+from = "nsync_cli/__init__.py"
+
+[tool.pdm.dev-dependencies]
+dev = [ "yapf~=0.31",]
+
+[tool.pdm.scripts]
+format = "yapf -rpi -vv ."
+check_format = "yapf -rpd ."
+publish = "pdm publish --username pizzapanther"
