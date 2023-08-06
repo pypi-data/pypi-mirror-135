@@ -1,0 +1,57 @@
+---
+excel-template:
+  help: Create the excel documentation template in the cwd.
+  default: False
+  action: 'store_true'
+switch-list:
+  help: Specify the switch list to use to collect documentation.
+  default: 'switch-list.txt'
+  type: str
+load-creds:
+  help: Load credentials into the keystore from this text document. (switch-ip,username,password)
+  default: ''
+  type: str
+output-dir:
+  help: Set the output directory for switch configs, arp table output, etc.
+  default: './'
+  type: str
+fetch-info:
+  help: Fetch information from the switches (outputs to OUTPUT_DIR/output.json)
+  default: False
+  action: 'store_true'
+parse-info:
+  help: Parses stored info from OUTPUT_DIR/output.json and outputs OUTPUT_DIR/output.csv
+  default: False
+  action: 'store_true'
+update-wireshark-oui:
+  help: This updates the wireshark oui list to identify vendors based on the device mac address.
+  default: False
+  action: 'store_true'
+update-excel:
+  help: This is the filename to update the 'SWITCHES' and 'ARP' sheets of the specified workbook automatically. This perminently erases the current 'SWITCHES' worksheet. This only appends values to the 'ARP' sheet.
+  type: str
+  default: ''
+parallel:
+  help: Run against all switches in parallel.
+  default: False
+  action: 'store_true'
+default-user:
+  help: Specify a default username to connect with.
+  default: ''
+  type: str
+default-pass:
+  help: Specify a default password to connect with.
+  default: ''
+  type: str
+additional-commands:
+  help: Specify comma delimited commands that will be added to output.json.
+  default: ''
+  type: str
+ssh-config:
+  help: Specify an ssh config file for using a jump host to connect to the switches.
+  default: ''
+  type: str
+switch:
+  help: Specify a single switch to collect information from.
+  default: ''
+  type: str
