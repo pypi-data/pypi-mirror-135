@@ -1,0 +1,107 @@
+Metadata-Version: 2.1
+Name: f2py-jit
+Version: 0.6.0
+Summary: UNKNOWN
+Home-page: https://gitlab.info-ufr.univ-montp2.fr/daniele.coslovich/f2py-jit
+Author: Daniele Coslovich
+Author-email: daniele.coslovich@umontpellier.fr
+License: GPLv3
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+
+f2py-jit
+==================
+
+[![pypi](https://img.shields.io/pypi/v/f2py-jit.svg)](https://pypi.python.org/pypi/f2py-jit/)
+[![version](https://img.shields.io/pypi/pyversions/f2py-jit.svg)](https://pypi.python.org/pypi/f2py-jit/)
+[![license](https://img.shields.io/pypi/l/f2py-jit.svg)](https://en.wikipedia.org/wiki/GNU_General_Public_License)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fframagit.org%2Fcoslo%2Ff2py-jit/HEAD?labpath=docs%2Findex.ipynb)
+[![pipeline status](https://framagit.org/coslo/f2py-jit/badges/master/pipeline.svg)](https://framagit.org/coslo/f2py-jit/-/commits/master)
+[![coverage report](https://framagit.org/coslo/f2py-jit/badges/master/coverage.svg)](https://framagit.org/coslo/f2py-jit/-/commits/master)
+
+Just-in-time compilation of Fortran code in Python via [f2py](https://numpy.org/doc/stable/f2py/).
+
+Quick start
+-----------
+
+Start from a piece of Fortran `code.f90`
+```fortran
+subroutine hello()
+  print*, "Hello world!"
+end subroutine hello
+```
+
+Compile the code, import it and execute it
+```python
+from f2py_jit import jit
+f90 = jit('code.f90')
+f90.hello()
+```
+
+Do the same but from a python string containing the source block
+```python
+source = """
+subroutine hello()
+  print*, "Hello world!"
+end subroutine hello
+"""
+f90 = jit(source)
+f90.hello()
+```
+
+If the Fortran source contains multiple subroutines calling each other, `f2py` will not perform interprocedural optimizations (at least not by default). `f2py_jit` can inline the source code before compiling it, and you will get a [performace boost](https://coslo.frama.io/f2py-jit/tutorial/#performance) [**This feature is experimental**]
+```python
+from f2py_jit import jit, inline
+f90 = jit(inline('code.f90'))
+f90.hello()
+```
+
+Documentation
+-------------
+
+- [Tutorial](https://coslo.frama.io/f2py-jit/tutorial/)
+- [Public API](https://coslo.frama.io/f2py-jit/api/f2py_jit/)
+
+Features
+--------
+- Compilation of source blocks as python strings
+- Caching of modules build across executions
+- Optional inlining of Fortran code to improve performance (experimental)
+
+## Documentation
+
+Check out the [tutorial](https://coslo.frama.io/f2py-jit/tutorial) for more examples and the [public API](https://coslo.frama.io/f2py-jit/api/f2py_jit) for full details.
+
+The tutorial can be executed live on [binder](https://mybinder.org/v2/git/https%3A%2F%2Fframagit.org%2Fcoslo%2Ff2py-jit/HEAD?labpath=docs%2Findex.ipynb).
+
+Dependencies
+------------
+- numpy
+- Fortran compiler
+
+Installation
+------------
+The easiest way to install f2py-jit is with pip
+```
+pip install f2py-jit
+```
+
+Alternately, you can clone the code repository and install from source
+```
+git clone https://framagit.org/coslo/f2py-jit.git
+cd f2py_jit
+make install
+```
+
+Authors
+-------
+Daniele Coslovich: https://www.units.it/daniele.coslovich/
+
+
