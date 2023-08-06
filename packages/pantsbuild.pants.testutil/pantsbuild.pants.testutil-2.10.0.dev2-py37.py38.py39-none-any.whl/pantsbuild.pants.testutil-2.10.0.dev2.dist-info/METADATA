@@ -1,0 +1,204 @@
+Metadata-Version: 2.1
+Name: pantsbuild.pants.testutil
+Version: 2.10.0.dev2
+Summary: Test support for writing Pants plugins.
+Home-page: https://github.com/pantsbuild/pants
+License: Apache License, Version 2.0
+Project-URL: Documentation, https://www.pantsbuild.org/
+Project-URL: Source, https://github.com/pantsbuild/pants
+Project-URL: Tracker, https://github.com/pantsbuild/pants/issues
+Project-URL: Changelog, https://www.pantsbuild.org/docs/changelog
+Project-URL: Twitter, https://twitter.com/pantsbuild
+Project-URL: Slack, https://pantsbuild.slack.com/join/shared_invite/zt-d0uh0mok-RLvVosDiX6JDpvStH~bFBA#/shared-invite/email
+Project-URL: YouTube, https://www.youtube.com/channel/UCCcfCbDqtqlCkFEuENsHlbQ
+Project-URL: Mailing lists, https://groups.google.com/g/pants-devel
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: Topic :: Software Development :: Testing
+Description-Content-Type: text/markdown
+Requires-Dist: pantsbuild.pants (==2.10.0.dev2)
+Requires-Dist: pytest (<6.3,>=6.2.4)
+
+Pants is an Apache2 licensed build tool written in Python and Rust.
+
+The latest documentation can be found at [pantsbuild.org](https://www.pantsbuild.org/).
+
+
+# 2.10.x Release Series
+
+## 2.10.0.dev2 (Jan 22, 2022)
+
+### New Features
+
+* JVM lockfile invalidation headers and verification ([#14185](https://github.com/pantsbuild/pants/pull/14185))
+
+* Add new `api-types` help goal ([#14081](https://github.com/pantsbuild/pants/pull/14081))
+
+* Add line numbers to `--unowned-dependency-behavior` errors ([#14169](https://github.com/pantsbuild/pants/pull/14169))
+
+* Add Flake8 first-party plugin support ([#14027](https://github.com/pantsbuild/pants/pull/14027))
+
+* add runtime dependencies field for Apache Thrift for Python ([#14158](https://github.com/pantsbuild/pants/pull/14158))
+
+* Add `#pants: no-infer-dep` pragma for ignoring imports ([#14059](https://github.com/pantsbuild/pants/pull/14059) and [#14225](https://github.com/pantsbuild/pants/pull/14225))
+
+* Add local `.pants.rc` support ([#14142](https://github.com/pantsbuild/pants/pull/14142))
+
+* thrift: add scrooge java backend ([#14043](https://github.com/pantsbuild/pants/pull/14043))
+
+* add Avro codegen support for Java ([#13990](https://github.com/pantsbuild/pants/pull/13990))
+
+### User API Changes
+
+* add timeout for remote cache lookups ([#14224](https://github.com/pantsbuild/pants/pull/14224))
+
+* Replace `coursier-resolve` goal with `generate-lockfiles` ([#14211](https://github.com/pantsbuild/pants/pull/14211))
+
+* Replace `jvm-generate-lockfiles` goal with `generate-lockfiles` ([#14176](https://github.com/pantsbuild/pants/pull/14176))
+
+* Deprecate `sourcefile-validation` in favor of `regex-lint` ([#14173](https://github.com/pantsbuild/pants/pull/14173))
+
+* Deprecate `python_requirements` and `poetry_requirements` using old macro in favor of target generation ([#14075](https://github.com/pantsbuild/pants/pull/14075))
+
+* Add try/except parsing to import_parser to avoid failing strict checks for optional imports ([#14216](https://github.com/pantsbuild/pants/pull/14216))
+
+* Don't error on string imports with `[python-infer].unowned_dependency_behavior` ([#14179](https://github.com/pantsbuild/pants/pull/14179))
+
+### Plugin API Changes
+
+* Remove per-language indirection for formatter plugins. ([#14166](https://github.com/pantsbuild/pants/pull/14166))
+
+### Bug fixes
+
+* Fix complex `__import__` statements failing to parse with Python 2.7 - 3.7 ([#14232](https://github.com/pantsbuild/pants/pull/14232))
+
+* `LockfileMetadata` - Replace flaky `_header_dict()` mechanism with more robust `header_attrs` mechanism ([#14229](https://github.com/pantsbuild/pants/pull/14229))
+
+* More accurate reported runtime when `pantsd` is in use. ([#14177](https://github.com/pantsbuild/pants/pull/14177))
+
+* Fix Pylint to run on transitive dependencies to avoid underreporting issues ([#13918](https://github.com/pantsbuild/pants/pull/13918))
+
+* [Docker] Fix bug when a putative target address did not exist. ([#14125](https://github.com/pantsbuild/pants/pull/14125))
+
+* Fix immutable inputs DCL bug. ([#14016](https://github.com/pantsbuild/pants/pull/14016))
+
+### Performance
+
+* Batching of `lint` and `fmt` invokes ([#14186](https://github.com/pantsbuild/pants/pull/14186))
+
+### Documentation
+
+* [Doc] Include backend source for goals, subsystems and targets in generated docsite. ([#14126](https://github.com/pantsbuild/pants/pull/14126))
+
+## 2.10.0.dev1 (Jan 07, 2022)
+
+### New Features
+
+* JVM Resources support ([#13908](https://github.com/pantsbuild/pants/pull/13908))
+
+* Expose Docker build context hash for image tag interpolation. ([#13959](https://github.com/pantsbuild/pants/pull/13959))
+
+* Add Thrift IDL codegen using Apache Thrift for Python and Java and Scrooge for Scala ([#13987](https://github.com/pantsbuild/pants/pull/13987))
+
+* Add new `image_labels` field to `docker_image`. ([#13973](https://github.com/pantsbuild/pants/pull/13973))
+
+### User API Changes
+
+* Deprecate `[validate].detail_level` in favor of `[sourcefile-validation].detail_level` ([#14103](https://github.com/pantsbuild/pants/pull/14103))
+
+* Upgrade Hadolint (dockerfile linter) to from 2.6.0 to 2.8.0 ([#14110](https://github.com/pantsbuild/pants/pull/14110))
+
+* Change third party module mapping to consider resolves ([#14034](https://github.com/pantsbuild/pants/pull/14034))
+
+### Plugin API Changes
+
+* Fix `@rule` effect validation for `not cacheable` types. ([#14069](https://github.com/pantsbuild/pants/pull/14069))
+
+* Allow plugins to use range requirements by applying constraints to plugin resolution ([#14058](https://github.com/pantsbuild/pants/pull/14058))
+
+### Bug fixes
+
+* Reduce output from `scalafmt`, and lower reflective access option threshold for Google Java Format. ([#14109](https://github.com/pantsbuild/pants/pull/14109))
+
+* Hook up Scalafmt and Google Java Format to `./pants lint` ([#14108](https://github.com/pantsbuild/pants/pull/14108))
+
+* Fix `validate` goal crashing if not configured ([#14104](https://github.com/pantsbuild/pants/pull/14104))
+
+* Fix dropped output race during UI teardown  ([#14093](https://github.com/pantsbuild/pants/pull/14093))
+
+* Fix incorrectly setting `name` on `python_requirements` macro ([#14065](https://github.com/pantsbuild/pants/pull/14065))
+
+* [jvm] Use appropriate coordinate serialization for Coursier CLI inputs. ([#14038](https://github.com/pantsbuild/pants/pull/14038))
+
+* Fix `.pyi` type stubs to show up in `python_distribution` ([#14033](https://github.com/pantsbuild/pants/pull/14033))
+
+* Fix file sources codegen for the Docker build context. ([#14024](https://github.com/pantsbuild/pants/pull/14024))
+
+* [jvm] Parse maven coordinates using regular expression ([#14010](https://github.com/pantsbuild/pants/pull/14010))
+
+* [jvm] Fix use of multiple scalac plugins when one plugin has multiple classpath entries ([#14012](https://github.com/pantsbuild/pants/pull/14012))
+
+### Documentation
+
+* Include provider info in help output for subsystems and target types. ([#13993](https://github.com/pantsbuild/pants/pull/13993))
+
+* Fix help strings which were accidentally tuples, and add a validation. ([#14057](https://github.com/pantsbuild/pants/pull/14057))
+
+## 2.10.0.dev0 (Dec 27, 2021)
+
+### New Features
+
+* Add duration and cache source to test output. ([#13889](https://github.com/pantsbuild/pants/pull/13889))
+
+* Add `pex_binaries` target generator ([#13910](https://github.com/pantsbuild/pants/pull/13910))
+
+* Support Docker build target stage ([#13956](https://github.com/pantsbuild/pants/pull/13956))
+
+* Add `ssh` field to `docker_image`. ([#13957](https://github.com/pantsbuild/pants/pull/13957))
+
+* Docker `FROM` target dep inference ([#13921](https://github.com/pantsbuild/pants/pull/13921))
+
+* Docker context troubleshooter ([#13896](https://github.com/pantsbuild/pants/pull/13896))
+
+* java: add protobuf code generation support using `protoc` ([#13989](https://github.com/pantsbuild/pants/pull/13989))
+
+* Support `test --debug` with scalatest and junit. ([#13966](https://github.com/pantsbuild/pants/pull/13966))
+
+### User API Changes
+
+* Update shellcheck default version to v0.8.0 ([#13983](https://github.com/pantsbuild/pants/pull/13983))
+
+* Upgrade to Pex 2.1.61 and use `--venv` copies. ([#13979](https://github.com/pantsbuild/pants/pull/13979))
+
+* Remove deprecated `[python-setup]` in favor of `[python]` ([#14004](https://github.com/pantsbuild/pants/pull/14004))
+
+* Remove deprecated `typecheck` goal as alias for `check` ([#13929](https://github.com/pantsbuild/pants/pull/13929))
+
+* Remove deprecated `pants_requirement` in favor of `pants_requirements` ([#13927](https://github.com/pantsbuild/pants/pull/13927))
+
+* Remove deprecated `--process-execution-local-cleanup` and `--process-execution-local-cache` in favor of `--process-cleanup` and `--local-cache` ([#13928](https://github.com/pantsbuild/pants/pull/13928))
+
+### Plugin API Changes
+
+* Add `OptionalSingleSourceField` ([#13982](https://github.com/pantsbuild/pants/pull/13982))
+
+* Remove deprecated RuleRunner methods `create_file(s)` and `add_to_build_file`. ([#13954](https://github.com/pantsbuild/pants/pull/13954))
+
+* Revert "Turn off validation for unset `SourcesField` if `required=False`" (#13856) ([#13944](https://github.com/pantsbuild/pants/pull/13944))
+
+### Bug fixes
+
+* [jvm] Fix parsing of `Coursier` report coordinates when `packaging` is reported. ([#13996](https://github.com/pantsbuild/pants/pull/13996))
+
+* Restore the `pants` namespace package. ([#13972](https://github.com/pantsbuild/pants/pull/13972))
+
+* Fix `--log-levels-by-target` not working for logs from Python code ([#13939](https://github.com/pantsbuild/pants/pull/13939))
+
+* Fix `tailor` not setting the `name` field ([#13913](https://github.com/pantsbuild/pants/pull/13913))
+
+
