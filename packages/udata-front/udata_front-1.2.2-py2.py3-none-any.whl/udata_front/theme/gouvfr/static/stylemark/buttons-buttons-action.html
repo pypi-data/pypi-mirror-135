@@ -1,0 +1,198 @@
+<!doctype html>
+<html data-fr-scheme="light" data-fr-theme="light">
+
+	<head>
+		<style>
+		</style>
+
+		<style>
+			html, body {
+				min-height: 0 !important;
+				height: auto !important;
+			}
+		</style>
+
+		<script>
+			function findAndHandleStylemarkBlocks(languages, handler) {
+				var blocks = getStylemarkBlocks(languages);
+				handleStylemarkBlocks(blocks, handler);
+			}
+
+			function getStylemarkBlocks(languages) {
+				languages = typeof languages === 'string' ? [languages] : languages;
+
+				var selectors = [];
+
+				for (var i = 0; i < languages.length; i++) {
+					selectors.push('script[data-language="' + languages[i] + '"]');
+				}
+
+				var selector = selectors.join(',');
+				var scripts = document.querySelectorAll(selector);
+				var blocks = [];
+
+				for (var i = 0, length = scripts.length; i < length; i++) {
+					if (scripts[i].innerText) {
+						blocks.push(scripts[i].innerText);
+					}
+				}
+
+				return blocks;
+			}
+
+			function handleStylemarkBlocks(blocks, handler) {
+				for (var i = 0, length = blocks.length; i < length; i++) {
+					handler(blocks[i], i);
+				}
+			}
+		</script>
+
+			<link rel="stylesheet" href="udata_front/theme/gouvfr/static/less/index.css">
+			<link rel="stylesheet" href="theme/less/examples.css">
+			<script src="udata_front/theme/gouvfr/static/js/index.js"></script>
+
+		
+	</head>
+
+	<body>					<p><a href="#" role="button" class="btn-action"><?xml version="1.0" encoding="UTF-8"?><svg id="SVGDoc" width="37" height="37.5" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 74 75"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>&lt;Path&gt;</title><path d="M74.0327,37.2026c0,20.435 -16.565,37 -37,37c-20.435,0 -37,-16.565 -37,-37c0,-20.434 16.565,-37 37,-37c20.435,0 37,16.566 37,37z" fill="#008452" fill-opacity="1"></path></g><g><title>&lt;Rectangle&gt;</title><path d="M40.182,49.011v0h-6.298v0v-23.617v0h6.298v0z" fill="#f9f9f9" fill-opacity="1"></path></g><g><title>&lt;Rectangle&gt;</title><path d="M25.224,34.054v0h23.617v0v6.298v0h-23.617v0z" fill="#f9f9f9" fill-opacity="1"></path></g></g></svg>Ajouter une ressource communautaire</a></p>
+			<script type="text/x-stylemark" data-language="html"><p><a href="#" role="button" class="btn-action"><?xml version="1.0" encoding="UTF-8"?><svg id="SVGDoc" width="37" height="37.5" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 74 75"><defs></defs><desc>Generated with Avocode.</desc><g><g><title>&lt;Path&gt;</title><path d="M74.0327,37.2026c0,20.435 -16.565,37 -37,37c-20.435,0 -37,-16.565 -37,-37c0,-20.434 16.565,-37 37,-37c20.435,0 37,16.566 37,37z" fill="#008452" fill-opacity="1"></path></g><g><title>&lt;Rectangle&gt;</title><path d="M40.182,49.011v0h-6.298v0v-23.617v0h6.298v0z" fill="#f9f9f9" fill-opacity="1"></path></g><g><title>&lt;Rectangle&gt;</title><path d="M25.224,34.054v0h23.617v0v6.298v0h-23.617v0z" fill="#f9f9f9" fill-opacity="1"></path></g></g></svg>Ajouter une ressource communautaire</a></p></script>
+
+		<!--
+			Vanilla JS
+		-->
+
+		<script>
+			findAndHandleStylemarkBlocks('js', function(block) {
+				eval(block);
+			});
+		</script>
+
+		<!--
+			AngularJS
+		-->
+
+		<script>
+			(function(angular) {
+
+				if (!angular) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks('angularjs', function(block, index) {
+					var moduleElem = document.querySelector('[ng-app]');
+					var module;
+
+					if (moduleElem) {
+						// Uses an existing module
+						module = angular.module(moduleElem.getAttribute('ng-app'));
+					}
+					else {
+						// Creates a new module
+						module = angular.module('stylemark-buttons-buttons-action', []);
+					}
+
+					module.controller('stylemark-buttons-buttons-action-' + index, function($scope) {
+						$scope.$eval(block);
+					});
+				});
+			})(window.angular);
+		</script>
+
+		<!--
+			React / JSX
+		-->
+
+		<script>
+			(function(ReactDOM) {
+
+				if (!ReactDOM) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks('jsx', function(block, index) {
+					var rootNode = document.querySelectorAll('.stylemark-react-root')[index];
+					var Component = eval(block);
+					ReactDOM.render(Component, rootNode);
+				});
+			})(window.ReactDOM);
+		</script>
+
+		<!--
+			Ember
+		-->
+
+		<script>
+			(function(Ember) {
+
+				if (!Ember) {
+					return;
+				}
+
+				findAndHandleStylemarkBlocks(['handlebars', 'hbs'], function(block, index) {
+					var render = function() {
+						var app = window.noop
+						var container = app.__container__;
+						var renderer = container.lookup('renderer:-dom');
+						var template = Ember.HTMLBars.compile(block);
+
+						var jsBlocks = getStylemarkBlocks('js');
+						var jsBlock = jsBlocks && jsBlocks[0] ? jsBlocks[0] : '{}';
+						var context;
+						eval('context = ' + jsBlock);
+
+						// Credit:
+						// http://stackoverflow.com/questions/27950413/render-ember-js-hbs-template-to-a-string#answer-35625858
+						var compile = function(container, template, context) {
+							return new Ember.RSVP.Promise(function(resolve) {
+								Ember.Component.extend(Ember.merge({
+									style: 'display:none;',
+									layout: template,
+									container: container,
+									renderer: renderer,
+
+									init: function() {
+										this._super.apply(this, arguments);
+										Ember.setOwner(this, container);
+									},
+
+									didRender: function() {
+										var elem = this.$();
+										resolve(elem);
+										this.destroy();
+									}
+								}, context))
+									.create()
+									.append();
+
+							});
+						};
+
+						compile(container, template, context).then(function(elem) {
+							var node = document.querySelectorAll('.stylemark-ember-root')[index];
+							jQuery(node).append(elem);
+						});
+					};
+
+					var isReady = function() {
+						return window.noop
+							&& window.noop.__container__;
+					};
+
+					var checkReady = function() {
+						if (isReady()) {
+							render();
+						}
+						else {
+							setTimeout(checkReady, 20);
+						}
+					};
+
+					checkReady();
+				});
+
+			})(window.Ember);
+		</script>
+
+		<script src="_stylemark/js/vendor/iframeResizer.contentWindow.min.js"></script>
+	</body>
+</html>
