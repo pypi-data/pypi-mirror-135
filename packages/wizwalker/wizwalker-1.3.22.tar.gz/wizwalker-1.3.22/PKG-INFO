@@ -1,0 +1,87 @@
+Metadata-Version: 2.1
+Name: wizwalker
+Version: 1.3.22
+Summary: Wizard101 scripting library
+Home-page: https://github.com/StarrFox/wizwalker
+License: GPL-3.0-or-later
+Author: StarrFox
+Author-email: starrfox6312@gmail.com
+Requires-Python: >=3.8,<4.0
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: aioconsole (>=0.2.1,<0.3.0)
+Requires-Dist: aiofiles (>=0.7.0,<0.8.0)
+Requires-Dist: aiomonitor (>=0.4.5,<0.5.0)
+Requires-Dist: appdirs (>=1.4.4,<2.0.0)
+Requires-Dist: click (>=7.1.2,<8.0.0)
+Requires-Dist: click_default_group (>=1.2.2,<2.0.0)
+Requires-Dist: janus (>=0.6.1,<0.7.0)
+Requires-Dist: loguru (>=0.5.1,<0.6.0)
+Requires-Dist: pefile (>=2021.5.24,<2022.0.0)
+Requires-Dist: pymem (==1.8.3)
+Requires-Dist: terminaltables (>=3.1.0,<4.0.0)
+Project-URL: Repository, https://github.com/StarrFox/wizwalker
+Description-Content-Type: text/markdown
+
+# WizWalker
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+Wizard101 scripting library
+
+## documentation
+you can find the documentation [here](https://starrfox.github.io/wizwalker/)
+
+## install
+```shell
+$ pip install -U wizwalker
+```
+
+## discord
+join the offical discord [here](https://discord.gg/JHrdCNK)
+
+## development install
+This package uses [poetry](https://python-poetry.org/)
+```shell
+$ poetry install
+```
+
+## running
+Shell may need admin perms
+```shell
+$ poetry shell
+$ wizwalker
+```
+
+## building
+You'll need the dev install (see above) for this to work
+
+### exe
+```shell
+# Admin if needed
+$ pyinstaller -F --uac-admin --name WizWalker wizwalker/__main__.py
+# Normal
+$ pyinstaller -F --name WizWalker wizwalker/__main__.py
+```
+
+### wheel and source
+```shell
+$ poetry build
+```
+
+### Docs
+```shell
+$ cd docs
+$ make html
+```
+
+## console commands
+wizwalker: Runs the wizwalker cli
+
+wizwalker start-wiz: start wizard101 instances
+
+wizwalker wad: edit and extract wizard101 wad files
+
