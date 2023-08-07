@@ -1,0 +1,1 @@
+Just a few utility functions to make life easier
